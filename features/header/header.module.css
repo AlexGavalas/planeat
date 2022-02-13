@@ -1,0 +1,10 @@
+.header {
+    height: 5rem;
+    border-bottom: 1px solid #2f943c;
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    margin: 0 1rem;
+}

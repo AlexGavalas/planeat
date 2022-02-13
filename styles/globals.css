@@ -1,0 +1,118 @@
+/* Reset */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body,
+#__next {
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    width: 100%;
+}
+
+.button {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background-color: #f3f3f3;
+}
+
+/* Home page  */
+
+.container {
+    padding: 2rem;
+}
+
+/* Calendar styles */
+
+.calendar-container {
+    --grid-config: 0.5fr repeat(7, 1fr);
+    --grid-gap: 0.5rem;
+    display: grid;
+    gap: var(--grid-gap);
+}
+
+.calendar-control-buttons {
+    width: 20%;
+    display: flex;
+    gap: 10px;
+    min-height: 2rem;
+    justify-self: flex-end;
+}
+
+.calendar-header {
+    display: grid;
+    gap: var(--grid-gap);
+    grid-template-columns: var(--grid-config);
+}
+
+.calendar-content {
+    display: grid;
+    gap: var(--grid-gap);
+}
+
+.calendar-header h3 {
+    border-bottom: 3px solid #2f943c;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1rem;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: var(--grid-config);
+    gap: var(--grid-gap);
+    min-height: 8rem;
+}
+
+.row h3 {
+    border-right: 3px solid #2f943c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    word-break: break-all;
+}
+
+.cell {
+    --cell-grid-gap: 5px;
+    height: 100%;
+    display: grid;
+    gap: var(--cell-grid-gap);
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: move;
+    white-space: pre-wrap;
+}
+
+.editing {
+    grid-template-rows: 1fr minmax(1rem, 1.5rem);
+}
+
+.cell .edit {
+    resize: none;
+    font-family: inherit;
+    padding: 0.5rem;
+    font-size: 100%;
+}
+
+.buttons {
+    display: flex;
+    gap: var(--cell-grid-gap);
+}
