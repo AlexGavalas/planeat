@@ -36,7 +36,7 @@ button {
 /* Home page  */
 
 .container {
-    padding: 2rem;
+    padding: 2rem 1rem;
 }
 
 /* Calendar styles */
@@ -46,6 +46,18 @@ button {
     --grid-gap: 0.5rem;
     display: grid;
     gap: var(--grid-gap);
+}
+
+.calendar-week-controls {
+    width: 20%;
+    display: flex;
+    gap: 10px;
+    min-height: 2rem;
+}
+
+.controls-wrapper {
+    display: flex;
+    justify-content: space-between;
 }
 
 .calendar-control-buttons {
@@ -84,7 +96,7 @@ button {
 .row h3 {
     border-right: 3px solid #2f943c;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     word-break: break-all;
 }
