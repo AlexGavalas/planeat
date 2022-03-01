@@ -3,8 +3,20 @@
     border-bottom: 1px solid #2f943c;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+
+.logoWrapper {
+    display: flex;
+    align-items: center;
 }
 
 .logo {
-    margin: 0 1rem;
+    margin-right: 1rem;
+}
+
+.button button {
+    min-height: 2rem;
+    padding: 0 1rem;
 }
