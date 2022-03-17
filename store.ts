@@ -1,8 +1,10 @@
 import {
+    add,
     addWeeks,
     eachDayOfInterval,
     endOfWeek,
     format,
+    parse,
     startOfWeek,
     subWeeks,
 } from 'date-fns';
@@ -18,13 +20,14 @@ interface StoreI {
     swapDays: (props: { destinationId: string; originId: string }) => void;
     nextWeek: () => void;
     previousWeek: () => void;
+    copyToNextWeek: () => void;
 }
 
-const getDaysOfWeek = (date: Date) => {
+export const getDaysOfWeek = (date: Date) => {
     return eachDayOfInterval({
         start: startOfWeek(date, { weekStartsOn: 1 }),
         end: endOfWeek(date, { weekStartsOn: 1 }),
-    }).map((day) => ({ timestamp: day, label: format(day, 'EEE dd/M') }));
+    }).map((day) => ({ timestamp: day, label: format(day, 'EEE dd/MM/yyyy') }));
 };
 
 const getInitialState = (currentWeek: Date) => {
@@ -38,6 +41,20 @@ const getInitialState = (currentWeek: Date) => {
     );
 };
 
+const cloneState = ({ content }: { content: Record<string, Content> }) => {
+    return Object.keys(content).reduce((acc: Record<string, Content>, key) => {
+        const newKey = key.replace(/(\d+\/\d+\/\d+)$/, (match) => {
+            const prevDate = parse(match, 'dd/MM/yyyy', new Date());
+
+            return format(add(prevDate, { weeks: 1 }), 'dd/MM/yyyy');
+        });
+
+        acc[newKey] = { ...content[key] };
+
+        return acc;
+    }, {});
+};
+
 const NOW = new Date();
 
 export const useStore = create<StoreI>((set) => ({
@@ -45,11 +62,35 @@ export const useStore = create<StoreI>((set) => ({
     content: {
         [NOW.toISOString()]: getInitialState(NOW),
     },
+    copyToNextWeek: () =>
+        set((state) => {
+            const nextWeek = addWeeks(state.currentWeek, 1);
+
+            const currentContent =
+                state.content[state.currentWeek.toISOString()];
+
+            return {
+                currentWeek: nextWeek,
+                content: {
+                    ...state.content,
+                    [nextWeek.toISOString()]: cloneState({
+                        content: currentContent,
+                    }),
+                },
+            };
+        }),
     editCell: (key, value) =>
         set((state) => {
             const prevContent = state.content[state.currentWeek.toISOString()];
+
             prevContent[key].content = value;
-            return state;
+
+            return {
+                content: {
+                    ...state.content,
+                    [state.currentWeek.toISOString()]: { ...prevContent },
+                },
+            };
         }),
     swapDays: ({
         destinationId,
@@ -70,6 +111,7 @@ export const useStore = create<StoreI>((set) => ({
 
             return {
                 content: {
+                    ...state.content,
                     [key]: { ...prevContent },
                 },
             };

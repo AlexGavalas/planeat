@@ -1,26 +1,24 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
 import { getClassnames } from '../../util/classnames';
 import { Button } from '../../components/button';
+import { useStore } from '../../store';
 
 interface CellProps {
-    value: string;
     id: string;
-    handleSwap: HandleSwap;
     editingCell: string | null;
     setEditingCell: Dispatch<SetStateAction<string | null>>;
-    editCell: EditCell;
 }
 
-export const Cell = ({
-    value,
-    handleSwap,
-    id,
-    editingCell,
-    setEditingCell,
-    editCell,
-}: CellProps) => {
+export const Cell = ({ id, editingCell, setEditingCell }: CellProps) => {
+    const swapDays = useStore((state) => state.swapDays);
+    const editCell = useStore((state) => state.editCell);
+
+    const value = useStore(
+        (state) => state.content[state.currentWeek.toISOString()][id].content
+    );
+
     const [content, setContent] = useState(value);
 
     const [{ isDragging }, drag] = useDrag(() => ({
@@ -34,7 +32,7 @@ export const Cell = ({
     const [{ isOver }, drop] = useDrop(() => ({
         accept: 'cell',
         drop: (el: { id: string }) => {
-            handleSwap({ destinationId: id, originId: el.id });
+            swapDays({ destinationId: id, originId: el.id });
         },
         collect: (monitor) => ({
             isOver: !!monitor.isOver(),
@@ -42,10 +40,6 @@ export const Cell = ({
     }));
 
     const isEdit = editingCell === id;
-
-    useEffect(() => {
-        setContent(value);
-    }, [isEdit, value]);
 
     return (
         <div

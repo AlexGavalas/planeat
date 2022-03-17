@@ -7,15 +7,9 @@ import { Header } from './header';
 import { useStore } from '../../store';
 
 export const Calendar = () => {
-    const currentWeek = useStore((state) => state.currentWeek);
     const goToNextWeek = useStore((state) => state.nextWeek);
-    const swapDays = useStore((state) => state.swapDays);
-    const editCell = useStore((state) => state.editCell);
+    const copyToNextWeek = useStore((state) => state.copyToNextWeek);
     const goToPreviousWeek = useStore((state) => state.previousWeek);
-
-    const content = useStore(
-        (state) => state.content[currentWeek.toISOString()]
-    );
 
     const onSave = () => {
         // TODO
@@ -29,11 +23,7 @@ export const Calendar = () => {
         <section className="calendar-container">
             <Header />
             <DndProvider backend={HTML5Backend}>
-                <Content
-                    content={content}
-                    handleSwap={swapDays}
-                    editCell={editCell}
-                />
+                <Content />
             </DndProvider>
             <div className="controls-wrapper">
                 <div className="calendar-week-controls">
@@ -43,6 +33,7 @@ export const Calendar = () => {
                     <Button onClick={goToNextWeek}>Next week &#xbb;</Button>
                 </div>
                 <div className="calendar-control-buttons">
+                    <Button onClick={copyToNextWeek}>Copy to next week</Button>
                     <Button onClick={onCancel}>Cancel &#x2715;</Button>
                     <Button onClick={onSave}>Save &#x2713;</Button>
                 </div>

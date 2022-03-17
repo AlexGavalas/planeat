@@ -61,7 +61,7 @@ button {
 }
 
 .calendar-control-buttons {
-    width: 20%;
+    width: 30%;
     display: flex;
     gap: 10px;
     min-height: 2rem;
