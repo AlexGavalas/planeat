@@ -128,3 +128,18 @@ button {
     display: flex;
     gap: var(--cell-grid-gap);
 }
+
+/* Lab */
+
+.gradient-border {
+    color: white;
+    width: 50%;
+    height: 50px;
+
+    border: 5px double transparent;
+    border-radius: 10px;
+    background-image: linear-gradient(black, black),
+        radial-gradient(circle at left top, rgb(1, 110, 218), rgb(217, 0, 192));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+}
