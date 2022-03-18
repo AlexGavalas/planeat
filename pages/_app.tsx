@@ -1,5 +1,7 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { UserProvider } from '@supabase/supabase-auth-helpers/react';
+import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 
@@ -21,8 +23,10 @@ function MyApp({ Component, pageProps }: AppProps) {
                 }}
             >
                 <ModalsProvider>
-                    <Header />
-                    <Component {...pageProps} />
+                    <UserProvider supabaseClient={supabaseClient}>
+                        <Header />
+                        <Component {...pageProps} />
+                    </UserProvider>
                 </ModalsProvider>
             </MantineProvider>
         </>
