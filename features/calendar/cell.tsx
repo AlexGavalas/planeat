@@ -1,17 +1,14 @@
-import { Dispatch, SetStateAction, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { useModals } from '@mantine/modals';
 
-import { getClassnames } from '../../util/classnames';
-import { Button } from '../../components/button';
 import { useStore } from '../../store';
+import { ModalContent } from './edit-meal-modal-content';
 
 interface CellProps {
     id: string;
-    editingCell: string | null;
-    setEditingCell: Dispatch<SetStateAction<string | null>>;
 }
 
-export const Cell = ({ id, editingCell, setEditingCell }: CellProps) => {
+export const Cell = ({ id }: CellProps) => {
     const swapDays = useStore((state) => state.swapDays);
     const editCell = useStore((state) => state.editCell);
 
@@ -19,7 +16,7 @@ export const Cell = ({ id, editingCell, setEditingCell }: CellProps) => {
         (state) => state.content[state.currentWeek.toISOString()][id].content
     );
 
-    const [content, setContent] = useState(value);
+    const modals = useModals();
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'cell',
@@ -39,54 +36,31 @@ export const Cell = ({ id, editingCell, setEditingCell }: CellProps) => {
         }),
     }));
 
-    const isEdit = editingCell === id;
+    const handleSave = (meal: string) => {
+        editCell(id, meal);
+    };
 
     return (
         <div
             ref={drag}
             onClick={() => {
-                setEditingCell(id);
+                modals.openModal({
+                    title: 'Edit this meal',
+                    children: (
+                        <ModalContent
+                            handleSave={handleSave}
+                            initialMeal={value}
+                        />
+                    ),
+                });
             }}
             style={{
                 ...(isDragging && { opacity: 0.5 }),
                 ...(isOver && { background: '#cbf5d0' }),
             }}
-            className={getClassnames({ editing: isEdit }, 'cell')}
+            className="cell"
         >
-            {isEdit ? (
-                <textarea
-                    className="edit"
-                    autoFocus={true}
-                    value={content}
-                    onChange={(e) => {
-                        setContent(e.target.value);
-                    }}
-                />
-            ) : (
-                <p ref={drop}>{value}</p>
-            )}
-            {isEdit && (
-                <div className="buttons">
-                    <Button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setEditingCell(null);
-                            setContent(value);
-                        }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setEditingCell(null);
-                            editCell(id, content);
-                        }}
-                    >
-                        Save
-                    </Button>
-                </div>
-            )}
+            <p ref={drop}>{value}</p>
         </div>
     );
 };

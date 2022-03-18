@@ -1,5 +1,6 @@
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Group } from '@mantine/core';
 
 import { Button } from '../../components/button';
 import { Content } from './content';
@@ -26,17 +27,17 @@ export const Calendar = () => {
                 <Content />
             </DndProvider>
             <div className="controls-wrapper">
-                <div className="calendar-week-controls">
+                <Group spacing="sm">
                     <Button onClick={goToPreviousWeek}>
                         &#xab; Previous week
                     </Button>
                     <Button onClick={goToNextWeek}>Next week &#xbb;</Button>
-                </div>
-                <div className="calendar-control-buttons">
+                </Group>
+                <Group spacing="sm">
                     <Button onClick={copyToNextWeek}>Copy to next week</Button>
                     <Button onClick={onCancel}>Cancel &#x2715;</Button>
                     <Button onClick={onSave}>Save &#x2713;</Button>
-                </div>
+                </Group>
             </div>
         </section>
     );

@@ -19,20 +19,6 @@ a {
     text-decoration: none;
 }
 
-button {
-    width: 100%;
-}
-
-.button {
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 5px;
-}
-
-.button:hover {
-    background-color: #f3f3f3;
-}
-
 /* Home page  */
 
 .container {
@@ -48,24 +34,9 @@ button {
     gap: var(--grid-gap);
 }
 
-.calendar-week-controls {
-    width: 20%;
-    display: flex;
-    gap: 10px;
-    min-height: 2rem;
-}
-
 .controls-wrapper {
     display: flex;
     justify-content: space-between;
-}
-
-.calendar-control-buttons {
-    width: 30%;
-    display: flex;
-    gap: 10px;
-    min-height: 2rem;
-    justify-self: flex-end;
 }
 
 .calendar-header {
@@ -102,31 +73,14 @@ button {
 }
 
 .cell {
-    --cell-grid-gap: 5px;
     height: 100%;
     display: grid;
-    gap: var(--cell-grid-gap);
+    gap: 5px;
     border: 1px solid black;
     border-radius: 5px;
     padding: 5px;
     cursor: move;
     white-space: pre-wrap;
-}
-
-.editing {
-    grid-template-rows: 1fr minmax(1rem, 1.5rem);
-}
-
-.cell .edit {
-    resize: none;
-    font-family: inherit;
-    padding: 0.5rem;
-    font-size: 100%;
-}
-
-.buttons {
-    display: flex;
-    gap: var(--cell-grid-gap);
 }
 
 /* Lab */

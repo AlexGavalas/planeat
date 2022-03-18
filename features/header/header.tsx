@@ -9,9 +9,7 @@ export const Header = () => {
                 <h1 className={styles.logo}>PLANEAT</h1>
                 <blockquote># Do the thing!</blockquote>
             </div>
-            <div className={styles.button}>
-                <Button>Login</Button>
-            </div>
+            <Button>Login</Button>
         </header>
     );
 };
