@@ -5,7 +5,7 @@ import { ModalsProvider } from '@mantine/modals';
 
 import '../styles/globals.css';
 
-import { Header } from '../features/header';
+import { Header } from '@features/header';
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (

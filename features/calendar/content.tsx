@@ -1,6 +1,7 @@
 import { Cell } from './cell';
 import { ROWS } from './constants';
-import { getDaysOfWeek, useStore } from '../../store';
+import { useStore } from '../../store';
+import { getDaysOfWeek } from '@util/date';
 
 export const Content = () => {
     const currentWeek = useStore((state) => state.currentWeek);

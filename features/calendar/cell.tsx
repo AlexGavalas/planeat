@@ -4,10 +4,6 @@ import { useModals } from '@mantine/modals';
 import { useStore } from '../../store';
 import { ModalContent } from './edit-meal-modal-content';
 
-interface CellProps {
-    id: string;
-}
-
 export const Cell = ({ id }: CellProps) => {
     const swapDays = useStore((state) => state.swapDays);
     const editCell = useStore((state) => state.editCell);

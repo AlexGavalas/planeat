@@ -1,34 +1,8 @@
-import {
-    add,
-    addWeeks,
-    eachDayOfInterval,
-    endOfWeek,
-    format,
-    parse,
-    startOfWeek,
-    subWeeks,
-} from 'date-fns';
-
+import { add, addWeeks, format, parse, subWeeks } from 'date-fns';
 import create from 'zustand';
 
+import { getDaysOfWeek } from '@util/date';
 import { ROWS } from './features/calendar/constants';
-
-interface StoreI {
-    currentWeek: Date;
-    content: Record<string, Record<string, Content>>;
-    editCell: (key: string, value: string) => void;
-    swapDays: (props: { destinationId: string; originId: string }) => void;
-    nextWeek: () => void;
-    previousWeek: () => void;
-    copyToNextWeek: () => void;
-}
-
-export const getDaysOfWeek = (date: Date) => {
-    return eachDayOfInterval({
-        start: startOfWeek(date, { weekStartsOn: 1 }),
-        end: endOfWeek(date, { weekStartsOn: 1 }),
-    }).map((day) => ({ timestamp: day, label: format(day, 'EEE dd/MM/yyyy') }));
-};
 
 const getInitialState = (currentWeek: Date) => {
     return Object.fromEntries(

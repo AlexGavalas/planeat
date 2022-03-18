@@ -2,7 +2,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Group } from '@mantine/core';
 
-import { Button } from '../../components/button';
+import { Button } from '@components/button';
 import { Content } from './content';
 import { Header } from './header';
 import { useStore } from '../../store';
