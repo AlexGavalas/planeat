@@ -3,9 +3,8 @@ import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { startOfISOWeek, endOfISOWeek } from 'date-fns';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Group, LoadingOverlay } from '@mantine/core';
+import { Button, Group, LoadingOverlay } from '@mantine/core';
 
-import { Button } from '@components/button';
 import { Content } from './content';
 import { Header } from './header';
 import { useStore } from '../../store';

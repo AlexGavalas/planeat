@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { Google, LogOut } from 'iconoir-react';
-import { Button, Title } from '@mantine/core';
+import { Button } from '@mantine/core';
 
 import styles from './header.module.css';
 
@@ -59,7 +60,9 @@ export const Header = () => {
 
     return (
         <header className={styles.header}>
-            <Title>PLANEAT</Title>
+            <Link href="/" passHref>
+                <a className={styles.headerLink}>PLANEAT</a>
+            </Link>
             {!isLoading && <UserActions />}
         </header>
     );

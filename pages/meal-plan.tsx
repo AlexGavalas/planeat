@@ -1,10 +1,9 @@
+import { Calendar } from '@features/calendar';
+import { Container } from '@mantine/core';
 import {
     getUser,
     withAuthRequired,
 } from '@supabase/supabase-auth-helpers/nextjs';
-
-import { Calendar } from '@features/calendar';
-import { Container } from '@mantine/core';
 
 export const getServerSideProps = withAuthRequired({
     redirectTo: '/',

@@ -1,3 +1,6 @@
+import Link from 'next/link';
+import { startOfDay, endOfDay } from 'date-fns';
+import { AppShell, Button, Group, Text, Navbar } from '@mantine/core';
 import {
     getUser,
     withAuthRequired,
@@ -5,12 +8,7 @@ import {
     supabaseClient,
 } from '@supabase/supabase-auth-helpers/nextjs';
 
-import { startOfDay, endOfDay, format } from 'date-fns';
-import { CrackedEgg, OrangeSliceAlt, AppleHalf, Bbq } from 'iconoir-react';
-import Link from 'next/link';
-
-import { AppShell, Button, Group, Timeline, Text, Navbar } from '@mantine/core';
-import { ROWS } from '@features/calendar/constants';
+import { DailyMeal } from '@features/daily-meal';
 
 export const getServerSideProps = withAuthRequired({
     redirectTo: '/',
@@ -35,66 +33,26 @@ export const getServerSideProps = withAuthRequired({
             .gte('day', startOfDay(NOW).toISOString())
             .lte('day', endOfDay(NOW).toISOString());
 
-        const mealsOfTheDay = data?.reduce((acc: MealsMap, meal) => {
+        const dailyMeals = data?.reduce((acc: MealsMap, meal) => {
             acc[meal.section_key] = meal;
             return acc;
         }, {});
 
         return {
             props: {
-                mealsOfTheDay: mealsOfTheDay || {},
+                dailyMeals: dailyMeals || {},
                 user,
             },
         };
     },
 });
 
-type T = typeof AppleHalf;
-
-const MEAL_ICON: Record<Row, T> = {
-    Morning: CrackedEgg,
-    'Snack 1': AppleHalf,
-    'Snack 2': AppleHalf,
-    Lunch: OrangeSliceAlt,
-    Dinner: Bbq,
-};
-
-const Home = ({
-    user,
-    mealsOfTheDay,
-}: {
-    user: User;
-    mealsOfTheDay: MealsMap;
-}) => {
+const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
     return (
         <AppShell
             navbar={
                 <Navbar width={{ base: 300 }} p={20} height="100%">
-                    <Text align="center" pb={20} weight="bold">
-                        Meals of the day
-                    </Text>
-                    <Timeline active={1} bulletSize={40}>
-                        {ROWS.map((row) => {
-                            const key = `${row}_${format(
-                                new Date(),
-                                'EEE dd/MM/yyyy'
-                            )}`;
-
-                            const meal = mealsOfTheDay[key]?.meal || 'N/A';
-
-                            const Icon = MEAL_ICON[row];
-
-                            return (
-                                <Timeline.Item
-                                    key={key}
-                                    title={row}
-                                    bullet={<Icon />}
-                                >
-                                    <Text>{meal}</Text>
-                                </Timeline.Item>
-                            );
-                        })}
-                    </Timeline>
+                    <DailyMeal dailyMeals={dailyMeals} />
                 </Navbar>
             }
         >
