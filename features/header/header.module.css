@@ -1,6 +1,6 @@
 .header {
     height: 5rem;
-    border-bottom: 1px solid #2f943c;
+    border-bottom: 1px solid lightgrey;
     display: flex;
     align-items: center;
     justify-content: space-between;

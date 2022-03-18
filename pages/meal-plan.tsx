@@ -1,9 +1,28 @@
-import { Calendar } from '@features/calendar';
+import {
+    getUser,
+    withAuthRequired,
+} from '@supabase/supabase-auth-helpers/nextjs';
 
-export default function Home() {
+import { Calendar } from '@features/calendar';
+import { Container } from '@mantine/core';
+
+export const getServerSideProps = withAuthRequired({
+    redirectTo: '/',
+    getServerSideProps: async (context) => {
+        const { user } = await getUser(context);
+
+        console.log(user);
+
+        return {
+            props: {},
+        };
+    },
+});
+
+export default function MealPlan() {
     return (
-        <div className="container">
+        <Container size="xl" pt={20}>
             <Calendar />
-        </div>
+        </Container>
     );
 }

@@ -21,8 +21,9 @@ a {
 
 /* Home page  */
 
-.container {
-    padding: 2rem 1rem;
+.home-container {
+    height: calc(100% - 5rem);
+    display: grid;
 }
 
 /* Calendar styles */
