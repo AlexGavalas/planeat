@@ -22,3 +22,5 @@ type Meal = {
     section_key: string;
     day: string;
 };
+
+type MealsMap = Record<string, Meal>;

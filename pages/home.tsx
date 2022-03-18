@@ -2,46 +2,15 @@ import {
     getUser,
     withAuthRequired,
     User,
+    supabaseClient,
 } from '@supabase/supabase-auth-helpers/nextjs';
 
+import { startOfDay, endOfDay, format } from 'date-fns';
+import { CrackedEgg, OrangeSliceAlt, AppleHalf, Bbq } from 'iconoir-react';
 import Link from 'next/link';
-import { Button, Center, Container, Group, Text } from '@mantine/core';
 
-/*
-{
-    "id": "0db33dba-e235-49a8-9e21-d51681e5333c",
-    "aud": "authenticated",
-    "role": "authenticated",
-    "email": "alex.gavalas.92@gmail.com",
-    "email_confirmed_at": null,
-    "phone": "",
-    "confirmed_at": null,
-    "last_sign_in_at": null,
-    "app_metadata": {
-        "provider": "google",
-        "providers": [
-            "google"
-        ]
-    },
-    "user_metadata": {
-        "avatar_url": "https://lh3.googleusercontent.com/a-/AOh14GifWAOPiFBZngjgKJFb0VaSwyo3CtbHpGu2D9myiA=s96-c",
-        "email": "alex.gavalas.92@gmail.com",
-        "email_verified": true,
-        "full_name": "Alex Gavalas",
-        "iss": "https://www.googleapis.com/userinfo/v2/me",
-        "name": "Alex Gavalas",
-        "picture": "https://lh3.googleusercontent.com/a-/AOh14GifWAOPiFBZngjgKJFb0VaSwyo3CtbHpGu2D9myiA=s96-c",
-        "provider_id": "102990282094564736022",
-        "sub": "102990282094564736022"
-    },
-    "identities": [],
-    "created_at": null,
-    "updated_at": null,
-    "supabase-auth-helpers-note": "This user payload is retrieved from the cached JWT and might be stale. If you need up to date user data, please call the `getUser` method in a server-side context!",
-    "exp": 1647609798,
-    "sub": "0db33dba-e235-49a8-9e21-d51681e5333c"
-}
-*/
+import { AppShell, Button, Group, Timeline, Text, Navbar } from '@mantine/core';
+import { ROWS } from '@features/calendar/constants';
 
 export const getServerSideProps = withAuthRequired({
     redirectTo: '/',
@@ -58,35 +27,91 @@ export const getServerSideProps = withAuthRequired({
             };
         }
 
+        const NOW = new Date();
+
+        const { data } = await supabaseClient
+            .from<Meal>('meals')
+            .select('*')
+            .gte('day', startOfDay(NOW).toISOString())
+            .lte('day', endOfDay(NOW).toISOString());
+
+        const mealsOfTheDay = data?.reduce((acc: MealsMap, meal) => {
+            acc[meal.section_key] = meal;
+            return acc;
+        }, {});
+
         return {
             props: {
+                mealsOfTheDay: mealsOfTheDay || {},
                 user,
             },
         };
     },
 });
 
-const Home = ({ user }: { user: User }) => {
+type T = typeof AppleHalf;
+
+const MEAL_ICON: Record<Row, T> = {
+    Morning: CrackedEgg,
+    'Snack 1': AppleHalf,
+    'Snack 2': AppleHalf,
+    Lunch: OrangeSliceAlt,
+    Dinner: Bbq,
+};
+
+const Home = ({
+    user,
+    mealsOfTheDay,
+}: {
+    user: User;
+    mealsOfTheDay: MealsMap;
+}) => {
     return (
-        <div className="home-container">
-            <Center>
-                <Container>
-                    <Group direction="column">
-                        <Text size="lg">
-                            Welcome{' '}
-                            <span style={{ fontWeight: 'bold' }}>
-                                {user.user_metadata.name}
-                            </span>
-                        </Text>
-                    </Group>
-                    <Group>
-                        <Link href="/meal-plan" passHref>
-                            <Button component="a">View meal plan</Button>
-                        </Link>
-                    </Group>
-                </Container>
-            </Center>
-        </div>
+        <AppShell
+            navbar={
+                <Navbar width={{ base: 300 }} p={20} height="100%">
+                    <Text align="center" pb={20} weight="bold">
+                        Meals of the day
+                    </Text>
+                    <Timeline active={1} bulletSize={40}>
+                        {ROWS.map((row) => {
+                            const key = `${row}_${format(
+                                new Date(),
+                                'EEE dd/MM/yyyy'
+                            )}`;
+
+                            const meal = mealsOfTheDay[key]?.meal || 'N/A';
+
+                            const Icon = MEAL_ICON[row];
+
+                            return (
+                                <Timeline.Item
+                                    key={key}
+                                    title={row}
+                                    bullet={<Icon />}
+                                >
+                                    <Text>{meal}</Text>
+                                </Timeline.Item>
+                            );
+                        })}
+                    </Timeline>
+                </Navbar>
+            }
+        >
+            <Group direction="column">
+                <Text size="lg">
+                    Welcome{' '}
+                    <span style={{ fontWeight: 'bold' }}>
+                        {user.user_metadata.name}
+                    </span>
+                </Text>
+            </Group>
+            <Group>
+                <Link href="/meal-plan" passHref>
+                    <Button component="a">View meal plan</Button>
+                </Link>
+            </Group>
+        </AppShell>
     );
 };
 

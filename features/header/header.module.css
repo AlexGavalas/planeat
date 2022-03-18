@@ -6,12 +6,3 @@
     justify-content: space-between;
     padding: 0 1rem;
 }
-
-.logoWrapper {
-    display: flex;
-    align-items: center;
-}
-
-.logo {
-    margin-right: 1rem;
-}

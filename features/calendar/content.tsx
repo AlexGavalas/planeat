@@ -5,8 +5,6 @@ import { ROWS } from './constants';
 import { useStore } from '../../store';
 import { getDaysOfWeek } from '@util/date';
 
-type MealsMap = Record<string, Meal>;
-
 export const Content = ({ meals }: { meals: Meal[] }) => {
     const currentWeek = useStore((state) => state.currentWeek);
 

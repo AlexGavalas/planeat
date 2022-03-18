@@ -3,8 +3,7 @@ import { useRouter } from 'next/router';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { Google, LogOut } from 'iconoir-react';
-
-import { Button } from '@components/button';
+import { Button, Title } from '@mantine/core';
 
 import styles from './header.module.css';
 
@@ -60,10 +59,7 @@ export const Header = () => {
 
     return (
         <header className={styles.header}>
-            <div className={styles.logoWrapper}>
-                <h1 className={styles.logo}>PLANEAT</h1>
-                <blockquote># Do the thing!</blockquote>
-            </div>
+            <Title>PLANEAT</Title>
             {!isLoading && <UserActions />}
         </header>
     );
