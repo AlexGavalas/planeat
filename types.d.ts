@@ -14,3 +14,11 @@ interface StoreI {
     previousWeek: () => void;
     copyToNextWeek: () => void;
 }
+
+type Meal = {
+    id: string;
+    meal: string;
+    user_id: string;
+    section_key: string;
+    day: string;
+};

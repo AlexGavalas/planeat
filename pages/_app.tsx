@@ -4,10 +4,19 @@ import { UserProvider } from '@supabase/supabase-auth-helpers/react';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import '../styles/globals.css';
 
 import { Header } from '@features/header';
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+        },
+    },
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
@@ -24,8 +33,10 @@ function MyApp({ Component, pageProps }: AppProps) {
             >
                 <ModalsProvider>
                     <UserProvider supabaseClient={supabaseClient}>
-                        <Header />
-                        <Component {...pageProps} />
+                        <QueryClientProvider client={queryClient}>
+                            <Header />
+                            <Component {...pageProps} />
+                        </QueryClientProvider>
                     </UserProvider>
                 </ModalsProvider>
             </MantineProvider>

@@ -11,8 +11,6 @@ export const getServerSideProps = withAuthRequired({
     getServerSideProps: async (context) => {
         const { user } = await getUser(context);
 
-        console.log(user);
-
         return {
             props: {},
         };

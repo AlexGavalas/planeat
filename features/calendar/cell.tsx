@@ -3,14 +3,17 @@ import { useModals } from '@mantine/modals';
 
 import { useStore } from '../../store';
 import { ModalContent } from './edit-meal-modal-content';
+import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import { useUser } from '@supabase/supabase-auth-helpers/react';
+import { useQueryClient } from 'react-query';
 
-export const Cell = ({ id }: CellProps) => {
+export const Cell = ({ id, meal, timestamp }: CellProps) => {
+    const { user } = useUser();
+    const queryClient = useQueryClient();
+
     const swapDays = useStore((state) => state.swapDays);
     const editCell = useStore((state) => state.editCell);
-
-    const value = useStore(
-        (state) => state.content[state.currentWeek.toISOString()][id].content
-    );
+    const currentWeek = useStore((state) => state.currentWeek);
 
     const modals = useModals();
 
@@ -32,8 +35,21 @@ export const Cell = ({ id }: CellProps) => {
         }),
     }));
 
-    const handleSave = (meal: string) => {
+    const handleSave = async (meal: string) => {
+        if (!user) return;
+
         editCell(id, meal);
+
+        const { error } = await supabaseClient.from<Meal>('meals').insert({
+            meal,
+            section_key: id,
+            user_id: user.id,
+            day: timestamp.toISOString(),
+        });
+
+        if (!error) {
+            queryClient.invalidateQueries(['meals', currentWeek]);
+        }
     };
 
     return (
@@ -45,7 +61,7 @@ export const Cell = ({ id }: CellProps) => {
                     children: (
                         <ModalContent
                             handleSave={handleSave}
-                            initialMeal={value}
+                            initialMeal={meal?.meal || ''}
                         />
                     ),
                 });
@@ -56,7 +72,7 @@ export const Cell = ({ id }: CellProps) => {
             }}
             className="cell"
         >
-            <p ref={drop}>{value}</p>
+            <p ref={drop}>{meal?.meal}</p>
         </div>
     );
 };

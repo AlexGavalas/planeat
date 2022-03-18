@@ -4,4 +4,6 @@ type Content = {
 
 interface CellProps {
     id: string;
+    meal?: Meal;
+    timestamp: Date;
 }

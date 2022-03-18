@@ -6,7 +6,7 @@ export const ModalContent = ({
     handleSave,
     initialMeal,
 }: {
-    handleSave: (meal: string) => void;
+    handleSave: (meal: string) => Promise<void>;
     initialMeal: string;
 }) => {
     const modals = useModals();
