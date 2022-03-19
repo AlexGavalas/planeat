@@ -9,8 +9,6 @@ interface StoreI {
     currentWeek: Date;
     content: Record<string, Record<string, Content>>;
     unsavedChanges: Record<string, EditedMeal>;
-    editCell: (key: string, value: string) => void;
-    swapDays: (props: { destinationId: string; originId: string }) => void;
     nextWeek: () => void;
     previousWeek: () => void;
     copyToNextWeek: () => void;

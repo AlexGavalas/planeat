@@ -65,67 +65,12 @@ export const useStore = create<StoreI>((set) => ({
                 },
             };
         }),
-    editCell: (key, value) =>
-        set((state) => {
-            const prevContent = state.content[state.currentWeek.toISOString()];
-
-            prevContent[key].content = value;
-
-            return {
-                content: {
-                    ...state.content,
-                    [state.currentWeek.toISOString()]: { ...prevContent },
-                },
-            };
-        }),
-    swapDays: ({
-        destinationId,
-        originId,
-    }: {
-        destinationId: string;
-        originId: string;
-    }) =>
-        set((state) => {
-            const key = state.currentWeek.toISOString();
-
-            const prevContent = state.content[key];
-
-            [prevContent[destinationId], prevContent[originId]] = [
-                prevContent[originId],
-                prevContent[destinationId],
-            ];
-
-            return {
-                content: {
-                    ...state.content,
-                    [key]: { ...prevContent },
-                },
-            };
-        }),
     nextWeek: () =>
-        set((state) => {
-            const nextWeek = addWeeks(state.currentWeek, 1);
-            const key = nextWeek.toISOString();
-
-            return {
-                currentWeek: nextWeek,
-                content: {
-                    ...state.content,
-                    [key]: state.content[key] ?? getInitialState(nextWeek),
-                },
-            };
-        }),
+        set((state) => ({
+            currentWeek: addWeeks(state.currentWeek, 1),
+        })),
     previousWeek: () =>
-        set((state) => {
-            const prevWeek = subWeeks(state.currentWeek, 1);
-            const key = prevWeek.toISOString();
-
-            return {
-                currentWeek: prevWeek,
-                content: {
-                    ...state.content,
-                    [key]: state.content[key] ?? getInitialState(prevWeek),
-                },
-            };
-        }),
+        set((state) => ({
+            currentWeek: subWeeks(state.currentWeek, 1),
+        })),
 }));

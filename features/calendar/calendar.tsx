@@ -4,6 +4,7 @@ import { startOfISOWeek, endOfISOWeek } from 'date-fns';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Button, Group, LoadingOverlay } from '@mantine/core';
+import { partition } from 'lodash';
 
 import { Content } from './content';
 import { Header } from './header';
@@ -34,11 +35,20 @@ export const Calendar = () => {
     );
 
     const onSave = async () => {
+        const [editedMeals, newMeals] = partition(
+            Object.values(unsavedChanges),
+            'id'
+        );
+
         const { error } = await supabaseClient
             .from<EditedMeal>('meals')
-            .upsert(Object.values(unsavedChanges));
+            .upsert(editedMeals);
 
-        if (!error) {
+        const { error: e2 } = await supabaseClient
+            .from<EditedMeal>('meals')
+            .insert(newMeals);
+
+        if (!error && !e2) {
             queryClient.invalidateQueries(['meals', currentWeek]);
             removeChanges();
         }
