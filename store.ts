@@ -3,6 +3,7 @@ import create from 'zustand';
 
 import { getDaysOfWeek } from '@util/date';
 import { ROWS } from './features/calendar/constants';
+import { omit } from 'lodash';
 
 const getInitialState = (currentWeek: Date) => {
     return Object.fromEntries(
@@ -43,6 +44,10 @@ export const useStore = create<StoreI>((set) => ({
                 ...state.unsavedChanges,
                 [meal.section_key]: meal,
             },
+        })),
+    removeChange: (key) =>
+        set((state) => ({
+            unsavedChanges: omit(state.unsavedChanges, key),
         })),
     removeChanges: () =>
         set(() => ({

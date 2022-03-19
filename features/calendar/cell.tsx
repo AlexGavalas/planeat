@@ -1,14 +1,19 @@
-import { useDrag, useDrop } from 'react-dnd';
+// import { useDrag, useDrop } from 'react-dnd';
 import { useModals } from '@mantine/modals';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
+import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import { useQueryClient } from 'react-query';
 
 import { useStore } from '../../store';
 import { ModalContent } from './edit-meal-modal-content';
 
 export const Cell = ({ id, meal, timestamp, isEdited }: CellProps) => {
     const { user } = useUser();
+    const queryClient = useQueryClient();
 
     const addChange = useStore((state) => state.addChange);
+    const removeChange = useStore((state) => state.removeChange);
+    const currentWeek = useStore((state) => state.currentWeek);
 
     const modals = useModals();
 
@@ -44,16 +49,36 @@ export const Cell = ({ id, meal, timestamp, isEdited }: CellProps) => {
         addChange(editedMeal);
     };
 
+    const handleDelete = async () => {
+        if (!meal) return;
+
+        removeChange(id);
+
+        if (!meal.id) return;
+
+        const { error } = await supabaseClient
+            .from('meals')
+            .delete()
+            .eq('id', meal.id);
+
+        if (!error) {
+            queryClient.invalidateQueries(['meals', currentWeek]);
+            modals.closeAll();
+        }
+    };
+
     return (
         <div
             // ref={drag}
             onClick={() => {
                 modals.openModal({
                     title: 'Edit this meal',
+                    centered: true,
                     children: (
                         <ModalContent
                             handleSave={handleSave}
                             initialMeal={meal?.meal || ''}
+                            deleteMeal={handleDelete}
                         />
                     ),
                 });

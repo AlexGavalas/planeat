@@ -13,6 +13,7 @@ interface StoreI {
     previousWeek: () => void;
     copyToNextWeek: () => void;
     addChange: (meal: EditedMeal) => void;
+    removeChange: (key: string) => void;
     removeChanges: () => void;
 }
 

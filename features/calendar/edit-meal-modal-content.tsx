@@ -5,11 +5,14 @@ import { useModals } from '@mantine/modals';
 export const ModalContent = ({
     handleSave,
     initialMeal,
+    deleteMeal,
 }: {
+    deleteMeal: () => Promise<void>;
     handleSave: (meal: string) => Promise<void>;
     initialMeal: string;
 }) => {
     const modals = useModals();
+
     const [error, setError] = useState('');
 
     return (
@@ -31,6 +34,7 @@ export const ModalContent = ({
         >
             <Group direction="column" spacing="sm" grow>
                 <Textarea
+                    data-autofocus
                     name="meal"
                     placeholder="Enter here"
                     label="Your meal"
@@ -53,7 +57,19 @@ export const ModalContent = ({
                     >
                         Cancel
                     </Button>
-                    <Button type="submit">Save</Button>
+                    <Group>
+                        <Button
+                            color="red"
+                            hidden={!initialMeal}
+                            onClick={() => {
+                                deleteMeal();
+                                modals.closeAll();
+                            }}
+                        >
+                            Delete
+                        </Button>
+                        <Button type="submit">Save</Button>
+                    </Group>
                 </Group>
             </Group>
         </form>
