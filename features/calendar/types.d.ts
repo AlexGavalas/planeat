@@ -6,6 +6,7 @@ type Content = {
 
 interface CellProps {
     id: string;
-    meal?: Meal;
+    meal?: Meal | EditedMeal;
     timestamp: Date;
+    isEdited: boolean;
 }

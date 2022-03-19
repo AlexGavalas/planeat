@@ -1,19 +1,16 @@
 import { useDrag, useDrop } from 'react-dnd';
 import { useModals } from '@mantine/modals';
+import { useUser } from '@supabase/supabase-auth-helpers/react';
 
 import { useStore } from '../../store';
 import { ModalContent } from './edit-meal-modal-content';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
-import { useUser } from '@supabase/supabase-auth-helpers/react';
-import { useQueryClient } from 'react-query';
+import { useState } from 'react';
 
-export const Cell = ({ id, meal, timestamp }: CellProps) => {
+export const Cell = ({ id, meal, timestamp, isEdited }: CellProps) => {
     const { user } = useUser();
-    const queryClient = useQueryClient();
 
     const swapDays = useStore((state) => state.swapDays);
-    const editCell = useStore((state) => state.editCell);
-    const currentWeek = useStore((state) => state.currentWeek);
+    const addChange = useStore((state) => state.addChange);
 
     const modals = useModals();
 
@@ -35,21 +32,19 @@ export const Cell = ({ id, meal, timestamp }: CellProps) => {
         }),
     }));
 
-    const handleSave = async (meal: string) => {
+    const handleSave = async (value: string) => {
         if (!user) return;
 
-        editCell(id, meal);
-
-        const { error } = await supabaseClient.from<Meal>('meals').insert({
-            meal,
+        const editedMeal = {
+            ...meal,
+            meal: value,
             section_key: id,
             user_id: user.id,
             day: timestamp.toISOString(),
-        });
+        };
 
-        if (!error) {
-            queryClient.invalidateQueries(['meals', currentWeek]);
-        }
+        // editCell(id, meal);
+        addChange(editedMeal);
     };
 
     return (
@@ -69,6 +64,7 @@ export const Cell = ({ id, meal, timestamp }: CellProps) => {
             style={{
                 ...(isDragging && { opacity: 0.5 }),
                 ...(isOver && { background: '#cbf5d0' }),
+                ...(isEdited && { border: '2px solid orange' }),
             }}
             className="cell"
         >

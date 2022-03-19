@@ -36,6 +36,18 @@ export const useStore = create<StoreI>((set) => ({
     content: {
         [NOW.toISOString()]: getInitialState(NOW),
     },
+    unsavedChanges: {},
+    addChange: (meal) =>
+        set((state) => ({
+            unsavedChanges: {
+                ...state.unsavedChanges,
+                [meal.section_key]: meal,
+            },
+        })),
+    removeChanges: () =>
+        set(() => ({
+            unsavedChanges: {},
+        })),
     copyToNextWeek: () =>
         set((state) => {
             const nextWeek = addWeeks(state.currentWeek, 1);

@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { startOfISOWeek, endOfISOWeek } from 'date-fns';
 import { DndProvider } from 'react-dnd';
@@ -10,10 +10,14 @@ import { Header } from './header';
 import { useStore } from '../../store';
 
 export const Calendar = () => {
+    const queryClient = useQueryClient();
+
     const goToNextWeek = useStore((state) => state.nextWeek);
     const copyToNextWeek = useStore((state) => state.copyToNextWeek);
     const goToPreviousWeek = useStore((state) => state.previousWeek);
     const currentWeek = useStore((state) => state.currentWeek);
+    const unsavedChanges = useStore((state) => state.unsavedChanges);
+    const removeChanges = useStore((state) => state.removeChanges);
 
     const { data = [], isFetching } = useQuery(
         ['meals', currentWeek],
@@ -29,12 +33,19 @@ export const Calendar = () => {
         }
     );
 
-    const onSave = () => {
-        // TODO
+    const onSave = async () => {
+        const { error } = await supabaseClient
+            .from<EditedMeal>('meals')
+            .upsert(Object.values(unsavedChanges));
+
+        if (!error) {
+            queryClient.invalidateQueries(['meals', currentWeek]);
+            removeChanges();
+        }
     };
 
     const onCancel = () => {
-        // TODO
+        removeChanges();
     };
 
     return (
@@ -53,8 +64,12 @@ export const Calendar = () => {
                 </Group>
                 <Group spacing="sm">
                     <Button onClick={copyToNextWeek}>Copy to next week</Button>
-                    <Button onClick={onCancel}>Cancel &#x2715;</Button>
-                    <Button onClick={onSave}>Save &#x2713;</Button>
+                    {Object.keys(unsavedChanges).length > 0 && (
+                        <>
+                            <Button onClick={onCancel}>Cancel &#x2715;</Button>
+                            <Button onClick={onSave}>Save &#x2713;</Button>
+                        </>
+                    )}
                 </Group>
             </div>
         </section>

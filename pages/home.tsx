@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { startOfDay, endOfDay } from 'date-fns';
+import { fromPairs, map } from 'lodash';
 
 import {
     AppShell,
@@ -46,14 +47,13 @@ export const getServerSideProps = withAuthRequired({
             .gte('day', startOfDay(NOW).toISOString())
             .lte('day', endOfDay(NOW).toISOString());
 
-        const dailyMeals = data?.reduce((acc: MealsMap, meal) => {
-            acc[meal.section_key] = meal;
-            return acc;
-        }, {});
+        const dailyMeals = fromPairs(
+            map(data, (item) => [item.section_key, item])
+        );
 
         return {
             props: {
-                dailyMeals: dailyMeals || {},
+                dailyMeals,
                 user,
             },
         };

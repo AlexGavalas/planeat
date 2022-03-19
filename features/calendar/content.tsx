@@ -7,6 +7,7 @@ import { getDaysOfWeek } from '@util/date';
 
 export const Content = ({ meals }: { meals: Meal[] }) => {
     const currentWeek = useStore((state) => state.currentWeek);
+    const unsavedChanges = useStore((state) => state.unsavedChanges);
 
     const mealsMap = useMemo(
         () =>
@@ -29,7 +30,13 @@ export const Content = ({ meals }: { meals: Meal[] }) => {
                                     key={label}
                                     id={`${row}_${label}`}
                                     timestamp={timestamp}
-                                    meal={mealsMap[`${row}_${label}`]}
+                                    meal={
+                                        unsavedChanges[`${row}_${label}`] ||
+                                        mealsMap[`${row}_${label}`]
+                                    }
+                                    isEdited={
+                                        !!unsavedChanges[`${row}_${label}`]
+                                    }
                                 />
                             )
                         )}
