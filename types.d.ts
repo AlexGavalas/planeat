@@ -7,11 +7,10 @@ namespace NodeJS {
 
 interface StoreI {
     currentWeek: Date;
-    content: Record<string, Record<string, Content>>;
     unsavedChanges: Record<string, EditedMeal>;
     nextWeek: () => void;
     previousWeek: () => void;
-    copyToNextWeek: () => void;
+    copyToNextWeek: (meals: Meal[]) => void;
     addChange: (meal: EditedMeal) => void;
     removeChange: (key: string) => void;
     removeChanges: () => void;
@@ -27,4 +26,4 @@ type Meal = {
 
 type EditedMeal = Omit<Meal, 'id'> & { id?: string };
 
-type MealsMap = Record<string, Meal>;
+type MealsMap = Record<string, Meal | EditedMeal>;

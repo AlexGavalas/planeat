@@ -73,7 +73,9 @@ export const Calendar = () => {
                     <Button onClick={goToNextWeek}>Next week &#xbb;</Button>
                 </Group>
                 <Group spacing="sm">
-                    <Button onClick={copyToNextWeek}>Copy to next week</Button>
+                    <Button onClick={() => copyToNextWeek(data)}>
+                        Copy to next week
+                    </Button>
                     {Object.keys(unsavedChanges).length > 0 && (
                         <>
                             <Button onClick={onCancel}>Cancel &#x2715;</Button>
