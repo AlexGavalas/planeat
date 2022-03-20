@@ -48,8 +48,12 @@ const refsLayer = (targetWeight: number) => (props: CustomLayerProps) => {
     );
 };
 
-const LineChart = () => {
-    const targetWeight = 90;
+interface LineChartProps {
+    target?: number;
+    unit: string;
+}
+
+const LineChart = ({ target, unit }: LineChartProps) => {
     const max = useMemo(() => maxBy(data[0].data, 'y')?.y || 0, [data]);
     const min = useMemo(() => minBy(data[0].data, 'y')?.y || 0, [data]);
 
@@ -69,7 +73,7 @@ const LineChart = () => {
             }}
             yScale={{
                 type: 'linear',
-                min: Math.min(min, targetWeight) - 2,
+                min: Math.min(min, target || Infinity) - 2,
                 max: max + 2,
             }}
             curve="natural"
@@ -111,21 +115,23 @@ const LineChart = () => {
                             transform: transformString,
                         }}
                     >
-                        {point.data.xFormatted}: {point.data.yFormatted} kg
+                        {point.data.xFormatted}: {point.data.yFormatted} {unit}
                     </Card>
                 );
             }}
-            layers={[
-                'grid',
-                'markers',
-                'axes',
-                'areas',
-                'lines',
-                refsLayer(targetWeight),
-                'points',
-                'crosshair',
-                'mesh',
-            ]}
+            {...(target && {
+                layers: [
+                    'grid',
+                    'markers',
+                    'axes',
+                    'areas',
+                    'lines',
+                    refsLayer(target),
+                    'points',
+                    'crosshair',
+                    'mesh',
+                ],
+            })}
         />
     );
 };

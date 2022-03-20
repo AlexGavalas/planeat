@@ -31,7 +31,7 @@ export const ProgressIndicator = ({
                     left: `calc(${percent}% - 50px)`,
                 }}
             >
-                {value}
+                {value} %
                 <NavArrowDown />
             </div>
             <div className={styles.sections}>

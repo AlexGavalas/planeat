@@ -55,7 +55,7 @@ export const FatPercentTimeline = () => {
                 Μεταβολή λίπους
             </Title>
             <Box style={{ height: 200, overflow: 'hidden' }}>
-                <LineChart />
+                <LineChart unit="%" />
             </Box>
         </>
     );

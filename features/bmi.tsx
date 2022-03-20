@@ -55,7 +55,7 @@ export const BMITimeline = () => {
                 Μεταβολή λίπους
             </Title>
             <Box style={{ height: 200, overflow: 'hidden' }}>
-                <LineChart />
+                <LineChart unit="kg" target={85} />
             </Box>
         </>
     );

@@ -88,7 +88,7 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
                 </Navbar>
             }
         >
-            <Group direction="column">
+            <Group>
                 <Text size="lg">
                     Welcome{' '}
                     <span style={{ fontWeight: 'bold' }}>
@@ -98,7 +98,7 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
             </Group>
             <Group>
                 <Link href="/meal-plan" passHref>
-                    <Button component="a">View meal plan</Button>
+                    <Button component="a">View weekly meal plan</Button>
                 </Link>
             </Group>
             <Divider my="lg" />
