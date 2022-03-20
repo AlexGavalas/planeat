@@ -3,6 +3,10 @@ import { EditPencil, Cancel, Plus, SaveFloppyDisk } from 'iconoir-react';
 import { format, parseISO } from 'date-fns';
 import { Calendar } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
+import { useEventListener } from '@mantine/hooks';
+import { useQuery, useQueryClient } from 'react-query';
+import { useUser } from '@supabase/supabase-auth-helpers/react';
+import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 
 import {
     ActionIcon,
@@ -16,6 +20,8 @@ import {
     Space,
     Button,
     Center,
+    Box,
+    LoadingOverlay,
 } from '@mantine/core';
 
 type WeightData = {
@@ -25,41 +31,56 @@ type WeightData = {
     user_id: string;
 };
 
-const data: WeightData[] = [
-    { date: new Date().toISOString(), id: '1', user_id: '1', weight: 88 },
-    { date: new Date().toISOString(), id: '2', user_id: '1', weight: 88 },
-    { date: new Date().toISOString(), id: '3', user_id: '1', weight: 88 },
-];
-
-const Row = ({ item }: { item: WeightData }) => {
+const Row = ({ item, page }: { item: WeightData; page: number }) => {
     const [show, setShow] = useState(false);
     const [edit, setEdit] = useState(false);
     const [newWeight, setNewWeight] = useState(item.weight);
 
-    const handleSave = () => {
-        setEdit(false);
+    const queryClient = useQueryClient();
+
+    const handleSave = async () => {
+        const { error } = await supabaseClient
+            .from('weight-measurements')
+            .update({
+                weight: newWeight,
+            })
+            .eq('id', item.id);
+
+        if (!error) {
+            queryClient.invalidateQueries(['measurements', page]);
+            setEdit(false);
+        }
     };
 
     const handleCancel = () => {
         setEdit(false);
     };
 
+    const ref = useEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            handleCancel();
+        }
+    });
+
     return (
         <tr
             onMouseEnter={() => setShow(true)}
             onMouseLeave={() => setShow(false)}
             style={{ height: '3rem' }}
+            ref={ref}
         >
             <td>{format(parseISO(item.date), 'dd/MM/yy')}</td>
             <td style={{ width: '50%' }}>
                 <Group>
                     {edit ? (
                         <NumberInput
+                            autoFocus
                             size="xs"
                             defaultValue={item.weight}
                             onChange={(v) => {
                                 v && setNewWeight(v);
                             }}
+                            precision={2}
                         />
                     ) : (
                         item.weight
@@ -97,29 +118,48 @@ const Row = ({ item }: { item: WeightData }) => {
     );
 };
 
-const NewWeightModalContent = () => {
+const NewWeightModalContent = ({
+    userId,
+    onSave,
+}: {
+    userId?: string;
+    onSave: () => void;
+}) => {
     const modals = useModals();
 
-    const [value, setValue] = useState(new Date());
+    const [date, setDate] = useState(new Date());
     const [weight, setWeight] = useState<number>();
     const [error, setError] = useState('');
 
-    const handleSave: FormEventHandler = (e) => {
+    const handleSave: FormEventHandler = async (e) => {
         e.preventDefault();
+
+        if (!userId) return;
 
         if (!weight) {
             setError('You forgot to input your weight');
             return;
         }
 
-        modals.closeAll();
+        const { error } = await supabaseClient
+            .from('weight-measurements')
+            .insert({
+                user_id: userId,
+                weight,
+                date,
+            });
+
+        if (!error) {
+            onSave();
+            modals.closeAll();
+        }
     };
 
     return (
         <form onSubmit={handleSave}>
             <Text>Date measured</Text>
             <Center>
-                <Calendar value={value} onChange={setValue} />
+                <Calendar value={date} onChange={setDate} />
             </Center>
             <Space h={20} />
             <NumberInput
@@ -145,8 +185,51 @@ const NewWeightModalContent = () => {
     );
 };
 
+const PAGE_SIZE = 2;
+
 const Settings = () => {
     const modals = useModals();
+    const { user } = useUser();
+    const queryClient = useQueryClient();
+
+    const [page, setPage] = useState(1);
+
+    const { data: count, isFetched } = useQuery(
+        ['measurements-count'],
+        async () => {
+            const { count } = await supabaseClient
+                .from('weight-measurements')
+                .select('id', { count: 'exact' });
+
+            if (!count) throw new Error(`Could not get count`);
+
+            return count / PAGE_SIZE;
+        },
+        {
+            enabled: Boolean(user),
+        }
+    );
+
+    const { data: measurements } = useQuery(
+        ['measurements', page],
+        async () => {
+            const { data } = await supabaseClient
+                .from('weight-measurements')
+                .select('*')
+                .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
+                .order('date', { ascending: false });
+
+            return data;
+        },
+        {
+            enabled: Boolean(count),
+        }
+    );
+
+    const onNewWeightSave = () => {
+        setPage(1);
+        queryClient.invalidateQueries(['measurements']);
+    };
 
     return (
         <Container>
@@ -161,27 +244,41 @@ const Settings = () => {
                             title: 'New weight',
                             centered: true,
                             size: 'sm',
-                            children: <NewWeightModalContent />,
+                            children: (
+                                <NewWeightModalContent
+                                    userId={user?.id}
+                                    onSave={onNewWeightSave}
+                                />
+                            ),
                         });
                     }}
                 >
                     <Plus />
                 </ActionIcon>
             </Group>
-            <Table highlightOnHover={true}>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Weight</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((item) => (
-                        <Row key={item.id} item={item} />
-                    ))}
-                </tbody>
-            </Table>
-            <Pagination total={10} position="right" />
+            <Box style={{ position: 'relative' }}>
+                <LoadingOverlay visible={!measurements && !isFetched} />
+                <Table highlightOnHover={true}>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Weight</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {(measurements || []).map((item) => (
+                            <Row key={item.id} item={item} page={page} />
+                        ))}
+                    </tbody>
+                </Table>
+                {count && count > PAGE_SIZE && (
+                    <Pagination
+                        total={count}
+                        position="right"
+                        onChange={setPage}
+                    />
+                )}
+            </Box>
         </Container>
     );
 };
