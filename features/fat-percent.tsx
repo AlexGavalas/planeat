@@ -1,4 +1,11 @@
+import dynamic from 'next/dynamic';
+import { Box, Title } from '@mantine/core';
+
 import { ProgressIndicator } from '@components/progress/indicator';
+
+const LineChart = dynamic(() => import('@components/charts/line'), {
+    ssr: false,
+});
 
 const SECTIONS = [
     {
@@ -38,5 +45,18 @@ export const FatPercent = ({ value }: { value: number }) => {
             percent={(value * 100) / MAX_FAT_PERCENT}
             sections={SECTIONS}
         />
+    );
+};
+
+export const FatPercentTimeline = () => {
+    return (
+        <>
+            <Title order={4} pt={20}>
+                Μεταβολή λίπους
+            </Title>
+            <Box style={{ height: 200, overflow: 'hidden' }}>
+                <LineChart />
+            </Box>
+        </>
     );
 };

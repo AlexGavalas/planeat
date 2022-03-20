@@ -1,3 +1,4 @@
+import { Box, Title } from '@mantine/core';
 import { NavArrowDown } from 'iconoir-react';
 
 import styles from './indicator.module.css';
@@ -22,8 +23,8 @@ export const ProgressIndicator = ({
     sections,
 }: ProgressIndicatorProps) => {
     return (
-        <div className={styles.container}>
-            <p className={styles.label}>{label}</p>
+        <Box>
+            <Title order={3}>{label}</Title>
             <div
                 className={styles.indicator}
                 style={{
@@ -47,6 +48,6 @@ export const ProgressIndicator = ({
                     </div>
                 ))}
             </div>
-        </div>
+        </Box>
     );
 };

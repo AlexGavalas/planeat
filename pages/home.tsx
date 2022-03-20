@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { startOfDay, endOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
 
@@ -22,8 +21,8 @@ import {
 } from '@supabase/supabase-auth-helpers/nextjs';
 
 import { DailyMeal } from '@features/daily-meal';
-import { FatPercent } from '@features/fat-percent';
-import { CurrentBMI } from '@features/bmi';
+import { FatPercent, FatPercentTimeline } from '@features/fat-percent';
+import { BMITimeline, CurrentBMI } from '@features/bmi';
 
 export const getServerSideProps = withAuthRequired({
     redirectTo: '/',
@@ -105,8 +104,10 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
             <Divider my="lg" />
             <Box>
                 <FatPercent value={userCurrentStats.fatPercent} />
+                <FatPercentTimeline />
                 <Divider my="lg" />
                 <CurrentBMI value={userBMI} />
+                <BMITimeline />
             </Box>
         </AppShell>
     );
