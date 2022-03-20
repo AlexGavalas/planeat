@@ -11,6 +11,7 @@ import {
     Navbar,
     Box,
     createStyles,
+    Divider,
 } from '@mantine/core';
 
 import {
@@ -21,8 +22,8 @@ import {
 } from '@supabase/supabase-auth-helpers/nextjs';
 
 import { DailyMeal } from '@features/daily-meal';
-
-const Stats = dynamic(() => import('@features/stats'), { ssr: false });
+import { FatPercent } from '@features/fat-percent';
+import { CurrentBMI } from '@features/bmi';
 
 export const getServerSideProps = withAuthRequired({
     redirectTo: '/',
@@ -69,6 +70,17 @@ const useStyles = createStyles({
 const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
     const { classes } = useStyles();
 
+    const userCurrentStats = {
+        fatPercent: 28.9,
+        weight: 88.8,
+        height: 1.74,
+    };
+
+    const userBMI = +(
+        userCurrentStats.weight /
+        userCurrentStats.height ** 2
+    ).toFixed(1);
+
     return (
         <AppShell
             navbar={
@@ -90,8 +102,11 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
                     <Button component="a">View meal plan</Button>
                 </Link>
             </Group>
-            <Box style={{ height: 400 }}>
-                <Stats />
+            <Divider my="lg" />
+            <Box>
+                <FatPercent value={userCurrentStats.fatPercent} />
+                <Divider my="lg" />
+                <CurrentBMI value={userBMI} />
             </Box>
         </AppShell>
     );
