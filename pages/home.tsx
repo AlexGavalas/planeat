@@ -100,6 +100,9 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
                 <Link href="/meal-plan" passHref>
                     <Button component="a">View weekly meal plan</Button>
                 </Link>
+                <Link href="/settings" passHref>
+                    <Button component="a">User settings</Button>
+                </Link>
             </Group>
             <Divider my="lg" />
             <Box>
