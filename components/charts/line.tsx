@@ -1,35 +1,7 @@
 import { useMemo } from 'react';
 import { Card } from '@mantine/core';
 import { ResponsiveLine, CustomLayerProps } from '@nivo/line';
-import { addDays, format } from 'date-fns';
 import { maxBy, minBy } from 'lodash';
-
-const NOW = new Date();
-
-const data = [
-    {
-        id: 'fat-percent',
-        color: 'blue',
-        data: [
-            {
-                x: format(NOW, 'dd/MM/yy'),
-                y: 95,
-            },
-            {
-                x: format(addDays(NOW, 10), 'dd/MM/yy'),
-                y: 93.2,
-            },
-            {
-                x: format(addDays(NOW, 24), 'dd/MM/yy'),
-                y: 89,
-            },
-            {
-                x: format(addDays(NOW, 44), 'dd/MM/yy'),
-                y: 87,
-            },
-        ],
-    },
-];
 
 // eslint-disable-next-line react/display-name
 const refsLayer = (targetWeight: number) => (props: CustomLayerProps) => {
@@ -48,12 +20,20 @@ const refsLayer = (targetWeight: number) => (props: CustomLayerProps) => {
     );
 };
 
-interface LineChartProps {
+interface LineChartProps<DataItem> {
     target?: number;
     unit: string;
+    data: {
+        id: string;
+        data: DataItem[];
+    }[];
 }
 
-const LineChart = ({ target, unit }: LineChartProps) => {
+const LineChart = <DataItem extends { x: string; y: number }>({
+    data,
+    target,
+    unit,
+}: LineChartProps<DataItem>) => {
     const max = useMemo(() => maxBy(data[0].data, 'y')?.y || 0, [data]);
     const min = useMemo(() => minBy(data[0].data, 'y')?.y || 0, [data]);
 

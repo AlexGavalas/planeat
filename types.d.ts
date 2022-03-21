@@ -27,3 +27,10 @@ type Meal = {
 type EditedMeal = Omit<Meal, 'id'> & { id?: string };
 
 type MealsMap = Record<string, Meal | EditedMeal>;
+
+type WeightMeasurement = {
+    id: string;
+    weight: number;
+    date: string;
+    user_id: string;
+};
