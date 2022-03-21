@@ -4,7 +4,7 @@ import { format, parseISO } from 'date-fns';
 import { Calendar } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
 import { useEventListener } from '@mantine/hooks';
-import { useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 
@@ -22,6 +22,8 @@ import {
     Center,
     Box,
     LoadingOverlay,
+    Switch,
+    Divider,
 } from '@mantine/core';
 
 type WeightData = {
@@ -194,16 +196,60 @@ const Settings = () => {
 
     const [page, setPage] = useState(1);
 
-    const { data: count, isFetched } = useQuery(
+    const { data: profile } = useQuery(
+        ['user'],
+        async () => {
+            if (!user) return;
+
+            const { data } = await supabaseClient
+                .from('users')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+
+            return data;
+        },
+        {
+            enabled: Boolean(user),
+        }
+    );
+
+    const { mutate } = useMutation(
+        async (value: boolean) => {
+            if (!user) return;
+
+            const { data, error } = await supabaseClient
+                .from('users')
+                .update({ is_nutritionist: value })
+                .eq('id', user.id);
+
+            if (error) {
+                throw error;
+            }
+
+            return data;
+        },
+        {
+            onMutate: () => {
+                queryClient.setQueryData(['user'], {
+                    ...profile,
+                    is_nutritionist: !profile.is_nutritionist,
+                });
+            },
+            onError: () => {
+                queryClient.invalidateQueries(['user']);
+            },
+        }
+    );
+
+    const { data: count = 0, isFetched } = useQuery(
         ['measurements-count'],
         async () => {
             const { count } = await supabaseClient
                 .from('weight-measurements')
                 .select('id', { count: 'exact' });
 
-            if (!count) throw new Error(`Could not get count`);
-
-            return count / PAGE_SIZE;
+            return (count || 0) / PAGE_SIZE;
         },
         {
             enabled: Boolean(user),
@@ -233,8 +279,15 @@ const Settings = () => {
 
     return (
         <Container>
+            <Switch
+                checked={profile?.is_nutritionist || false}
+                onChange={({ target: { checked } }) => mutate(checked)}
+                label="Είμαι διαιτολόγος"
+                py={20}
+            />
+            <Divider />
             <Group position="apart" py={20}>
-                <Title order={3}>Your weight measurements</Title>
+                <Title order={3}>Μετρήσεις βάρους</Title>
                 <ActionIcon
                     title="Add a new measurement"
                     variant="light"
@@ -258,25 +311,37 @@ const Settings = () => {
             </Group>
             <Box style={{ position: 'relative', minHeight: 200 }}>
                 <LoadingOverlay visible={!measurements && !isFetched} />
-                <Table highlightOnHover={true}>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th style={{ width: '50%' }}>Weight</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {(measurements || []).map((item) => (
-                            <Row key={item.id} item={item} page={page} />
-                        ))}
-                    </tbody>
-                </Table>
-                {count && count > PAGE_SIZE && (
-                    <Pagination
-                        total={count}
-                        position="right"
-                        onChange={setPage}
-                    />
+                {measurements ? (
+                    <>
+                        <Table highlightOnHover={true}>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th style={{ width: '50%' }}>Weight</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {(measurements || []).map((item) => (
+                                    <Row
+                                        key={item.id}
+                                        item={item}
+                                        page={page}
+                                    />
+                                ))}
+                            </tbody>
+                        </Table>
+                        {count > PAGE_SIZE && (
+                            <Pagination
+                                total={count}
+                                position="right"
+                                onChange={setPage}
+                            />
+                        )}
+                    </>
+                ) : (
+                    <Center>
+                        <Title order={4}>Δεν έχεις ακόμα καμία μέτρηση</Title>
+                    </Center>
                 )}
             </Box>
         </Container>
