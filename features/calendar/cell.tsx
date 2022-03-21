@@ -4,16 +4,15 @@ import { useUser } from '@supabase/supabase-auth-helpers/react';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { useQueryClient } from 'react-query';
 
-import { useStore } from '../../store';
+import { useCurrentWeek, useUnsavedChanges } from '../../store';
 import { ModalContent } from './edit-meal-modal-content';
 
 export const Cell = ({ id, meal, timestamp, isEdited }: CellProps) => {
     const { user } = useUser();
     const queryClient = useQueryClient();
 
-    const addChange = useStore((state) => state.addChange);
-    const removeChange = useStore((state) => state.removeChange);
-    const currentWeek = useStore((state) => state.currentWeek);
+    const { currentWeek } = useCurrentWeek();
+    const { addChange, removeChange } = useUnsavedChanges();
 
     const modals = useModals();
 

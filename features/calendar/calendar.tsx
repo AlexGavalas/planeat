@@ -8,17 +8,19 @@ import { partition } from 'lodash';
 
 import { Content } from './content';
 import { Header } from './header';
-import { useStore } from '../../store';
+
+import {
+    useCurrentWeek,
+    useUnsavedChanges,
+    useWeeklyScheduleOps,
+} from '../../store';
 
 export const Calendar = () => {
     const queryClient = useQueryClient();
 
-    const goToNextWeek = useStore((state) => state.nextWeek);
-    const copyToNextWeek = useStore((state) => state.copyToNextWeek);
-    const goToPreviousWeek = useStore((state) => state.previousWeek);
-    const currentWeek = useStore((state) => state.currentWeek);
-    const unsavedChanges = useStore((state) => state.unsavedChanges);
-    const removeChanges = useStore((state) => state.removeChanges);
+    const { currentWeek, nextWeek, previousWeek } = useCurrentWeek();
+    const { unsavedChanges, removeChanges } = useUnsavedChanges();
+    const { copyToNextWeek } = useWeeklyScheduleOps();
 
     const { data = [], isFetching } = useQuery(
         ['meals', currentWeek],
@@ -67,10 +69,8 @@ export const Calendar = () => {
             </DndProvider>
             <div className="controls-wrapper">
                 <Group spacing="sm">
-                    <Button onClick={goToPreviousWeek}>
-                        &#xab; Previous week
-                    </Button>
-                    <Button onClick={goToNextWeek}>Next week &#xbb;</Button>
+                    <Button onClick={previousWeek}>&#xab; Previous week</Button>
+                    <Button onClick={nextWeek}>Next week &#xbb;</Button>
                 </Group>
                 <Group spacing="sm">
                     <Button onClick={() => copyToNextWeek(data)}>

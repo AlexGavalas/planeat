@@ -1,10 +1,10 @@
 import { isToday } from 'date-fns';
 
-import { useStore } from '../../store';
+import { useCurrentWeek } from '../../store';
 import { getDaysOfWeek } from '@util/date';
 
 export const Header = () => {
-    const currentWeek = useStore((state) => state.currentWeek);
+    const { currentWeek } = useCurrentWeek();
 
     return (
         <div className="calendar-header">

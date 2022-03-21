@@ -2,12 +2,12 @@ import { useMemo } from 'react';
 
 import { Cell } from './cell';
 import { ROWS } from './constants';
-import { useStore } from '../../store';
+import { useCurrentWeek, useUnsavedChanges } from '../../store';
 import { getDaysOfWeek } from '@util/date';
 
 export const Content = ({ meals }: { meals: Meal[] }) => {
-    const currentWeek = useStore((state) => state.currentWeek);
-    const unsavedChanges = useStore((state) => state.unsavedChanges);
+    const { currentWeek } = useCurrentWeek();
+    const { unsavedChanges } = useUnsavedChanges();
 
     const mealsMap = useMemo(
         () =>

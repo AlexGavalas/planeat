@@ -5,17 +5,6 @@ namespace NodeJS {
     }
 }
 
-interface StoreI {
-    currentWeek: Date;
-    unsavedChanges: Record<string, EditedMeal>;
-    nextWeek: () => void;
-    previousWeek: () => void;
-    copyToNextWeek: (meals: Meal[]) => void;
-    addChange: (meal: EditedMeal) => void;
-    removeChange: (key: string) => void;
-    removeChanges: () => void;
-}
-
 type Meal = {
     id: string;
     meal: string;

@@ -1,6 +1,7 @@
 import { add, addWeeks, format, parse, parseISO, subWeeks } from 'date-fns';
-import { fromPairs, map, omit } from 'lodash';
-import create from 'zustand';
+import { set, omit } from 'lodash/fp';
+import { atom, useAtom } from 'jotai';
+import { useCallback } from 'react';
 
 const cloneState = (meals: Meal[]) => {
     return meals.reduce((acc: MealsMap, meal) => {
@@ -22,49 +23,64 @@ const cloneState = (meals: Meal[]) => {
     }, {});
 };
 
-const NOW = new Date();
+const currentWeekAtom = atom(new Date());
+const unsavedChangesAtom = atom<Record<string, EditedMeal>>({});
 
-export const useStore = create<StoreI>((set) => ({
-    currentWeek: NOW,
-    unsavedChanges: {},
-    addChange: (meal) =>
-        set((state) => ({
-            unsavedChanges: {
-                ...state.unsavedChanges,
-                [meal.section_key]: meal,
-            },
-        })),
-    removeChange: (key) =>
-        set((state) => ({
-            unsavedChanges: omit(state.unsavedChanges, key),
-        })),
-    removeChanges: () =>
-        set(() => ({
-            unsavedChanges: {},
-        })),
-    copyToNextWeek: (meals: Meal[]) =>
-        set((state) => {
-            const nextWeek = addWeeks(state.currentWeek, 1);
+export const useCurrentWeek = () => {
+    const [currentWeek, setCurrentWeek] = useAtom(currentWeekAtom);
 
-            return {
-                currentWeek: nextWeek,
-                unsavedChanges: {
-                    ...state.unsavedChanges,
-                    ...fromPairs(
-                        map(cloneState(meals), (item) => [
-                            item.section_key,
-                            item,
-                        ])
-                    ),
-                },
-            };
-        }),
-    nextWeek: () =>
-        set((state) => ({
-            currentWeek: addWeeks(state.currentWeek, 1),
-        })),
-    previousWeek: () =>
-        set((state) => ({
-            currentWeek: subWeeks(state.currentWeek, 1),
-        })),
-}));
+    const nextWeek = useCallback(() => {
+        setCurrentWeek((prevWeek) => addWeeks(prevWeek, 1));
+    }, []);
+
+    const previousWeek = useCallback(() => {
+        setCurrentWeek((prevWeek) => subWeeks(prevWeek, 1));
+    }, []);
+
+    return {
+        currentWeek,
+        nextWeek,
+        previousWeek,
+    };
+};
+
+export const useUnsavedChanges = () => {
+    const [unsavedChanges, setUnsavedChanges] = useAtom(unsavedChangesAtom);
+
+    const addChange = useCallback((meal: Meal | EditedMeal) => {
+        setUnsavedChanges((prevChanges) =>
+            set(meal.section_key, meal, prevChanges)
+        );
+    }, []);
+
+    const removeChange = useCallback((key: string) => {
+        setUnsavedChanges((prevChanges) => omit(key, prevChanges));
+    }, []);
+
+    const removeChanges = useCallback(() => {
+        setUnsavedChanges({});
+    }, []);
+
+    return {
+        unsavedChanges,
+        addChange,
+        removeChange,
+        removeChanges,
+    };
+};
+
+export const useWeeklyScheduleOps = () => {
+    const { nextWeek } = useCurrentWeek();
+    const { addChange } = useUnsavedChanges();
+
+    const copyToNextWeek = useCallback((meals: Meal[]) => {
+        nextWeek();
+        Object.values(cloneState(meals)).forEach((meal) => {
+            addChange(meal);
+        });
+    }, []);
+
+    return {
+        copyToNextWeek,
+    };
+};
