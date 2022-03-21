@@ -1,12 +1,16 @@
+import type { GetServerSideProps } from 'next';
 import { FormEventHandler, useState } from 'react';
 import { EditPencil, Cancel, Plus, SaveFloppyDisk } from 'iconoir-react';
 import { format, parseISO } from 'date-fns';
 import { Calendar } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
-import { useEventListener } from '@mantine/hooks';
+import { useDebouncedValue, useEventListener } from '@mantine/hooks';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import {
+    supabaseClient,
+    getUser,
+} from '@supabase/supabase-auth-helpers/nextjs';
 
 import {
     ActionIcon,
@@ -24,6 +28,7 @@ import {
     LoadingOverlay,
     Switch,
     Divider,
+    Autocomplete,
 } from '@mantine/core';
 
 type WeightData = {
@@ -31,6 +36,23 @@ type WeightData = {
     date: string;
     weight: number;
     user_id: string;
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const { user } = await getUser(context).catch(() => ({ user: null }));
+
+    if (!user) {
+        return {
+            redirect: {
+                destination: '/home',
+                permanent: false,
+            },
+        };
+    }
+
+    return {
+        props: {},
+    };
 };
 
 const Row = ({ item, page }: { item: WeightData; page: number }) => {
@@ -195,6 +217,9 @@ const Settings = () => {
     const queryClient = useQueryClient();
 
     const [page, setPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 250);
 
     const { data: profile } = useQuery(
         ['user'],
@@ -272,6 +297,22 @@ const Settings = () => {
         }
     );
 
+    const { data, isFetching } = useQuery(
+        ['nutritionists', debouncedSearchQuery],
+        async () => {
+            const { data } = await supabaseClient
+                .from('users')
+                .select('*')
+                .ilike('full_name', `%${debouncedSearchQuery}%`)
+                .limit(5);
+
+            return data;
+        },
+        {
+            enabled: Boolean(debouncedSearchQuery),
+        }
+    );
+
     const onNewWeightSave = () => {
         setPage(1);
         queryClient.invalidateQueries(['measurements']);
@@ -279,13 +320,27 @@ const Settings = () => {
 
     return (
         <Container>
-            <Switch
-                checked={profile?.is_nutritionist || false}
-                onChange={({ target: { checked } }) => mutate(checked)}
-                label="Είμαι διαιτολόγος"
-                py={20}
-            />
-            <Divider />
+            <Group position="apart" mt={10}>
+                <Switch
+                    checked={profile?.is_nutritionist || false}
+                    onChange={({ target: { checked } }) => mutate(checked)}
+                    label="Είμαι διαιτολόγος"
+                />
+                <Text>ή</Text>
+                <Autocomplete
+                    label="Βρες τον διαιτολόγο σου"
+                    placeholder="Αναζήτηση"
+                    data={(data || []).map(({ full_name }) => full_name)}
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                    nothingFound={
+                        debouncedSearchQuery && !isFetching && !data?.length
+                            ? 'Δεν βρέθηκαν αποτελέσματα'
+                            : ''
+                    }
+                />
+            </Group>
+            <Divider my={20} />
             <Group position="apart" py={20}>
                 <Title order={3}>Μετρήσεις βάρους</Title>
                 <ActionIcon
