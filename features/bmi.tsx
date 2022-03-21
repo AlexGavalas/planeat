@@ -63,10 +63,12 @@ export const BMITimeline = () => {
         },
         {
             select: ({ data }) =>
-                data?.map(({ date, weight }) => ({
-                    y: weight,
-                    x: date,
-                })),
+                data?.length
+                    ? data.map(({ date, weight }) => ({
+                          y: weight,
+                          x: date,
+                      }))
+                    : null,
         }
     );
 

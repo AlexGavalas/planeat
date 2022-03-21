@@ -8,7 +8,7 @@ import {
 export const getServerSideProps = withAuthRequired({
     redirectTo: '/',
     getServerSideProps: async (context) => {
-        const { user } = await getUser(context);
+        const { user } = await getUser(context).catch(() => ({ user: null }));
 
         return {
             props: {},

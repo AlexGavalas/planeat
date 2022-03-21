@@ -27,7 +27,7 @@ import { BMITimeline, CurrentBMI } from '@features/bmi';
 export const getServerSideProps = withAuthRequired({
     redirectTo: '/',
     getServerSideProps: async (context) => {
-        const { user } = await getUser(context);
+        const { user } = await getUser(context).catch(() => ({ user: null }));
 
         if (!user) {
             return {
@@ -35,7 +35,6 @@ export const getServerSideProps = withAuthRequired({
                     destination: '/',
                     permanent: false,
                 },
-                props: {},
             };
         }
 
