@@ -256,13 +256,13 @@ const Settings = () => {
                     <Plus />
                 </ActionIcon>
             </Group>
-            <Box style={{ position: 'relative' }}>
+            <Box style={{ position: 'relative', minHeight: 200 }}>
                 <LoadingOverlay visible={!measurements && !isFetched} />
                 <Table highlightOnHover={true}>
                     <thead>
                         <tr>
                             <th>Date</th>
-                            <th>Weight</th>
+                            <th style={{ width: '50%' }}>Weight</th>
                         </tr>
                     </thead>
                     <tbody>
