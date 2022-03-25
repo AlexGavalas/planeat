@@ -10,7 +10,16 @@ import { ModalContent } from './edit-meal-modal-content';
 import { useHover } from '@mantine/hooks';
 import { EditPencil } from 'iconoir-react';
 
-export const Cell = ({ id, meal, timestamp, isEdited }: CellProps) => {
+export const Cell = ({
+    id,
+    meal,
+    timestamp,
+    isEdited,
+    isRow,
+    daysOfWeek,
+    row,
+    mealsMap,
+}: CellProps) => {
     const { user } = useUser();
     const { hovered, ref } = useHover();
     const queryClient = useQueryClient();
@@ -41,6 +50,26 @@ export const Cell = ({ id, meal, timestamp, isEdited }: CellProps) => {
     const handleSave = async (value: string) => {
         if (!user) return;
 
+        if (isRow && daysOfWeek && mealsMap) {
+            for (const { timestamp, label } of daysOfWeek) {
+                const key = `${row}_${label}`;
+
+                const meal = mealsMap[key];
+
+                const editedMeal = {
+                    ...meal,
+                    meal: value,
+                    section_key: key,
+                    user_id: user.id,
+                    day: timestamp.toISOString(),
+                };
+
+                addChange(editedMeal);
+            }
+
+            return;
+        }
+
         const editedMeal = {
             ...meal,
             meal: value,
@@ -55,28 +84,44 @@ export const Cell = ({ id, meal, timestamp, isEdited }: CellProps) => {
     const handleDelete = async () => {
         if (!meal) return;
 
-        removeChange(id);
+        if (isRow && daysOfWeek) {
+            for (const { label } of daysOfWeek) {
+                removeChange(`${row}_${label}`);
+            }
+        } else {
+            removeChange(id);
+        }
 
         if (!meal.id) return;
 
-        const { error } = await supabaseClient
-            .from('meals')
-            .delete()
-            .eq('id', meal.id);
-
-        if (!error) {
-            queryClient.invalidateQueries(['meals', currentWeek]);
-            modals.closeAll();
+        if (isRow && daysOfWeek) {
+            for (const { label } of daysOfWeek) {
+                await supabaseClient
+                    .from('meals')
+                    .delete()
+                    .eq('section_key', `${row}_${label}`);
+            }
+        } else {
+            await supabaseClient.from('meals').delete().eq('id', meal.id);
         }
+
+        queryClient.invalidateQueries(['meals', currentWeek]);
+        modals.closeAll();
     };
 
     return (
-        <Box style={{ position: 'relative' }} ref={ref}>
+        <Box
+            style={{
+                position: 'relative',
+                ...(isRow && { gridColumn: 'span 7' }),
+            }}
+            ref={ref}
+        >
             {hovered && (
-                <Overlay opacity={0.8}>
+                <Overlay opacity={0.85}>
                     <Center style={{ height: '100%' }}>
                         <ActionIcon
-                            size="sm"
+                            size="lg"
                             title="Edit"
                             onClick={() => {
                                 modals.openModal({
@@ -109,7 +154,9 @@ export const Cell = ({ id, meal, timestamp, isEdited }: CellProps) => {
                 {/* <p
                 //  ref={drop}
                 > */}
-                <Text p={5}>{meal?.meal || 'N/A '}</Text>
+                <Center>
+                    <Text p={5}>{meal?.meal || 'N/A '}</Text>
+                </Center>
                 {/* </p> */}
             </Box>
         </Box>

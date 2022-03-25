@@ -1,12 +1,12 @@
 type Row = 'Morning' | 'Snack 1' | 'Lunch' | 'Snack 2' | 'Dinner';
 
-type Content = {
-    content: string;
-};
-
 interface CellProps {
     id: string;
     meal?: Meal | EditedMeal;
     timestamp: Date;
     isEdited: boolean;
+    isRow: boolean;
+    daysOfWeek?: { timestamp: Date; label: string }[];
+    row: string;
+    mealsMap?: MealsMap;
 }
