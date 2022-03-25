@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
 };
 
-export default function Home() {
+const Home = () => {
     return (
         <div className="home-container">
             <Center>
@@ -34,4 +34,6 @@ export default function Home() {
             </Center>
         </div>
     );
-}
+};
+
+export default Home;

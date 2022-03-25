@@ -1,17 +1,7 @@
 import Link from 'next/link';
 import { startOfDay, endOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
-
-import {
-    AppShell,
-    Button,
-    Group,
-    Text,
-    Navbar,
-    Box,
-    createStyles,
-    Divider,
-} from '@mantine/core';
+import { Button, Group, Text, Box, Divider } from '@mantine/core';
 
 import {
     getUser,
@@ -59,59 +49,46 @@ export const getServerSideProps = withAuthRequired({
     },
 });
 
-const useStyles = createStyles({
-    navbar: {
-        '--mantine-header-height': '5rem',
-    },
-});
+const calculateBMI = ({ weight, height }: { weight: number; height: number }) =>
+    weight / height ** 2;
+
+const USER_TEST_DATA = {
+    fatPercent: 28.9,
+    weight: 88.8,
+    height: 1.74,
+};
 
 const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
-    const { classes } = useStyles();
-
-    const userCurrentStats = {
-        fatPercent: 28.9,
-        weight: 88.8,
-        height: 1.74,
-    };
-
-    const userBMI = +(
-        userCurrentStats.weight /
-        userCurrentStats.height ** 2
-    ).toFixed(1);
+    const userBMI = +calculateBMI(USER_TEST_DATA).toFixed(1);
 
     return (
-        <AppShell
-            navbar={
-                <Navbar width={{ base: 300 }} p={20} className={classes.navbar}>
-                    <DailyMeal dailyMeals={dailyMeals} />
-                </Navbar>
-            }
-        >
-            <Group>
-                <Text size="lg">
+        <Group grow p={20} align="start">
+            <Group direction="column" style={{ maxWidth: '25%' }}>
+                <DailyMeal dailyMeals={dailyMeals} />
+            </Group>
+            <Box style={{ maxWidth: '100%' }}>
+                <Text>
                     Welcome{' '}
-                    <span style={{ fontWeight: 'bold' }}>
+                    <Text component="span" weight="bold">
                         {user.user_metadata.name}
-                    </span>
+                    </Text>
                 </Text>
-            </Group>
-            <Group>
-                <Link href="/meal-plan" passHref>
-                    <Button component="a">View weekly meal plan</Button>
-                </Link>
-                <Link href="/settings" passHref>
-                    <Button component="a">User settings</Button>
-                </Link>
-            </Group>
-            <Divider my="lg" />
-            <Box>
-                <FatPercent value={userCurrentStats.fatPercent} />
+                <Group>
+                    <Link href="/meal-plan" passHref>
+                        <Button component="a">View weekly meal plan</Button>
+                    </Link>
+                    <Link href="/settings" passHref>
+                        <Button component="a">User settings</Button>
+                    </Link>
+                </Group>
+                <Divider my="lg" />
+                <FatPercent value={USER_TEST_DATA.fatPercent} />
                 <FatPercentTimeline />
                 <Divider my="lg" />
                 <CurrentBMI value={userBMI} />
                 <BMITimeline />
             </Box>
-        </AppShell>
+        </Group>
     );
 };
 

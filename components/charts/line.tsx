@@ -4,7 +4,7 @@ import { ResponsiveLine, CustomLayerProps } from '@nivo/line';
 import { maxBy, minBy } from 'lodash';
 
 // eslint-disable-next-line react/display-name
-const refsLayer = (targetWeight: number) => (props: CustomLayerProps) => {
+const targetLayer = (targetWeight: number) => (props: CustomLayerProps) => {
     const lineHeight = 2;
 
     return (
@@ -106,7 +106,7 @@ const LineChart = <DataItem extends { x: string; y: number }>({
                     'axes',
                     'areas',
                     'lines',
-                    refsLayer(target),
+                    targetLayer(target),
                     'points',
                     'crosshair',
                     'mesh',

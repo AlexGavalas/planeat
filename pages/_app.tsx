@@ -18,7 +18,7 @@ const queryClient = new QueryClient({
     },
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+const App = ({ Component, pageProps }: AppProps) => {
     return (
         <>
             <Head>
@@ -42,6 +42,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             </MantineProvider>
         </>
     );
-}
+};
 
-export default MyApp;
+export default App;

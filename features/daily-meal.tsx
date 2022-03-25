@@ -30,7 +30,11 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
                     const Icon = MEAL_ICON[row];
 
                     return (
-                        <Timeline.Item key={key} title={row} bullet={<Icon />}>
+                        <Timeline.Item
+                            key={key}
+                            title={<Text weight="bold">{row}</Text>}
+                            bullet={<Icon />}
+                        >
                             <Text>{meal}</Text>
                         </Timeline.Item>
                     );

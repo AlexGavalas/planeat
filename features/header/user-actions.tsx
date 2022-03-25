@@ -1,18 +1,16 @@
 import { useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { Google, LogOut } from 'iconoir-react';
 import { Button } from '@mantine/core';
 
-import styles from './header.module.css';
-
-const UserActions = () => {
+export const UserActions = () => {
     const router = useRouter();
     const { user } = useUser();
 
     useEffect(() => {
+        // TODO: Change location of the auth listener
         const { data: authListener } = supabaseClient.auth.onAuthStateChange(
             (event) => {
                 if (event === 'SIGNED_IN') {
@@ -52,18 +50,5 @@ const UserActions = () => {
         >
             Logout
         </Button>
-    );
-};
-
-export const Header = () => {
-    const { isLoading } = useUser();
-
-    return (
-        <header className={styles.header}>
-            <Link href="/" passHref>
-                <a className={styles.headerLink}>PLANEAT</a>
-            </Link>
-            {!isLoading && <UserActions />}
-        </header>
     );
 };

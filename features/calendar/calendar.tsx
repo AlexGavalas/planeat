@@ -37,20 +37,22 @@ export const Calendar = () => {
     );
 
     const onSave = async () => {
+        // The edited meals will have the id from the db
         const [editedMeals, newMeals] = partition(
             Object.values(unsavedChanges),
             'id'
         );
 
-        const { error } = await supabaseClient
+        const { error: updateError } = await supabaseClient
             .from<EditedMeal>('meals')
             .upsert(editedMeals);
 
-        const { error: e2 } = await supabaseClient
+        const { error: createError } = await supabaseClient
             .from<EditedMeal>('meals')
             .insert(newMeals);
 
-        if (!error && !e2) {
+        // TODO: Handle errors
+        if (!updateError && !createError) {
             queryClient.invalidateQueries(['meals', currentWeek]);
             removeChanges();
         }
