@@ -1,94 +1,43 @@
-import { useModals } from '@mantine/modals';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
-import { useQueryClient } from 'react-query';
 import { Box, Text, Center } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 
-import { useCurrentWeek, useUnsavedChanges } from '@store/hooks';
+import { useMeals } from '@store/hooks';
 import { CellOverlay } from './overlay';
 
 import styles from './cell.module.css';
 
-export const Cell = ({
-    id,
-    meal,
-    timestamp,
-    isEdited,
-    isRow,
-    daysOfWeek,
-    row,
-    mealsMap,
-}: CellProps) => {
+export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
     const { user } = useUser();
     const { hovered, ref } = useHover();
-    const queryClient = useQueryClient();
 
-    const { currentWeek } = useCurrentWeek();
-    const { addChange, removeChange } = useUnsavedChanges();
-
-    const modals = useModals();
+    const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =
+        useMeals();
 
     const handleSave = async (value: string) => {
         if (!user) return;
 
-        if (isRow && daysOfWeek && mealsMap) {
-            for (const { timestamp, label } of daysOfWeek) {
-                const key = `${row}_${label}`;
-
-                const meal = mealsMap[key];
-
-                const editedMeal = {
-                    ...meal,
-                    meal: value,
-                    section_key: key,
-                    user_id: user.id,
-                    day: timestamp.toISOString(),
-                };
-
-                addChange(editedMeal);
-            }
-
-            return;
+        if (isRow) {
+            saveEntryRow({ sectionKey: id, userId: user.id, value });
+        } else {
+            saveEntryCell({
+                meal,
+                sectionKey: id,
+                timestamp,
+                userId: user.id,
+                value,
+            });
         }
-
-        const editedMeal = {
-            ...meal,
-            meal: value,
-            section_key: id,
-            user_id: user.id,
-            day: timestamp.toISOString(),
-        };
-
-        addChange(editedMeal);
     };
 
     const handleDelete = async () => {
         if (!meal) return;
 
-        if (isRow && daysOfWeek) {
-            for (const { label } of daysOfWeek) {
-                removeChange(`${row}_${label}`);
-            }
+        if (isRow) {
+            deleteEntryRow({ id, meal });
         } else {
-            removeChange(id);
+            deleteEntryCell({ id, meal });
         }
-
-        if (!meal.id) return;
-
-        if (isRow && daysOfWeek) {
-            for (const { label } of daysOfWeek) {
-                await supabaseClient
-                    .from('meals')
-                    .delete()
-                    .eq('section_key', `${row}_${label}`);
-            }
-        } else {
-            await supabaseClient.from('meals').delete().eq('id', meal.id);
-        }
-
-        queryClient.invalidateQueries(['meals', currentWeek]);
-        modals.closeAll();
     };
 
     return (
@@ -113,7 +62,9 @@ export const Cell = ({
                 }}
             >
                 <Center>
-                    <Text p={5}>{meal?.meal || 'N/A '}</Text>
+                    <Text p={5} align="center">
+                        {meal?.meal || 'N/A '}
+                    </Text>
                 </Center>
             </Box>
         </Box>

@@ -16,11 +16,11 @@ export const Calendar = () => {
     const { nextWeek, previousWeek } = useCurrentWeek();
     const { unsavedChanges } = useUnsavedChanges();
     const { copyToNextWeek } = useWeeklyScheduleOps();
-    const { fetchingMeals, meals, revert, savePlan } = useMeals();
+    const { loading, meals, revert, savePlan } = useMeals();
 
     return (
         <section className="calendar-container">
-            <LoadingOverlay visible={fetchingMeals} />
+            <LoadingOverlay visible={loading} />
             <Header />
             <DndProvider backend={HTML5Backend}>
                 <Content />

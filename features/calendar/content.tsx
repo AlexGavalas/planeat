@@ -45,9 +45,6 @@ export const Content = () => {
                                 }
                                 isEdited={!!unsavedChanges[`${row}_${label}`]}
                                 isRow={true}
-                                daysOfWeek={daysOfWeek}
-                                row={row}
-                                mealsMap={mealsMap}
                             />
                         </div>
                     );
@@ -67,7 +64,6 @@ export const Content = () => {
                                 }
                                 isEdited={!!unsavedChanges[`${row}_${label}`]}
                                 isRow={false}
-                                row={row}
                             />
                         ))}
                     </div>

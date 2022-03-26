@@ -6,7 +6,4 @@ interface CellProps {
     timestamp: Date;
     isEdited: boolean;
     isRow: boolean;
-    daysOfWeek?: { timestamp: Date; label: string }[];
-    row: string;
-    mealsMap?: MealsMap;
 }
