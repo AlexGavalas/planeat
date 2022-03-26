@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { Cell } from './cell';
 import { ROWS } from './constants';
-import { useCurrentWeek, useMeals, useUnsavedChanges } from '../../store';
+import { useCurrentWeek, useMeals, useUnsavedChanges } from '@store/hooks';
 import { getDaysOfWeek } from '@util/date';
 
 import styles from './content.module.css';

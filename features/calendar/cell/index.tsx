@@ -5,7 +5,7 @@ import { useQueryClient } from 'react-query';
 import { Box, Text, Center } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 
-import { useCurrentWeek, useUnsavedChanges } from '../../../store';
+import { useCurrentWeek, useUnsavedChanges } from '@store/hooks';
 import { CellOverlay } from './overlay';
 
 import styles from './cell.module.css';

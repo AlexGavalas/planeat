@@ -10,7 +10,7 @@ import {
     useUnsavedChanges,
     useWeeklyScheduleOps,
     useMeals,
-} from '../../store';
+} from '@store/hooks';
 
 export const Calendar = () => {
     const { nextWeek, previousWeek } = useCurrentWeek();

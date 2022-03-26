@@ -1,6 +1,6 @@
 import { isToday } from 'date-fns';
 
-import { useCurrentWeek } from '../../store';
+import { useCurrentWeek } from '@store/hooks';
 import { getDaysOfWeek } from '@util/date';
 
 import styles from './header.module.css';
