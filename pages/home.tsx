@@ -66,7 +66,13 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
             <Group direction="column" style={{ maxWidth: '25%' }}>
                 <DailyMeal dailyMeals={dailyMeals} />
             </Group>
-            <Box style={{ maxWidth: '100%' }}>
+            <Box
+                pl={20}
+                style={{
+                    maxWidth: '100%',
+                    borderLeft: '1px solid #ced4da',
+                }}
+            >
                 <Text>
                     Welcome{' '}
                     <Text component="span" weight="bold">
@@ -83,9 +89,11 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
                 </Group>
                 <Divider my="lg" />
                 <FatPercent value={USER_TEST_DATA.fatPercent} />
+                <Divider my="sm" />
                 <FatPercentTimeline />
                 <Divider my="lg" />
                 <CurrentBMI value={userBMI} />
+                <Divider my="sm" />
                 <BMITimeline />
             </Box>
         </Group>

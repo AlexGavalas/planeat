@@ -1,27 +1,14 @@
-.container {
-}
-
-.sections {
-    display: flex;
-    width: 100%;
-    top: 20px;
-}
-
 .section {
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
+    --rounding: 5px;
+    height: 1rem;
 }
 
 .section:first-child {
-    border-radius: 20px 0 0 20px;
+    border-radius: var(--rounding) 0 0 var(--rounding);
 }
 
 .section:last-child {
-    border-radius: 0 20px 20px 0;
+    border-radius: 0 var(--rounding) var(--rounding) 0;
 }
 
 .indicator {
@@ -30,8 +17,4 @@
     align-items: center;
     position: relative;
     width: 100px;
-}
-
-.label {
-    font-size: larger;
 }

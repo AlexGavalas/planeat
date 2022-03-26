@@ -1,4 +1,4 @@
-import { Box, Title } from '@mantine/core';
+import { Box, Title, Tooltip } from '@mantine/core';
 import { NavArrowDown } from 'iconoir-react';
 
 import styles from './indicator.module.css';
@@ -34,20 +34,19 @@ export const ProgressIndicator = ({
                 {value} %
                 <NavArrowDown />
             </div>
-            <div className={styles.sections}>
+            <Box>
                 {sections.map(({ label, percent, bg }) => (
-                    <div
+                    <Tooltip
                         key={label}
+                        label={label}
+                        style={{ width: `${percent}%`, backgroundColor: bg }}
+                        position="bottom"
                         className={styles.section}
-                        style={{
-                            width: `${percent}%`,
-                            backgroundColor: bg,
-                        }}
                     >
-                        {label}
-                    </div>
+                        <div />
+                    </Tooltip>
                 ))}
-            </div>
+            </Box>
         </Box>
     );
 };
