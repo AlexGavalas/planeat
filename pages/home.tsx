@@ -7,7 +7,7 @@ import {
     getUser,
     withAuthRequired,
     User,
-    supabaseClient,
+    supabaseServerClient,
 } from '@supabase/supabase-auth-helpers/nextjs';
 
 import { DailyMeal } from '@features/daily-meal';
@@ -30,7 +30,7 @@ export const getServerSideProps = withAuthRequired({
 
         const NOW = new Date();
 
-        const { data } = await supabaseClient
+        const { data } = await supabaseServerClient(context)
             .from<Meal>('meals')
             .select('*')
             .gte('day', startOfDay(NOW).toISOString())

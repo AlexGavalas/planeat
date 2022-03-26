@@ -4,6 +4,7 @@ import { UserProvider } from '@supabase/supabase-auth-helpers/react';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
+import { NotificationsProvider } from '@mantine/notifications';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import '../styles/globals.css';
@@ -31,14 +32,16 @@ const App = ({ Component, pageProps }: AppProps) => {
                     colorScheme: 'light',
                 }}
             >
-                <ModalsProvider>
-                    <UserProvider supabaseClient={supabaseClient}>
-                        <QueryClientProvider client={queryClient}>
-                            <Header />
-                            <Component {...pageProps} />
-                        </QueryClientProvider>
-                    </UserProvider>
-                </ModalsProvider>
+                <NotificationsProvider>
+                    <ModalsProvider>
+                        <UserProvider supabaseClient={supabaseClient}>
+                            <QueryClientProvider client={queryClient}>
+                                <Header />
+                                <Component {...pageProps} />
+                            </QueryClientProvider>
+                        </UserProvider>
+                    </ModalsProvider>
+                </NotificationsProvider>
             </MantineProvider>
         </>
     );

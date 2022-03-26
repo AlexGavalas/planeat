@@ -1,10 +1,6 @@
-import { useQuery, useQueryClient } from 'react-query';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
-import { startOfISOWeek, endOfISOWeek } from 'date-fns';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Button, Group, LoadingOverlay } from '@mantine/core';
-import { partition } from 'lodash';
 
 import { Content } from './content';
 import { Header } from './header';
@@ -13,61 +9,21 @@ import {
     useCurrentWeek,
     useUnsavedChanges,
     useWeeklyScheduleOps,
+    useMeals,
 } from '../../store';
 
 export const Calendar = () => {
-    const queryClient = useQueryClient();
-
-    const { currentWeek, nextWeek, previousWeek } = useCurrentWeek();
-    const { unsavedChanges, removeChanges } = useUnsavedChanges();
+    const { nextWeek, previousWeek } = useCurrentWeek();
+    const { unsavedChanges } = useUnsavedChanges();
     const { copyToNextWeek } = useWeeklyScheduleOps();
-
-    const { data = [], isFetching } = useQuery(
-        ['meals', currentWeek],
-        async () => {
-            return supabaseClient
-                .from<Meal>('meals')
-                .select('*')
-                .gte('day', startOfISOWeek(currentWeek).toISOString())
-                .lte('day', endOfISOWeek(currentWeek).toISOString());
-        },
-        {
-            select: ({ data }) => data || [],
-        }
-    );
-
-    const onSave = async () => {
-        // The edited meals will have the id from the db
-        const [editedMeals, newMeals] = partition(
-            Object.values(unsavedChanges),
-            'id'
-        );
-
-        const { error: updateError } = await supabaseClient
-            .from<EditedMeal>('meals')
-            .upsert(editedMeals);
-
-        const { error: createError } = await supabaseClient
-            .from<EditedMeal>('meals')
-            .insert(newMeals);
-
-        // TODO: Handle errors
-        if (!updateError && !createError) {
-            queryClient.invalidateQueries(['meals', currentWeek]);
-            removeChanges();
-        }
-    };
-
-    const onCancel = () => {
-        removeChanges();
-    };
+    const { fetchingMeals, meals, revert, savePlan } = useMeals();
 
     return (
         <section className="calendar-container">
-            <LoadingOverlay visible={isFetching} />
+            <LoadingOverlay visible={fetchingMeals} />
             <Header />
             <DndProvider backend={HTML5Backend}>
-                <Content meals={data} />
+                <Content />
             </DndProvider>
             <div className="controls-wrapper">
                 <Group spacing="sm">
@@ -75,13 +31,13 @@ export const Calendar = () => {
                     <Button onClick={nextWeek}>Next week &#xbb;</Button>
                 </Group>
                 <Group spacing="sm">
-                    <Button onClick={() => copyToNextWeek(data)}>
+                    <Button onClick={() => copyToNextWeek(meals)}>
                         Copy to next week
                     </Button>
                     {Object.keys(unsavedChanges).length > 0 && (
                         <>
-                            <Button onClick={onCancel}>Cancel &#x2715;</Button>
-                            <Button onClick={onSave}>Save &#x2713;</Button>
+                            <Button onClick={revert}>Cancel &#x2715;</Button>
+                            <Button onClick={savePlan}>Save &#x2713;</Button>
                         </>
                     )}
                 </Group>
