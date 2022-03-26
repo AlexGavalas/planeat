@@ -1,4 +1,3 @@
-import type { GetServerSideProps } from 'next';
 import { FormEventHandler, useState } from 'react';
 import { EditPencil, Cancel, Plus, SaveFloppyDisk } from 'iconoir-react';
 import { format, parseISO } from 'date-fns';
@@ -9,7 +8,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
 import {
     supabaseClient,
-    getUser,
+    withAuthRequired,
 } from '@supabase/supabase-auth-helpers/nextjs';
 
 import {
@@ -38,22 +37,9 @@ type WeightData = {
     user_id: string;
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const { user } = await getUser(context).catch(() => ({ user: null }));
-
-    if (!user) {
-        return {
-            redirect: {
-                destination: '/home',
-                permanent: false,
-            },
-        };
-    }
-
-    return {
-        props: {},
-    };
-};
+export const getServerSideProps = withAuthRequired({
+    redirectTo: '/',
+});
 
 const Row = ({ item, page }: { item: WeightData; page: number }) => {
     const [show, setShow] = useState(false);

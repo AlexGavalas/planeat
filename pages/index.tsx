@@ -3,7 +3,7 @@ import { getUser } from '@supabase/supabase-auth-helpers/nextjs';
 import { Center, Title, Text, List, Group } from '@mantine/core';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const { user } = await getUser(context).catch(() => ({ user: null }));
+    const { user } = await getUser(context);
 
     if (user) {
         return {

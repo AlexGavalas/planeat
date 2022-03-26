@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useEffect } from 'react';
 import { UserProvider } from '@supabase/supabase-auth-helpers/react';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { MantineProvider } from '@mantine/core';
@@ -19,7 +20,23 @@ const queryClient = new QueryClient({
     },
 });
 
-const App = ({ Component, pageProps }: AppProps) => {
+const App = ({ Component, pageProps, router }: AppProps) => {
+    useEffect(() => {
+        const { data: authListener } = supabaseClient.auth.onAuthStateChange(
+            (event) => {
+                if (event === 'SIGNED_IN') {
+                    router.push('/home');
+                } else if (event === 'SIGNED_OUT') {
+                    router.push('/');
+                }
+            }
+        );
+
+        return () => {
+            authListener?.unsubscribe();
+        };
+    }, []);
+
     return (
         <>
             <Head>
