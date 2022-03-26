@@ -5,6 +5,8 @@ import { ROWS } from './constants';
 import { useCurrentWeek, useMeals, useUnsavedChanges } from '../../store';
 import { getDaysOfWeek } from '@util/date';
 
+import styles from './content.module.css';
+
 export const Content = () => {
     const { currentWeek } = useCurrentWeek();
     const { unsavedChanges } = useUnsavedChanges();
@@ -22,7 +24,7 @@ export const Content = () => {
     const daysOfWeek = getDaysOfWeek(currentWeek);
 
     return (
-        <div className="calendar-content">
+        <div className={styles.wrapper}>
             {ROWS.map((row) => {
                 const isRow =
                     row === 'Morning' || row === 'Snack 1' || row === 'Snack 2';
@@ -31,7 +33,7 @@ export const Content = () => {
                     const { label, timestamp } = daysOfWeek[0];
 
                     return (
-                        <div key={row} className="row">
+                        <div key={row} className={styles.row}>
                             <h3>{row}</h3>
                             <Cell
                                 key={label}
@@ -52,7 +54,7 @@ export const Content = () => {
                 }
 
                 return (
-                    <div key={row} className="row">
+                    <div key={row} className={styles.row}>
                         <h3>{row}</h3>
                         {daysOfWeek.map(({ label, timestamp }) => (
                             <Cell

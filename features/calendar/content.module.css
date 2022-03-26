@@ -1,0 +1,18 @@
+.wrapper {
+    display: grid;
+    gap: var(--grid-gap);
+}
+
+.row {
+    display: grid;
+    grid-template-columns: var(--grid-config);
+    gap: var(--grid-gap);
+    min-height: 8rem;
+}
+
+.row h3 {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    word-break: break-all;
+}

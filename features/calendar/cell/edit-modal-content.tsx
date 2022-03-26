@@ -1,37 +1,43 @@
-import { useState } from 'react';
+import { FormEventHandler, useState } from 'react';
 import { Group, Textarea, Button } from '@mantine/core';
 import { useModals } from '@mantine/modals';
+
+interface ModalContentProps {
+    deleteMeal: () => Promise<void>;
+    handleSave: (meal: string) => Promise<void>;
+    initialMeal: string;
+}
 
 export const ModalContent = ({
     handleSave,
     initialMeal,
     deleteMeal,
-}: {
-    deleteMeal: () => Promise<void>;
-    handleSave: (meal: string) => Promise<void>;
-    initialMeal: string;
-}) => {
+}: ModalContentProps) => {
     const modals = useModals();
-
     const [error, setError] = useState('');
 
+    const closeModal = () => modals.closeAll();
+
+    const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+        e.preventDefault();
+
+        const meal = new FormData(e.currentTarget).get('meal')?.toString();
+
+        if (!meal) {
+            return setError('You have not entered a meal to save');
+        }
+
+        handleSave(meal);
+        closeModal();
+    };
+
+    const onDelete = () => {
+        deleteMeal();
+        closeModal();
+    };
+
     return (
-        <form
-            onSubmit={(e) => {
-                e.preventDefault();
-
-                const meal = new FormData(e.currentTarget)
-                    .get('meal')
-                    ?.toString();
-
-                if (!meal) {
-                    return setError('You have not entered a meal to save');
-                }
-
-                handleSave(meal);
-                modals.closeAll();
-            }}
-        >
+        <form onSubmit={onSubmit}>
             <Group direction="column" spacing="sm" grow>
                 <Textarea
                     data-autofocus
@@ -40,7 +46,7 @@ export const ModalContent = ({
                     label="Your meal"
                     defaultValue={initialMeal}
                     autosize
-                    minRows={3}
+                    minRows={5}
                     maxRows={20}
                     error={error}
                     onFocus={() => {
@@ -48,23 +54,14 @@ export const ModalContent = ({
                     }}
                 />
                 <Group position="apart" spacing="sm">
-                    <Button
-                        variant="light"
-                        color="red"
-                        onClick={() => {
-                            modals.closeAll();
-                        }}
-                    >
+                    <Button variant="light" color="red" onClick={closeModal}>
                         Cancel
                     </Button>
                     <Group>
                         <Button
                             color="red"
                             hidden={!initialMeal}
-                            onClick={() => {
-                                deleteMeal();
-                                modals.closeAll();
-                            }}
+                            onClick={onDelete}
                         >
                             Delete
                         </Button>

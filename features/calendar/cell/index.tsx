@@ -1,14 +1,14 @@
-// import { useDrag, useDrop } from 'react-dnd';
 import { useModals } from '@mantine/modals';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { useQueryClient } from 'react-query';
-import { ActionIcon, Box, Text, Overlay, Center } from '@mantine/core';
-
-import { useCurrentWeek, useUnsavedChanges } from '../../store';
-import { ModalContent } from './edit-meal-modal-content';
+import { Box, Text, Center } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
-import { EditPencil } from 'iconoir-react';
+
+import { useCurrentWeek, useUnsavedChanges } from '../../../store';
+import { CellOverlay } from './overlay';
+
+import styles from './cell.module.css';
 
 export const Cell = ({
     id,
@@ -28,24 +28,6 @@ export const Cell = ({
     const { addChange, removeChange } = useUnsavedChanges();
 
     const modals = useModals();
-
-    // const [{ isDragging }, drag] = useDrag(() => ({
-    //     type: 'cell',
-    //     item: meal,
-    //     collect: (monitor) => ({
-    //         isDragging: !!monitor.isDragging(),
-    //     }),
-    // }));
-
-    // const [{ isOver }, drop] = useDrop(() => ({
-    //     accept: 'cell',
-    //     drop: (el: Meal) => {
-    //         swapDays({ mealA: meal, mealB: el });
-    //     },
-    //     collect: (monitor) => ({
-    //         isOver: !!monitor.isOver(),
-    //     }),
-    // }));
 
     const handleSave = async (value: string) => {
         if (!user) return;
@@ -111,53 +93,28 @@ export const Cell = ({
 
     return (
         <Box
+            ref={ref}
             style={{
                 position: 'relative',
                 ...(isRow && { gridColumn: 'span 7' }),
             }}
-            ref={ref}
         >
             {hovered && (
-                <Overlay opacity={0.85}>
-                    <Center style={{ height: '100%' }}>
-                        <ActionIcon
-                            size="lg"
-                            title="Edit"
-                            onClick={() => {
-                                modals.openModal({
-                                    title: 'Edit this meal',
-                                    centered: true,
-                                    children: (
-                                        <ModalContent
-                                            handleSave={handleSave}
-                                            initialMeal={meal?.meal || ''}
-                                            deleteMeal={handleDelete}
-                                        />
-                                    ),
-                                });
-                            }}
-                        >
-                            <EditPencil />
-                        </ActionIcon>
-                    </Center>
-                </Overlay>
+                <CellOverlay
+                    handleDelete={handleDelete}
+                    handleSave={handleSave}
+                    meal={meal}
+                />
             )}
             <Box
-                // ref={drag}
+                className={styles.cell}
                 style={{
-                    // ...(isDragging && { opacity: 0.5 }),
-                    // ...(isOver && { background: '#cbf5d0' }),
                     ...(isEdited && { border: '2px solid orange' }),
                 }}
-                className="cell"
             >
-                {/* <p
-                //  ref={drop}
-                > */}
                 <Center>
                     <Text p={5}>{meal?.meal || 'N/A '}</Text>
                 </Center>
-                {/* </p> */}
             </Box>
         </Box>
     );

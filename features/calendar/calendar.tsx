@@ -25,7 +25,7 @@ export const Calendar = () => {
             <DndProvider backend={HTML5Backend}>
                 <Content />
             </DndProvider>
-            <div className="controls-wrapper">
+            <Group position="apart">
                 <Group spacing="sm">
                     <Button onClick={previousWeek}>&#xab; Previous week</Button>
                     <Button onClick={nextWeek}>Next week &#xbb;</Button>
@@ -41,7 +41,7 @@ export const Calendar = () => {
                         </>
                     )}
                 </Group>
-            </div>
+            </Group>
         </section>
     );
 };
