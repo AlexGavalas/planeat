@@ -64,8 +64,16 @@ export const useMeals = () => {
             .from<EditedMeal>('meals')
             .insert(newMeals);
 
-        // TODO: Handle errors
-        if (!updateError && !createError) {
+        if (updateError || createError) {
+            setSubmitting(false);
+
+            notifications.showNotification({
+                title: 'Error',
+                message: 'We could not save your changes. Please try again.',
+                color: 'red',
+                autoClose: 5000,
+            });
+        } else {
             queryClient.invalidateQueries(['meals', currentWeek]);
 
             removeChanges();
@@ -104,7 +112,16 @@ export const useMeals = () => {
             .delete()
             .eq('id', meal.id);
 
-        if (!error) {
+        if (error) {
+            setSubmitting(false);
+
+            notifications.showNotification({
+                title: 'Error',
+                message: 'We could not delete the entry. Please try again.',
+                color: 'red',
+                autoClose: 5000,
+            });
+        } else {
             queryClient.invalidateQueries(['meals', currentWeek]);
 
             modals.closeAll();
@@ -138,7 +155,16 @@ export const useMeals = () => {
             .delete()
             .in('section_key', sectionKeys);
 
-        if (!error) {
+        if (error) {
+            setSubmitting(false);
+
+            notifications.showNotification({
+                title: 'Error',
+                message: 'We could not delete the entry. Please try again.',
+                color: 'red',
+                autoClose: 5000,
+            });
+        } else {
             queryClient.invalidateQueries(['meals', currentWeek]);
 
             modals.closeAll();
