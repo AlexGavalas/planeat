@@ -23,3 +23,10 @@ type WeightMeasurement = {
     date: string;
     user_id: string;
 };
+
+type WeightData = {
+    id: string;
+    date: string;
+    weight: number;
+    user_id: string;
+};
