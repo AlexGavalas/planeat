@@ -2,9 +2,13 @@ import { useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import {
+    getUser,
     supabaseClient,
+    supabaseServerClient,
     withAuthRequired,
 } from '@supabase/supabase-auth-helpers/nextjs';
 
@@ -21,9 +25,37 @@ import { WeightTable } from '@features/measurements/weight';
 
 export const getServerSideProps = withAuthRequired({
     redirectTo: '/',
+    getServerSideProps: async (context) => {
+        const { user } = await getUser(context);
+
+        if (!user) {
+            return {
+                redirect: {
+                    destination: '/',
+                    permanent: false,
+                },
+            };
+        }
+
+        const { data: profile } = await supabaseServerClient(context)
+            .from<Profile>('users')
+            .select('language')
+            .eq('id', user.id)
+            .single();
+
+        return {
+            props: {
+                ...(await serverSideTranslations(profile?.language || 'en', [
+                    'common',
+                ])),
+            },
+        };
+    },
 });
 
 const Settings = () => {
+    const { t } = useTranslation();
+
     const { user } = useUser();
     const queryClient = useQueryClient();
 
@@ -37,7 +69,7 @@ const Settings = () => {
             if (!user) return;
 
             const { data } = await supabaseClient
-                .from('users')
+                .from<Profile>('users')
                 .select('*')
                 .eq('id', user.id)
                 .single();
@@ -54,7 +86,7 @@ const Settings = () => {
             if (!user) return;
 
             const { data, error } = await supabaseClient
-                .from('users')
+                .from<Profile>('users')
                 .update({ is_nutritionist: value })
                 .eq('id', user.id);
 
@@ -66,6 +98,8 @@ const Settings = () => {
         },
         {
             onMutate: () => {
+                if (!profile) return;
+
                 queryClient.setQueryData(['user'], {
                     ...profile,
                     is_nutritionist: !profile.is_nutritionist,
@@ -77,18 +111,17 @@ const Settings = () => {
         }
     );
 
-    const { data, isFetching } = useQuery(
+    const { data = [], isFetching } = useQuery(
         ['nutritionists', debouncedSearchQuery],
         async () => {
-            const { data } = await supabaseClient
-                .from('users')
+            return await supabaseClient
+                .from<Profile>('users')
                 .select('*')
                 .ilike('full_name', `%${debouncedSearchQuery}%`)
                 .limit(5);
-
-            return data;
         },
         {
+            select: ({ data }) => data || [],
             enabled: Boolean(debouncedSearchQuery),
         }
     );
@@ -99,18 +132,17 @@ const Settings = () => {
                 <Switch
                     checked={profile?.is_nutritionist || false}
                     onChange={({ target: { checked } }) => mutate(checked)}
-                    label="Είμαι διαιτολόγος"
+                    label={t('am_nutritionist')}
                 />
-                <Text>ή</Text>
                 <Autocomplete
-                    label="Βρες τον διαιτολόγο σου"
-                    placeholder="Αναζήτηση"
-                    data={(data || []).map(({ full_name }) => full_name)}
+                    label={t('find_your_nutritionist')}
+                    placeholder={t('search')}
+                    data={data.map(({ full_name }) => full_name)}
                     value={searchQuery}
                     onChange={setSearchQuery}
                     nothingFound={
                         debouncedSearchQuery && !isFetching && !data?.length
-                            ? 'Δεν βρέθηκαν αποτελέσματα'
+                            ? t('no_data')
                             : ''
                     }
                 />

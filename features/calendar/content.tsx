@@ -6,8 +6,11 @@ import { useCurrentWeek, useMeals, useUnsavedChanges } from '@store/hooks';
 import { getDaysOfWeek } from '@util/date';
 
 import styles from './content.module.css';
+import { useTranslation } from 'next-i18next';
 
 export const Content = () => {
+    const { t } = useTranslation();
+
     const { currentWeek } = useCurrentWeek();
     const { unsavedChanges } = useUnsavedChanges();
     const { meals } = useMeals();
@@ -23,27 +26,36 @@ export const Content = () => {
 
     const daysOfWeek = getDaysOfWeek(currentWeek);
 
+    const translatedRows = ROWS.map((row) => ({
+        ...row,
+        label: t(`row.${row.key}`),
+    }));
+
     return (
         <div className={styles.wrapper}>
-            {ROWS.map((row) => {
+            {translatedRows.map((row) => {
                 const isRow =
-                    row === 'Morning' || row === 'Snack 1' || row === 'Snack 2';
+                    row.key === 'morning' ||
+                    row.key === 'snack1' ||
+                    row.key === 'snack2';
 
                 if (isRow) {
                     const { label, timestamp } = daysOfWeek[0];
 
                     return (
-                        <div key={row} className={styles.row}>
-                            <h3>{row}</h3>
+                        <div key={row.key} className={styles.row}>
+                            <h3>{row.label}</h3>
                             <Cell
                                 key={label}
-                                id={`${row}_${label}`}
+                                id={`${row.key}_${label}`}
                                 timestamp={timestamp}
                                 meal={
-                                    unsavedChanges[`${row}_${label}`] ||
-                                    mealsMap[`${row}_${label}`]
+                                    unsavedChanges[`${row.key}_${label}`] ||
+                                    mealsMap[`${row.key}_${label}`]
                                 }
-                                isEdited={!!unsavedChanges[`${row}_${label}`]}
+                                isEdited={
+                                    !!unsavedChanges[`${row.key}_${label}`]
+                                }
                                 isRow={true}
                             />
                         </div>
@@ -51,18 +63,20 @@ export const Content = () => {
                 }
 
                 return (
-                    <div key={row} className={styles.row}>
-                        <h3>{row}</h3>
+                    <div key={row.key} className={styles.row}>
+                        <h3>{row.label}</h3>
                         {daysOfWeek.map(({ label, timestamp }) => (
                             <Cell
                                 key={label}
-                                id={`${row}_${label}`}
+                                id={`${row.key}_${label}`}
                                 timestamp={timestamp}
                                 meal={
-                                    unsavedChanges[`${row}_${label}`] ||
-                                    mealsMap[`${row}_${label}`]
+                                    unsavedChanges[`${row.key}_${label}`] ||
+                                    mealsMap[`${row.key}_${label}`]
                                 }
-                                isEdited={!!unsavedChanges[`${row}_${label}`]}
+                                isEdited={
+                                    !!unsavedChanges[`${row.key}_${label}`]
+                                }
                                 isRow={false}
                             />
                         ))}

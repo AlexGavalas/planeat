@@ -1,6 +1,7 @@
 import { ActionIcon, Center, Overlay } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { EditPencil } from 'iconoir-react';
+import { useTranslation } from 'next-i18next';
 
 import { ModalContent } from './edit-modal-content';
 
@@ -15,6 +16,8 @@ export const CellOverlay = ({
     handleSave,
     meal,
 }: CellOverlayProps) => {
+    const { t } = useTranslation();
+
     const modals = useModals();
 
     return (
@@ -22,10 +25,10 @@ export const CellOverlay = ({
             <Center style={{ height: '100%' }}>
                 <ActionIcon
                     size="lg"
-                    title="Edit"
+                    title={t('edit')}
                     onClick={() => {
                         modals.openModal({
-                            title: 'Edit this meal',
+                            title: t('edit_meal'),
                             centered: true,
                             children: (
                                 <ModalContent

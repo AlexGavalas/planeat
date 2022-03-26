@@ -1,0 +1,69 @@
+{
+    "logout": "Logout",
+    "login": {
+        "google": "Login with Google"
+    },
+    "am_nutritionist": "I am a nutritionist",
+    "find_your_nutritionist": "Find your nutritionist",
+    "search": "Search",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "no_data": "No data",
+    "weight_measurements": "Weight measurements",
+    "add_measurement": "Add a new measurement",
+    "new_weight": "New weight",
+    "weight": "Weight",
+    "date": "Date",
+    "no_measurements_yet": "You don't have any measurements yet",
+    "welcome": "Welcome",
+    "view_weekly_meal": "View your meal plan",
+    "user_settings": "User settings",
+    "bmi_label": "Body Mass Index (BMI)",
+    "bmi_sections": {
+        "bmi1": "Underweight",
+        "bmi2": "Normal",
+        "bmi3": "Overweight",
+        "bmi4": "1st degree Obese",
+        "bmi5": "2nd/3rd degree Obese"
+    },
+    "fat_change": "Fat change",
+    "kg": "kg",
+    "fat_label": "Fat percentage",
+    "fat_sections": {
+        "fat1": "Underweight",
+        "fat2": "Athletic",
+        "fat3": "Ideal",
+        "fat4": "Average",
+        "fat5": "Obese"
+    },
+    "day_plan": "Day plan",
+    "week": {
+        "previous": "Previous week",
+        "next": "Next week",
+        "copy_to_next_week": "Copy to next week"
+    },
+    "edit_meal": "Edit meal",
+    "meal_placeholder": "Write here",
+    "meal_label": "The meal",
+    "row": {
+        "morning": "Morning",
+        "snack1": "Snack",
+        "lunch": "Lunch",
+        "snack2": "Snack",
+        "dinner": "Dinner"
+    },
+    "success": "Success",
+    "error": "Error",
+    "try_again": "Please try again",
+    "errors": {
+        "weight_update": "We could not update your weight",
+        "weight_save": "We could not save your weight",
+        "weight_empty": "You forgot to input your weight",
+        "meal_save": "We could not save your changes",
+        "meal_delete": "We could not delete this meal",
+        "meal_empty": "You forgot to input the meal"
+    },
+    "meal_save_success": "Your changes where successfully saved"
+}

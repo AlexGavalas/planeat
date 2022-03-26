@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { startOfDay, endOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
 import { Button, Group, Text, Box, Divider } from '@mantine/core';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 
 import {
     getUser,
@@ -36,6 +38,12 @@ export const getServerSideProps = withAuthRequired({
             .gte('day', startOfDay(NOW).toISOString())
             .lte('day', endOfDay(NOW).toISOString());
 
+        const { data: profile } = await supabaseServerClient(context)
+            .from<Profile>('users')
+            .select('language')
+            .eq('id', user.id)
+            .single();
+
         const dailyMeals = fromPairs(
             map(data, (item) => [item.section_key, item])
         );
@@ -44,6 +52,9 @@ export const getServerSideProps = withAuthRequired({
             props: {
                 dailyMeals,
                 user,
+                ...(await serverSideTranslations(profile?.language || 'en', [
+                    'common',
+                ])),
             },
         };
     },
@@ -59,6 +70,8 @@ const USER_TEST_DATA = {
 };
 
 const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
+    const { t } = useTranslation();
+
     const userBMI = +calculateBMI(USER_TEST_DATA).toFixed(1);
 
     return (
@@ -69,22 +82,22 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
             <Box
                 pl={20}
                 style={{
-                    maxWidth: '100%',
+                    maxWidth: '75%',
                     borderLeft: '1px solid #ced4da',
                 }}
             >
                 <Text>
-                    Welcome{' '}
+                    {t('welcome')}{' '}
                     <Text component="span" weight="bold">
                         {user.user_metadata.name}
                     </Text>
                 </Text>
                 <Group>
                     <Link href="/meal-plan" passHref>
-                        <Button component="a">View weekly meal plan</Button>
+                        <Button component="a">{t('view_weekly_meal')}</Button>
                     </Link>
                     <Link href="/settings" passHref>
-                        <Button component="a">User settings</Button>
+                        <Button component="a">{t('user_settings')}</Button>
                     </Link>
                 </Group>
                 <Divider my="lg" />

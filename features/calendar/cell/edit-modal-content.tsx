@@ -1,6 +1,7 @@
 import { FormEventHandler, useState } from 'react';
 import { Group, Textarea, Button } from '@mantine/core';
 import { useModals } from '@mantine/modals';
+import { useTranslation } from 'next-i18next';
 
 interface ModalContentProps {
     deleteMeal: () => Promise<void>;
@@ -13,6 +14,8 @@ export const ModalContent = ({
     initialMeal,
     deleteMeal,
 }: ModalContentProps) => {
+    const { t } = useTranslation();
+
     const modals = useModals();
     const [error, setError] = useState('');
 
@@ -23,9 +26,7 @@ export const ModalContent = ({
 
         const meal = new FormData(e.currentTarget).get('meal')?.toString();
 
-        if (!meal) {
-            return setError('You have not entered a meal to save');
-        }
+        if (!meal) return setError(t('errors.meal_empty'));
 
         handleSave(meal);
         closeModal();
@@ -42,20 +43,18 @@ export const ModalContent = ({
                 <Textarea
                     data-autofocus
                     name="meal"
-                    placeholder="Enter here"
-                    label="Your meal"
+                    placeholder={t('meal_placeholder')}
+                    label={t('meal_label')}
                     defaultValue={initialMeal}
                     autosize
                     minRows={5}
                     maxRows={20}
                     error={error}
-                    onFocus={() => {
-                        setError('');
-                    }}
+                    onFocus={() => setError('')}
                 />
                 <Group position="apart" spacing="sm">
                     <Button variant="light" color="red" onClick={closeModal}>
-                        Cancel
+                        {t('cancel')}
                     </Button>
                     <Group>
                         <Button
@@ -63,9 +62,9 @@ export const ModalContent = ({
                             hidden={!initialMeal}
                             onClick={onDelete}
                         >
-                            Delete
+                            {t('delete')}
                         </Button>
-                        <Button type="submit">Save</Button>
+                        <Button type="submit">{t('save')}</Button>
                     </Group>
                 </Group>
             </Group>

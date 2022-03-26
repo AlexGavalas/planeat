@@ -2,8 +2,11 @@ import { useUser } from '@supabase/supabase-auth-helpers/react';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { Google, LogOut } from 'iconoir-react';
 import { Button } from '@mantine/core';
+import { useTranslation } from 'next-i18next';
 
 export const UserActions = () => {
+    const { t } = useTranslation();
+
     const { user } = useUser();
 
     if (!user) {
@@ -16,7 +19,7 @@ export const UserActions = () => {
                     });
                 }}
             >
-                Login with Google
+                {t('login.google')}
             </Button>
         );
     }
@@ -28,7 +31,7 @@ export const UserActions = () => {
             }}
             leftIcon={<LogOut />}
         >
-            Logout
+            {t('logout')}
         </Button>
     );
 };

@@ -3,7 +3,14 @@ import { Calendar } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
 import { useNotifications } from '@mantine/notifications';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import { useTranslation } from 'next-i18next';
 import { useState, FormEventHandler } from 'react';
+
+import 'dayjs/locale/el';
+
+const localeMap = {
+    gr: 'el',
+};
 
 interface ModalContentProps {
     userId: string;
@@ -14,6 +21,8 @@ export const NewWeightModalContent = ({
     userId,
     onSave,
 }: ModalContentProps) => {
+    const { t, i18n } = useTranslation();
+
     const modals = useModals();
     const notifications = useNotifications();
 
@@ -27,7 +36,7 @@ export const NewWeightModalContent = ({
         e.preventDefault();
 
         if (!weight) {
-            return setError('You forgot to input your weight');
+            return setError(t('errors.weight_empty'));
         }
 
         const { error } = await supabaseClient
@@ -40,10 +49,9 @@ export const NewWeightModalContent = ({
 
         if (error) {
             notifications.showNotification({
-                title: 'Error',
-                message: 'We could not save your weight. Please try again.',
+                title: t('error'),
+                message: `${t('errors.weight_save')}. ${t('try_again')}`,
                 color: 'red',
-                autoClose: 5000,
             });
         } else {
             onSave();
@@ -53,13 +61,17 @@ export const NewWeightModalContent = ({
 
     return (
         <form onSubmit={handleSave}>
-            <Text>Date measured</Text>
+            <Text>{t('date')}</Text>
             <Center>
-                <Calendar value={date} onChange={setDate} />
+                <Calendar
+                    value={date}
+                    onChange={setDate}
+                    locale={localeMap[i18n.language as keyof typeof localeMap]}
+                />
             </Center>
             <Space h={20} />
             <NumberInput
-                label="New weight"
+                label={t('weight')}
                 error={error}
                 onFocus={() => setError('')}
                 onChange={setWeight}
@@ -67,9 +79,9 @@ export const NewWeightModalContent = ({
             <Space h={20} />
             <Group position="apart">
                 <Button variant="light" color="red" onClick={closeModal}>
-                    Cancel
+                    {t('cancel')}
                 </Button>
-                <Button type="submit">Save</Button>
+                <Button type="submit">{t('save')}</Button>
             </Group>
         </form>
     );

@@ -13,6 +13,7 @@ import { useModals } from '@mantine/modals';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
 import { Plus } from 'iconoir-react';
+import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
@@ -22,6 +23,8 @@ import { Row } from './row';
 const PAGE_SIZE = 10;
 
 export const WeightTable = () => {
+    const { t } = useTranslation();
+
     const modals = useModals();
     const { user } = useUser();
     const queryClient = useQueryClient();
@@ -52,7 +55,7 @@ export const WeightTable = () => {
         },
         {
             select: ({ data }) => data || [],
-            enabled: Boolean(count),
+            enabled: isFetched,
         }
     );
 
@@ -64,16 +67,16 @@ export const WeightTable = () => {
     return (
         <>
             <Group position="apart" py={20}>
-                <Title order={3}>Μετρήσεις βάρους</Title>
+                <Title order={3}>{t('weight_measurements')}</Title>
                 <ActionIcon
-                    title="Add a new measurement"
+                    title={t('add_measurement')}
                     variant="light"
                     size="lg"
                     onClick={() => {
                         if (!user) return;
 
                         modals.openModal({
-                            title: 'New weight',
+                            title: t('new_weight'),
                             centered: true,
                             size: 'sm',
                             children: (
@@ -97,8 +100,10 @@ export const WeightTable = () => {
                         <Table highlightOnHover={true}>
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th style={{ width: '50%' }}>Weight</th>
+                                    <th>{t('date')}</th>
+                                    <th style={{ width: '50%' }}>
+                                        {t('weight')}
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -121,7 +126,7 @@ export const WeightTable = () => {
                     </>
                 ) : (
                     <Center>
-                        <Title order={4}>Δεν έχεις ακόμα καμία μέτρηση</Title>
+                        <Title order={4}>{t('no_measurements_yet')}</Title>
                     </Center>
                 )}
             </Box>

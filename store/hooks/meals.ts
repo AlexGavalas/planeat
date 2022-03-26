@@ -5,12 +5,15 @@ import { startOfISOWeek, endOfISOWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
 import { useMemo, useState } from 'react';
 import { useQueryClient, useQuery } from 'react-query';
+import { useTranslation } from 'next-i18next';
 
 import { useCurrentWeek } from './current-week';
 import { useUnsavedChanges } from './unsaved-changes';
 import { getDaysOfWeek } from '@util/date';
 
 export const useMeals = () => {
+    const { t } = useTranslation();
+
     const { currentWeek } = useCurrentWeek();
     const queryClient = useQueryClient();
     const notifications = useNotifications();
@@ -68,10 +71,9 @@ export const useMeals = () => {
             setSubmitting(false);
 
             notifications.showNotification({
-                title: 'Error',
-                message: 'We could not save your changes. Please try again.',
+                title: t('error'),
+                message: `${t('errors.meal_save')}. ${t('try_again')}`,
                 color: 'red',
-                autoClose: 5000,
             });
         } else {
             queryClient.invalidateQueries(['meals', currentWeek]);
@@ -79,16 +81,14 @@ export const useMeals = () => {
             removeChanges();
 
             notifications.showNotification({
-                title: 'Success',
-                message: 'Your changes have been saved',
+                title: t('success'),
+                message: t('meal_save_success'),
                 color: 'green',
-                autoClose: 2000,
             });
         }
     };
 
     const revert = () => {
-        setSubmitting(true);
         removeChanges();
     };
 
@@ -116,10 +116,9 @@ export const useMeals = () => {
             setSubmitting(false);
 
             notifications.showNotification({
-                title: 'Error',
-                message: 'We could not delete the entry. Please try again.',
+                title: t('error'),
+                message: `${t('errors.meal_delete')}. ${t('try_again')}`,
                 color: 'red',
-                autoClose: 5000,
             });
         } else {
             queryClient.invalidateQueries(['meals', currentWeek]);
@@ -159,10 +158,9 @@ export const useMeals = () => {
             setSubmitting(false);
 
             notifications.showNotification({
-                title: 'Error',
-                message: 'We could not delete the entry. Please try again.',
+                title: t('error'),
+                message: `${t('errors.meal_delete')}. ${t('try_again')}`,
                 color: 'red',
-                autoClose: 5000,
             });
         } else {
             queryClient.invalidateQueries(['meals', currentWeek]);

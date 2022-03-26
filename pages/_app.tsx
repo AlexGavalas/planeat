@@ -1,16 +1,17 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { useEffect } from 'react';
 import { UserProvider } from '@supabase/supabase-auth-helpers/react';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { NotificationsProvider } from '@mantine/notifications';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { appWithTranslation } from 'next-i18next';
 
 import '../styles/globals.css';
 
 import { Header } from '@features/header';
+import { UserContext } from '@store/user-context';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -20,23 +21,7 @@ const queryClient = new QueryClient({
     },
 });
 
-const App = ({ Component, pageProps, router }: AppProps) => {
-    useEffect(() => {
-        const { data: authListener } = supabaseClient.auth.onAuthStateChange(
-            (event) => {
-                if (event === 'SIGNED_IN') {
-                    router.push('/home');
-                } else if (event === 'SIGNED_OUT') {
-                    router.push('/');
-                }
-            }
-        );
-
-        return () => {
-            authListener?.unsubscribe();
-        };
-    }, []);
-
+const App = ({ Component, pageProps }: AppProps) => {
     return (
         <>
             <Head>
@@ -53,8 +38,10 @@ const App = ({ Component, pageProps, router }: AppProps) => {
                     <ModalsProvider>
                         <UserProvider supabaseClient={supabaseClient}>
                             <QueryClientProvider client={queryClient}>
-                                <Header />
-                                <Component {...pageProps} />
+                                <UserContext>
+                                    <Header />
+                                    <Component {...pageProps} />
+                                </UserContext>
                             </QueryClientProvider>
                         </UserProvider>
                     </ModalsProvider>
@@ -64,4 +51,4 @@ const App = ({ Component, pageProps, router }: AppProps) => {
     );
 };
 
-export default App;
+export default appWithTranslation(App);

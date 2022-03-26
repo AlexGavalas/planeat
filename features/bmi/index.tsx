@@ -3,6 +3,7 @@ import { Box, Center, LoadingOverlay, Title } from '@mantine/core';
 import { sub } from 'date-fns';
 import { useQuery } from 'react-query';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import { useTranslation } from 'next-i18next';
 
 import { MAX_BMI, SECTIONS } from './constants';
 import { ProgressIndicator } from '@components/progress/indicator';
@@ -12,17 +13,26 @@ const LineChart = dynamic(() => import('@components/charts/line'), {
 });
 
 export const CurrentBMI = ({ value }: { value: number }) => {
+    const { t } = useTranslation();
+
+    const translatedSections = SECTIONS.map((section) => ({
+        ...section,
+        label: t(`bmi_sections.${section.key}`),
+    }));
+
     return (
         <ProgressIndicator
-            label="Δείκτης μάζας σώματος BMI"
+            label={t('bmi_label')}
             value={value}
             percent={(value * 100) / MAX_BMI}
-            sections={SECTIONS}
+            sections={translatedSections}
         />
     );
 };
 
 export const BMITimeline = () => {
+    const { t } = useTranslation();
+
     const { data, isFetching } = useQuery(
         ['bmi-timeline'],
         async () => {
@@ -46,7 +56,7 @@ export const BMITimeline = () => {
     return (
         <>
             <Title order={4} pt={20}>
-                Μεταβολή λίπους
+                {t('fat_change')}
             </Title>
             <Box
                 style={{
@@ -57,16 +67,14 @@ export const BMITimeline = () => {
                 <LoadingOverlay visible={isFetching} />
                 {data && (
                     <LineChart
-                        unit="kg"
+                        unit={t('kg')}
                         target={85}
                         data={[{ id: 'bmi-timeline', data }]}
                     />
                 )}
                 {!isFetching && !data && (
                     <Center style={{ height: '100%' }}>
-                        <Title order={4}>
-                            Δεν υπάρχουν ακόμα διαθέσιμες μετρήσεις
-                        </Title>
+                        <Title order={4}>{t('no_measurements_yet')}</Title>
                     </Center>
                 )}
             </Box>

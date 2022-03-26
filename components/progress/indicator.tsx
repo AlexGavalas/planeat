@@ -3,12 +3,6 @@ import { NavArrowDown } from 'iconoir-react';
 
 import styles from './indicator.module.css';
 
-type Section = {
-    label: string;
-    percent: number;
-    bg: string;
-};
-
 interface ProgressIndicatorProps {
     label: string;
     value: number;

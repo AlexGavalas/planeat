@@ -1,9 +1,10 @@
-import { NumberInput, ActionIcon } from '@mantine/core';
+import { NumberInput, ActionIcon, Group } from '@mantine/core';
 import { useEventListener, useHover } from '@mantine/hooks';
 import { useNotifications } from '@mantine/notifications';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { format, parseISO } from 'date-fns';
-import { Group, EditPencil, SaveFloppyDisk, Cancel } from 'iconoir-react';
+import { EditPencil, SaveFloppyDisk, Cancel } from 'iconoir-react';
+import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -13,6 +14,8 @@ interface RowProps {
 }
 
 export const Row = ({ item, page }: RowProps) => {
+    const { t } = useTranslation();
+
     const [edit, setEdit] = useState(false);
     const [newWeight, setNewWeight] = useState(item.weight);
 
@@ -35,10 +38,9 @@ export const Row = ({ item, page }: RowProps) => {
 
         if (error) {
             notifications.showNotification({
-                title: 'Error',
-                message: 'We could not update your weight. Please try again.',
+                title: t('error'),
+                message: `${t('errors.weight_update')}. ${t('try_again')}`,
                 color: 'red',
-                autoClose: 5000,
             });
         } else {
             queryClient.invalidateQueries(['measurements', page]);
@@ -72,7 +74,7 @@ export const Row = ({ item, page }: RowProps) => {
                         <ActionIcon
                             size="sm"
                             onClick={() => setEdit(true)}
-                            title="Edit"
+                            title={t('edit')}
                         >
                             <EditPencil />
                         </ActionIcon>
@@ -82,14 +84,14 @@ export const Row = ({ item, page }: RowProps) => {
                             <ActionIcon
                                 size="sm"
                                 onClick={handleSave}
-                                title="Save"
+                                title={t('save')}
                             >
                                 <SaveFloppyDisk />
                             </ActionIcon>
                             <ActionIcon
                                 size="sm"
                                 onClick={handleCancel}
-                                title="Cancel"
+                                title={t('cancel')}
                             >
                                 <Cancel />
                             </ActionIcon>
