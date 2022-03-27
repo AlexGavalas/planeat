@@ -60,12 +60,6 @@ export const getServerSideProps = withAuthRequired({
     },
 });
 
-const USER_TEST_DATA = {
-    fatPercent: 28.9,
-    weight: 88.8,
-    height: 1.74,
-};
-
 const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
     const { t } = useTranslation();
 
@@ -96,7 +90,7 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
                     </Link>
                 </Group>
                 <Divider my="lg" />
-                <FatPercent value={USER_TEST_DATA.fatPercent} />
+                <FatPercent />
                 <Divider my="sm" />
                 <FatPercentTimeline />
                 <Divider my="lg" />

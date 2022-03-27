@@ -31,6 +31,13 @@ type WeightData = {
     user_id: string;
 };
 
+type FatMeasurement = {
+    id: string;
+    fat_percent: number;
+    date: string;
+    user_id: string;
+};
+
 type Profile = {
     id: string;
     is_nutritionist: boolean;
