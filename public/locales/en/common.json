@@ -12,8 +12,10 @@
     "delete": "Delete",
     "no_data": "No data",
     "weight_measurements": "Weight measurements",
+    "fat_measurements": "Fat measurements",
     "add_measurement": "Add a new measurement",
     "new_weight": "New weight",
+    "new_measurement": "New measurement",
     "weight": "Weight",
     "date": "Date",
     "no_measurements_yet": "You don't have any measurements yet",
@@ -65,7 +67,10 @@
         "weight_empty": "You forgot to input your weight",
         "meal_save": "We could not save your changes",
         "meal_delete": "We could not delete this meal",
-        "meal_empty": "You forgot to input the meal"
+        "meal_empty": "You forgot to input the meal",
+        "fat_update": "We could not update your fat percentage",
+        "fat_save": "We could not save your fat percentage",
+        "fat_empty": "You forgot to input your fat percentage"
     },
     "meal_save_success": "Your changes where successfully saved"
 }

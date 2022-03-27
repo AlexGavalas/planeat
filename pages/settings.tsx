@@ -23,6 +23,7 @@ import {
 } from '@mantine/core';
 
 import { WeightTable } from '@features/measurements/weight';
+import { FatPercentTable } from '@features/measurements/fat';
 
 export const getServerSideProps = withAuthRequired({
     redirectTo: '/',
@@ -175,6 +176,8 @@ const Settings = () => {
             )}
             <Divider my={20} />
             <WeightTable />
+            <Divider my={20} />
+            <FatPercentTable />
         </Container>
     );
 };

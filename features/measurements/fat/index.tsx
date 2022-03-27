@@ -17,12 +17,12 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
-import { NewWeightModalContent } from './new-weight-modal-content';
+import { NewFatModalContent } from './new-fat-modal-content';
 import { Row } from './row';
 
 const PAGE_SIZE = 10;
 
-export const WeightTable = () => {
+export const FatPercentTable = () => {
     const { t } = useTranslation();
 
     const modals = useModals();
@@ -31,10 +31,10 @@ export const WeightTable = () => {
     const [page, setPage] = useState(1);
 
     const { data: count = 0, isFetched } = useQuery(
-        ['measurements-count'],
+        ['fat-measurements-count'],
         async () => {
             const { count } = await supabaseClient
-                .from('weight-measurements')
+                .from('fat-measurements')
                 .select('id', { count: 'exact' });
 
             return (count || 0) / PAGE_SIZE;
@@ -45,10 +45,10 @@ export const WeightTable = () => {
     );
 
     const { data: measurements = [], isFetching } = useQuery(
-        ['measurements', page],
+        ['fat-measurements', page],
         async () => {
             return supabaseClient
-                .from<WeightData>('weight-measurements')
+                .from<FatMeasurement>('fat-measurements')
                 .select('*')
                 .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
                 .order('date', { ascending: false });
@@ -61,7 +61,7 @@ export const WeightTable = () => {
 
     const onNewWeightSave = () => {
         setPage(1);
-        queryClient.invalidateQueries(['measurements']);
+        queryClient.invalidateQueries(['fat-measurements']);
     };
 
     const loading = (!measurements.length && !isFetched) || isFetching;
@@ -69,7 +69,7 @@ export const WeightTable = () => {
     return (
         <>
             <Group position="apart" py={20}>
-                <Title order={3}>{t('weight_measurements')}</Title>
+                <Title order={3}>{t('fat_measurements')}</Title>
                 <ActionIcon
                     title={t('add_measurement')}
                     variant="light"
@@ -78,11 +78,11 @@ export const WeightTable = () => {
                         if (!user) return;
 
                         modals.openModal({
-                            title: t('new_weight'),
+                            title: t('new_measurement'),
                             centered: true,
                             size: 'sm',
                             children: (
-                                <NewWeightModalContent
+                                <NewFatModalContent
                                     userId={user.id}
                                     onSave={onNewWeightSave}
                                 />
@@ -102,7 +102,7 @@ export const WeightTable = () => {
                                 <tr>
                                     <th>{t('date')}</th>
                                     <th style={{ width: '50%' }}>
-                                        {t('weight')}
+                                        {t('fat_label')}
                                     </th>
                                 </tr>
                             </thead>

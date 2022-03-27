@@ -17,17 +17,14 @@ interface ModalContentProps {
     onSave: () => void;
 }
 
-export const NewWeightModalContent = ({
-    userId,
-    onSave,
-}: ModalContentProps) => {
+export const NewFatModalContent = ({ userId, onSave }: ModalContentProps) => {
     const { t, i18n } = useTranslation();
 
     const modals = useModals();
     const notifications = useNotifications();
 
     const [date, setDate] = useState(new Date());
-    const [weight, setWeight] = useState<number>();
+    const [fatPercent, setFatPercent] = useState<number>();
     const [error, setError] = useState('');
 
     const closeModal = () => modals.closeAll();
@@ -35,22 +32,22 @@ export const NewWeightModalContent = ({
     const handleSave: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
-        if (!weight) {
-            return setError(t('errors.weight_empty'));
+        if (!fatPercent) {
+            return setError(t('errors.fat_empty'));
         }
 
         const { error } = await supabaseClient
-            .from('weight-measurements')
+            .from<FatMeasurement>('fat-measurements')
             .insert({
                 user_id: userId,
-                weight,
+                fat_percent: fatPercent,
                 date,
             });
 
         if (error) {
             notifications.showNotification({
                 title: t('error'),
-                message: `${t('errors.weight_save')}. ${t('try_again')}`,
+                message: `${t('errors.fat_save')}. ${t('try_again')}`,
                 color: 'red',
             });
         } else {
@@ -71,10 +68,10 @@ export const NewWeightModalContent = ({
             </Center>
             <Space h={20} />
             <NumberInput
-                label={t('weight')}
+                label={t('fat_label')}
                 error={error}
                 onFocus={() => setError('')}
-                onChange={setWeight}
+                onChange={setFatPercent}
                 precision={2}
             />
             <Space h={20} />

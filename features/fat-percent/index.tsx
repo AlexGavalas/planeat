@@ -27,7 +27,7 @@ export const FatPercent = () => {
                 .from<FatMeasurement>('fat-measurements')
                 .select('*')
                 .eq('user_id', user.id)
-                .order('date', { ascending: true })
+                .order('date', { ascending: false })
                 .limit(1);
         },
         {
