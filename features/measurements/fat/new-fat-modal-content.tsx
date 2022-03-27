@@ -36,13 +36,12 @@ export const NewFatModalContent = ({ userId, onSave }: ModalContentProps) => {
             return setError(t('errors.fat_empty'));
         }
 
-        const { error } = await supabaseClient
-            .from<FatMeasurement>('fat-measurements')
-            .insert({
-                user_id: userId,
-                fat_percent: fatPercent,
-                date,
-            });
+        // TODO: Add type annotation
+        const { error } = await supabaseClient.from('fat-measurements').insert({
+            user_id: userId,
+            fat_percent: fatPercent,
+            date,
+        });
 
         if (error) {
             notifications.showNotification({

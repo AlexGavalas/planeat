@@ -39,6 +39,7 @@ export const NewWeightModalContent = ({
             return setError(t('errors.weight_empty'));
         }
 
+        // TODO: Add type annotation
         const { error } = await supabaseClient
             .from('weight-measurements')
             .insert({
