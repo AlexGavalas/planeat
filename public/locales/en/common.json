@@ -72,5 +72,7 @@
         "fat_save": "We could not save your fat percentage",
         "fat_empty": "You forgot to input your fat percentage"
     },
-    "meal_save_success": "Your changes where successfully saved"
+    "meal_save_success": "Your changes where successfully saved",
+    "hide": "Hide",
+    "show_more": "Show more"
 }

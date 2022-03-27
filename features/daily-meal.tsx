@@ -1,8 +1,7 @@
-import { Timeline, Text } from '@mantine/core';
+import { Timeline, Text, Spoiler } from '@mantine/core';
 import { format, set, isAfter } from 'date-fns';
 import { CrackedEgg, OrangeSliceAlt, AppleHalf, Bbq } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
-import { useMemo } from 'react';
 
 import { ROWS } from './calendar/constants';
 
@@ -64,7 +63,13 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
                             title={<Text weight="bold">{row.label}</Text>}
                             bullet={<Icon />}
                         >
-                            <Text>{meal}</Text>
+                            <Spoiler
+                                maxHeight={100}
+                                hideLabel={t('hide')}
+                                showLabel={t('show_more')}
+                            >
+                                <Text>{meal}</Text>
+                            </Spoiler>
                         </Timeline.Item>
                     );
                 })}
