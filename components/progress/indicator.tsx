@@ -19,15 +19,17 @@ export const ProgressIndicator = ({
     return (
         <Box>
             <Title order={3}>{label}</Title>
-            <div
-                className={styles.indicator}
-                style={{
-                    left: `calc(${percent}% - 50px)`,
-                }}
-            >
-                {value} %
-                <NavArrowDown />
-            </div>
+            {Boolean(value) && (
+                <div
+                    className={styles.indicator}
+                    style={{
+                        left: `calc(${percent}% - 50px)`,
+                    }}
+                >
+                    {value} %
+                    <NavArrowDown />
+                </div>
+            )}
             <Box>
                 {sections.map(({ label, percent, bg }) => (
                     <Tooltip

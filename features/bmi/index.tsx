@@ -48,12 +48,11 @@ export const CurrentBMI = () => {
                 .select('*')
                 .eq('user_id', user.id)
                 .order('date', { ascending: true })
-                .limit(1)
-                .single();
+                .limit(1);
         },
         {
             enabled: Boolean(user),
-            select: ({ data }) => data?.weight,
+            select: ({ data }) => data?.[0]?.weight,
         }
     );
 
