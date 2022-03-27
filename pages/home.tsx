@@ -60,9 +60,6 @@ export const getServerSideProps = withAuthRequired({
     },
 });
 
-const calculateBMI = ({ weight, height }: { weight: number; height: number }) =>
-    weight / height ** 2;
-
 const USER_TEST_DATA = {
     fatPercent: 28.9,
     weight: 88.8,
@@ -71,8 +68,6 @@ const USER_TEST_DATA = {
 
 const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
     const { t } = useTranslation();
-
-    const userBMI = +calculateBMI(USER_TEST_DATA).toFixed(1);
 
     return (
         <Group grow p={20} align="start">
@@ -105,7 +100,7 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
                 <Divider my="sm" />
                 <FatPercentTimeline />
                 <Divider my="lg" />
-                <CurrentBMI value={userBMI} />
+                <CurrentBMI />
                 <Divider my="sm" />
                 <BMITimeline />
             </Box>

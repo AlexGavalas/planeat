@@ -36,6 +36,7 @@ type Profile = {
     is_nutritionist: boolean;
     full_name: string;
     language: string;
+    height: number;
 };
 
 type Section = {

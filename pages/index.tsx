@@ -33,12 +33,15 @@ const Home = () => {
                         margin: 'auto',
                         width: 500,
                         height: 500,
+                        borderRadius: 5,
+                        overflow: 'hidden',
                     }}
                 >
                     <Image
                         src="/images/kitchen.png"
                         layout="fill"
                         alt="An illustration of a kitchen"
+                        priority={true}
                     />
                 </Box>
                 <Title order={1}>Your next meal planning solution</Title>

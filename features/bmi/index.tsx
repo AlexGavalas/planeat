@@ -7,24 +7,68 @@ import { useTranslation } from 'next-i18next';
 
 import { MAX_BMI, SECTIONS } from './constants';
 import { ProgressIndicator } from '@components/progress/indicator';
+import { useUser } from '@supabase/supabase-auth-helpers/react';
 
 const LineChart = dynamic(() => import('@components/charts/line'), {
     ssr: false,
 });
 
-export const CurrentBMI = ({ value }: { value: number }) => {
+const calculateBMI = ({ weight, height }: { weight: number; height: number }) =>
+    weight / (height / 100) ** 2;
+
+export const CurrentBMI = () => {
     const { t } = useTranslation();
+
+    const { user } = useUser();
+
+    const { data: height = 0 } = useQuery(
+        ['profile'],
+        async () => {
+            if (!user) throw new Error('User not logged in');
+
+            return supabaseClient
+                .from<Profile>('users')
+                .select('height')
+                .eq('id', user.id)
+                .single();
+        },
+        {
+            enabled: Boolean(user),
+            select: ({ data }) => data?.height,
+        }
+    );
+
+    const { data: weight = 0 } = useQuery(
+        ['current-weight'],
+        async () => {
+            if (!user) throw new Error(`User not logged in`);
+
+            return supabaseClient
+                .from<WeightMeasurement>('weight-measurements')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('date', { ascending: true })
+                .limit(1)
+                .single();
+        },
+        {
+            enabled: Boolean(user),
+            select: ({ data }) => data?.weight,
+        }
+    );
 
     const translatedSections = SECTIONS.map((section) => ({
         ...section,
         label: t(`bmi_sections.${section.key}`),
     }));
 
+    const userBMI = +calculateBMI({ weight, height }).toFixed(1);
+
     return (
         <ProgressIndicator
             label={t('bmi_label')}
-            value={value}
-            percent={(value * 100) / MAX_BMI}
+            value={userBMI}
+            percent={(userBMI * 100) / MAX_BMI}
             sections={translatedSections}
         />
     );
@@ -33,16 +77,22 @@ export const CurrentBMI = ({ value }: { value: number }) => {
 export const BMITimeline = () => {
     const { t } = useTranslation();
 
+    const { user } = useUser();
+
     const { data, isFetching } = useQuery(
         ['bmi-timeline'],
         async () => {
+            if (!user) throw new Error(`User not logged in`);
+
             return supabaseClient
                 .from<WeightMeasurement>('weight-measurements')
                 .select('*')
+                .eq('user_id', user.id)
                 .gte('date', sub(new Date(), { days: 100 }).toISOString())
                 .order('date', { ascending: true });
         },
         {
+            enabled: Boolean(user),
             select: ({ data }) =>
                 data?.length
                     ? data.map(({ date, weight }) => ({
@@ -56,7 +106,7 @@ export const BMITimeline = () => {
     return (
         <>
             <Title order={4} pt={20}>
-                {t('fat_change')}
+                {t('weight_change')}
             </Title>
             <Box
                 style={{

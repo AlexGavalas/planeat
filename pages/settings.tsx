@@ -15,10 +15,11 @@ import {
 import {
     Container,
     Group,
-    Text,
+    Button,
     Switch,
     Divider,
     Autocomplete,
+    NumberInput,
 } from '@mantine/core';
 
 import { WeightTable } from '@features/measurements/weight';
@@ -60,6 +61,7 @@ const Settings = () => {
     const queryClient = useQueryClient();
 
     const [searchQuery, setSearchQuery] = useState('');
+    const [height, setHeight] = useState<number>();
 
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 250);
 
@@ -87,24 +89,28 @@ const Settings = () => {
 
             const { data, error } = await supabaseClient
                 .from<Profile>('users')
-                .update({ is_nutritionist: value })
+                .update({
+                    is_nutritionist: value,
+                    ...(height && { height }),
+                })
                 .eq('id', user.id);
 
-            if (error) {
-                throw error;
-            }
+            if (error) throw error;
 
             return data;
         },
         {
-            onMutate: () => {
-                if (!profile) return;
-
-                queryClient.setQueryData(['user'], {
-                    ...profile,
-                    is_nutritionist: !profile.is_nutritionist,
-                });
+            onSuccess: () => {
+                queryClient.invalidateQueries(['user']);
             },
+            // onMutate: () => {
+            //     if (!profile) return;
+
+            //     queryClient.setQueryData(['user'], {
+            //         ...profile,
+            //         is_nutritionist: !profile.is_nutritionist,
+            //     });
+            // },
             onError: () => {
                 queryClient.invalidateQueries(['user']);
             },
@@ -147,6 +153,26 @@ const Settings = () => {
                     }
                 />
             </Group>
+            <Divider my={20} />
+            {profile && (
+                <Group align="end">
+                    <NumberInput
+                        label={t('height_input')}
+                        style={{ width: '25%' }}
+                        defaultValue={profile?.height}
+                        onChange={setHeight}
+                    />
+                    <Button
+                        onClick={() => {
+                            if (profile) {
+                                mutate(profile.is_nutritionist);
+                            }
+                        }}
+                    >
+                        {t('save')}
+                    </Button>
+                </Group>
+            )}
             <Divider my={20} />
             <WeightTable />
         </Container>
