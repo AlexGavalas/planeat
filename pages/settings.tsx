@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useUser } from '@supabase/supabase-auth-helpers/react';
+import { useQuery } from 'react-query';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
@@ -22,8 +21,8 @@ import {
     NumberInput,
 } from '@mantine/core';
 
-import { MeasurementsTable } from '@features/measurements/weight';
-// import { FatPercentTable } from '@features/measurements/fat';
+import { MeasurementsTable } from '@features/measurements/table';
+import { useProfile } from '@hooks/use-profile';
 
 export const getServerSideProps = withAuthRequired({
     redirectTo: '/',
@@ -58,100 +57,51 @@ export const getServerSideProps = withAuthRequired({
 const Settings = () => {
     const { t } = useTranslation();
 
-    const { user } = useUser();
-    const queryClient = useQueryClient();
-
     const [searchQuery, setSearchQuery] = useState('');
     const [height, setHeight] = useState<number>();
 
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 250);
 
-    const { data: profile } = useQuery(
-        ['user'],
-        async () => {
-            if (!user) return;
+    const { profile, updateProfile } = useProfile();
 
-            const { data } = await supabaseClient
-                .from<Profile>('users')
-                .select('*')
-                .eq('id', user.id)
-                .single();
-
-            return data;
-        },
-        {
-            enabled: Boolean(user),
-        }
-    );
-
-    const { mutate } = useMutation(
-        async (value: boolean) => {
-            if (!user) return;
-
-            const { data, error } = await supabaseClient
-                .from<Profile>('users')
-                .update({
-                    is_nutritionist: value,
-                    ...(height && { height }),
-                })
-                .eq('id', user.id);
-
-            if (error) throw error;
-
-            return data;
-        },
-        {
-            onSuccess: () => {
-                queryClient.invalidateQueries(['user']);
-            },
-            // onMutate: () => {
-            //     if (!profile) return;
-
-            //     queryClient.setQueryData(['user'], {
-            //         ...profile,
-            //         is_nutritionist: !profile.is_nutritionist,
-            //     });
-            // },
-            onError: () => {
-                queryClient.invalidateQueries(['user']);
-            },
-        }
-    );
-
-    const { data = [], isFetching } = useQuery(
+    const { data: nutritionists = [], isFetching } = useQuery(
         ['nutritionists', debouncedSearchQuery],
         async () => {
-            return await supabaseClient
+            return supabaseClient
                 .from<Profile>('users')
                 .select('*')
                 .ilike('full_name', `%${debouncedSearchQuery}%`)
                 .limit(5);
         },
         {
-            select: ({ data }) => data || [],
+            select: ({ data }) =>
+                (data || []).map(({ full_name }) => full_name),
             enabled: Boolean(debouncedSearchQuery),
         }
     );
+
+    const nothingFoundLabel =
+        debouncedSearchQuery && !isFetching && !nutritionists?.length
+            ? t('no_data')
+            : '';
 
     return (
         <Container>
             <Group position="apart" mt={10}>
                 <Switch
-                    checked={profile?.is_nutritionist || false}
-                    onChange={({ target: { checked } }) => mutate(checked)}
                     label={t('am_nutritionist')}
+                    checked={profile?.is_nutritionist || false}
+                    onChange={({ target: { checked } }) => {
+                        updateProfile({ isNutritionist: checked });
+                    }}
                 />
                 <Autocomplete
                     label={t('find_your_nutritionist')}
                     placeholder={t('search')}
-                    data={data.map(({ full_name }) => full_name)}
+                    data={nutritionists}
                     value={searchQuery}
                     onChange={setSearchQuery}
-                    nothingFound={
-                        debouncedSearchQuery && !isFetching && !data?.length
-                            ? t('no_data')
-                            : ''
-                    }
+                    nothingFound={nothingFoundLabel}
                 />
             </Group>
             <Divider my={20} />
@@ -165,9 +115,7 @@ const Settings = () => {
                     />
                     <Button
                         onClick={() => {
-                            if (profile) {
-                                mutate(profile.is_nutritionist);
-                            }
+                            updateProfile({ height });
                         }}
                     >
                         {t('save')}
@@ -176,8 +124,6 @@ const Settings = () => {
             )}
             <Divider my={20} />
             <MeasurementsTable />
-            {/* <Divider my={20} />
-            <FatPercentTable /> */}
         </Container>
     );
 };

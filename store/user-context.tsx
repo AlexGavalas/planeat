@@ -1,31 +1,14 @@
+import { FC, useEffect } from 'react';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
-import { useUser } from '@supabase/supabase-auth-helpers/react';
 import { i18n } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { FC, useEffect } from 'react';
-import { useQuery } from 'react-query';
+
+import { useProfile } from '@hooks/use-profile';
 
 export const UserContext: FC = ({ children }) => {
-    const { user } = useUser();
     const router = useRouter();
 
-    const { data: profile } = useQuery(
-        ['user'],
-        async () => {
-            if (!user) return;
-
-            const { data } = await supabaseClient
-                .from<Profile>('users')
-                .select('*')
-                .eq('id', user.id)
-                .single();
-
-            return data;
-        },
-        {
-            enabled: Boolean(user),
-        }
-    );
+    const { profile } = useProfile();
 
     useEffect(() => {
         const { data: authListener } = supabaseClient.auth.onAuthStateChange(

@@ -4,10 +4,11 @@ import { sub } from 'date-fns';
 import { useQuery } from 'react-query';
 import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 import { useTranslation } from 'next-i18next';
+import { useUser } from '@supabase/supabase-auth-helpers/react';
 
 import { MAX_BMI, SECTIONS } from './constants';
 import { ProgressIndicator } from '@components/progress/indicator';
-import { useUser } from '@supabase/supabase-auth-helpers/react';
+import { useProfile } from '@hooks/use-profile';
 
 const LineChart = dynamic(() => import('@components/charts/line'), {
     ssr: false,
@@ -21,22 +22,7 @@ export const CurrentBMI = () => {
 
     const { user } = useUser();
 
-    const { data: height = 0 } = useQuery(
-        ['profile'],
-        async () => {
-            if (!user) throw new Error('User not logged in');
-
-            return supabaseClient
-                .from<Profile>('users')
-                .select('height')
-                .eq('id', user.id)
-                .single();
-        },
-        {
-            enabled: Boolean(user),
-            select: ({ data }) => data?.height,
-        }
-    );
+    const { profile } = useProfile();
 
     const { data: weight = 0 } = useQuery(
         ['current-weight'],
@@ -62,7 +48,10 @@ export const CurrentBMI = () => {
         label: t(`bmi_sections.${section.key}`),
     }));
 
-    const userBMI = +calculateBMI({ weight, height }).toFixed(1);
+    const userBMI = +calculateBMI({
+        weight,
+        height: profile?.height || 0,
+    }).toFixed(1);
 
     return (
         <ProgressIndicator
