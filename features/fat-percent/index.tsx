@@ -24,15 +24,16 @@ export const FatPercent = () => {
             if (!user) throw new Error(`User not logged in`);
 
             return supabaseClient
-                .from<FatMeasurement>('fat-measurements')
-                .select('*')
+                .from<Measurement>('measurements')
+                .select('fat_percentage')
                 .eq('user_id', user.id)
+                .not('fat_percentage', 'is', null)
                 .order('date', { ascending: false })
                 .limit(1);
         },
         {
             enabled: Boolean(user),
-            select: ({ data }) => data?.[0]?.fat_percent,
+            select: ({ data }) => data?.[0]?.fat_percentage,
         }
     );
 
@@ -62,9 +63,10 @@ export const FatPercentTimeline = () => {
             if (!user) throw new Error(`User not logged in`);
 
             return supabaseClient
-                .from<FatMeasurement>('fat-measurements')
-                .select('*')
+                .from<Measurement>('measurements')
+                .select('date, fat_percentage')
                 .eq('user_id', user.id)
+                .not('fat_percentage', 'is', null)
                 .gte('date', sub(new Date(), { days: 100 }).toISOString())
                 .order('date', { ascending: true });
         },
@@ -72,8 +74,8 @@ export const FatPercentTimeline = () => {
             enabled: Boolean(user),
             select: ({ data }) =>
                 data?.length
-                    ? data.map(({ date, fat_percent }) => ({
-                          y: fat_percent,
+                    ? data.map(({ date, fat_percentage }) => ({
+                          y: fat_percentage,
                           x: date,
                       }))
                     : null,

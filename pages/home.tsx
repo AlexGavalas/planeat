@@ -64,7 +64,7 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
     const { t } = useTranslation();
 
     return (
-        <Group grow p={20} align="start">
+        <Group grow p={20} align="start" noWrap={true}>
             <Group direction="column" style={{ maxWidth: '25%' }}>
                 <DailyMeal dailyMeals={dailyMeals} />
             </Group>

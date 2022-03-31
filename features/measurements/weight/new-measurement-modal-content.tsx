@@ -17,7 +17,7 @@ interface ModalContentProps {
     onSave: () => void;
 }
 
-export const NewWeightModalContent = ({
+export const NewMeasurementModalContent = ({
     userId,
     onSave,
 }: ModalContentProps) => {
@@ -28,6 +28,7 @@ export const NewWeightModalContent = ({
 
     const [date, setDate] = useState(new Date());
     const [weight, setWeight] = useState<number>();
+    const [fatPercent, setFatPercent] = useState<number>();
     const [error, setError] = useState('');
 
     const closeModal = () => modals.closeAll();
@@ -35,23 +36,21 @@ export const NewWeightModalContent = ({
     const handleSave: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
-        if (!weight) {
-            return setError(t('errors.weight_empty'));
-        }
+        if (!weight) return setError(t('errors.weight_empty'));
 
-        // TODO: Add type annotation
         const { error } = await supabaseClient
-            .from('weight-measurements')
+            .from<Measurement>('measurements')
             .insert({
                 user_id: userId,
+                date: date.toISOString(),
                 weight,
-                date,
+                fat_percentage: fatPercent,
             });
 
         if (error) {
             notifications.showNotification({
                 title: t('error'),
-                message: `${t('errors.weight_save')}. ${t('try_again')}`,
+                message: `${t('errors.measurement_save')}. ${t('try_again')}`,
                 color: 'red',
             });
         } else {
@@ -76,6 +75,14 @@ export const NewWeightModalContent = ({
                 error={error}
                 onFocus={() => setError('')}
                 onChange={setWeight}
+                precision={2}
+            />
+            <Space h={20} />
+            <NumberInput
+                label={t('fat_label')}
+                error={error}
+                onFocus={() => setError('')}
+                onChange={setFatPercent}
                 precision={2}
             />
             <Space h={20} />

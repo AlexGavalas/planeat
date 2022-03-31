@@ -44,9 +44,10 @@ export const CurrentBMI = () => {
             if (!user) throw new Error(`User not logged in`);
 
             return supabaseClient
-                .from<WeightMeasurement>('weight-measurements')
-                .select('*')
+                .from<Measurement>('measurements')
+                .select('weight')
                 .eq('user_id', user.id)
+                .not('weight', 'is', null)
                 .order('date', { ascending: false })
                 .limit(1);
         },
@@ -84,9 +85,10 @@ export const BMITimeline = () => {
             if (!user) throw new Error(`User not logged in`);
 
             return supabaseClient
-                .from<WeightMeasurement>('weight-measurements')
-                .select('*')
+                .from<Measurement>('measurements')
+                .select('date, weight')
                 .eq('user_id', user.id)
+                .not('weight', 'is', null)
                 .gte('date', sub(new Date(), { days: 100 }).toISOString())
                 .order('date', { ascending: true });
         },

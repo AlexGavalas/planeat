@@ -13,6 +13,7 @@
     "no_data": "No data",
     "weight_measurements": "Weight measurements",
     "fat_measurements": "Fat measurements",
+    "measurements": "Measurements",
     "add_measurement": "Add a new measurement",
     "new_weight": "New weight",
     "new_measurement": "New measurement",
@@ -70,7 +71,10 @@
         "meal_empty": "You forgot to input the meal",
         "fat_update": "We could not update your fat percentage",
         "fat_save": "We could not save your fat percentage",
-        "fat_empty": "You forgot to input your fat percentage"
+        "fat_empty": "You forgot to input your fat percentage",
+        "measurement_update": "We could not update your measurement",
+        "measurement_save": "We could not save your measurement",
+        "measurement_empty": "You forgot to input your measurement"
     },
     "meal_save_success": "Your changes where successfully saved",
     "hide": "Hide",
