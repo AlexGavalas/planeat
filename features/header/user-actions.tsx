@@ -1,5 +1,5 @@
-import { useUser } from '@supabase/supabase-auth-helpers/react';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import { useUser } from '@supabase/auth-helpers-react';
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { Google, LogOut } from 'iconoir-react';
 import { Button } from '@mantine/core';
 import { useTranslation } from 'next-i18next';

@@ -10,8 +10,8 @@ import {
 } from '@mantine/core';
 
 import { useModals } from '@mantine/modals';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
-import { useUser } from '@supabase/supabase-auth-helpers/react';
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { useUser } from '@supabase/auth-helpers-react';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';

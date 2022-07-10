@@ -1,4 +1,4 @@
-import { useUser } from '@supabase/supabase-auth-helpers/react';
+import { useUser } from '@supabase/auth-helpers-react';
 import { Box, Text, Center } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 

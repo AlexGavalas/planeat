@@ -4,12 +4,12 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import {
     getUser,
     supabaseServerClient,
-    withAuthRequired,
-} from '@supabase/supabase-auth-helpers/nextjs';
+    withPageAuth,
+} from '@supabase/auth-helpers-nextjs';
 
 import { Calendar } from '@features/calendar';
 
-export const getServerSideProps = withAuthRequired({
+export const getServerSideProps = withPageAuth({
     redirectTo: '/',
     getServerSideProps: async (context) => {
         const { user } = await getUser(context);

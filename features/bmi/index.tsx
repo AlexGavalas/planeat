@@ -2,9 +2,9 @@ import dynamic from 'next/dynamic';
 import { Box, Center, LoadingOverlay, Title } from '@mantine/core';
 import { sub } from 'date-fns';
 import { useQuery } from 'react-query';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useTranslation } from 'next-i18next';
-import { useUser } from '@supabase/supabase-auth-helpers/react';
+import { useUser } from '@supabase/auth-helpers-react';
 
 import { MAX_BMI, SECTIONS } from './constants';
 import { ProgressIndicator } from '@components/progress/indicator';

@@ -1,6 +1,6 @@
 import type { GetServerSideProps } from 'next';
 import Image from 'next/image';
-import { getUser } from '@supabase/supabase-auth-helpers/nextjs';
+import { getUser } from '@supabase/auth-helpers-nextjs';
 import { Center, Title, Text, List, Group, Box } from '@mantine/core';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 

@@ -7,16 +7,16 @@ import { useTranslation } from 'next-i18next';
 
 import {
     getUser,
-    withAuthRequired,
+    withPageAuth,
     User,
     supabaseServerClient,
-} from '@supabase/supabase-auth-helpers/nextjs';
+} from '@supabase/auth-helpers-nextjs';
 
 import { DailyMeal } from '@features/daily-meal';
 import { FatPercent, FatPercentTimeline } from '@features/fat-percent';
 import { BMITimeline, CurrentBMI } from '@features/bmi';
 
-export const getServerSideProps = withAuthRequired({
+export const getServerSideProps = withPageAuth({
     redirectTo: '/',
     getServerSideProps: async (context) => {
         const { user } = await getUser(context);

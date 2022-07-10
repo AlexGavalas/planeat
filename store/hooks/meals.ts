@@ -1,6 +1,6 @@
 import { useNotifications } from '@mantine/notifications';
 import { useModals } from '@mantine/modals';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { startOfISOWeek, endOfISOWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
 import { useMemo, useState } from 'react';

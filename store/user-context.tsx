@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { i18n } from 'next-i18next';
 import { useRouter } from 'next/router';
 

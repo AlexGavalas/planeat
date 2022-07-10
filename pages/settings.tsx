@@ -8,8 +8,8 @@ import {
     getUser,
     supabaseClient,
     supabaseServerClient,
-    withAuthRequired,
-} from '@supabase/supabase-auth-helpers/nextjs';
+    withPageAuth,
+} from '@supabase/auth-helpers-nextjs';
 
 import {
     Container,
@@ -24,7 +24,7 @@ import {
 import { MeasurementsTable } from '@features/measurements/table';
 import { useProfile } from '@hooks/use-profile';
 
-export const getServerSideProps = withAuthRequired({
+export const getServerSideProps = withPageAuth({
     redirectTo: '/',
     getServerSideProps: async (context) => {
         const { user } = await getUser(context);
