@@ -1,4 +1,4 @@
-import { Box, Center, Group, List, Text, Title } from '@mantine/core';
+import { Box, Center, List, Stack, Text, Title } from '@mantine/core';
 import { getUser } from '@supabase/auth-helpers-nextjs';
 import type { GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Home = () => {
     return (
         <Center pt={20}>
-            <Group direction="column" spacing="lg">
+            <Stack spacing="lg">
                 <Box
                     style={{
                         position: 'relative',
@@ -50,7 +50,7 @@ const Home = () => {
                     <List.Item>Plan your weekly meals</List.Item>
                     <List.Item>Collaborate with your nutrionist</List.Item>
                 </List>
-            </Group>
+            </Stack>
         </Center>
     );
 };

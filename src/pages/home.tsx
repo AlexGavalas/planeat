@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Group, Text } from '@mantine/core';
+import { Box, Button, Divider, Group, Stack, Text } from '@mantine/core';
 import {
     type User,
     getUser,
@@ -64,9 +64,9 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
 
     return (
         <Group grow p={20} align="start" noWrap={true}>
-            <Group direction="column" style={{ maxWidth: '25%' }}>
+            <Stack style={{ maxWidth: '25%' }}>
                 <DailyMeal dailyMeals={dailyMeals} />
-            </Group>
+            </Stack>
             <Box
                 pl={20}
                 style={{

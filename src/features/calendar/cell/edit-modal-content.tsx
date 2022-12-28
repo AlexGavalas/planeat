@@ -1,4 +1,4 @@
-import { Button, Group, Textarea } from '@mantine/core';
+import { Button, Group, Stack, Textarea } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
 import { type FormEventHandler, useState } from 'react';
@@ -39,7 +39,7 @@ export const ModalContent = ({
 
     return (
         <form onSubmit={onSubmit}>
-            <Group direction="column" spacing="sm" grow>
+            <Stack spacing="sm">
                 <Textarea
                     data-autofocus
                     name="meal"
@@ -67,7 +67,7 @@ export const ModalContent = ({
                         <Button type="submit">{t('save')}</Button>
                     </Group>
                 </Group>
-            </Group>
+            </Stack>
         </form>
     );
 };

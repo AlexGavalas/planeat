@@ -1,6 +1,6 @@
 import { ActionIcon, Group, NumberInput } from '@mantine/core';
 import { useEventListener, useHover } from '@mantine/hooks';
-import { useNotifications } from '@mantine/notifications';
+import { showNotification } from '@mantine/notifications';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { format, parseISO } from 'date-fns';
 import { Cancel, EditPencil, SaveFloppyDisk } from 'iconoir-react';
@@ -75,7 +75,6 @@ const Td = ({ edit, hovered, value, cancel, save, set, setEdit }: TdProps) => {
 export const Row = ({ item, page }: RowProps) => {
     const { t } = useTranslation();
 
-    const notifications = useNotifications();
     const { hovered, ref: hoverRef } = useHover<HTMLTableRowElement>();
 
     const [edit, setEdit] = useState(false);
@@ -91,7 +90,7 @@ export const Row = ({ item, page }: RowProps) => {
             .eq('id', item.id);
 
         if (error) {
-            notifications.showNotification({
+            showNotification({
                 title: t('error'),
                 message: `${t('errors.measurement_update')}. ${t('try_again')}`,
                 color: 'red',

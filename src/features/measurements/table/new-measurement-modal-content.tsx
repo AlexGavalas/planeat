@@ -1,7 +1,7 @@
 import { Button, Center, Group, NumberInput, Space, Text } from '@mantine/core';
 import { Calendar } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
-import { useNotifications } from '@mantine/notifications';
+import { showNotification } from '@mantine/notifications';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import 'dayjs/locale/el';
 import { useTranslation } from 'next-i18next';
@@ -23,9 +23,8 @@ export const NewMeasurementModalContent = ({
     const { t, i18n } = useTranslation();
 
     const modals = useModals();
-    const notifications = useNotifications();
 
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState<Date | null>(new Date());
     const [weight, setWeight] = useState<number>();
     const [fatPercent, setFatPercent] = useState<number>();
     const [error, setError] = useState('');
@@ -36,6 +35,7 @@ export const NewMeasurementModalContent = ({
         e.preventDefault();
 
         if (!weight) return setError(t('errors.weight_empty').toString());
+        if (!date) return setError(t('errors.date_empty').toString());
 
         const { error } = await supabaseClient
             .from<Measurement>('measurements')
@@ -47,7 +47,7 @@ export const NewMeasurementModalContent = ({
             });
 
         if (error) {
-            notifications.showNotification({
+            showNotification({
                 title: t('error'),
                 message: `${t('errors.measurement_save')}. ${t('try_again')}`,
                 color: 'red',

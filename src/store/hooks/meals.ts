@@ -1,5 +1,5 @@
 import { useModals } from '@mantine/modals';
-import { useNotifications } from '@mantine/notifications';
+import { showNotification } from '@mantine/notifications';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { endOfISOWeek, startOfISOWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
@@ -17,7 +17,6 @@ export const useMeals = () => {
 
     const { currentWeek } = useCurrentWeek();
     const queryClient = useQueryClient();
-    const notifications = useNotifications();
     const modals = useModals();
 
     const { unsavedChanges, removeChanges, removeChange, addChange } =
@@ -71,7 +70,7 @@ export const useMeals = () => {
         if (updateError || createError) {
             setSubmitting(false);
 
-            notifications.showNotification({
+            showNotification({
                 title: t('error'),
                 message: `${t('errors.meal_save')}. ${t('try_again')}`,
                 color: 'red',
@@ -81,7 +80,7 @@ export const useMeals = () => {
 
             removeChanges();
 
-            notifications.showNotification({
+            showNotification({
                 title: t('success'),
                 message: t('meal_save_success'),
                 color: 'green',
@@ -116,7 +115,7 @@ export const useMeals = () => {
         if (error) {
             setSubmitting(false);
 
-            notifications.showNotification({
+            showNotification({
                 title: t('error'),
                 message: `${t('errors.meal_delete')}. ${t('try_again')}`,
                 color: 'red',
@@ -158,7 +157,7 @@ export const useMeals = () => {
         if (error) {
             setSubmitting(false);
 
-            notifications.showNotification({
+            showNotification({
                 title: t('error'),
                 message: `${t('errors.meal_delete')}. ${t('try_again')}`,
                 color: 'red',

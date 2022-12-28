@@ -66,6 +66,7 @@
         "weight_update": "We could not update your weight",
         "weight_save": "We could not save your weight",
         "weight_empty": "You forgot to input your weight",
+        "date_empty": "You forgot to input a date",
         "meal_save": "We could not save your changes",
         "meal_delete": "We could not delete this meal",
         "meal_empty": "You forgot to input the meal",
