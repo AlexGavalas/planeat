@@ -1,13 +1,12 @@
 import { Box } from '@mantine/core';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-
 import {
     getUser,
     supabaseServerClient,
     withPageAuth,
 } from '@supabase/auth-helpers-nextjs';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import { Calendar } from '@features/calendar';
+import { Calendar } from '~features/calendar';
 
 export const getServerSideProps = withPageAuth({
     redirectTo: '/',

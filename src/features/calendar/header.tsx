@@ -1,8 +1,8 @@
 import { isToday } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 
-import { useCurrentWeek } from '@store/hooks';
-import { getDaysOfWeek } from '@util/date';
+import { useCurrentWeek } from '~store/hooks';
+import { getDaysOfWeek } from '~util/date';
 
 import styles from './header.module.css';
 
@@ -22,7 +22,7 @@ export const Header = () => {
                     >
                         {label}
                     </h3>
-                )
+                ),
             )}
         </div>
     );

@@ -27,7 +27,7 @@ export const useProfile = () => {
         },
         {
             enabled: Boolean(user),
-        }
+        },
     );
 
     const { mutate: updateProfile } = useMutation(
@@ -50,7 +50,7 @@ export const useProfile = () => {
             onSuccess: () => {
                 queryClient.invalidateQueries(['user']);
             },
-        }
+        },
     );
 
     return {

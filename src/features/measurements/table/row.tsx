@@ -1,9 +1,9 @@
-import { NumberInput, ActionIcon, Group } from '@mantine/core';
+import { ActionIcon, Group, NumberInput } from '@mantine/core';
 import { useEventListener, useHover } from '@mantine/hooks';
 import { useNotifications } from '@mantine/notifications';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { format, parseISO } from 'date-fns';
-import { EditPencil, SaveFloppyDisk, Cancel } from 'iconoir-react';
+import { Cancel, EditPencil, SaveFloppyDisk } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQueryClient } from 'react-query';

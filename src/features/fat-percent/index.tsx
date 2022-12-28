@@ -1,15 +1,16 @@
-import dynamic from 'next/dynamic';
 import { Box, Center, LoadingOverlay, Title } from '@mantine/core';
-import { useQuery } from 'react-query';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { useTranslation } from 'next-i18next';
-
-import { MAX_FAT_PERCENT, SECTIONS } from './constants';
-import { ProgressIndicator } from '@components/progress/indicator';
 import { useUser } from '@supabase/auth-helpers-react';
 import { sub } from 'date-fns';
+import { useTranslation } from 'next-i18next';
+import dynamic from 'next/dynamic';
+import { useQuery } from 'react-query';
 
-const LineChart = dynamic(() => import('@components/charts/line'), {
+import { ProgressIndicator } from '~components/progress/indicator';
+
+import { MAX_FAT_PERCENT, SECTIONS } from './constants';
+
+const LineChart = dynamic(() => import('~components/charts/line'), {
     ssr: false,
 });
 
@@ -34,7 +35,7 @@ export const FatPercent = () => {
         {
             enabled: Boolean(user),
             select: ({ data }) => data?.[0]?.fat_percentage,
-        }
+        },
     );
 
     const translatedSections = SECTIONS.map((section) => ({
@@ -79,7 +80,7 @@ export const FatPercentTimeline = () => {
                           x: date,
                       }))
                     : null,
-        }
+        },
     );
 
     return (

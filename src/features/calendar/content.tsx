@@ -1,12 +1,12 @@
+import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
+
+import { useCurrentWeek, useMeals, useUnsavedChanges } from '~store/hooks';
+import { getDaysOfWeek } from '~util/date';
 
 import { Cell } from './cell';
 import { ROWS } from './constants';
-import { useCurrentWeek, useMeals, useUnsavedChanges } from '@store/hooks';
-import { getDaysOfWeek } from '@util/date';
-
 import styles from './content.module.css';
-import { useTranslation } from 'next-i18next';
 
 export const Content = () => {
     const { t } = useTranslation();
@@ -21,7 +21,7 @@ export const Content = () => {
                 acc[meal.section_key] = meal;
                 return acc;
             }, {}),
-        [meals]
+        [meals],
     );
 
     const daysOfWeek = getDaysOfWeek(currentWeek);

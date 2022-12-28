@@ -1,6 +1,6 @@
-import { Timeline, Text, Spoiler } from '@mantine/core';
-import { format, set, isAfter } from 'date-fns';
-import { CrackedEgg, OrangeSliceAlt, AppleHalf, Bbq } from 'iconoir-react';
+import { Spoiler, Text, Timeline } from '@mantine/core';
+import { format, isAfter, set } from 'date-fns';
+import { AppleHalf, Bbq, CrackedEgg, OrangeSliceAlt } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 
 import { ROWS } from './calendar/constants';
@@ -23,8 +23,6 @@ const MEAL_TIMES = {
     dinner: set(NOW, { hours: 20, minutes: 0, seconds: 0 }),
 };
 
-const d = set(NOW, { hours: 11, minutes: 32, seconds: 0 });
-
 export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
     const { t } = useTranslation();
 
@@ -45,10 +43,10 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
                 active={activeIndex < 0 ? ROWS.length : activeIndex}
                 bulletSize={40}
             >
-                {translatedRows.map((row, index) => {
+                {translatedRows.map((row) => {
                     const key = `${row.key}_${format(
                         new Date(),
-                        'EEE dd/MM/yyyy'
+                        'EEE dd/MM/yyyy',
                     )}`;
 
                     const meal = dailyMeals[key]?.meal || 'N/A';

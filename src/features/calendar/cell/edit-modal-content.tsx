@@ -1,7 +1,7 @@
-import { FormEventHandler, useState } from 'react';
-import { Group, Textarea, Button } from '@mantine/core';
+import { Button, Group, Textarea } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
+import { type FormEventHandler, useState } from 'react';
 
 interface ModalContentProps {
     deleteMeal: () => Promise<void>;

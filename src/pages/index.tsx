@@ -1,8 +1,8 @@
-import type { GetServerSideProps } from 'next';
-import Image from 'next/image';
+import { Box, Center, Group, List, Text, Title } from '@mantine/core';
 import { getUser } from '@supabase/auth-helpers-nextjs';
-import { Center, Title, Text, List, Group, Box } from '@mantine/core';
+import type { GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Image from 'next/image';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { user } = await getUser(context);

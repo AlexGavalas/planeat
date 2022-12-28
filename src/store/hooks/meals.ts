@@ -1,15 +1,16 @@
-import { useNotifications } from '@mantine/notifications';
 import { useModals } from '@mantine/modals';
+import { useNotifications } from '@mantine/notifications';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { startOfISOWeek, endOfISOWeek } from 'date-fns';
+import { endOfISOWeek, startOfISOWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
-import { useMemo, useState } from 'react';
-import { useQueryClient, useQuery } from 'react-query';
 import { useTranslation } from 'next-i18next';
+import { useMemo, useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
+
+import { getDaysOfWeek } from '~util/date';
 
 import { useCurrentWeek } from './current-week';
 import { useUnsavedChanges } from './unsaved-changes';
-import { getDaysOfWeek } from '@util/date';
 
 export const useMeals = () => {
     const { t } = useTranslation();
@@ -38,7 +39,7 @@ export const useMeals = () => {
             onSettled: () => {
                 setSubmitting(false);
             },
-        }
+        },
     );
 
     const mealsMap = useMemo(
@@ -47,7 +48,7 @@ export const useMeals = () => {
                 acc[meal.section_key] = meal;
                 return acc;
             }, {}),
-        [meals]
+        [meals],
     );
 
     const savePlan = async () => {
@@ -56,7 +57,7 @@ export const useMeals = () => {
         // The edited meals will have the id from the db
         const [editedMeals, newMeals] = partition(
             'id',
-            Object.values(unsavedChanges)
+            Object.values(unsavedChanges),
         );
 
         const { error: updateError } = await supabaseClient

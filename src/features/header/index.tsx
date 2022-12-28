@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import { useUser } from '@supabase/auth-helpers-react';
 import { Divider, Group, Title } from '@mantine/core';
+import { useUser } from '@supabase/auth-helpers-react';
+import Link from 'next/link';
 
 import { UserActions } from './user-actions';
 

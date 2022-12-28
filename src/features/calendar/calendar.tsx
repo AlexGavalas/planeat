@@ -1,17 +1,17 @@
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Button, Group, LoadingOverlay } from '@mantine/core';
 import { useTranslation } from 'next-i18next';
-
-import { Content } from './content';
-import { Header } from './header';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import {
     useCurrentWeek,
+    useMeals,
     useUnsavedChanges,
     useWeeklyScheduleOps,
-    useMeals,
-} from '@store/hooks';
+} from '~store/hooks';
+
+import { Content } from './content';
+import { Header } from './header';
 
 export const Calendar = () => {
     const { t } = useTranslation();

@@ -1,0 +1,3 @@
+{
+    "*.(ts|tsx)": "yarn test --findRelatedTests --passWithNoTests"
+}

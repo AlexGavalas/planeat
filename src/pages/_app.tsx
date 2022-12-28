@@ -1,17 +1,17 @@
-import type { AppProps } from 'next/app';
-import Head from 'next/head';
-import { UserProvider } from '@supabase/auth-helpers-react';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { NotificationsProvider } from '@mantine/notifications';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { UserProvider } from '@supabase/auth-helpers-react';
 import { appWithTranslation } from 'next-i18next';
+import { type AppProps } from 'next/app';
+import Head from 'next/head';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+import { Header } from '~features/header';
+import { UserContext } from '~store/user-context';
 
 import '../styles/globals.css';
-
-import { Header } from '@features/header';
-import { UserContext } from '@store/user-context';
 
 const queryClient = new QueryClient({
     defaultOptions: {

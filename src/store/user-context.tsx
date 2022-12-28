@@ -1,11 +1,11 @@
-import { FC, useEffect } from 'react';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { i18n } from 'next-i18next';
 import { useRouter } from 'next/router';
+import { type FC, type ReactNode, useEffect } from 'react';
 
-import { useProfile } from '@hooks/use-profile';
+import { useProfile } from '~hooks/use-profile';
 
-export const UserContext: FC = ({ children }) => {
+export const UserContext: FC<{ children?: ReactNode }> = ({ children }) => {
     const router = useRouter();
 
     const { profile } = useProfile();
@@ -18,13 +18,13 @@ export const UserContext: FC = ({ children }) => {
                 } else if (event === 'SIGNED_OUT') {
                     router.push('/');
                 }
-            }
+            },
         );
 
         return () => {
             authListener?.unsubscribe();
         };
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         if (profile) {

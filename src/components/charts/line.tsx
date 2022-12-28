@@ -1,24 +1,31 @@
-import { useMemo } from 'react';
 import { Card } from '@mantine/core';
-import { ResponsiveLine, CustomLayerProps } from '@nivo/line';
+import { type CustomLayerProps, ResponsiveLine } from '@nivo/line';
 import { maxBy, minBy } from 'lodash';
+import { useMemo } from 'react';
 
-// eslint-disable-next-line react/display-name
-const targetLayer = (targetWeight: number) => (props: CustomLayerProps) => {
-    const lineHeight = 2;
+type NumFn = (tw: number) => number;
 
-    return (
-        <g>
-            <rect
-                // @ts-ignore
-                y={props.yScale(targetWeight) - lineHeight / 2}
-                width={props.innerWidth}
-                height={lineHeight}
-                fill="red"
-            />
-        </g>
-    );
+const yScaleIsCallable = (yScale: unknown): yScale is NumFn => {
+    return true;
 };
+
+const targetLayer = (targetWeight: number) =>
+    function CustomLayer(props: CustomLayerProps) {
+        const lineHeight = 2;
+
+        return (
+            yScaleIsCallable(props.yScale) && (
+                <g>
+                    <rect
+                        y={props.yScale(targetWeight) - lineHeight / 2}
+                        width={props.innerWidth}
+                        height={lineHeight}
+                        fill="red"
+                    />
+                </g>
+            )
+        );
+    };
 
 interface LineChartProps<DataItem> {
     target?: number;

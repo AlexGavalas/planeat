@@ -8,7 +8,6 @@ import {
     Table,
     Title,
 } from '@mantine/core';
-
 import { useModals } from '@mantine/modals';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useUser } from '@supabase/auth-helpers-react';
@@ -44,7 +43,7 @@ export const MeasurementsTable = () => {
         },
         {
             enabled: Boolean(user),
-        }
+        },
     );
 
     const { data: measurements = [], isFetching } = useQuery(
@@ -62,7 +61,7 @@ export const MeasurementsTable = () => {
         {
             select: ({ data }) => data || [],
             enabled: isFetched,
-        }
+        },
     );
 
     const onNewWeightSave = () => {

@@ -1,12 +1,11 @@
-import { Group, Center, Space, Text, NumberInput, Button } from '@mantine/core';
+import { Button, Center, Group, NumberInput, Space, Text } from '@mantine/core';
 import { Calendar } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
 import { useNotifications } from '@mantine/notifications';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { useTranslation } from 'next-i18next';
-import { useState, FormEventHandler } from 'react';
-
 import 'dayjs/locale/el';
+import { useTranslation } from 'next-i18next';
+import { type FormEventHandler, useState } from 'react';
 
 const localeMap = {
     gr: 'el',

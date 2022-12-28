@@ -1,28 +1,26 @@
-import { useState } from 'react';
+import {
+    Autocomplete,
+    Button,
+    Container,
+    Divider,
+    Group,
+    NumberInput,
+    Switch,
+} from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useQuery } from 'react-query';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-
 import {
     getUser,
     supabaseClient,
     supabaseServerClient,
     withPageAuth,
 } from '@supabase/auth-helpers-nextjs';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useState } from 'react';
+import { useQuery } from 'react-query';
 
-import {
-    Container,
-    Group,
-    Button,
-    Switch,
-    Divider,
-    Autocomplete,
-    NumberInput,
-} from '@mantine/core';
-
-import { MeasurementsTable } from '@features/measurements/table';
-import { useProfile } from '@hooks/use-profile';
+import { MeasurementsTable } from '~features/measurements/table';
+import { useProfile } from '~hooks/use-profile';
 
 export const getServerSideProps = withPageAuth({
     redirectTo: '/',
@@ -77,7 +75,7 @@ const Settings = () => {
             select: ({ data }) =>
                 (data || []).map(({ full_name }) => full_name),
             enabled: Boolean(debouncedSearchQuery),
-        }
+        },
     );
 
     const nothingFoundLabel =

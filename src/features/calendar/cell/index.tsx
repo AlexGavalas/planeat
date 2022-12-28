@@ -1,11 +1,11 @@
-import { useUser } from '@supabase/auth-helpers-react';
-import { Box, Text, Center } from '@mantine/core';
+import { Box, Center, Text } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
+import { useUser } from '@supabase/auth-helpers-react';
 
-import { useMeals } from '@store/hooks';
-import { CellOverlay } from './overlay';
+import { useMeals } from '~store/hooks';
 
 import styles from './cell.module.css';
+import { CellOverlay } from './overlay';
 
 export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
     const { user } = useUser();

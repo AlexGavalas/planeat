@@ -1,20 +1,19 @@
-import Link from 'next/link';
-import { startOfDay, endOfDay } from 'date-fns';
-import { fromPairs, map } from 'lodash';
-import { Button, Group, Text, Box, Divider } from '@mantine/core';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useTranslation } from 'next-i18next';
-
+import { Box, Button, Divider, Group, Text } from '@mantine/core';
 import {
+    type User,
     getUser,
-    withPageAuth,
-    User,
     supabaseServerClient,
+    withPageAuth,
 } from '@supabase/auth-helpers-nextjs';
+import { endOfDay, startOfDay } from 'date-fns';
+import { fromPairs, map } from 'lodash';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Link from 'next/link';
 
-import { DailyMeal } from '@features/daily-meal';
-import { FatPercent, FatPercentTimeline } from '@features/fat-percent';
-import { BMITimeline, CurrentBMI } from '@features/bmi';
+import { BMITimeline, CurrentBMI } from '~features/bmi';
+import { DailyMeal } from '~features/daily-meal';
+import { FatPercent, FatPercentTimeline } from '~features/fat-percent';
 
 export const getServerSideProps = withPageAuth({
     redirectTo: '/',
@@ -45,7 +44,7 @@ export const getServerSideProps = withPageAuth({
             .single();
 
         const dailyMeals = fromPairs(
-            map(data, (item) => [item.section_key, item])
+            map(data, (item) => [item.section_key, item]),
         );
 
         return {
