@@ -95,7 +95,7 @@ const Settings = () => {
                 />
                 <Autocomplete
                     label={t('find_your_nutritionist')}
-                    placeholder={t('search')}
+                    placeholder={t('search').toString()}
                     data={nutritionists}
                     value={searchQuery}
                     onChange={setSearchQuery}

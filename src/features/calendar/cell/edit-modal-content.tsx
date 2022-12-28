@@ -26,7 +26,7 @@ export const ModalContent = ({
 
         const meal = new FormData(e.currentTarget).get('meal')?.toString();
 
-        if (!meal) return setError(t('errors.meal_empty'));
+        if (!meal) return setError(t('errors.meal_empty').toString());
 
         handleSave(meal);
         closeModal();
@@ -43,7 +43,7 @@ export const ModalContent = ({
                 <Textarea
                     data-autofocus
                     name="meal"
-                    placeholder={t('meal_placeholder')}
+                    placeholder={t('meal_placeholder').toString()}
                     label={t('meal_label')}
                     defaultValue={initialMeal}
                     autosize

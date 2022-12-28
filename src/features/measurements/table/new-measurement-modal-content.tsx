@@ -35,7 +35,7 @@ export const NewMeasurementModalContent = ({
     const handleSave: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
-        if (!weight) return setError(t('errors.weight_empty'));
+        if (!weight) return setError(t('errors.weight_empty').toString());
 
         const { error } = await supabaseClient
             .from<Measurement>('measurements')
