@@ -1,15 +1,20 @@
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { NotificationsProvider } from '@mantine/notifications';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { UserProvider } from '@supabase/auth-helpers-react';
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import {
+    type Session,
+    SessionContextProvider,
+} from '@supabase/auth-helpers-react';
 import { appWithTranslation } from 'next-i18next';
 import { type AppProps } from 'next/app';
 import Head from 'next/head';
+import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { Header } from '~features/header';
 import { UserContext } from '~store/user-context';
+import { type Database } from '~types/supabase';
 
 import '../styles/globals.css';
 
@@ -21,7 +26,14 @@ const queryClient = new QueryClient({
     },
 });
 
-const App = ({ Component, pageProps }: AppProps) => {
+const App = ({
+    Component,
+    pageProps,
+}: AppProps<{ initialSession: Session }>) => {
+    const [supabaseClient] = useState(() =>
+        createBrowserSupabaseClient<Database>(),
+    );
+
     return (
         <>
             <Head>
@@ -36,14 +48,17 @@ const App = ({ Component, pageProps }: AppProps) => {
             >
                 <NotificationsProvider>
                     <ModalsProvider>
-                        <UserProvider supabaseClient={supabaseClient}>
+                        <SessionContextProvider
+                            supabaseClient={supabaseClient}
+                            initialSession={pageProps.initialSession}
+                        >
                             <QueryClientProvider client={queryClient}>
                                 <UserContext>
                                     <Header />
                                     <Component {...pageProps} />
                                 </UserContext>
                             </QueryClientProvider>
-                        </UserProvider>
+                        </SessionContextProvider>
                     </ModalsProvider>
                 </NotificationsProvider>
             </MantineProvider>

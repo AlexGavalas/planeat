@@ -22,6 +22,7 @@
             "~store/*": ["store/*"],
             "~styles/*": ["styles/*"],
             "~test/*": ["test/*"],
+            "~types/*": ["types/*"],
             "~util/*": ["util/*"]
         }
     },

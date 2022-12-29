@@ -1,12 +1,14 @@
 import { ActionIcon, Group, NumberInput } from '@mantine/core';
 import { useEventListener, useHover } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { format, parseISO } from 'date-fns';
 import { Cancel, EditPencil, SaveFloppyDisk } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQueryClient } from 'react-query';
+
+import { type Database } from '~types/supabase';
 
 interface RowProps {
     item: Measurement;
@@ -16,7 +18,7 @@ interface RowProps {
 interface TdProps {
     edit: boolean;
     hovered: boolean;
-    value: number;
+    value: number | null;
     set: (value: number) => void;
     save: () => void;
     cancel: () => void;
@@ -39,7 +41,7 @@ const Td = ({ edit, hovered, value, cancel, save, set, setEdit }: TdProps) => {
                     <NumberInput
                         autoFocus
                         size="xs"
-                        defaultValue={value}
+                        defaultValue={value ?? undefined}
                         precision={2}
                         onChange={(v) => {
                             v && set(v);
@@ -74,6 +76,7 @@ const Td = ({ edit, hovered, value, cancel, save, set, setEdit }: TdProps) => {
 
 export const Row = ({ item, page }: RowProps) => {
     const { t } = useTranslation();
+    const supabaseClient = useSupabaseClient<Database>();
 
     const { hovered, ref: hoverRef } = useHover<HTMLTableRowElement>();
 
@@ -85,7 +88,7 @@ export const Row = ({ item, page }: RowProps) => {
 
     const handleSave = async () => {
         const { error } = await supabaseClient
-            .from<Measurement>('measurements')
+            .from('measurements')
             .update({ weight: newWeight, fat_percentage: newFat })
             .eq('id', item.id);
 

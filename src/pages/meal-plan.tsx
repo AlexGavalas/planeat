@@ -1,42 +1,43 @@
 import { Box } from '@mantine/core';
-import {
-    getUser,
-    supabaseServerClient,
-    withPageAuth,
-} from '@supabase/auth-helpers-nextjs';
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { type GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { Calendar } from '~features/calendar';
+import { type Database } from '~types/supabase';
 
-export const getServerSideProps = withPageAuth({
-    redirectTo: '/',
-    getServerSideProps: async (context) => {
-        const { user } = await getUser(context);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const supabase = createServerSupabaseClient<Database>(context);
 
-        if (!user) {
-            return {
-                redirect: {
-                    destination: '/',
-                    permanent: false,
-                },
-            };
-        }
+    const {
+        data: { session },
+    } = await supabase.auth.getSession();
 
-        const { data: profile } = await supabaseServerClient(context)
-            .from<Profile>('users')
-            .select('language')
-            .eq('id', user.id)
-            .single();
-
+    if (!session) {
         return {
-            props: {
-                ...(await serverSideTranslations(profile?.language || 'en', [
-                    'common',
-                ])),
+            redirect: {
+                destination: '/',
+                permanent: false,
             },
         };
-    },
-});
+    }
+
+    const { user } = session;
+
+    const { data: profile } = await supabase
+        .from('users')
+        .select('language')
+        .eq('id', user.id)
+        .single();
+
+    return {
+        props: {
+            ...(await serverSideTranslations(profile?.language || 'en', [
+                'common',
+            ])),
+        },
+    };
+};
 
 const MealPlan = () => {
     return (

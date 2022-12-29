@@ -5,8 +5,8 @@ import styles from './indicator.module.css';
 
 interface ProgressIndicatorProps {
     label: string;
-    value: number;
-    percent: number;
+    value: number | null;
+    percent: number | null;
     sections: Section[];
 }
 

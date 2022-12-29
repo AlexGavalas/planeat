@@ -9,12 +9,13 @@ import {
     Title,
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { useUser } from '@supabase/auth-helpers-react';
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
+
+import { type Database } from '~types/supabase';
 
 import { NewMeasurementModalContent } from './new-measurement-modal-content';
 import { Row } from './row';
@@ -25,8 +26,9 @@ export const MeasurementsTable = () => {
     const { t } = useTranslation();
 
     const modals = useModals();
-    const { user } = useUser();
+    const user = useUser();
     const queryClient = useQueryClient();
+    const supabaseClient = useSupabaseClient<Database>();
     const [page, setPage] = useState(1);
 
     const { data: count = 0, isFetched } = useQuery(
@@ -35,7 +37,7 @@ export const MeasurementsTable = () => {
             if (!user) throw new Error(`User not logged in`);
 
             const { count } = await supabaseClient
-                .from<Measurement>('measurements')
+                .from('measurements')
                 .select('id', { count: 'exact' })
                 .eq('user_id', user.id);
 
@@ -52,7 +54,7 @@ export const MeasurementsTable = () => {
             if (!user) throw new Error(`User not logged in`);
 
             return supabaseClient
-                .from<Measurement>('measurements')
+                .from('measurements')
                 .select('*')
                 .eq('user_id', user.id)
                 .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)

@@ -1,12 +1,11 @@
 import { Box, Button, Divider, Group, Stack, Text } from '@mantine/core';
 import {
     type User,
-    getUser,
-    supabaseServerClient,
-    withPageAuth,
+    createServerSupabaseClient,
 } from '@supabase/auth-helpers-nextjs';
 import { endOfDay, startOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
+import { type GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
@@ -14,50 +13,52 @@ import Link from 'next/link';
 import { BMITimeline, CurrentBMI } from '~features/bmi';
 import { DailyMeal } from '~features/daily-meal';
 import { FatPercent, FatPercentTimeline } from '~features/fat-percent';
+import { type Database } from '~types/supabase';
 
-export const getServerSideProps = withPageAuth({
-    redirectTo: '/',
-    getServerSideProps: async (context) => {
-        const { user } = await getUser(context);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const supabase = createServerSupabaseClient<Database>(context);
 
-        if (!user) {
-            return {
-                redirect: {
-                    destination: '/',
-                    permanent: false,
-                },
-            };
-        }
+    const {
+        data: { session },
+    } = await supabase.auth.getSession();
 
-        const NOW = new Date();
-
-        const { data } = await supabaseServerClient(context)
-            .from<Meal>('meals')
-            .select('*')
-            .gte('day', startOfDay(NOW).toISOString())
-            .lte('day', endOfDay(NOW).toISOString());
-
-        const { data: profile } = await supabaseServerClient(context)
-            .from<Profile>('users')
-            .select('language')
-            .eq('id', user.id)
-            .single();
-
-        const dailyMeals = fromPairs(
-            map(data, (item) => [item.section_key, item]),
-        );
-
+    if (!session) {
         return {
-            props: {
-                dailyMeals,
-                user,
-                ...(await serverSideTranslations(profile?.language || 'en', [
-                    'common',
-                ])),
+            redirect: {
+                destination: '/',
+                permanent: false,
             },
         };
-    },
-});
+    }
+
+    const NOW = new Date();
+
+    const { user } = session;
+
+    const { data } = await supabase
+        .from('meals')
+        .select('*')
+        .gte('day', startOfDay(NOW).toISOString())
+        .lte('day', endOfDay(NOW).toISOString());
+
+    const { data: profile } = await supabase
+        .from('users')
+        .select('language')
+        .eq('id', user.id)
+        .single();
+
+    const dailyMeals = fromPairs(map(data, (item) => [item.section_key, item]));
+
+    return {
+        props: {
+            dailyMeals,
+            user,
+            ...(await serverSideTranslations(profile?.language || 'en', [
+                'common',
+            ])),
+        },
+    };
+};
 
 const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
     const { t } = useTranslation();

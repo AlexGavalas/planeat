@@ -36,7 +36,7 @@ interface LineChartProps<DataItem> {
     }[];
 }
 
-const LineChart = <DataItem extends { x: string; y: number }>({
+const LineChart = <DataItem extends { x: string; y: number | null }>({
     data,
     target,
     unit,

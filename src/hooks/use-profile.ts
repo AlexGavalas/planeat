@@ -1,6 +1,8 @@
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { useUser } from '@supabase/auth-helpers-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useCallback } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+
+import { type Database } from '~types/supabase';
 
 interface MutationProps {
     isNutritionist?: boolean;
@@ -9,33 +11,35 @@ interface MutationProps {
 
 export const useProfile = () => {
     const queryClient = useQueryClient();
+    const supabaseClient = useSupabaseClient<Database>();
 
-    const { user } = useUser();
-
-    const { data: profile, isFetching } = useQuery(
-        ['user'],
+    const { data: user, isFetching: isFetchingSupabaseUser } = useQuery(
+        ['supabase-user'],
         async () => {
-            if (!user) return;
+            const { data } = await supabaseClient.auth.getSession();
 
-            const { data } = await supabaseClient
-                .from<Profile>('users')
-                .select('*')
-                .eq('id', user.id)
-                .single();
-
-            return data;
-        },
-        {
-            enabled: Boolean(user),
+            return data.session?.user;
         },
     );
+
+    const { data: profile, isFetching } = useQuery(['user'], async () => {
+        if (!user) return;
+
+        const { data } = await supabaseClient
+            .from('users')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+        return data;
+    });
 
     const { mutate: updateProfile } = useMutation(
         async ({ isNutritionist, height }: MutationProps) => {
             if (!user) return;
 
             const { data, error } = await supabaseClient
-                .from<Profile>('users')
+                .from('users')
                 .update({
                     is_nutritionist: isNutritionist,
                     height,
@@ -53,9 +57,16 @@ export const useProfile = () => {
         },
     );
 
+    const logout = useCallback(async () => {
+        await queryClient.invalidateQueries(['supabase-user']);
+        await queryClient.invalidateQueries(['user']);
+    }, [queryClient]);
+
     return {
         profile,
-        isFetching,
+        isFetching: isFetchingSupabaseUser || isFetching,
         updateProfile,
+        logout,
+        user,
     };
 };

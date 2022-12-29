@@ -8,12 +8,9 @@ import {
     Switch,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import {
-    getUser,
-    supabaseClient,
-    supabaseServerClient,
-    withPageAuth,
-} from '@supabase/auth-helpers-nextjs';
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { type GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState } from 'react';
@@ -21,36 +18,40 @@ import { useQuery } from 'react-query';
 
 import { MeasurementsTable } from '~features/measurements/table';
 import { useProfile } from '~hooks/use-profile';
+import { type Database } from '~types/supabase';
 
-export const getServerSideProps = withPageAuth({
-    redirectTo: '/',
-    getServerSideProps: async (context) => {
-        const { user } = await getUser(context);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const supabase = createServerSupabaseClient<Database>(context);
 
-        if (!user) {
-            return {
-                redirect: {
-                    destination: '/',
-                    permanent: false,
-                },
-            };
-        }
+    const {
+        data: { session },
+    } = await supabase.auth.getSession();
 
-        const { data: profile } = await supabaseServerClient(context)
-            .from<Profile>('users')
-            .select('language')
-            .eq('id', user.id)
-            .single();
-
+    if (!session) {
         return {
-            props: {
-                ...(await serverSideTranslations(profile?.language || 'en', [
-                    'common',
-                ])),
+            redirect: {
+                destination: '/',
+                permanent: false,
             },
         };
-    },
-});
+    }
+
+    const { user } = session;
+
+    const { data: profile } = await supabase
+        .from('users')
+        .select('language')
+        .eq('id', user.id)
+        .single();
+
+    return {
+        props: {
+            ...(await serverSideTranslations(profile?.language || 'en', [
+                'common',
+            ])),
+        },
+    };
+};
 
 const Settings = () => {
     const { t } = useTranslation();
@@ -62,11 +63,13 @@ const Settings = () => {
 
     const { profile, updateProfile } = useProfile();
 
+    const supabaseClient = useSupabaseClient<Database>();
+
     const { data: nutritionists = [], isFetching } = useQuery(
         ['nutritionists', debouncedSearchQuery],
         async () => {
             return supabaseClient
-                .from<Profile>('users')
+                .from('users')
                 .select('*')
                 .ilike('full_name', `%${debouncedSearchQuery}%`)
                 .limit(5);
@@ -108,7 +111,7 @@ const Settings = () => {
                     <NumberInput
                         label={t('height_input')}
                         style={{ width: '25%' }}
-                        defaultValue={profile?.height}
+                        defaultValue={profile?.height ?? undefined}
                         onChange={setHeight}
                     />
                     <Button

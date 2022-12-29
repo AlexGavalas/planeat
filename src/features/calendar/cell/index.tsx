@@ -8,7 +8,7 @@ import styles from './cell.module.css';
 import { CellOverlay } from './overlay';
 
 export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
-    const { user } = useUser();
+    const user = useUser();
     const { hovered, ref } = useHover();
 
     const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =

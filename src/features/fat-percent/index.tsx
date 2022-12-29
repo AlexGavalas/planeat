@@ -1,12 +1,12 @@
 import { Box, Center, LoadingOverlay, Title } from '@mantine/core';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { useUser } from '@supabase/auth-helpers-react';
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import { sub } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useQuery } from 'react-query';
 
 import { ProgressIndicator } from '~components/progress/indicator';
+import { type Database } from '~types/supabase';
 
 import { MAX_FAT_PERCENT, SECTIONS } from './constants';
 
@@ -16,8 +16,8 @@ const LineChart = dynamic(() => import('~components/charts/line'), {
 
 export const FatPercent = () => {
     const { t } = useTranslation();
-
-    const { user } = useUser();
+    const supabaseClient = useSupabaseClient<Database>();
+    const user = useUser();
 
     const { data: fatPercent = 0 } = useQuery(
         ['current-fat-percent'],
@@ -25,7 +25,7 @@ export const FatPercent = () => {
             if (!user) throw new Error(`User not logged in`);
 
             return supabaseClient
-                .from<Measurement>('measurements')
+                .from('measurements')
                 .select('fat_percentage')
                 .eq('user_id', user.id)
                 .not('fat_percentage', 'is', null)
@@ -47,7 +47,7 @@ export const FatPercent = () => {
         <ProgressIndicator
             label={t('fat_label')}
             value={fatPercent}
-            percent={(fatPercent * 100) / MAX_FAT_PERCENT}
+            percent={fatPercent && (fatPercent * 100) / MAX_FAT_PERCENT}
             sections={translatedSections}
         />
     );
@@ -55,8 +55,8 @@ export const FatPercent = () => {
 
 export const FatPercentTimeline = () => {
     const { t } = useTranslation();
-
-    const { user } = useUser();
+    const supabaseClient = useSupabaseClient<Database>();
+    const user = useUser();
 
     const { data, isFetching } = useQuery(
         ['fat-percent-timeline'],
@@ -64,7 +64,7 @@ export const FatPercentTimeline = () => {
             if (!user) throw new Error(`User not logged in`);
 
             return supabaseClient
-                .from<Measurement>('measurements')
+                .from('measurements')
                 .select('date, fat_percentage')
                 .eq('user_id', user.id)
                 .not('fat_percentage', 'is', null)

@@ -22,7 +22,7 @@ type Measurement = {
     user_id: string;
     date: string;
     weight: number;
-    fat_percentage: number;
+    fat_percentage: number | null;
 };
 
 type FatMeasurement = {

@@ -1,6 +1,5 @@
 import { Box, Center, LoadingOverlay, Title } from '@mantine/core';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { useUser } from '@supabase/auth-helpers-react';
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import { sub } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
@@ -8,6 +7,7 @@ import { useQuery } from 'react-query';
 
 import { ProgressIndicator } from '~components/progress/indicator';
 import { useProfile } from '~hooks/use-profile';
+import { type Database } from '~types/supabase';
 
 import { MAX_BMI, SECTIONS } from './constants';
 
@@ -20,8 +20,8 @@ const calculateBMI = ({ weight, height }: { weight: number; height: number }) =>
 
 export const CurrentBMI = () => {
     const { t } = useTranslation();
-
-    const { user } = useUser();
+    const supabaseClient = useSupabaseClient<Database>();
+    const user = useUser();
 
     const { profile } = useProfile();
 
@@ -31,7 +31,7 @@ export const CurrentBMI = () => {
             if (!user) throw new Error(`User not logged in`);
 
             return supabaseClient
-                .from<Measurement>('measurements')
+                .from('measurements')
                 .select('weight')
                 .eq('user_id', user.id)
                 .not('weight', 'is', null)
@@ -67,7 +67,8 @@ export const CurrentBMI = () => {
 export const BMITimeline = () => {
     const { t } = useTranslation();
 
-    const { user } = useUser();
+    const supabaseClient = useSupabaseClient<Database>();
+    const user = useUser();
 
     const { data, isFetching } = useQuery(
         ['bmi-timeline'],
@@ -75,7 +76,7 @@ export const BMITimeline = () => {
             if (!user) throw new Error(`User not logged in`);
 
             return supabaseClient
-                .from<Measurement>('measurements')
+                .from('measurements')
                 .select('date, weight')
                 .eq('user_id', user.id)
                 .not('weight', 'is', null)

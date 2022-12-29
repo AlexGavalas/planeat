@@ -1,12 +1,13 @@
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { endOfISOWeek, startOfISOWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
+import { type Database } from '~types/supabase';
 import { getDaysOfWeek } from '~util/date';
 
 import { useCurrentWeek } from './current-week';
@@ -17,6 +18,7 @@ export const useMeals = () => {
 
     const { currentWeek } = useCurrentWeek();
     const queryClient = useQueryClient();
+    const supabaseClient = useSupabaseClient<Database>();
     const modals = useModals();
 
     const { unsavedChanges, removeChanges, removeChange, addChange } =
@@ -28,7 +30,7 @@ export const useMeals = () => {
         ['meals', currentWeek],
         async () => {
             return supabaseClient
-                .from<Meal>('meals')
+                .from('meals')
                 .select('*')
                 .gte('day', startOfISOWeek(currentWeek).toISOString())
                 .lte('day', endOfISOWeek(currentWeek).toISOString());
@@ -60,11 +62,11 @@ export const useMeals = () => {
         );
 
         const { error: updateError } = await supabaseClient
-            .from<Meal>('meals')
+            .from('meals')
             .upsert(editedMeals);
 
         const { error: createError } = await supabaseClient
-            .from<EditedMeal>('meals')
+            .from('meals')
             .insert(newMeals);
 
         if (updateError || createError) {
