@@ -7,7 +7,7 @@ export const Header = () => {
     return (
         <>
             <Group position="apart" align="center" py={10} px={20}>
-                <Link href="/" passHref>
+                <Link href="/">
                     <Title order={1} style={{ cursor: 'pointer' }}>
                         PLANEAT
                     </Title>

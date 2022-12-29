@@ -82,11 +82,11 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
                     </Text>
                 </Text>
                 <Group>
-                    <Link href="/meal-plan" passHref>
-                        <Button component="a">{t('view_weekly_meal')}</Button>
+                    <Link href="/meal-plan">
+                        <Button>{t('view_weekly_meal')}</Button>
                     </Link>
-                    <Link href="/settings" passHref>
-                        <Button component="a">{t('user_settings')}</Button>
+                    <Link href="/settings">
+                        <Button>{t('user_settings')}</Button>
                     </Link>
                 </Group>
                 <Divider my="lg" />

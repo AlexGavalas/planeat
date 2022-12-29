@@ -45,9 +45,10 @@ const Home = () => {
                 >
                     <Image
                         src="/images/kitchen.png"
-                        layout="fill"
                         alt="An illustration of a kitchen"
                         priority={true}
+                        fill
+                        sizes="100vw"
                     />
                 </Box>
                 <Title order={1}>Your next meal planning solution</Title>
