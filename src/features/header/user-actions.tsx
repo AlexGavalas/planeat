@@ -4,18 +4,16 @@ import { Google, LogOut } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 
-import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 
 export const UserActions = () => {
     const router = useRouter();
     const { t } = useTranslation();
     const supabaseClient = useSupabaseClient<Database>();
-    const { isFetching, user, logout } = useProfile();
 
-    if (isFetching) return null;
+    const hasUser = router.pathname !== '/';
 
-    if (!user) {
+    if (!hasUser) {
         return (
             <Button
                 leftIcon={<Google />}
@@ -34,7 +32,6 @@ export const UserActions = () => {
         <Button
             onClick={async () => {
                 await supabaseClient.auth.signOut();
-                await logout();
                 router.push('/');
             }}
             leftIcon={<LogOut />}

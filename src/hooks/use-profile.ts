@@ -1,5 +1,4 @@
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { useCallback } from 'react';
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { type Database } from '~types/supabase';
@@ -13,14 +12,7 @@ export const useProfile = () => {
     const queryClient = useQueryClient();
     const supabaseClient = useSupabaseClient<Database>();
 
-    const { data: user, isFetching: isFetchingSupabaseUser } = useQuery(
-        ['supabase-user'],
-        async () => {
-            const { data } = await supabaseClient.auth.getSession();
-
-            return data.session?.user;
-        },
-    );
+    const user = useUser();
 
     const { data: profile, isFetching } = useQuery(['user'], async () => {
         if (!user) return;
@@ -57,16 +49,10 @@ export const useProfile = () => {
         },
     );
 
-    const logout = useCallback(async () => {
-        await queryClient.invalidateQueries(['supabase-user']);
-        await queryClient.invalidateQueries(['user']);
-    }, [queryClient]);
-
     return {
         profile,
-        isFetching: isFetchingSupabaseUser || isFetching,
+        isFetching,
         updateProfile,
-        logout,
         user,
     };
 };
