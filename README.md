@@ -23,3 +23,7 @@ This project uses:
 ## Deployment
 
 This project is deployed on [Vercel Platform](https://vercel.com).
+
+## Misc
+
+Interesting API: [spoonacular](https://spoonacular.com/food-api/docs).
