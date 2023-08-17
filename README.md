@@ -6,7 +6,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-After installing the dependencies, running `yarn install --frozen-lockfile`, you can run the development server with `yarn dev` and go to [http://localhost:3000](http://localhost:3000) on your browser to see the page.
+After installing the dependencies, running `pnpm install`, you can run the development server with `pnpm dev` and go to [http://localhost:3000](http://localhost:3000) on your browser to see the page.
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 

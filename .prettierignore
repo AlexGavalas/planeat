@@ -1,0 +1,12 @@
+# local env files
+.env*
+
+# next.js
+.next
+
+# supabase
+supabase/.branches
+supabase/.temp
+
+# lockfile
+pnpm-lock.yaml

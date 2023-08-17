@@ -1,5 +1,0 @@
-{
-    "editor.formatOnSave": true,
-    "jest.jestCommandLine": "source ~/.zshrc && yarn test",
-    "jest.shell": "/bin/zsh"
-}
