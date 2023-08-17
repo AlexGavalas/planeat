@@ -21,7 +21,7 @@ export const CellOverlay = ({
     const modals = useModals();
 
     return (
-        <Overlay opacity={0.85}>
+        <Overlay opacity={0.05}>
             <Center style={{ height: '100%' }}>
                 <ActionIcon
                     size="lg"

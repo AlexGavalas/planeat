@@ -8,7 +8,7 @@ import {
     Switch,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { type GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
@@ -21,7 +21,7 @@ import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const supabase = createServerSupabaseClient<Database>(context);
+    const supabase = createPagesServerClient<Database>(context);
 
     const {
         data: { session },
@@ -112,7 +112,7 @@ const Settings = () => {
                         label={t('height_input')}
                         style={{ width: '25%' }}
                         defaultValue={profile?.height ?? undefined}
-                        onChange={setHeight}
+                        onChange={(value) => setHeight(Number(value))}
                     />
                     <Button
                         onClick={() => {

@@ -1,5 +1,5 @@
 import { Button, Center, Group, NumberInput, Space, Text } from '@mantine/core';
-import { Calendar } from '@mantine/dates';
+import { DatePicker } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
@@ -63,7 +63,7 @@ export const NewMeasurementModalContent = ({
         <form onSubmit={handleSave}>
             <Text>{t('date')}</Text>
             <Center>
-                <Calendar
+                <DatePicker
                     value={date}
                     onChange={setDate}
                     locale={localeMap[i18n.language as keyof typeof localeMap]}
@@ -74,7 +74,7 @@ export const NewMeasurementModalContent = ({
                 label={t('weight')}
                 error={error}
                 onFocus={() => setError('')}
-                onChange={setWeight}
+                onChange={(value) => setWeight(Number(value))}
                 precision={2}
             />
             <Space h={20} />
@@ -82,7 +82,7 @@ export const NewMeasurementModalContent = ({
                 label={t('fat_label')}
                 error={error}
                 onFocus={() => setError('')}
-                onChange={setFatPercent}
+                onChange={(value) => setFatPercent(Number(value))}
                 precision={2}
             />
             <Space h={20} />

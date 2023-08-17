@@ -3,27 +3,23 @@ import { type CustomLayerProps, ResponsiveLine } from '@nivo/line';
 import { maxBy, minBy } from 'lodash';
 import { useMemo } from 'react';
 
-type NumFn = (tw: number) => number;
-
-const yScaleIsCallable = (yScale: unknown): yScale is NumFn => {
-    return true;
-};
+type NumFn = (prop: number) => number;
 
 const targetLayer = (targetWeight: number) =>
     function CustomLayer(props: CustomLayerProps) {
         const lineHeight = 2;
 
         return (
-            yScaleIsCallable(props.yScale) && (
-                <g>
-                    <rect
-                        y={props.yScale(targetWeight) - lineHeight / 2}
-                        width={props.innerWidth}
-                        height={lineHeight}
-                        fill="red"
-                    />
-                </g>
-            )
+            <g>
+                <rect
+                    // Required assertion
+                    // Issue: https://github.com/plouc/nivo/issues/1947
+                    y={(props.yScale as NumFn)(targetWeight) - lineHeight / 2}
+                    width={props.innerWidth}
+                    height={lineHeight}
+                    fill="red"
+                />
+            </g>
         );
     };
 

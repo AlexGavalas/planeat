@@ -1,6 +1,6 @@
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
-import { NotificationsProvider } from '@mantine/notifications';
+import { Notifications } from '@mantine/notifications';
 import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import {
     type Session,
@@ -46,21 +46,20 @@ const App = ({
                     colorScheme: 'light',
                 }}
             >
-                <NotificationsProvider>
-                    <ModalsProvider>
-                        <SessionContextProvider
-                            supabaseClient={supabaseClient}
-                            initialSession={pageProps.initialSession}
-                        >
-                            <QueryClientProvider client={queryClient}>
-                                <UserContext>
-                                    <Header />
-                                    <Component {...pageProps} />
-                                </UserContext>
-                            </QueryClientProvider>
-                        </SessionContextProvider>
-                    </ModalsProvider>
-                </NotificationsProvider>
+                <ModalsProvider>
+                    <SessionContextProvider
+                        supabaseClient={supabaseClient}
+                        initialSession={pageProps.initialSession}
+                    >
+                        <QueryClientProvider client={queryClient}>
+                            <UserContext>
+                                <Header />
+                                <Component {...pageProps} />
+                            </UserContext>
+                        </QueryClientProvider>
+                    </SessionContextProvider>
+                </ModalsProvider>
+                <Notifications />
             </MantineProvider>
         </>
     );

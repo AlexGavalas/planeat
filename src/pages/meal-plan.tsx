@@ -1,5 +1,5 @@
 import { Box } from '@mantine/core';
-import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { type GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
@@ -7,7 +7,7 @@ import { Calendar } from '~features/calendar';
 import { type Database } from '~types/supabase';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const supabase = createServerSupabaseClient<Database>(context);
+    const supabase = createPagesServerClient<Database>(context);
 
     const {
         data: { session },

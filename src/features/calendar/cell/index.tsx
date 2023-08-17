@@ -61,7 +61,11 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                     ...(isEdited && { border: '2px solid orange' }),
                 }}
             >
-                <Center>
+                <Center
+                    style={{
+                        ...(hovered && { opacity: 0.15 }),
+                    }}
+                >
                     <Text p={5} align="center">
                         {meal?.meal || 'N/A '}
                     </Text>

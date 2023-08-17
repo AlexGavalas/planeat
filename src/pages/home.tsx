@@ -1,7 +1,7 @@
 import { Box, Button, Divider, Group, Stack, Text } from '@mantine/core';
 import {
     type User,
-    createServerSupabaseClient,
+    createPagesServerClient,
 } from '@supabase/auth-helpers-nextjs';
 import { endOfDay, startOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
@@ -16,7 +16,7 @@ import { FatPercent, FatPercentTimeline } from '~features/fat-percent';
 import { type Database } from '~types/supabase';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const supabase = createServerSupabaseClient<Database>(context);
+    const supabase = createPagesServerClient<Database>(context);
 
     const {
         data: { session },
