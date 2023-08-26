@@ -29,37 +29,35 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
 };
 
-const Home = () => {
+export default function LandingPage() {
     return (
-        <Center pt={20}>
+        <Center p={20}>
             <Stack spacing="lg">
                 <Box
                     style={{
                         position: 'relative',
+                        width: '100%',
                         margin: 'auto',
-                        width: 500,
-                        height: 500,
                         borderRadius: 5,
                         overflow: 'hidden',
                     }}
                 >
                     <Image
-                        src="/images/kitchen.png"
-                        alt="An illustration of a kitchen"
-                        priority={true}
-                        fill
-                        sizes="100vw"
+                        src="/images/landing-page.jpg"
+                        alt="An illustration of a woman dancing around fruits and vegetables"
+                        priority
+                        style={{ width: '100%', height: 'auto' }}
+                        width={1152}
+                        height={768}
                     />
                 </Box>
                 <Title order={1}>Your next meal planning solution</Title>
                 <Text size="lg">You can use it to:</Text>
                 <List size="lg">
                     <List.Item>Plan your weekly meals</List.Item>
-                    <List.Item>Collaborate with your nutrionist</List.Item>
+                    <List.Item>Record how you follow it</List.Item>
                 </List>
             </Stack>
         </Center>
     );
-};
-
-export default Home;
+}

@@ -51,6 +51,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
         props: {
+            initialSession: session,
             dailyMeals,
             user,
             ...(await serverSideTranslations(profile?.language || 'en', [

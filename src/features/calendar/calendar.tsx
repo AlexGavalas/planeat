@@ -15,7 +15,6 @@ import { Header } from './header';
 
 export const Calendar = () => {
     const { t } = useTranslation();
-
     const { nextWeek, previousWeek } = useCurrentWeek();
     const { unsavedChanges } = useUnsavedChanges();
     const { copyToNextWeek } = useWeeklyScheduleOps();

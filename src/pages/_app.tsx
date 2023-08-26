@@ -1,7 +1,7 @@
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
-import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
 import {
     type Session,
     SessionContextProvider,
@@ -31,7 +31,7 @@ const App = ({
     pageProps,
 }: AppProps<{ initialSession: Session }>) => {
     const [supabaseClient] = useState(() =>
-        createBrowserSupabaseClient<Database>(),
+        createPagesBrowserClient<Database>(),
     );
 
     return (
