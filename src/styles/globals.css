@@ -29,11 +29,46 @@ a {
     text-decoration: none;
 }
 
+#__next {
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
+
+:root {
+    --desert-sand: #d2ab99;
+    --ash-gray: #bdbea9;
+    --color-primary: #a7d3a5;
+    --color-primary-dark: #04724d;
+}
+
+::selection {
+    background-color: var(--color-primary);
+}
+
+.button {
+    background-color: var(--color-primary-dark);
+}
+
+.button:hover {
+    background-color: var(--color-primary-dark);
+    opacity: 0.9;
+}
+
+.calendar [data-selected] {
+    background-color: var(--color-primary-dark);
+}
+
 /* Home page  */
 
-.home-container {
-    height: calc(100% - 5rem);
-    display: grid;
+.container {
+    border-top: 5px solid var(--color-primary);
+    height: 100%;
+    padding: 2rem;
+    background: linear-gradient(45deg, var(--color-primary) 0%, #e8e8e8 100%);
+}
+
+.container .content {
+    width: clamp(50%, 65% + 5vw, 75%);
 }
 
 /* Calendar styles */

@@ -43,7 +43,6 @@ type Profile = {
 
 type Section = {
     key: string;
-    label: string;
     percent: number;
     bg: string;
 };

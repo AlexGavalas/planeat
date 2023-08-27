@@ -14,16 +14,18 @@ export const Header = () => {
     return (
         <div className={styles.wrapper}>
             <div></div>
-            {getDaysOfWeek(currentWeek, 'EEE dd/MM', i18n.language).map(
-                ({ timestamp, label }) => (
-                    <h3
-                        key={label}
-                        style={{ ...(isToday(timestamp) && { color: 'red' }) }}
-                    >
-                        {label}
-                    </h3>
-                ),
-            )}
+            {getDaysOfWeek(
+                currentWeek,
+                'EEE dd/MM',
+                i18n.language === 'en' ? 'en' : 'gr',
+            ).map(({ timestamp, label }) => (
+                <h3
+                    key={label}
+                    style={{ ...(isToday(timestamp) && { color: 'red' }) }}
+                >
+                    {label}
+                </h3>
+            ))}
         </div>
     );
 };

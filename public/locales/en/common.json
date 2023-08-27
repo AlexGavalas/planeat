@@ -21,7 +21,7 @@
     "date": "Date",
     "no_measurements_yet": "You don't have any measurements yet",
     "welcome": "Welcome",
-    "view_weekly_meal": "View your meal plan",
+    "view_weekly_meal": "Meal plan",
     "user_settings": "User settings",
     "height_input": "Your height (in cm)",
     "bmi_label": "Body Mass Index (BMI)",
@@ -79,5 +79,6 @@
     },
     "meal_save_success": "Your changes where successfully saved",
     "hide": "Hide",
-    "show_more": "Show more"
+    "show_more": "Show more",
+    "home": "Home"
 }

@@ -1,4 +1,4 @@
-import { Spoiler, Text, Timeline } from '@mantine/core';
+import { Spoiler, Text, Timeline, Title } from '@mantine/core';
 import { format, isAfter, set } from 'date-fns';
 import { AppleHalf, Bbq, CrackedEgg, OrangeSliceAlt } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
@@ -36,12 +36,11 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
 
     return (
         <>
-            <Text align="center" pb={20} weight="bold">
-                {t('day_plan')}
-            </Text>
+            <Title order={3}>{t('day_plan')}</Title>
             <Timeline
                 active={activeIndex < 0 ? ROWS.length : activeIndex}
                 bulletSize={40}
+                color="green.1"
             >
                 {translatedRows.map((row) => {
                     const key = `${row.key}_${format(
@@ -52,8 +51,6 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
                     const meal = dailyMeals[key]?.meal || 'N/A';
 
                     const Icon = MEAL_ICON[row.key];
-
-                    // const nextMeal = index === activeIndex + 1;
 
                     return (
                         <Timeline.Item

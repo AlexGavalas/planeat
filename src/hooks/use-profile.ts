@@ -1,6 +1,7 @@
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import { fetchUser } from '~api/user';
 import { type Database } from '~types/supabase';
 
 import { useUser } from './use-user';
@@ -21,13 +22,7 @@ export const useProfile = () => {
         async () => {
             if (!user?.email) return;
 
-            const { data } = await supabaseClient
-                .from('users')
-                .select('*')
-                .eq('email', user.email)
-                .single();
-
-            return data;
+            return fetchUser({ email: user.email, supabase: supabaseClient });
         },
         {
             enabled: !!user,

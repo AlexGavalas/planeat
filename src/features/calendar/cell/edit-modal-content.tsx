@@ -64,7 +64,9 @@ export const ModalContent = ({
                         >
                             {t('delete')}
                         </Button>
-                        <Button type="submit">{t('save')}</Button>
+                        <Button className="button" type="submit">
+                            {t('save')}
+                        </Button>
                     </Group>
                 </Group>
             </Stack>

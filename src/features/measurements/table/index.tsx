@@ -1,6 +1,6 @@
 import {
     ActionIcon,
-    Box,
+    Card,
     Center,
     Group,
     LoadingOverlay,
@@ -79,7 +79,8 @@ export const MeasurementsTable = () => {
                 <Title order={3}>{t('measurements')}</Title>
                 <ActionIcon
                     title={t('add_measurement')}
-                    variant="light"
+                    color="green.1"
+                    bg="green.0"
                     size="lg"
                     onClick={() => {
                         if (!user) return;
@@ -100,11 +101,11 @@ export const MeasurementsTable = () => {
                     <Plus />
                 </ActionIcon>
             </Group>
-            <Box style={{ position: 'relative', minHeight: 200 }}>
+            <Card style={{ position: 'relative' }}>
                 <LoadingOverlay visible={loading} />
                 {measurements.length > 0 ? (
                     <>
-                        <Table highlightOnHover={true}>
+                        <Table highlightOnHover>
                             <thead>
                                 <tr>
                                     <th style={{ width: '33%' }}>
@@ -143,7 +144,7 @@ export const MeasurementsTable = () => {
                         </Center>
                     )
                 )}
-            </Box>
+            </Card>
         </>
     );
 };

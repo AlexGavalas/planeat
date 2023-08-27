@@ -1,4 +1,4 @@
-import { Flex, Stack, Title, Tooltip } from '@mantine/core';
+import { Progress, Stack, Text, Title } from '@mantine/core';
 import { NavArrowDown } from 'iconoir-react';
 
 import styles from './indicator.module.css';
@@ -7,7 +7,7 @@ interface ProgressIndicatorProps {
     label: string;
     value: number | null;
     percent: number | null;
-    sections: Section[];
+    sections: (Section & { label: string })[];
 }
 
 export const ProgressIndicator = ({
@@ -17,7 +17,7 @@ export const ProgressIndicator = ({
     sections,
 }: ProgressIndicatorProps) => {
     return (
-        <Stack>
+        <Stack spacing="xs">
             <Title order={3}>{label}</Title>
             {Boolean(value) && (
                 <div
@@ -26,23 +26,21 @@ export const ProgressIndicator = ({
                         left: `calc(${percent}% - 50px)`,
                     }}
                 >
-                    {value} %
+                    <Text>{value}%</Text>
                     <NavArrowDown />
                 </div>
             )}
-            <Flex>
-                {sections.map(({ label, percent, bg }) => (
-                    <Tooltip key={label} label={label} position="bottom">
-                        <div
-                            className={styles.section}
-                            style={{
-                                width: `${percent}%`,
-                                backgroundColor: bg,
-                            }}
-                        />
-                    </Tooltip>
-                ))}
-            </Flex>
+            <Progress
+                size="xl"
+                style={{
+                    height: '2rem',
+                }}
+                sections={sections.map((section) => ({
+                    color: section.bg,
+                    value: section.percent,
+                    label: section.label,
+                }))}
+            />
         </Stack>
     );
 };

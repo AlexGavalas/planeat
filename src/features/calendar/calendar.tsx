@@ -29,21 +29,26 @@ export const Calendar = () => {
             </DndProvider>
             <Group position="apart">
                 <Group spacing="sm">
-                    <Button onClick={previousWeek}>
+                    <Button className="button" onClick={previousWeek}>
                         &#xab; {t('week.previous')}
                     </Button>
-                    <Button onClick={nextWeek}>{t('week.next')} &#xbb;</Button>
+                    <Button className="button" onClick={nextWeek}>
+                        {t('week.next')} &#xbb;
+                    </Button>
                 </Group>
                 <Group spacing="sm">
-                    <Button onClick={() => copyToNextWeek(meals)}>
+                    <Button
+                        className="button"
+                        onClick={() => copyToNextWeek(meals)}
+                    >
                         {t('week.copy_to_next_week')}
                     </Button>
                     {Object.keys(unsavedChanges).length > 0 && (
                         <>
-                            <Button onClick={revert}>
+                            <Button className="button" onClick={revert}>
                                 {t('cancel')} &#x2715;
                             </Button>
-                            <Button onClick={savePlan}>
+                            <Button className="button" onClick={savePlan}>
                                 {t('save')} &#x2713;
                             </Button>
                         </>

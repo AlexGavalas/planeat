@@ -1,14 +1,16 @@
 import { eachDayOfInterval, endOfWeek, format, startOfWeek } from 'date-fns';
 import el from 'date-fns/locale/el';
+import enGB from 'date-fns/locale/en-GB';
 
 const localeMap = {
     gr: el,
+    en: enGB,
 };
 
 export const getDaysOfWeek = (
     date: Date,
     formatString = 'EEE dd/MM/yyyy',
-    locale = '',
+    locale: keyof typeof localeMap = 'en',
 ) => {
     return eachDayOfInterval({
         start: startOfWeek(date, { weekStartsOn: 1 }),
@@ -16,7 +18,7 @@ export const getDaysOfWeek = (
     }).map((day) => ({
         timestamp: day,
         label: format(day, formatString, {
-            locale: localeMap[locale as keyof typeof localeMap],
+            locale: localeMap[locale],
         }),
     }));
 };

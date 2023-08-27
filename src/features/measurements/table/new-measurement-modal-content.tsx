@@ -60,7 +60,7 @@ export const NewMeasurementModalContent = ({
     };
 
     return (
-        <form onSubmit={handleSave}>
+        <form onSubmit={handleSave} className="calendar">
             <Text>{t('date')}</Text>
             <Center>
                 <DatePicker
@@ -90,7 +90,9 @@ export const NewMeasurementModalContent = ({
                 <Button variant="light" color="red" onClick={closeModal}>
                     {t('cancel')}
                 </Button>
-                <Button type="submit">{t('save')}</Button>
+                <Button type="submit" className="button">
+                    {t('save')}
+                </Button>
             </Group>
         </form>
     );

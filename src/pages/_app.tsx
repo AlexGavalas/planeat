@@ -43,6 +43,10 @@ const App = ({
                 withGlobalStyles
                 withNormalizeCSS
                 theme={{
+                    colors: {
+                        green: ['#a7d3a5', '#04724d'],
+                    },
+                    primaryColor: 'green',
                     colorScheme: 'light',
                 }}
             >
@@ -52,7 +56,9 @@ const App = ({
                             <ModalsProvider>
                                 <UserContext>
                                     <Header />
-                                    <Component {...pageProps} />
+                                    <div className="container">
+                                        <Component {...pageProps} />
+                                    </div>
                                 </UserContext>
                                 <Notifications />
                             </ModalsProvider>

@@ -13,6 +13,7 @@ export const UserActions = () => {
     if (!hasUser) {
         return (
             <Button
+                className="button"
                 leftIcon={<Google />}
                 onClick={async () => {
                     await signIn('google');
@@ -25,6 +26,7 @@ export const UserActions = () => {
 
     return (
         <Button
+            className="button"
             onClick={async () => {
                 await signOut();
                 router.push('/');

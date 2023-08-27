@@ -1,60 +1,18 @@
-import { Box, Center, LoadingOverlay, Title } from '@mantine/core';
+import { Card, Center, LoadingOverlay, Title } from '@mantine/core';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { sub } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useQuery } from 'react-query';
 
-import { ProgressIndicator } from '~components/progress/indicator';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
-
-import { MAX_FAT_PERCENT, SECTIONS } from './constants';
 
 const LineChart = dynamic(() => import('~components/charts/line'), {
     ssr: false,
 });
 
-export const FatPercent = () => {
-    const { t } = useTranslation();
-    const supabaseClient = useSupabaseClient<Database>();
-    const { profile: user } = useProfile();
-
-    const { data: fatPercent = 0 } = useQuery(
-        ['current-fat-percent'],
-        async () => {
-            if (!user) throw new Error(`User not logged in`);
-
-            return supabaseClient
-                .from('measurements')
-                .select('fat_percentage')
-                .eq('user_id', user.id)
-                .not('fat_percentage', 'is', null)
-                .order('date', { ascending: false })
-                .limit(1);
-        },
-        {
-            enabled: Boolean(user),
-            select: ({ data }) => data?.[0]?.fat_percentage,
-        },
-    );
-
-    const translatedSections = SECTIONS.map((section) => ({
-        ...section,
-        label: t(`fat_sections.${section.key}`),
-    }));
-
-    return (
-        <ProgressIndicator
-            label={t('fat_label')}
-            value={fatPercent}
-            percent={fatPercent && (fatPercent * 100) / MAX_FAT_PERCENT}
-            sections={translatedSections}
-        />
-    );
-};
-
-export const FatPercentTimeline = () => {
+export const FatTimeline = () => {
     const { t } = useTranslation();
     const supabaseClient = useSupabaseClient<Database>();
     const { profile: user } = useProfile();
@@ -76,10 +34,7 @@ export const FatPercentTimeline = () => {
             enabled: Boolean(user),
             select: ({ data }) =>
                 data?.length
-                    ? data.map(({ date, fat_percentage }) => ({
-                          y: fat_percentage,
-                          x: date,
-                      }))
+                    ? data.map(({ date: x, fat_percentage: y }) => ({ x, y }))
                     : null,
         },
     );
@@ -89,7 +44,8 @@ export const FatPercentTimeline = () => {
             <Title order={4} pt={20}>
                 {t('fat_change')}
             </Title>
-            <Box
+            <Card
+                bg="transparent"
                 style={{
                     height: 200,
                     position: 'relative',
@@ -104,7 +60,7 @@ export const FatPercentTimeline = () => {
                         <Title order={4}>{t('no_measurements_yet')}</Title>
                     </Center>
                 )}
-            </Box>
+            </Card>
         </>
     );
 };

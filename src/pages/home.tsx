@@ -1,30 +1,22 @@
-import { Box, Button, Divider, Group, Stack, Text } from '@mantine/core';
+import { Box, Divider, Group, Space, Stack } from '@mantine/core';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { endOfDay, startOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
 import { type GetServerSideProps } from 'next';
-import { type User } from 'next-auth';
-import { getServerSession } from 'next-auth/next';
-import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Link from 'next/link';
 import invariant from 'tiny-invariant';
 
+import { getServerSession } from '~api/session';
+import { fetchUser } from '~api/user';
 import { BMITimeline, CurrentBMI } from '~features/bmi';
 import { DailyMeal } from '~features/daily-meal';
-import { FatPercent, FatPercentTimeline } from '~features/fat-percent';
+import { CurrentFat, FatTimeline } from '~features/fat-percent';
 import { type Database } from '~types/supabase';
-
-import { authOptions } from './api/auth/[...nextauth]';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const supabase = createPagesServerClient<Database>(context);
 
-    const session = await getServerSession(
-        context.req,
-        context.res,
-        authOptions,
-    );
+    const session = await getServerSession(context);
 
     if (!session) {
         return {
@@ -47,11 +39,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         .gte('day', startOfDay(NOW).toISOString())
         .lte('day', endOfDay(NOW).toISOString());
 
-    const { data: profile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('email', user.email)
-        .single();
+    const profile = await fetchUser({ email: user.email, supabase });
 
     const dailyMeals = fromPairs(map(data, (item) => [item.section_key, item]));
 
@@ -66,46 +54,30 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
 };
 
-const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
-    const { t } = useTranslation();
-
+export default function Home({ dailyMeals }: { dailyMeals: MealsMap }) {
     return (
-        <Group grow p={20} align="start" noWrap={true}>
-            <Stack style={{ maxWidth: '25%' }}>
-                <DailyMeal dailyMeals={dailyMeals} />
-            </Stack>
-            <Box
-                pl={20}
+        <Group p={20} align="start" grow noWrap>
+            <Stack
                 style={{
-                    maxWidth: '75%',
-                    borderLeft: '1px solid #ced4da',
+                    width: '20%',
+                    maxWidth: '20%',
                 }}
             >
-                <Text>
-                    {t('welcome')}{' '}
-                    <Text component="span" weight="bold">
-                        {user.name}
-                    </Text>
-                </Text>
-                <Group>
-                    <Link href="/meal-plan">
-                        <Button>{t('view_weekly_meal')}</Button>
-                    </Link>
-                    <Link href="/settings">
-                        <Button>{t('user_settings')}</Button>
-                    </Link>
-                </Group>
-                <Divider my="lg" />
-                <FatPercent />
-                <Divider my="sm" />
-                <FatPercentTimeline />
-                <Divider my="lg" />
+                <DailyMeal dailyMeals={dailyMeals} />
+            </Stack>
+            <Divider size="xs" color="green.1" orientation="vertical" />
+            <Box
+                style={{
+                    width: '80%',
+                    maxWidth: '80%',
+                }}
+            >
+                <CurrentFat />
+                <FatTimeline />
+                <Space h="xl" />
                 <CurrentBMI />
-                <Divider my="sm" />
                 <BMITimeline />
             </Box>
         </Group>
     );
-};
-
-export default Home;
+}
