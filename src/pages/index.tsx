@@ -3,6 +3,7 @@ import type { GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { getServerSession } from '~api/session';
+import { Blobs, Line } from '~components/icons/line';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getServerSession(context);
@@ -33,6 +34,7 @@ export default function LandingPage() {
     return (
         <Center>
             <Stack spacing="xl" className="content">
+                <Blobs />
                 <Title order={1}>Welcome to Planeat!</Title>
                 <Title order={2}>
                     Your Ultimate Health and Wellness Companion
@@ -83,6 +85,7 @@ export default function LandingPage() {
                     today and take charge of your well-being like never before.
                     Your journey towards a healthier, happier you starts here.
                 </Text>
+                <Line />
             </Stack>
         </Center>
     );

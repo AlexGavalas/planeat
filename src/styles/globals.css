@@ -64,7 +64,7 @@ a {
     border-top: 5px solid var(--color-primary);
     height: 100%;
     padding: 2rem;
-    background: linear-gradient(45deg, var(--color-primary) 0%, #e8e8e8 100%);
+    background: #ecf5ec;
 }
 
 .container .content {
