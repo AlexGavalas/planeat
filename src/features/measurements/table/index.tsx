@@ -9,12 +9,13 @@ import {
     Title,
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
+import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 
 import { NewMeasurementModalContent } from './new-measurement-modal-content';
@@ -24,9 +25,8 @@ const PAGE_SIZE = 10;
 
 export const MeasurementsTable = () => {
     const { t } = useTranslation();
-
     const modals = useModals();
-    const user = useUser();
+    const { profile: user } = useProfile();
     const queryClient = useQueryClient();
     const supabaseClient = useSupabaseClient<Database>();
     const [page, setPage] = useState(1);

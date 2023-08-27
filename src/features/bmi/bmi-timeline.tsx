@@ -1,10 +1,11 @@
 import { Box, Center, LoadingOverlay, Title } from '@mantine/core';
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { sub } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useQuery } from 'react-query';
 
+import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 
 const LineChart = dynamic(() => import('~components/charts/line'), {
@@ -14,7 +15,7 @@ const LineChart = dynamic(() => import('~components/charts/line'), {
 export const BMITimeline = () => {
     const { t } = useTranslation();
     const supabaseClient = useSupabaseClient<Database>();
-    const user = useUser();
+    const { profile: user } = useProfile();
 
     const { data, isFetching } = useQuery(
         ['bmi-timeline'],

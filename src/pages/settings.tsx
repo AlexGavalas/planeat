@@ -11,21 +11,27 @@ import { useDebouncedValue } from '@mantine/hooks';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { type GetServerSideProps } from 'next';
+import { getServerSession } from 'next-auth/next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import invariant from 'tiny-invariant';
 
 import { MeasurementsTable } from '~features/measurements/table';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 
+import { authOptions } from './api/auth/[...nextauth]';
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const supabase = createPagesServerClient<Database>(context);
 
-    const {
-        data: { session },
-    } = await supabase.auth.getSession();
+    const session = await getServerSession(
+        context.req,
+        context.res,
+        authOptions,
+    );
 
     if (!session) {
         return {
@@ -38,10 +44,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const { user } = session;
 
+    invariant(user?.email, 'User email must exist in session');
+
     const { data: profile } = await supabase
         .from('users')
         .select('language')
-        .eq('id', user.id)
+        .eq('email', user.email)
         .single();
 
     return {

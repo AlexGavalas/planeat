@@ -1,15 +1,12 @@
 import { Button } from '@mantine/core';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { Google, LogOut } from 'iconoir-react';
+import { signIn, signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-
-import { type Database } from '~types/supabase';
 
 export const UserActions = () => {
     const router = useRouter();
     const { t } = useTranslation();
-    const supabaseClient = useSupabaseClient<Database>();
 
     const hasUser = router.pathname !== '/';
 
@@ -17,10 +14,8 @@ export const UserActions = () => {
         return (
             <Button
                 leftIcon={<Google />}
-                onClick={() => {
-                    supabaseClient.auth.signInWithOAuth({
-                        provider: 'google',
-                    });
+                onClick={async () => {
+                    await signIn('google');
                 }}
             >
                 {t('login.google')}
@@ -31,7 +26,7 @@ export const UserActions = () => {
     return (
         <Button
             onClick={async () => {
-                await supabaseClient.auth.signOut();
+                await signOut();
                 router.push('/');
             }}
             leftIcon={<LogOut />}

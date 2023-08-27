@@ -2,13 +2,14 @@ declare namespace NodeJS {
     interface ProcessEnv {
         NEXT_PUBLIC_SUPABASE_URL: string;
         NEXT_PUBLIC_SUPABASE_ANON_KEY: string;
+        NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY: string;
     }
 }
 
 type Meal = {
     id: string;
     meal: string;
-    user_id: string;
+    user_id: number;
     section_key: string;
     day: string;
 };
@@ -19,7 +20,7 @@ type MealsMap = Record<string, Meal | EditedMeal>;
 
 type Measurement = {
     id: string;
-    user_id: string;
+    user_id: number;
     date: string;
     weight: number;
     fat_percentage: number | null;
@@ -29,7 +30,7 @@ type FatMeasurement = {
     id: string;
     fat_percent: number;
     date: string;
-    user_id: string;
+    user_id: number;
 };
 
 type Profile = {

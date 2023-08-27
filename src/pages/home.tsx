@@ -1,26 +1,30 @@
 import { Box, Button, Divider, Group, Stack, Text } from '@mantine/core';
-import {
-    type User,
-    createPagesServerClient,
-} from '@supabase/auth-helpers-nextjs';
+import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { endOfDay, startOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
 import { type GetServerSideProps } from 'next';
+import { type User } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
+import invariant from 'tiny-invariant';
 
 import { BMITimeline, CurrentBMI } from '~features/bmi';
 import { DailyMeal } from '~features/daily-meal';
 import { FatPercent, FatPercentTimeline } from '~features/fat-percent';
 import { type Database } from '~types/supabase';
 
+import { authOptions } from './api/auth/[...nextauth]';
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const supabase = createPagesServerClient<Database>(context);
 
-    const {
-        data: { session },
-    } = await supabase.auth.getSession();
+    const session = await getServerSession(
+        context.req,
+        context.res,
+        authOptions,
+    );
 
     if (!session) {
         return {
@@ -35,6 +39,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const { user } = session;
 
+    invariant(user?.email, 'User email must exist in session');
+
     const { data } = await supabase
         .from('meals')
         .select('*')
@@ -43,15 +49,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const { data: profile } = await supabase
         .from('users')
-        .select('language')
-        .eq('id', user.id)
+        .select('*')
+        .eq('email', user.email)
         .single();
 
     const dailyMeals = fromPairs(map(data, (item) => [item.section_key, item]));
 
     return {
         props: {
-            initialSession: session,
             dailyMeals,
             user,
             ...(await serverSideTranslations(profile?.language || 'en', [
@@ -79,7 +84,7 @@ const Home = ({ user, dailyMeals }: { user: User; dailyMeals: MealsMap }) => {
                 <Text>
                     {t('welcome')}{' '}
                     <Text component="span" weight="bold">
-                        {user.user_metadata.name}
+                        {user.name}
                     </Text>
                 </Text>
                 <Group>

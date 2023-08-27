@@ -1,7 +1,9 @@
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { type Database } from '~types/supabase';
+
+import { useUser } from './use-user';
 
 interface MutationProps {
     isNutritionist?: boolean;
@@ -14,21 +16,27 @@ export const useProfile = () => {
 
     const user = useUser();
 
-    const { data: profile, isFetching } = useQuery(['user'], async () => {
-        if (!user) return;
+    const { data: profile, isFetching } = useQuery(
+        ['user'],
+        async () => {
+            if (!user?.email) return;
 
-        const { data } = await supabaseClient
-            .from('users')
-            .select('*')
-            .eq('id', user.id)
-            .single();
+            const { data } = await supabaseClient
+                .from('users')
+                .select('*')
+                .eq('email', user.email)
+                .single();
 
-        return data;
-    });
+            return data;
+        },
+        {
+            enabled: !!user,
+        },
+    );
 
     const { mutate: updateProfile } = useMutation(
         async ({ isNutritionist, height }: MutationProps) => {
-            if (!user) return;
+            if (!user?.email) return;
 
             const { data, error } = await supabaseClient
                 .from('users')
@@ -36,7 +44,7 @@ export const useProfile = () => {
                     is_nutritionist: isNutritionist,
                     height,
                 })
-                .eq('id', user.id);
+                .eq('email', user.email);
 
             if (error) throw error;
 

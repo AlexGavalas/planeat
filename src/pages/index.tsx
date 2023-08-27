@@ -1,17 +1,17 @@
 import { Box, Center, List, Stack, Text, Title } from '@mantine/core';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import type { GetServerSideProps } from 'next';
+import { getServerSession } from 'next-auth/next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Image from 'next/image';
 
-import { type Database } from '~types/supabase';
+import { authOptions } from './api/auth/[...nextauth]';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const supabase = createPagesServerClient<Database>(context);
-
-    const {
-        data: { session },
-    } = await supabase.auth.getSession();
+    const session = await getServerSession(
+        context.req,
+        context.res,
+        authOptions,
+    );
 
     if (session) {
         return {

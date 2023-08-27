@@ -14,7 +14,7 @@ const localeMap = {
 };
 
 interface ModalContentProps {
-    userId: string;
+    userId: number;
     onSave: () => void;
 }
 

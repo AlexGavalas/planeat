@@ -1,4 +1,4 @@
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useTranslation } from 'next-i18next';
 import { useQuery } from 'react-query';
 
@@ -12,7 +12,7 @@ import { calculateBMI } from './helpers';
 export const CurrentBMI = () => {
     const { t } = useTranslation();
     const supabaseClient = useSupabaseClient<Database>();
-    const user = useUser();
+    const { profile: user } = useProfile();
 
     const { profile } = useProfile();
 

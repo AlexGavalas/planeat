@@ -1,14 +1,14 @@
 import { Box, Center, Text } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
-import { useUser } from '@supabase/auth-helpers-react';
 
+import { useProfile } from '~hooks/use-profile';
 import { useMeals } from '~store/hooks';
 
 import styles from './cell.module.css';
 import { CellOverlay } from './overlay';
 
 export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
-    const user = useUser();
+    const { profile: user } = useProfile();
     const { hovered, ref } = useHover();
 
     const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =

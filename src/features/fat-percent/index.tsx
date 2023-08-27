@@ -1,11 +1,12 @@
 import { Box, Center, LoadingOverlay, Title } from '@mantine/core';
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { sub } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useQuery } from 'react-query';
 
 import { ProgressIndicator } from '~components/progress/indicator';
+import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 
 import { MAX_FAT_PERCENT, SECTIONS } from './constants';
@@ -17,7 +18,7 @@ const LineChart = dynamic(() => import('~components/charts/line'), {
 export const FatPercent = () => {
     const { t } = useTranslation();
     const supabaseClient = useSupabaseClient<Database>();
-    const user = useUser();
+    const { profile: user } = useProfile();
 
     const { data: fatPercent = 0 } = useQuery(
         ['current-fat-percent'],
@@ -56,7 +57,7 @@ export const FatPercent = () => {
 export const FatPercentTimeline = () => {
     const { t } = useTranslation();
     const supabaseClient = useSupabaseClient<Database>();
-    const user = useUser();
+    const { profile: user } = useProfile();
 
     const { data, isFetching } = useQuery(
         ['fat-percent-timeline'],

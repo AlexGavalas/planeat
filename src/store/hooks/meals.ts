@@ -181,7 +181,7 @@ export const useMeals = () => {
         meal?: Meal | EditedMeal;
         sectionKey: string;
         timestamp: Date;
-        userId: string;
+        userId: number;
         value: string;
     }) => {
         const editedMeal = {
@@ -201,7 +201,7 @@ export const useMeals = () => {
         value,
     }: {
         sectionKey: string;
-        userId: string;
+        userId: number;
         value: string;
     }) => {
         const [row] = sectionKey.split('_');
