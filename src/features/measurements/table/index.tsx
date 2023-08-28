@@ -3,7 +3,6 @@ import {
     Card,
     Center,
     Group,
-    LoadingOverlay,
     Pagination,
     Table,
     Title,
@@ -15,6 +14,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
+import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 
@@ -108,14 +108,17 @@ export const MeasurementsTable = () => {
                         <Table highlightOnHover>
                             <thead>
                                 <tr>
-                                    <th style={{ width: '33%' }}>
+                                    <th style={{ width: '25%' }}>
                                         {t('date')}
                                     </th>
-                                    <th style={{ width: '33%' }}>
+                                    <th style={{ width: '25%' }}>
                                         {t('weight')}
                                     </th>
-                                    <th style={{ width: '33%' }}>
+                                    <th style={{ width: '25%' }}>
                                         {t('fat_label')}
+                                    </th>
+                                    <th style={{ width: '25%' }}>
+                                        {t('actions')}
                                     </th>
                                 </tr>
                             </thead>

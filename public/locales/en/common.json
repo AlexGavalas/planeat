@@ -80,5 +80,11 @@
     "meal_save_success": "Your changes where successfully saved",
     "hide": "Hide",
     "show_more": "Show more",
-    "home": "Home"
+    "home": "Home",
+    "actions": "Actions",
+    "confirmation": {
+        "generic": "Are you sure?",
+        "yes": "Yes",
+        "no": "No"
+    }
 }
