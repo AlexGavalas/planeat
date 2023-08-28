@@ -108,14 +108,17 @@ export const MeasurementsTable = () => {
                         <Table highlightOnHover>
                             <thead>
                                 <tr>
-                                    <th style={{ width: '33%' }}>
+                                    <th style={{ width: '25%' }}>
                                         {t('date')}
                                     </th>
-                                    <th style={{ width: '33%' }}>
+                                    <th style={{ width: '25%' }}>
                                         {t('weight')}
                                     </th>
-                                    <th style={{ width: '33%' }}>
+                                    <th style={{ width: '25%' }}>
                                         {t('fat_label')}
+                                    </th>
+                                    <th style={{ width: '25%' }}>
+                                        {t('actions')}
                                     </th>
                                 </tr>
                             </thead>
