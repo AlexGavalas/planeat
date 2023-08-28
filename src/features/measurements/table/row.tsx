@@ -53,8 +53,6 @@ export const Row = ({ item, page }: RowProps) => {
     const handleDelete = async () => {
         setDeleteInProgress(true);
 
-        await new Promise((r) => setTimeout(r, 5000));
-
         const { error } = await supabaseClient
             .from('measurements')
             .delete()
