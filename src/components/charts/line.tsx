@@ -1,9 +1,13 @@
 import { Card } from '@mantine/core';
 import { type CustomLayerProps, ResponsiveLine } from '@nivo/line';
 import { maxBy, minBy } from 'lodash';
+import { type SVGAttributes } from 'react';
 import { useMemo } from 'react';
 
 type NumFn = (prop: number) => number;
+type TextAnchor = NonNullable<
+    SVGAttributes<SVGTextElement>['style']
+>['textAnchor'];
 
 const targetLayer = (targetWeight: number) =>
     function CustomLayer(props: CustomLayerProps) {
@@ -43,12 +47,12 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
     return (
         <ResponsiveLine
             data={data}
-            colors={['#32ad4c']}
+            colors={['#04724d']}
             lineWidth={2}
             margin={{
-                top: 20,
+                top: 10,
                 bottom: 25,
-                right: 40,
+                right: 0,
                 left: 40,
             }}
             xScale={{
@@ -57,7 +61,7 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
             yScale={{
                 type: 'linear',
                 min: Math.min(min, target || Infinity) - 2,
-                max: max + 2,
+                max: Math.max(max, target || -Infinity) + 2,
             }}
             curve="natural"
             theme={{
@@ -70,14 +74,46 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
                 },
             }}
             axisBottom={{
-                tickSize: 5,
+                renderTick: (tick) => {
+                    const isFirst = tick.tickIndex === 0;
+                    const isLast = tick.tickIndex === data[0].data.length - 1;
+
+                    let textAnchor: TextAnchor = isFirst
+                        ? 'start'
+                        : isLast
+                        ? 'end'
+                        : 'middle';
+
+                    if (isFirst && isLast) {
+                        textAnchor = 'middle';
+                    }
+
+                    return (
+                        <g>
+                            <text
+                                dominant-baseline="text-before-edge"
+                                text-anchor={textAnchor}
+                                transform={`translate(${tick.x}, ${tick.y})`}
+                                y={tick.textY}
+                                style={{
+                                    textAnchor,
+                                    fontSize: 12,
+                                    fill: 'rgb(51, 51, 51)',
+                                }}
+                            >
+                                {tick.value}
+                            </text>
+                        </g>
+                    );
+                },
+                tickSize: 0,
+                tickPadding: 10,
             }}
             axisLeft={{
-                tickSize: 5,
+                tickSize: 10,
             }}
             pointSize={10}
-            pointLabelYOffset={2}
-            useMesh={true}
+            useMesh
             tooltip={({ point }) => {
                 const isFirst = point.index === 0;
                 const isLast = point.index === data[0].data.length - 1;

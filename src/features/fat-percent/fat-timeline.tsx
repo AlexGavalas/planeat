@@ -46,12 +46,16 @@ export const FatTimeline = () => {
             </Title>
             <Card
                 bg="transparent"
+                px={0}
                 style={{
                     height: 200,
                     position: 'relative',
                 }}
             >
-                <LoadingOverlay visible={isFetching} />
+                <LoadingOverlay
+                    visible={isFetching}
+                    loaderProps={{ color: 'green.1' }}
+                />
                 {data && (
                     <LineChart unit="%" data={[{ id: 'fat-percent', data }]} />
                 )}
