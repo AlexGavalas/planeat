@@ -1,10 +1,11 @@
-import { Box, Center, LoadingOverlay, Title } from '@mantine/core';
+import { Box, Center, Title } from '@mantine/core';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { sub } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useQuery } from 'react-query';
 
+import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 
@@ -52,10 +53,7 @@ export const BMITimeline = () => {
                     position: 'relative',
                 }}
             >
-                <LoadingOverlay
-                    visible={isFetching}
-                    loaderProps={{ color: 'green.1' }}
-                />
+                <LoadingOverlay visible={isFetching} />
                 {data && (
                     <LineChart
                         unit={t('kg')}

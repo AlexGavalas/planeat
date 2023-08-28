@@ -1,8 +1,9 @@
-import { Button, Group, LoadingOverlay } from '@mantine/core';
+import { Button, Group } from '@mantine/core';
 import { useTranslation } from 'next-i18next';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import { LoadingOverlay } from '~components/loading-overlay';
 import {
     useCurrentWeek,
     useMeals,
