@@ -101,7 +101,7 @@ export const MeasurementsTable = () => {
                     <Plus />
                 </ActionIcon>
             </Group>
-            <Card style={{ position: 'relative' }}>
+            <Card style={{ minHeight: 100 }}>
                 <LoadingOverlay visible={loading} />
                 {measurements.length > 0 ? (
                     <>
@@ -142,7 +142,7 @@ export const MeasurementsTable = () => {
                     </>
                 ) : (
                     !loading && (
-                        <Center>
+                        <Center style={{ height: 100 }}>
                             <Title order={4}>{t('no_measurements_yet')}</Title>
                         </Center>
                     )

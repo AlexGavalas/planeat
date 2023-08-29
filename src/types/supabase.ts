@@ -80,6 +80,7 @@ export interface Database {
                     id: number;
                     is_nutritionist: boolean;
                     language: string;
+                    target_weight: number | null;
                 };
                 Insert: {
                     created_at?: string;
@@ -89,6 +90,7 @@ export interface Database {
                     id?: number;
                     is_nutritionist?: boolean;
                     language: string;
+                    target_weight?: number | null;
                 };
                 Update: {
                     created_at?: string;
@@ -98,6 +100,7 @@ export interface Database {
                     id?: number;
                     is_nutritionist?: boolean;
                     language?: string;
+                    target_weight?: number | null;
                 };
                 Relationships: [];
             };

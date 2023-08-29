@@ -44,8 +44,8 @@ export const NewMeasurementModalContent = ({
     const handleSave: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
-        if (!weight) return setError(t('errors.weight_empty').toString());
-        if (!date) return setError(t('errors.date_empty').toString());
+        if (!weight) return setError(t('errors.weight_empty'));
+        if (!date) return setError(t('errors.date_empty'));
 
         let error;
 
