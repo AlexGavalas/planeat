@@ -57,7 +57,7 @@ export const BMITimeline = () => {
                 {data && (
                     <LineChart
                         unit={t('kg')}
-                        target={85}
+                        target={Number(user?.target_weight)}
                         data={[{ id: 'bmi-timeline', data }]}
                     />
                 )}

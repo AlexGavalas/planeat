@@ -1,6 +1,7 @@
 import {
     Autocomplete,
     Button,
+    Card,
     Container,
     Group,
     NumberInput,
@@ -19,6 +20,7 @@ import invariant from 'tiny-invariant';
 
 import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
+import { LoadingOverlay } from '~components/loading-overlay';
 import { MeasurementsTable } from '~features/measurements/table';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
@@ -56,6 +58,7 @@ export default function Settings() {
     const { t } = useTranslation();
     const [searchQuery, setSearchQuery] = useState('');
     const [height, setHeight] = useState<number>();
+    const [targetWeight, setTargetWeight] = useState<number>();
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 250);
     const { profile, updateProfile } = useProfile();
     const supabaseClient = useSupabaseClient<Database>();
@@ -87,14 +90,14 @@ export default function Settings() {
                 <Switch
                     color="green.1"
                     label={t('am_nutritionist')}
-                    checked={profile?.is_nutritionist || false}
-                    onChange={({ target: { checked } }) => {
-                        updateProfile({ isNutritionist: checked });
-                    }}
+                    checked={profile?.is_nutritionist}
+                    onChange={({ target: { checked } }) =>
+                        updateProfile({ isNutritionist: checked })
+                    }
                 />
                 <Autocomplete
                     label={t('find_your_nutritionist')}
-                    placeholder={t('search').toString()}
+                    placeholder={t('search')}
                     data={nutritionists}
                     value={searchQuery}
                     onChange={setSearchQuery}
@@ -102,23 +105,39 @@ export default function Settings() {
                 />
             </Group>
             <Space h="lg" />
-            {profile && (
-                <Group align="end">
-                    <NumberInput
-                        label={t('height_input')}
-                        style={{ width: '25%' }}
-                        defaultValue={profile?.height ?? undefined}
-                        onChange={(value) => setHeight(Number(value))}
-                    />
-                    <Button
-                        className="button"
-                        onClick={() => {
-                            updateProfile({ height });
-                        }}
-                    >
-                        {t('save')}
-                    </Button>
+            {profile ? (
+                <Group>
+                    <Group align="end">
+                        <NumberInput
+                            label={t('height_input')}
+                            defaultValue={profile.height ?? undefined}
+                            onChange={(value) => setHeight(Number(value))}
+                        />
+                        <Button
+                            className="button"
+                            onClick={() => updateProfile({ height })}
+                        >
+                            {t('save')}
+                        </Button>
+                    </Group>
+                    <Group align="end">
+                        <NumberInput
+                            label={t('target_weight_input')}
+                            defaultValue={profile.target_weight ?? undefined}
+                            onChange={(value) => setTargetWeight(Number(value))}
+                        />
+                        <Button
+                            className="button"
+                            onClick={() => updateProfile({ targetWeight })}
+                        >
+                            {t('save')}
+                        </Button>
+                    </Group>
                 </Group>
+            ) : (
+                <Card style={{ height: 60 }}>
+                    <LoadingOverlay visible />
+                </Card>
             )}
             <Space h="lg" />
             <MeasurementsTable />

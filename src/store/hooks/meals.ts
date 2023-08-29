@@ -83,9 +83,9 @@ export const useMeals = () => {
             removeChanges();
 
             showNotification({
-                title: t('success'),
-                message: t('meal_save_success'),
-                color: 'green',
+                title: t('notification.success.title'),
+                message: t('notification.success.message'),
+                color: 'green.1',
             });
         }
     };

@@ -1,4 +1,4 @@
-create table
+create table if not exists
   public.measurements (
     id uuid not null default uuid_generate_v4 (),
     date date not null,

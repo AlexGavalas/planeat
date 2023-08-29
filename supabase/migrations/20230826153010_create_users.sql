@@ -1,4 +1,4 @@
-create table
+create table if not exists
   public.users (
     created_at timestamp with time zone not null default now(),
     email text not null,
