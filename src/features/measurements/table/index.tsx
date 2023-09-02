@@ -15,10 +15,10 @@ import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
+import { MeasurementModal } from '~features/modals/measurement';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 
-import { NewMeasurementModalContent } from './new-measurement-modal-content';
 import { Row } from './row';
 
 const PAGE_SIZE = 10;
@@ -90,7 +90,7 @@ export const MeasurementsTable = () => {
                             centered: true,
                             size: 'sm',
                             children: (
-                                <NewMeasurementModalContent
+                                <MeasurementModal
                                     userId={user.id}
                                     onSave={onNewWeightSave}
                                 />

@@ -24,7 +24,7 @@ interface ModalContentProps {
     };
 }
 
-export const NewMeasurementModalContent = ({
+export const MeasurementModal = ({
     userId,
     onSave,
     initialData,

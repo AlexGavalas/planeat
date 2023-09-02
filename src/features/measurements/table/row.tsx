@@ -8,10 +8,10 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQueryClient } from 'react-query';
 
+import { MeasurementModal } from '~features/modals/measurement';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 
-import { NewMeasurementModalContent } from './new-measurement-modal-content';
 import { Td } from './row-td';
 
 interface RowProps {
@@ -109,7 +109,7 @@ export const Row = ({ item, page }: RowProps) => {
                                 centered: true,
                                 size: 'sm',
                                 children: (
-                                    <NewMeasurementModalContent
+                                    <MeasurementModal
                                         userId={user.id}
                                         initialData={{
                                             id: item.id,
