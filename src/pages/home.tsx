@@ -8,6 +8,7 @@ import invariant from 'tiny-invariant';
 
 import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
+import { Fab } from '~components/fab';
 import { BMITimeline, CurrentBMI } from '~features/bmi';
 import { DailyMeal } from '~features/daily-meal';
 import { CurrentFat, FatTimeline } from '~features/fat-percent';
@@ -78,6 +79,7 @@ export default function Home({ dailyMeals }: { dailyMeals: MealsMap }) {
                 <CurrentBMI />
                 <BMITimeline />
             </Box>
+            <Fab />
         </Group>
     );
 }
