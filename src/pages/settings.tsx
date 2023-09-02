@@ -5,6 +5,7 @@ import {
     Container,
     Group,
     NumberInput,
+    Select,
     Space,
     Switch,
 } from '@mantine/core';
@@ -59,6 +60,7 @@ export default function Settings() {
     const [searchQuery, setSearchQuery] = useState('');
     const [height, setHeight] = useState<number>();
     const [targetWeight, setTargetWeight] = useState<number>();
+    const [language, setLanguage] = useState<string>();
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 250);
     const { profile, updateProfile } = useProfile();
     const supabaseClient = useSupabaseClient<Database>();
@@ -106,33 +108,55 @@ export default function Settings() {
             </Group>
             <Space h="lg" />
             {profile ? (
-                <Group>
-                    <Group align="end">
-                        <NumberInput
-                            label={t('height_input')}
-                            defaultValue={profile.height ?? undefined}
-                            onChange={(value) => setHeight(Number(value))}
-                        />
-                        <Button
-                            className="button"
-                            onClick={() => updateProfile({ height })}
-                        >
-                            {t('save')}
-                        </Button>
-                    </Group>
-                    <Group align="end">
-                        <NumberInput
-                            label={t('target_weight_input')}
-                            defaultValue={profile.target_weight ?? undefined}
-                            onChange={(value) => setTargetWeight(Number(value))}
-                        />
-                        <Button
-                            className="button"
-                            onClick={() => updateProfile({ targetWeight })}
-                        >
-                            {t('save')}
-                        </Button>
-                    </Group>
+                <Group grow align="end">
+                    <NumberInput
+                        label={t('height_input')}
+                        defaultValue={profile.height ?? undefined}
+                        onChange={(value) => setHeight(Number(value))}
+                    />
+                    <NumberInput
+                        label={t('target_weight_input')}
+                        defaultValue={profile.target_weight ?? undefined}
+                        onChange={(value) => setTargetWeight(Number(value))}
+                    />
+                    <Select
+                        label={t('languages.label')}
+                        placeholder={t('languages.placeholder')}
+                        defaultValue={profile.language}
+                        color="green"
+                        styles={(theme) => ({
+                            item: {
+                                '&[data-selected]': {
+                                    backgroundColor: theme.colors.green[1],
+                                },
+                            },
+                        })}
+                        onChange={(value) => {
+                            setLanguage(value ?? undefined);
+                        }}
+                        data={[
+                            {
+                                value: 'en',
+                                label: t('languages.options.en'),
+                            },
+                            {
+                                value: 'gr',
+                                label: t('languages.options.el'),
+                            },
+                        ]}
+                    />
+                    <Button
+                        className="button"
+                        onClick={() => {
+                            updateProfile({
+                                language,
+                                height,
+                                targetWeight,
+                            });
+                        }}
+                    >
+                        {t('save')}
+                    </Button>
                 </Group>
             ) : (
                 <Card style={{ height: 60 }}>
