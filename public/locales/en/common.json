@@ -92,5 +92,13 @@
         "generic": "Are you sure?",
         "yes": "Yes",
         "no": "No"
+    },
+    "languages": {
+        "label": "Language",
+        "placeholder": "Select a language",
+        "options": {
+            "en": "English",
+            "el": "Greek"
+        }
     }
 }

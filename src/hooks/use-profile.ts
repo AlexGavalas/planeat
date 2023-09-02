@@ -12,6 +12,7 @@ interface MutationProps {
     isNutritionist?: boolean;
     height?: number;
     targetWeight?: number;
+    language?: string;
 }
 
 export const useProfile = () => {
@@ -33,7 +34,12 @@ export const useProfile = () => {
     );
 
     const { mutate: updateProfile } = useMutation(
-        async ({ isNutritionist, height, targetWeight }: MutationProps) => {
+        async ({
+            isNutritionist,
+            height,
+            targetWeight,
+            language,
+        }: MutationProps) => {
             if (!user?.email) return;
 
             const { data, error } = await supabaseClient
@@ -42,6 +48,7 @@ export const useProfile = () => {
                     is_nutritionist: isNutritionist,
                     target_weight: targetWeight,
                     height,
+                    language,
                 })
                 .eq('email', user.email);
 

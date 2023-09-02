@@ -96,8 +96,8 @@ export const Row = ({ item, page }: RowProps) => {
                 setEdit={() => setEdit(true)}
                 value={item.fat_percentage}
             />
-            <td style={{ width: '25%' }}>
-                <Group spacing="md">
+            <td style={{ width: '35%' }}>
+                <Group spacing="md" grow>
                     <Button
                         className="button"
                         size="xs"

@@ -31,7 +31,7 @@ export const Td = ({
     });
 
     return (
-        <td ref={ref} style={{ width: '25%' }}>
+        <td ref={ref} style={{ width: '20%' }}>
             <Group>
                 {edit ? (
                     <NumberInput

@@ -111,13 +111,13 @@ export const MeasurementsTable = () => {
                                     <th style={{ width: '25%' }}>
                                         {t('date')}
                                     </th>
-                                    <th style={{ width: '25%' }}>
+                                    <th style={{ width: '20%' }}>
                                         {t('weight')}
                                     </th>
-                                    <th style={{ width: '25%' }}>
+                                    <th style={{ width: '20%' }}>
                                         {t('fat_label')}
                                     </th>
-                                    <th style={{ width: '25%' }}>
+                                    <th style={{ width: '35%' }}>
                                         {t('actions')}
                                     </th>
                                 </tr>
