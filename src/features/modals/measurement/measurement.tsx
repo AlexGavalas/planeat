@@ -15,7 +15,7 @@ const localeMap = {
 
 interface ModalContentProps {
     userId: number;
-    onSave: () => void;
+    onSave?: () => void;
     initialData?: {
         id: string;
         date: Date;
@@ -24,7 +24,7 @@ interface ModalContentProps {
     };
 }
 
-export const NewMeasurementModalContent = ({
+export const MeasurementModal = ({
     userId,
     onSave,
     initialData,
