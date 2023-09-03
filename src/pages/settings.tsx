@@ -22,6 +22,7 @@ import invariant from 'tiny-invariant';
 import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
 import { LoadingOverlay } from '~components/loading-overlay';
+import { DeleteAccount } from '~features/delete-account';
 import { MeasurementsTable } from '~features/measurements/table';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
@@ -155,6 +156,8 @@ export default function Settings() {
             )}
             <Space h="lg" />
             <MeasurementsTable />
+            <Space h="lg" />
+            <DeleteAccount />
         </Container>
     );
 }

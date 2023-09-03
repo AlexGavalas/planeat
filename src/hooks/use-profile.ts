@@ -1,6 +1,8 @@
 import { showNotification } from '@mantine/notifications';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { fetchUser } from '~api/user';
@@ -16,6 +18,7 @@ interface MutationProps {
 }
 
 export const useProfile = () => {
+    const router = useRouter();
     const queryClient = useQueryClient();
     const supabaseClient = useSupabaseClient<Database>();
     const { t } = useTranslation();
@@ -24,7 +27,9 @@ export const useProfile = () => {
     const { data: profile, isFetching } = useQuery(
         ['user'],
         async () => {
-            if (!user?.email) return;
+            if (!user?.email) {
+                return;
+            }
 
             return fetchUser({ email: user.email, supabase: supabaseClient });
         },
@@ -33,14 +38,16 @@ export const useProfile = () => {
         },
     );
 
-    const { mutate: updateProfile } = useMutation(
+    const { mutate: updateProfile, isLoading } = useMutation(
         async ({
             isNutritionist,
             height,
             targetWeight,
             language,
         }: MutationProps) => {
-            if (!user?.email) return;
+            if (!user?.email) {
+                return;
+            }
 
             const { data, error } = await supabaseClient
                 .from('users')
@@ -52,7 +59,9 @@ export const useProfile = () => {
                 })
                 .eq('email', user.email);
 
-            if (error) throw error;
+            if (error) {
+                throw error;
+            }
 
             return data;
         },
@@ -70,10 +79,46 @@ export const useProfile = () => {
         },
     );
 
+    const { mutate: deleteProfile } = useMutation(
+        async () => {
+            if (!user?.email) {
+                return;
+            }
+
+            const { data, error } = await supabaseClient
+                .from('users')
+                .delete()
+                .eq('email', user.email)
+                .single();
+
+            if (error) {
+                throw error;
+            }
+
+            return data;
+        },
+        {
+            onSuccess: async () => {
+                showNotification({
+                    title: t('notification.success.title'),
+                    message: t('notification.success.message'),
+                });
+
+                queryClient.clear();
+
+                await signOut();
+
+                router.push('/');
+            },
+        },
+    );
+
     return {
         profile,
         isFetching,
         updateProfile,
         user,
+        deleteProfile,
+        isDeleting: isLoading,
     };
 };
