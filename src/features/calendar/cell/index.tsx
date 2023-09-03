@@ -14,14 +14,17 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
     const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =
         useMeals();
 
-    const handleSave = async (value: string) => {
-        if (!user) return;
+    const handleSave = async (newMeal: Partial<Meal>) => {
+        if (!user || !newMeal.meal) {
+            return;
+        }
 
         if (isRow) {
             saveEntryRow({
                 sectionKey: id,
                 userId: user.id,
-                value,
+                value: newMeal.meal,
+                note: newMeal.note,
             });
         } else {
             saveEntryCell({
@@ -29,13 +32,16 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                 sectionKey: id,
                 timestamp,
                 userId: user.id,
-                value,
+                value: newMeal.meal,
+                note: newMeal.note,
             });
         }
     };
 
     const handleDelete = async () => {
-        if (!meal) return;
+        if (!meal) {
+            return;
+        }
 
         if (isRow) {
             deleteEntryRow({ id, meal });

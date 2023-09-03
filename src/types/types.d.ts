@@ -12,6 +12,7 @@ type Meal = {
     user_id: number;
     section_key: string;
     day: string;
+    note?: string;
 };
 
 type EditedMeal = Omit<Meal, 'id'> & { id?: string };

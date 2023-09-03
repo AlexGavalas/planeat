@@ -17,8 +17,9 @@ export const Content = () => {
 
     const mealsMap = useMemo(
         () =>
-            meals.reduce((acc: MealsMap, meal) => {
-                acc[meal.section_key] = meal;
+            meals.reduce<MealsMap>((acc, meal) => {
+                // TODO: Refactor types
+                acc[meal.section_key] = meal as Meal | EditedMeal;
                 return acc;
             }, {}),
         [meals],
