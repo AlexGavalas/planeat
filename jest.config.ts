@@ -25,7 +25,13 @@ const config: Config = {
     testEnvironment: 'jsdom',
 
     transform: {
-        '^.+\\.tsx?$': ['ts-jest', { tsconfig: './tsconfig.test.json' }],
+        '^.+\\.tsx?$': [
+            'ts-jest',
+            {
+                tsconfig: './tsconfig.test.json',
+                isolatedModules: true,
+            },
+        ],
     },
 
     setupFilesAfterEnv: ['<rootDir>/src/test/setup.ts'],

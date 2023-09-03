@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Nav /> renders 1`] = `
+<div>
+  <div
+    class="mantine-Group-root mantine-k3ov3c"
+  >
+    <a
+      href="/home"
+    >
+      <span
+        class="mantine-Text-root mantine-Anchor-root mantine-qdotc7"
+      >
+        <div
+          class="mantine-Text-root mantine-1d564l0"
+        >
+          Home
+        </div>
+      </span>
+    </a>
+    <a
+      href="/meal-plan"
+    >
+      <span
+        class="mantine-Text-root mantine-Anchor-root mantine-qdotc7"
+      >
+        <div
+          class="mantine-Text-root mantine-1d564l0"
+        >
+          Meal plan
+        </div>
+      </span>
+    </a>
+    <a
+      href="/settings"
+    >
+      <span
+        class="mantine-Text-root mantine-Anchor-root mantine-qdotc7"
+      >
+        <div
+          class="mantine-Text-root mantine-1d564l0"
+        >
+          User settings
+        </div>
+      </span>
+    </a>
+  </div>
+</div>
+`;
