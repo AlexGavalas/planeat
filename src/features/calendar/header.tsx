@@ -8,7 +8,6 @@ import styles from './header.module.css';
 
 export const Header = () => {
     const { i18n } = useTranslation();
-
     const { currentWeek } = useCurrentWeek();
 
     return (
