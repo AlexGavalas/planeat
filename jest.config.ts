@@ -32,7 +32,10 @@ const config: Config = {
 
     roots: ['<rootDir>'],
     modulePaths: [compilerOptions.baseUrl],
-    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
+    moduleNameMapper: {
+        ...pathsToModuleNameMapper(compilerOptions.paths),
+        '\\.css$': 'identity-obj-proxy',
+    },
 };
 
 export default config;

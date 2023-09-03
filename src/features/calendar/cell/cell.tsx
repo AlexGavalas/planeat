@@ -4,10 +4,18 @@ import { MultiplePages } from 'iconoir-react';
 
 import { useProfile } from '~hooks/use-profile';
 import { useMeals } from '~store/hooks';
-import { type Meal } from '~types/meal';
+import { type EditedMeal, type Meal } from '~types/meal';
 
 import styles from './cell.module.css';
 import { CellOverlay } from './overlay';
+
+export type CellProps = {
+    id: string;
+    meal?: Meal | EditedMeal;
+    timestamp: Date;
+    isEdited: boolean;
+    isRow: boolean;
+};
 
 export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
     const { profile: user } = useProfile();
