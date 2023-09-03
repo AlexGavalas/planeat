@@ -113,5 +113,21 @@
         "meal_rate": {
             "title": "Rate this meal"
         }
+    },
+    "account_settings": {
+        "sections": {
+            "delete_account": {
+                "title": "Delete account",
+                "button": {
+                    "label": "Delete account"
+                },
+                "modal": {
+                    "label": "Type your account email ({{email}}) to confirm.",
+                    "banner": "IMPORTANT: This action cannot be undone.",
+                    "cancel": "Cancel",
+                    "confirm": "Delete my account"
+                }
+            }
+        }
     }
 }
