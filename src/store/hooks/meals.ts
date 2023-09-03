@@ -177,6 +177,7 @@ export const useMeals = () => {
         userId,
         value,
         note,
+        rating,
     }: {
         meal?: Meal | EditedMeal;
         sectionKey: string;
@@ -184,6 +185,7 @@ export const useMeals = () => {
         userId: number;
         value: string;
         note: EditedMeal['note'];
+        rating: EditedMeal['rating'];
     }) => {
         const editedMeal = {
             ...meal,
@@ -192,6 +194,7 @@ export const useMeals = () => {
             user_id: userId,
             day: timestamp.toISOString(),
             note,
+            rating,
         };
 
         addChange(editedMeal);
@@ -202,11 +205,13 @@ export const useMeals = () => {
         userId,
         value,
         note,
+        rating,
     }: {
         sectionKey: string;
         userId: number;
         value: string;
         note: EditedMeal['note'];
+        rating: EditedMeal['rating'];
     }) => {
         const [row] = sectionKey.split('_');
         const daysOfWeek = getDaysOfWeek(currentWeek);
@@ -223,6 +228,7 @@ export const useMeals = () => {
                 value,
                 meal,
                 note,
+                rating,
             });
         }
     };

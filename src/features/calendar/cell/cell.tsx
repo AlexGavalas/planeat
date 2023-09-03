@@ -35,6 +35,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                 userId: user.id,
                 value: newMeal.meal,
                 note: newMeal.note,
+                rating: newMeal.rating,
             });
         } else {
             saveEntryCell({
@@ -44,6 +45,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                 userId: user.id,
                 value: newMeal.meal,
                 note: newMeal.note,
+                rating: newMeal.rating,
             });
         }
     };

@@ -1,10 +1,11 @@
 import { ActionIcon, Center, Overlay } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import { EditPencil, Notes } from 'iconoir-react';
+import { EditPencil, Notes, ThreeStars } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 
 import { MealModal } from '~features/modals/meal';
 import { MealNoteModal } from '~features/modals/meal-note';
+import { MealRatingModal } from '~features/modals/meal-rating';
 import { type EditedMeal, type Meal } from '~types/meal';
 
 interface CellOverlayProps {
@@ -31,12 +32,20 @@ export const CellOverlay = ({
         handleSave({ ...meal, meal: value });
     };
 
-    const handleMealNoteSave = async (value: string) => {
-        handleSave({ ...meal, note: value });
+    const handleMealNoteSave = async (note: string) => {
+        handleSave({ ...meal, note });
     };
 
     const handleMealNoteDelete = async () => {
-        handleSave({ ...meal, note: '' });
+        handleSave({ ...meal, note: null });
+    };
+
+    const handleMealRatingSave = async (rating: number) => {
+        handleSave({ ...meal, rating });
+    };
+
+    const handleMealRatingDelete = async () => {
+        handleSave({ ...meal, rating: null });
     };
 
     return (
@@ -62,25 +71,47 @@ export const CellOverlay = ({
                     <EditPencil />
                 </ActionIcon>
                 {isMealSaved && (
-                    <ActionIcon
-                        size="lg"
-                        title={t('edit')}
-                        onClick={() => {
-                            modals.openModal({
-                                title: t('notes'),
-                                centered: true,
-                                children: (
-                                    <MealNoteModal
-                                        meal={meal}
-                                        handleSave={handleMealNoteSave}
-                                        handleDelete={handleMealNoteDelete}
-                                    />
-                                ),
-                            });
-                        }}
-                    >
-                        <Notes />
-                    </ActionIcon>
+                    <>
+                        <ActionIcon
+                            size="lg"
+                            title={t('edit')}
+                            onClick={() => {
+                                modals.openModal({
+                                    title: t('notes'),
+                                    centered: true,
+                                    children: (
+                                        <MealNoteModal
+                                            meal={meal}
+                                            handleSave={handleMealNoteSave}
+                                            handleDelete={handleMealNoteDelete}
+                                        />
+                                    ),
+                                });
+                            }}
+                        >
+                            <Notes />
+                        </ActionIcon>
+                        <ActionIcon
+                            title={t('modals.meal_rate.title')}
+                            onClick={() => {
+                                modals.openModal({
+                                    title: t('modals.meal_rate.title'),
+                                    centered: true,
+                                    children: (
+                                        <MealRatingModal
+                                            meal={meal}
+                                            handleSave={handleMealRatingSave}
+                                            handleDelete={
+                                                handleMealRatingDelete
+                                            }
+                                        />
+                                    ),
+                                });
+                            }}
+                        >
+                            <ThreeStars />
+                        </ActionIcon>
+                    </>
                 )}
             </Center>
         </Overlay>

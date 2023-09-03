@@ -109,6 +109,9 @@
         "meal_note": {
             "placeholder": "Write here",
             "label": "Meal note"
+        },
+        "meal_rate": {
+            "title": "Rate this meal"
         }
     }
 }
