@@ -57,10 +57,12 @@ export const useProfile = () => {
             return data;
         },
         {
-            onSuccess: () => {
+            onSuccess: (_, { language }) => {
                 showNotification({
-                    title: t('notification.success.title'),
-                    message: t('notification.success.message'),
+                    title: t('notification.success.title', { lng: language }),
+                    message: t('notification.success.message', {
+                        lng: language,
+                    }),
                 });
 
                 queryClient.invalidateQueries(['user']);
