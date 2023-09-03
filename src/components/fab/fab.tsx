@@ -1,8 +1,8 @@
 import { ActionIcon, Box, Button, Stack } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { EditPencil, Plus } from 'iconoir-react';
+import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useQueryClient } from 'react-query';
 
 import { MeasurementModal } from '~features/modals/measurement';
