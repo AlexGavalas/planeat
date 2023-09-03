@@ -116,6 +116,9 @@
     },
     "account_settings": {
         "sections": {
+            "general": {
+                "title": "General settings"
+            },
             "delete_account": {
                 "title": "Delete account",
                 "button": {

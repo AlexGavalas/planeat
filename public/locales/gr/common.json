@@ -116,6 +116,9 @@
     },
     "account_settings": {
         "sections": {
+            "general": {
+                "title": "Γενικές ρυθμίσεις"
+            },
             "delete_account": {
                 "title": "Διαγραφή λογαριασμού",
                 "button": {

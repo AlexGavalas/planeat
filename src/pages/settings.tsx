@@ -8,6 +8,7 @@ import {
     Select,
     Space,
     Switch,
+    Title,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
@@ -89,7 +90,10 @@ export default function Settings() {
 
     return (
         <Container>
-            <Group position="apart" mt={10}>
+            <Title order={3}>
+                {t('account_settings.sections.general.title')}
+            </Title>
+            <Group position="apart">
                 <Switch
                     label={t('am_nutritionist')}
                     checked={profile?.is_nutritionist}
