@@ -3,6 +3,8 @@ import { format, isAfter, set } from 'date-fns';
 import { AppleHalf, Bbq, CrackedEgg, OrangeSliceAlt } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 
+import { type MealsMap } from '~types/meal';
+
 import { ROWS } from './calendar/constants';
 
 const MEAL_ICON = {

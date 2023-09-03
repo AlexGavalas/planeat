@@ -3,6 +3,7 @@ import { omit, set } from 'lodash/fp';
 import { useCallback } from 'react';
 
 import { unsavedChangesAtom } from '~store/atoms';
+import { type EditedMeal, type Meal } from '~types/meal';
 
 export const useUnsavedChanges = () => {
     const [unsavedChanges, setUnsavedChanges] = useAtom(unsavedChangesAtom);

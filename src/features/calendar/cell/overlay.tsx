@@ -5,6 +5,7 @@ import { useTranslation } from 'next-i18next';
 
 import { MealModal } from '~features/modals/meal';
 import { MealNoteModal } from '~features/modals/meal-note';
+import { type EditedMeal, type Meal } from '~types/meal';
 
 interface CellOverlayProps {
     handleDelete: () => Promise<void>;

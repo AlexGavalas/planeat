@@ -56,8 +56,7 @@ export const Calendar = () => {
                 <Group spacing="sm">
                     <Button
                         className="button"
-                        // TODO: Refactor types
-                        onClick={() => copyToNextWeek(meals as Meal[])}
+                        onClick={() => copyToNextWeek(meals)}
                         rightIcon={<Copy />}
                     >
                         {t('week.copy_to_next_week')}

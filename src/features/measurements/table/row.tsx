@@ -11,6 +11,7 @@ import { useQueryClient } from 'react-query';
 import { MeasurementModal } from '~features/modals/measurement';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
+import { type Measurement } from '~types/types';
 
 import { Td } from './row-td';
 

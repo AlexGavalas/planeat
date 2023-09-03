@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
 import { useCurrentWeek, useMeals, useUnsavedChanges } from '~store/hooks';
+import { type MealsMap } from '~types/meal';
 import { getDaysOfWeek } from '~util/date';
 
 import { Cell } from './cell';
@@ -18,8 +19,7 @@ export const Content = () => {
     const mealsMap = useMemo(
         () =>
             meals.reduce<MealsMap>((acc, meal) => {
-                // TODO: Refactor types
-                acc[meal.section_key] = meal as Meal | EditedMeal;
+                acc[meal.section_key] = meal;
                 return acc;
             }, {}),
         [meals],

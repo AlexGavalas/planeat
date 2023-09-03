@@ -12,6 +12,7 @@ import { Fab } from '~components/fab';
 import { BMITimeline, CurrentBMI } from '~features/bmi';
 import { DailyMeal } from '~features/daily-meal';
 import { CurrentFat, FatTimeline } from '~features/fat-percent';
+import { type MealsMap } from '~types/meal';
 import { type Database } from '~types/supabase';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

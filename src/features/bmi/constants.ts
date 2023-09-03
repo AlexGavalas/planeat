@@ -1,3 +1,5 @@
+import { type Section } from '~types/types';
+
 export const SECTIONS: Section[] = [
     {
         percent: 40,

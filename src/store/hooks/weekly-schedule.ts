@@ -1,6 +1,8 @@
 import { add, format, parse, parseISO } from 'date-fns';
 import { useCallback } from 'react';
 
+import { type Meal, type MealsMap } from '~types/meal';
+
 import { useCurrentWeek } from './current-week';
 import { useUnsavedChanges } from './unsaved-changes';
 

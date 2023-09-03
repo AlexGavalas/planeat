@@ -7,6 +7,7 @@ import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
+import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 import { type Database } from '~types/supabase';
 import { getDaysOfWeek } from '~util/date';
 
@@ -45,9 +46,7 @@ export const useMeals = () => {
     const mealsMap = useMemo(
         () =>
             meals.reduce<MealsMap>((acc, meal) => {
-                // TODO: Refactor types to avoid this
-                // Use supabase types instead of custom defined
-                acc[meal.section_key] = meal as Meal;
+                acc[meal.section_key] = meal;
                 return acc;
             }, {}),
         [meals],
@@ -185,7 +184,7 @@ export const useMeals = () => {
         timestamp: Date;
         userId: number;
         value: string;
-        note?: string;
+        note: EditedMeal['note'];
     }) => {
         const editedMeal = {
             ...meal,
@@ -208,7 +207,7 @@ export const useMeals = () => {
         sectionKey: string;
         userId: number;
         value: string;
-        note?: string;
+        note: EditedMeal['note'];
     }) => {
         const [row] = sectionKey.split('_');
         const daysOfWeek = getDaysOfWeek(currentWeek);

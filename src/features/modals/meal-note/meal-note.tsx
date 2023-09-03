@@ -3,6 +3,8 @@ import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
 import { type FormEventHandler, useState } from 'react';
 
+import { type Meal } from '~types/meal';
+
 interface MealNoteModalProps {
     meal: Meal;
     handleSave: (meal: string) => Promise<void>;
@@ -50,7 +52,7 @@ export const MealNoteModal = ({
                     name={NOTE_FIELD_NAME}
                     placeholder={t('modals.meal_note.placeholder')}
                     label={t('modals.meal_note.label')}
-                    defaultValue={meal.note}
+                    defaultValue={meal.note ?? ''}
                     autosize
                     minRows={5}
                     maxRows={20}

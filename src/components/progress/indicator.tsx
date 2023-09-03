@@ -1,6 +1,8 @@
 import { Progress, Stack, Text, Title } from '@mantine/core';
 import { NavArrowDown } from 'iconoir-react';
 
+import { type Section } from '~types/types';
+
 import styles from './indicator.module.css';
 
 interface ProgressIndicatorProps {

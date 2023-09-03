@@ -24,6 +24,16 @@ export const authOptions: AuthOptions = {
     ],
     events: {
         signIn: async ({ user }) => {
+            invariant(
+                process.env.NEXT_PUBLIC_SUPABASE_URL,
+                'Missing NEXT_PUBLIC_SUPABASE_URL env var',
+            );
+
+            invariant(
+                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+                'Missing NEXT_PUBLIC_SUPABASE_ANON_KEY env var',
+            );
+
             const supabase = createClient(
                 process.env.NEXT_PUBLIC_SUPABASE_URL,
                 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,

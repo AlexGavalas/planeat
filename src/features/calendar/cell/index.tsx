@@ -4,6 +4,7 @@ import { MultiplePages } from 'iconoir-react';
 
 import { useProfile } from '~hooks/use-profile';
 import { useMeals } from '~store/hooks';
+import { type Meal } from '~types/meal';
 
 import styles from './cell.module.css';
 import { CellOverlay } from './overlay';
