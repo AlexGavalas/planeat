@@ -56,7 +56,7 @@ export const Content = () => {
                                 isEdited={
                                     !!unsavedChanges[`${row.key}_${label}`]
                                 }
-                                isRow={true}
+                                isRow
                             />
                         </div>
                     );

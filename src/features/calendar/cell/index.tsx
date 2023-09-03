@@ -18,7 +18,11 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
         if (!user) return;
 
         if (isRow) {
-            saveEntryRow({ sectionKey: id, userId: user.id, value });
+            saveEntryRow({
+                sectionKey: id,
+                userId: user.id,
+                value,
+            });
         } else {
             saveEntryCell({
                 meal,

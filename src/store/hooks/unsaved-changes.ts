@@ -32,5 +32,6 @@ export const useUnsavedChanges = () => {
         addChange,
         removeChange,
         removeChanges,
+        hasUnsavedChanges: Object.keys(unsavedChanges).length > 0,
     };
 };

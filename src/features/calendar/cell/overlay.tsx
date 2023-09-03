@@ -17,7 +17,6 @@ export const CellOverlay = ({
     meal,
 }: CellOverlayProps) => {
     const { t } = useTranslation();
-
     const modals = useModals();
 
     return (
