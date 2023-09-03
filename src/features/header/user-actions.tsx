@@ -1,8 +1,10 @@
 import { Button } from '@mantine/core';
-import { Google, LogOut } from 'iconoir-react';
-import { signIn, signOut } from 'next-auth/react';
+import { Google } from 'iconoir-react';
+import { signIn } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+
+import { UserMenu } from '~features/user-menu';
 
 export const UserActions = () => {
     const router = useRouter();
@@ -23,15 +25,5 @@ export const UserActions = () => {
         );
     }
 
-    return (
-        <Button
-            onClick={async () => {
-                await signOut();
-                router.push('/');
-            }}
-            leftIcon={<LogOut />}
-        >
-            {t('logout')}
-        </Button>
-    );
+    return <UserMenu />;
 };

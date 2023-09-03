@@ -8,7 +8,14 @@ const { i18n } = require('./next-i18next.config');
 const config = {
     reactStrictMode: true,
     images: {
-        domains: ['lh3.googleusercontent.com'],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: '*.googleusercontent.com',
+                port: '',
+                pathname: '**',
+            },
+        ],
     },
     i18n: {
         defaultLocale: i18n.defaultLocale,
