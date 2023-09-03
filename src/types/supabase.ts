@@ -15,6 +15,7 @@ export interface Database {
                     id: string;
                     meal: string;
                     note: string | null;
+                    rating: number | null;
                     section_key: string;
                     user_id: number;
                 };
@@ -23,6 +24,7 @@ export interface Database {
                     id?: string;
                     meal: string;
                     note?: string | null;
+                    rating?: number | null;
                     section_key: string;
                     user_id: number;
                 };
@@ -31,6 +33,7 @@ export interface Database {
                     id?: string;
                     meal?: string;
                     note?: string | null;
+                    rating?: number | null;
                     section_key?: string;
                     user_id?: number;
                 };

@@ -37,6 +37,7 @@ describe('<Cell />', () => {
             day: '2021-01-01',
             section_key: 'section-key',
             user_id: 1,
+            rating: null,
             note: null,
         };
 
