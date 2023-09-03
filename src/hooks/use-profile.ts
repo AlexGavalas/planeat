@@ -61,7 +61,6 @@ export const useProfile = () => {
                 showNotification({
                     title: t('notification.success.title'),
                     message: t('notification.success.message'),
-                    color: 'green.1',
                 });
 
                 queryClient.invalidateQueries(['user']);

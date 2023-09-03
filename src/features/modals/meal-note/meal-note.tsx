@@ -71,9 +71,7 @@ export const MealNoteModal = ({
                         >
                             {t('delete')}
                         </Button>
-                        <Button className="button" type="submit">
-                            {t('save')}
-                        </Button>
+                        <Button type="submit">{t('save')}</Button>
                     </Group>
                 </Group>
             </Stack>

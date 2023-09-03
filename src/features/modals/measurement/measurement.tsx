@@ -117,9 +117,7 @@ export const MeasurementModal = ({
                 <Button variant="light" color="red" onClick={closeModal}>
                     {t('cancel')}
                 </Button>
-                <Button type="submit" className="button">
-                    {t('save')}
-                </Button>
+                <Button type="submit">{t('save')}</Button>
             </Group>
         </form>
     );

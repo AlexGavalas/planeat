@@ -44,9 +44,19 @@ const App = ({
                 withNormalizeCSS
                 theme={{
                     colors: {
-                        green: ['#a7d3a5', '#04724d'],
+                        brand: [
+                            '#04A670',
+                            '#049766',
+                            '#04895D',
+                            '#047D55',
+                            '#04724D',
+                            '#046745',
+                            '#045D3E',
+                            '#045438',
+                            '#044C32',
+                        ],
                     },
-                    primaryColor: 'green',
+                    primaryColor: 'brand',
                     colorScheme: 'light',
                 }}
             >

@@ -85,7 +85,6 @@ export const useMeals = () => {
             showNotification({
                 title: t('notification.success.title'),
                 message: t('notification.success.message'),
-                color: 'green.1',
             });
         }
     };

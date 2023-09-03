@@ -100,7 +100,6 @@ export const Row = ({ item, page }: RowProps) => {
             <td style={{ width: '35%' }}>
                 <Group spacing="md" grow>
                     <Button
-                        className="button"
                         size="xs"
                         onClick={() => {
                             if (!user) return;
@@ -169,7 +168,6 @@ export const Row = ({ item, page }: RowProps) => {
                                         {t('confirmation.no')}
                                     </Button>
                                     <Button
-                                        className="button"
                                         size="xs"
                                         onClick={handleDelete}
                                         loading={deleteInProgress}

@@ -35,27 +35,11 @@ a {
 }
 
 :root {
-    --desert-sand: #d2ab99;
-    --ash-gray: #bdbea9;
     --color-primary: #a7d3a5;
-    --color-primary-dark: #04724d;
 }
 
 ::selection {
     background-color: var(--color-primary);
-}
-
-.button {
-    background-color: var(--color-primary-dark);
-}
-
-.button:hover {
-    background-color: var(--color-primary-dark);
-    opacity: 0.9;
-}
-
-.calendar [data-selected] {
-    background-color: var(--color-primary-dark);
 }
 
 /* Home page  */
