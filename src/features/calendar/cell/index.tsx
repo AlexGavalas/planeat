@@ -1,5 +1,6 @@
 import { Box, Center, Text } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
+import { MultiplePages } from 'iconoir-react';
 
 import { useProfile } from '~hooks/use-profile';
 import { useMeals } from '~store/hooks';
@@ -50,6 +51,8 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
         }
     };
 
+    const hasNote = !!meal?.note;
+
     return (
         <Box
             ref={ref}
@@ -64,6 +67,11 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                     handleSave={handleSave}
                     meal={meal}
                 />
+            )}
+            {hasNote && (
+                <Box className={styles.infoContainer}>
+                    <MultiplePages />
+                </Box>
             )}
             <Box
                 className={styles.cell}
