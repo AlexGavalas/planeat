@@ -11,3 +11,9 @@
 .cell:hover {
     background-color: #f7f7f7;
 }
+
+.infoContainer {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}

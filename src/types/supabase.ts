@@ -14,6 +14,7 @@ export interface Database {
                     day: string;
                     id: string;
                     meal: string;
+                    note: string | null;
                     section_key: string;
                     user_id: number;
                 };
@@ -21,6 +22,7 @@ export interface Database {
                     day: string;
                     id?: string;
                     meal: string;
+                    note?: string | null;
                     section_key: string;
                     user_id: number;
                 };
@@ -28,6 +30,7 @@ export interface Database {
                     day?: string;
                     id?: string;
                     meal?: string;
+                    note?: string | null;
                     section_key?: string;
                     user_id?: number;
                 };

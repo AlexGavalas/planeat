@@ -70,13 +70,3 @@ a {
 .container .content {
     width: clamp(50%, 65% + 5vw, 75%);
 }
-
-/* Calendar styles */
-
-.calendar-container {
-    --grid-config: 0.75fr repeat(7, 1fr);
-    --grid-gap: 0.5rem;
-    display: grid;
-    gap: var(--grid-gap);
-    position: relative;
-}

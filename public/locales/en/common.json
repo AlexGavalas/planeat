@@ -76,7 +76,10 @@
         "fat_empty": "You forgot to input your fat percentage",
         "measurement_update": "We could not update your measurement",
         "measurement_save": "We could not save your measurement",
-        "measurement_empty": "You forgot to input your measurement"
+        "measurement_empty": "You forgot to input your measurement",
+        "note_save": "We could not save your changes",
+        "note_delete": "We could not delete this note",
+        "note_empty": "You forgot to input the note"
     },
     "hide": "Hide",
     "show_more": "Show more",
@@ -99,6 +102,13 @@
         "options": {
             "en": "English",
             "el": "Greek"
+        }
+    },
+    "notes": "Write something for the meal",
+    "modals": {
+        "meal_note": {
+            "placeholder": "Write here",
+            "label": "Meal note"
         }
     }
 }

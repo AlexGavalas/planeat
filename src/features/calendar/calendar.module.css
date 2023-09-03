@@ -1,0 +1,7 @@
+.container {
+    --grid-config: 0.75fr repeat(7, 1fr);
+    --grid-gap: 0.5rem;
+    display: grid;
+    gap: var(--grid-gap);
+    position: relative;
+}

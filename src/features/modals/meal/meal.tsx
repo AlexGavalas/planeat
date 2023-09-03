@@ -3,19 +3,18 @@ import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
 import { type FormEventHandler, useState } from 'react';
 
-interface ModalContentProps {
+interface MealModalProps {
     deleteMeal: () => Promise<void>;
     handleSave: (meal: string) => Promise<void>;
     initialMeal: string;
 }
 
-export const ModalContent = ({
+export const MealModal = ({
     handleSave,
     initialMeal,
     deleteMeal,
-}: ModalContentProps) => {
+}: MealModalProps) => {
     const { t } = useTranslation();
-
     const modals = useModals();
     const [error, setError] = useState('');
 

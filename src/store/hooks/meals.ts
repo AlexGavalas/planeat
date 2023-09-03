@@ -15,7 +15,6 @@ import { useUnsavedChanges } from './unsaved-changes';
 
 export const useMeals = () => {
     const { t } = useTranslation();
-
     const { currentWeek } = useCurrentWeek();
     const queryClient = useQueryClient();
     const supabaseClient = useSupabaseClient<Database>();
@@ -45,8 +44,10 @@ export const useMeals = () => {
 
     const mealsMap = useMemo(
         () =>
-            meals.reduce((acc: MealsMap, meal) => {
-                acc[meal.section_key] = meal;
+            meals.reduce<MealsMap>((acc, meal) => {
+                // TODO: Refactor types to avoid this
+                // Use supabase types instead of custom defined
+                acc[meal.section_key] = meal as Meal;
                 return acc;
             }, {}),
         [meals],
@@ -177,12 +178,14 @@ export const useMeals = () => {
         timestamp,
         userId,
         value,
+        note,
     }: {
         meal?: Meal | EditedMeal;
         sectionKey: string;
         timestamp: Date;
         userId: number;
         value: string;
+        note?: string;
     }) => {
         const editedMeal = {
             ...meal,
@@ -190,6 +193,7 @@ export const useMeals = () => {
             section_key: sectionKey,
             user_id: userId,
             day: timestamp.toISOString(),
+            note,
         };
 
         addChange(editedMeal);
@@ -199,10 +203,12 @@ export const useMeals = () => {
         sectionKey,
         userId,
         value,
+        note,
     }: {
         sectionKey: string;
         userId: number;
         value: string;
+        note?: string;
     }) => {
         const [row] = sectionKey.split('_');
         const daysOfWeek = getDaysOfWeek(currentWeek);
@@ -212,7 +218,14 @@ export const useMeals = () => {
 
             const meal = mealsMap[key];
 
-            saveEntryCell({ sectionKey: key, timestamp, userId, value, meal });
+            saveEntryCell({
+                sectionKey: key,
+                timestamp,
+                userId,
+                value,
+                meal,
+                note,
+            });
         }
     };
 
