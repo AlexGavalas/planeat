@@ -15,9 +15,7 @@ export const Nav = () => {
         <Group>
             {LINKS.map(({ href, label }) => (
                 <Link href={href} key={href}>
-                    <Anchor component="span" color="green.1">
-                        {t(label)}
-                    </Anchor>
+                    <Anchor component="span">{t(label)}</Anchor>
                 </Link>
             ))}
         </Group>

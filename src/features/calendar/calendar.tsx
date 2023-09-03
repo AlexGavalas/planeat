@@ -38,24 +38,15 @@ export const Calendar = () => {
             </DndProvider>
             <Group position="apart">
                 <Group spacing="sm">
-                    <Button
-                        className="button"
-                        onClick={previousWeek}
-                        leftIcon={<FastArrowLeft />}
-                    >
+                    <Button onClick={previousWeek} leftIcon={<FastArrowLeft />}>
                         {t('week.previous')}
                     </Button>
-                    <Button
-                        className="button"
-                        onClick={nextWeek}
-                        rightIcon={<FastArrowRight />}
-                    >
+                    <Button onClick={nextWeek} rightIcon={<FastArrowRight />}>
                         {t('week.next')}
                     </Button>
                 </Group>
                 <Group spacing="sm">
                     <Button
-                        className="button"
                         onClick={() => copyToNextWeek(meals)}
                         rightIcon={<Copy />}
                     >
@@ -63,15 +54,10 @@ export const Calendar = () => {
                     </Button>
                     {hasUnsavedChanges && (
                         <>
-                            <Button
-                                className="button"
-                                onClick={revert}
-                                rightIcon={<Cancel />}
-                            >
+                            <Button onClick={revert} rightIcon={<Cancel />}>
                                 {t('cancel')}
                             </Button>
                             <Button
-                                className="button"
                                 onClick={savePlan}
                                 rightIcon={<SaveFloppyDisk />}
                             >

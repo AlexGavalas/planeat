@@ -42,7 +42,6 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
             <Timeline
                 active={activeIndex < 0 ? ROWS.length : activeIndex}
                 bulletSize={40}
-                color="green.1"
             >
                 {translatedRows.map((row) => {
                     const key = `${row.key}_${format(

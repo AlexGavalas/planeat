@@ -30,7 +30,6 @@ export const Fab = () => {
             {showMenu && (
                 <Stack spacing="sm" mb={10}>
                     <Button
-                        className="button"
                         style={{ maxWidth: 'fit-content' }}
                         size="sm"
                         radius="xl"
@@ -56,7 +55,7 @@ export const Fab = () => {
                 </Stack>
             )}
             <ActionIcon
-                className="button"
+                color="brand"
                 size="xl"
                 radius="xl"
                 variant="filled"

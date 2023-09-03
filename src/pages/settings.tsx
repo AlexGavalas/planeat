@@ -90,7 +90,6 @@ export default function Settings() {
         <Container>
             <Group position="apart" mt={10}>
                 <Switch
-                    color="green.1"
                     label={t('am_nutritionist')}
                     checked={profile?.is_nutritionist}
                     onChange={({ target: { checked } }) =>
@@ -123,14 +122,6 @@ export default function Settings() {
                         label={t('languages.label')}
                         placeholder={t('languages.placeholder')}
                         defaultValue={profile.language}
-                        color="green"
-                        styles={(theme) => ({
-                            item: {
-                                '&[data-selected]': {
-                                    backgroundColor: theme.colors.green[1],
-                                },
-                            },
-                        })}
                         onChange={(value) => {
                             setLanguage(value ?? undefined);
                         }}
@@ -146,7 +137,6 @@ export default function Settings() {
                         ]}
                     />
                     <Button
-                        className="button"
                         onClick={() => {
                             updateProfile({
                                 language,

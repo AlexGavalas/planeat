@@ -67,7 +67,7 @@ export default function Home({ dailyMeals }: { dailyMeals: MealsMap }) {
             >
                 <DailyMeal dailyMeals={dailyMeals} />
             </Stack>
-            <Divider size="xs" color="green.1" orientation="vertical" />
+            <Divider size="xs" orientation="vertical" />
             <Box
                 style={{
                     width: '80%',

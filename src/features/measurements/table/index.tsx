@@ -79,8 +79,6 @@ export const MeasurementsTable = () => {
                 <Title order={3}>{t('measurements')}</Title>
                 <ActionIcon
                     title={t('add_measurement')}
-                    color="green.1"
-                    bg="green.0"
                     size="lg"
                     onClick={() => {
                         if (!user) return;
