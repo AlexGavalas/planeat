@@ -4,6 +4,7 @@ import { AppleHalf, Bbq, CrackedEgg, OrangeSliceAlt } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 
 import { type MealsMap } from '~types/meal';
+import { getUTCDate } from '~util/date';
 
 import { ROWS } from './calendar/constants';
 
@@ -15,7 +16,7 @@ const MEAL_ICON = {
     dinner: Bbq,
 };
 
-const NOW = new Date();
+const NOW = getUTCDate(new Date());
 
 const MEAL_TIMES = {
     morning: set(NOW, { hours: 9, minutes: 0, seconds: 0 }),

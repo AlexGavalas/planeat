@@ -8,6 +8,7 @@ import { useQuery } from 'react-query';
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
+import { getUTCDate } from '~util/date';
 
 const LineChart = dynamic(() => import('~components/charts/line'), {
     ssr: false,
@@ -23,12 +24,16 @@ export const BMITimeline = () => {
         async () => {
             if (!user) throw new Error(`User not logged in`);
 
+            const startDate = getUTCDate(
+                sub(new Date(), { days: 100 }),
+            ).toUTCString();
+
             return supabaseClient
                 .from('measurements')
                 .select('date, weight')
                 .eq('user_id', user.id)
                 .not('weight', 'is', null)
-                .gte('date', sub(new Date(), { days: 100 }).toISOString())
+                .gte('date', startDate)
                 .order('date', { ascending: true });
         },
         {

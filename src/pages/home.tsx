@@ -1,7 +1,6 @@
 import { Box, Divider, Group, Space, Stack } from '@mantine/core';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { endOfDay, parseISO, startOfDay } from 'date-fns';
-import { utcToZonedTime } from 'date-fns-tz';
+import { endOfDay, startOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
 import { type GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -15,6 +14,7 @@ import { DailyMeal } from '~features/daily-meal';
 import { CurrentFat, FatTimeline } from '~features/fat-percent';
 import { type MealsMap } from '~types/meal';
 import { type Database } from '~types/supabase';
+import { getUTCDate } from '~util/date';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const supabase = createPagesServerClient<Database>(context);
@@ -30,17 +30,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         };
     }
 
-    const NOW = utcToZonedTime(parseISO(new Date().toISOString()), 'UTC');
-
     const { user } = session;
 
     invariant(user?.email, 'User email must exist in session');
 
+    const NOW = new Date();
+
+    const startOfDayTimestamp = getUTCDate(startOfDay(NOW)).toUTCString();
+    const endOfDayTimestamp = getUTCDate(endOfDay(NOW)).toUTCString();
+
     const { data } = await supabase
         .from('meals')
         .select('*')
-        .gte('day', startOfDay(NOW).toISOString())
-        .lte('day', endOfDay(NOW).toISOString());
+        .gte('day', startOfDayTimestamp)
+        .lte('day', endOfDayTimestamp);
 
     const profile = await fetchUser({ email: user.email, supabase });
 
