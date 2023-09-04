@@ -1,6 +1,7 @@
 import { Box, Divider, Group, Space, Stack } from '@mantine/core';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { endOfDay, startOfDay } from 'date-fns';
+import { endOfDay, parseISO, startOfDay } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz';
 import { fromPairs, map } from 'lodash';
 import { type GetServerSideProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -29,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         };
     }
 
-    const NOW = new Date();
+    const NOW = utcToZonedTime(parseISO(new Date().toISOString()), 'UTC');
 
     const { user } = session;
 

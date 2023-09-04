@@ -74,6 +74,7 @@ export default function Settings() {
                 .from('users')
                 .select('*')
                 .ilike('full_name', `%${debouncedSearchQuery}%`)
+                .neq('email', profile?.email)
                 .limit(5);
         },
         {
