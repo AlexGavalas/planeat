@@ -42,12 +42,11 @@ a {
     background-color: var(--color-primary);
 }
 
-/* Home page  */
-
 .container {
     border-top: 5px solid var(--color-primary);
     height: 100%;
     padding: 2rem;
+    position: relative;
     background: #ecf5ec;
 }
 
