@@ -1,5 +1,6 @@
 import { Card, useMantineTheme } from '@mantine/core';
 import { type CustomLayerProps, ResponsiveLine } from '@nivo/line';
+import { format, parse } from 'date-fns';
 import { maxBy, minBy } from 'lodash';
 import { type SVGAttributes } from 'react';
 import { useMemo } from 'react';
@@ -57,8 +58,10 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
                 right: 0,
                 left: 40,
             }}
-            xScale={{
-                type: 'point',
+            xFormat={(value) => {
+                const date = parse(value.toString(), 'yyyy-MM-dd', new Date());
+
+                return format(date, 'dd/MM/yy');
             }}
             yScale={{
                 type: 'linear',
@@ -90,6 +93,10 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
                         textAnchor = 'middle';
                     }
 
+                    const date = parse(tick.value, 'yyyy-MM-dd', new Date());
+
+                    const formattedDate = format(date, 'dd/MM/yy');
+
                     return (
                         <g>
                             <text
@@ -103,7 +110,7 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
                                     fill: 'rgb(51, 51, 51)',
                                 }}
                             >
-                                {tick.value}
+                                {formattedDate}
                             </text>
                         </g>
                     );
@@ -114,7 +121,7 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
             axisLeft={{
                 tickSize: 10,
             }}
-            pointSize={10}
+            pointSize={0}
             useMesh
             tooltip={({ point }) => {
                 const isFirst = point.index === 0;
