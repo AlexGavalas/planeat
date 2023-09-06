@@ -15,7 +15,6 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { type GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import invariant from 'tiny-invariant';
@@ -27,6 +26,7 @@ import { DeleteAccount } from '~features/delete-account';
 import { MeasurementsTable } from '~features/measurements/table';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
+import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const supabase = createPagesServerClient<Database>(context);
@@ -50,9 +50,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
         props: {
-            ...(await serverSideTranslations(profile?.language || 'en', [
-                'common',
-            ])),
+            ...(await getServerSideTranslations({ locale: profile?.language })),
         },
     };
 };
