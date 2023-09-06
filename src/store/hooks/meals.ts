@@ -1,7 +1,7 @@
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { endOfISOWeek, startOfISOWeek } from 'date-fns';
+import { endOfWeek, startOfWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -9,7 +9,7 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 import { type Database } from '~types/supabase';
-import { getDaysOfWeek } from '~util/date';
+import { getDaysOfWeek, getUTCDate } from '~util/date';
 
 import { useCurrentWeek } from './current-week';
 import { useUnsavedChanges } from './unsaved-changes';
@@ -32,8 +32,8 @@ export const useMeals = () => {
             return supabaseClient
                 .from('meals')
                 .select('*')
-                .gte('day', startOfISOWeek(currentWeek).toISOString())
-                .lte('day', endOfISOWeek(currentWeek).toISOString());
+                .gte('day', getUTCDate(startOfWeek(currentWeek)).toUTCString())
+                .lte('day', getUTCDate(endOfWeek(currentWeek)).toUTCString());
         },
         {
             select: ({ data }) => data || [],
@@ -187,12 +187,14 @@ export const useMeals = () => {
         note: EditedMeal['note'];
         rating: EditedMeal['rating'];
     }) => {
+        const day = getUTCDate(timestamp).toUTCString();
+
         const editedMeal = {
             ...meal,
             meal: value,
             section_key: sectionKey,
             user_id: userId,
-            day: timestamp.toISOString(),
+            day,
             note,
             rating,
         };

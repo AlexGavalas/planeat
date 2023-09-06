@@ -2,6 +2,7 @@ import { add, format, parse, parseISO } from 'date-fns';
 import { useCallback } from 'react';
 
 import { type Meal, type MealsMap } from '~types/meal';
+import { getUTCDate } from '~util/date';
 
 import { useCurrentWeek } from './current-week';
 import { useUnsavedChanges } from './unsaved-changes';
@@ -14,9 +15,13 @@ const cloneState = (meals: Meal[]) => {
             return format(add(prevDate, { weeks: 1 }), 'dd/MM/yyyy');
         });
 
+        const day = getUTCDate(
+            add(parseISO(meal.day), { weeks: 1 }),
+        ).toUTCString();
+
         acc[newKey] = {
             ...meal,
-            day: add(parseISO(meal.day), { weeks: 1 }).toISOString(),
+            day,
             section_key: newKey,
         };
 

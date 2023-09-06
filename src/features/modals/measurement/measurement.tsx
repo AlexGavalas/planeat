@@ -8,6 +8,7 @@ import { useTranslation } from 'next-i18next';
 import { type FormEventHandler, useState } from 'react';
 
 import { type Database } from '~types/supabase';
+import { getUTCDate } from '~util/date';
 
 const localeMap = {
     gr: 'el',
@@ -53,7 +54,7 @@ export const MeasurementModal = ({
             const result = await supabaseClient
                 .from('measurements')
                 .update({
-                    date: date.toISOString(),
+                    date: getUTCDate(date).toUTCString(),
                     weight,
                     fat_percentage: fatPercent,
                 })
@@ -63,7 +64,7 @@ export const MeasurementModal = ({
         } else {
             const result = await supabaseClient.from('measurements').insert({
                 user_id: userId,
-                date: date.toISOString(),
+                date: getUTCDate(date).toUTCString(),
                 weight,
                 fat_percentage: fatPercent,
             });

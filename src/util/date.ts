@@ -1,4 +1,5 @@
 import { eachDayOfInterval, endOfWeek, format, startOfWeek } from 'date-fns';
+import { zonedTimeToUtc } from 'date-fns-tz';
 import el from 'date-fns/locale/el';
 import enGB from 'date-fns/locale/en-GB';
 
@@ -22,3 +23,5 @@ export const getDaysOfWeek = (
         }),
     }));
 };
+
+export const getUTCDate = (date: Date) => zonedTimeToUtc(date, 'UTC');
