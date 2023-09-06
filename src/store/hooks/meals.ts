@@ -37,6 +37,9 @@ export const useMeals = () => {
         },
         {
             select: ({ data }) => data || [],
+            onSuccess: () => {
+                removeChanges();
+            },
             onSettled: () => {
                 setSubmitting(false);
             },
@@ -61,13 +64,11 @@ export const useMeals = () => {
             Object.values(unsavedChanges),
         );
 
-        const { error: updateError } = await supabaseClient
-            .from('meals')
-            .upsert(editedMeals);
+        const updatePromise = supabaseClient.from('meals').upsert(editedMeals);
+        const insertPromise = supabaseClient.from('meals').insert(newMeals);
 
-        const { error: createError } = await supabaseClient
-            .from('meals')
-            .insert(newMeals);
+        const [{ error: updateError }, { error: createError }] =
+            await Promise.all([updatePromise, insertPromise]);
 
         if (updateError || createError) {
             setSubmitting(false);
@@ -78,9 +79,7 @@ export const useMeals = () => {
                 color: 'red',
             });
         } else {
-            queryClient.invalidateQueries(['meals', currentWeek]);
-
-            removeChanges();
+            await queryClient.invalidateQueries(['meals', currentWeek]);
 
             showNotification({
                 title: t('notification.success.title'),
@@ -100,14 +99,14 @@ export const useMeals = () => {
         id: string;
         meal: Meal | EditedMeal;
     }) => {
-        // Remove local change
         removeChange(id);
 
-        if (!meal.id) return;
+        if (!meal.id) {
+            return;
+        }
 
         setSubmitting(true);
 
-        // Remove db entry
         const { error } = await supabaseClient
             .from('meals')
             .delete()
@@ -122,7 +121,7 @@ export const useMeals = () => {
                 color: 'red',
             });
         } else {
-            queryClient.invalidateQueries(['meals', currentWeek]);
+            await queryClient.invalidateQueries(['meals', currentWeek]);
 
             modals.closeAll();
         }
@@ -138,18 +137,18 @@ export const useMeals = () => {
         const [row] = id.split('_');
         const daysOfWeek = getDaysOfWeek(currentWeek);
 
-        // Remove local changes
         for (const { label } of daysOfWeek) {
             removeChange(`${row}_${label}`);
         }
 
-        if (!meal.id) return;
+        if (!meal.id) {
+            return;
+        }
 
         setSubmitting(true);
 
         const sectionKeys = daysOfWeek.map(({ label }) => `${row}_${label}`);
 
-        // Remove db entries
         const { error } = await supabaseClient
             .from('meals')
             .delete()
@@ -164,7 +163,7 @@ export const useMeals = () => {
                 color: 'red',
             });
         } else {
-            queryClient.invalidateQueries(['meals', currentWeek]);
+            await queryClient.invalidateQueries(['meals', currentWeek]);
 
             modals.closeAll();
         }

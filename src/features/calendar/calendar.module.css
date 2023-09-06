@@ -3,5 +3,4 @@
     --grid-gap: 0.5rem;
     display: grid;
     gap: var(--grid-gap);
-    position: relative;
 }
