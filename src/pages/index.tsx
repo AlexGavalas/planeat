@@ -1,9 +1,9 @@
 import { Center, List, Stack, Text, Title } from '@mantine/core';
 import type { GetServerSideProps } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { getServerSession } from '~api/session';
 import { Blobs, Line } from '~components/icons/line';
+import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getServerSession(context);
@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
         props: {
-            ...(await serverSideTranslations('en', ['common'])),
+            ...(await getServerSideTranslations({ locale: 'en' })),
         },
     };
 };

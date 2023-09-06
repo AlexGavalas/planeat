@@ -3,7 +3,6 @@ import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { endOfDay, startOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
 import { type GetServerSideProps } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import invariant from 'tiny-invariant';
 
 import { getServerSession } from '~api/session';
@@ -15,6 +14,7 @@ import { CurrentFat, FatTimeline } from '~features/fat-percent';
 import { type MealsMap } from '~types/meal';
 import { type Database } from '~types/supabase';
 import { getUTCDate } from '~util/date';
+import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const supabase = createPagesServerClient<Database>(context);
@@ -53,9 +53,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         props: {
             dailyMeals,
             user,
-            ...(await serverSideTranslations(profile?.language || 'en', [
-                'common',
-            ])),
+            ...(await getServerSideTranslations({ locale: profile?.language })),
         },
     };
 };

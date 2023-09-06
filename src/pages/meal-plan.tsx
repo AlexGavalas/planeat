@@ -1,12 +1,12 @@
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { type GetServerSideProps } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import invariant from 'tiny-invariant';
 
 import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
 import { Calendar } from '~features/calendar';
 import { type Database } from '~types/supabase';
+import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const supabase = createPagesServerClient<Database>(context);
@@ -30,9 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
         props: {
-            ...(await serverSideTranslations(profile?.language || 'en', [
-                'common',
-            ])),
+            ...(await getServerSideTranslations({ locale: profile?.language })),
         },
     };
 };
