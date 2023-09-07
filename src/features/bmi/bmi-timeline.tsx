@@ -25,7 +25,7 @@ export const BMITimeline = () => {
             if (!user) throw new Error(`User not logged in`);
 
             const startDate = getUTCDate(
-                sub(new Date(), { days: 100 }),
+                sub(new Date(), { years: 1 }),
             ).toUTCString();
 
             return supabaseClient
