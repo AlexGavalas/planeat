@@ -21,6 +21,9 @@ const config = {
         defaultLocale: i18n.defaultLocale,
         locales: i18n.locales,
     },
+    experimental: {
+        esmExternals: false,
+    },
 };
 
 module.exports = config;
