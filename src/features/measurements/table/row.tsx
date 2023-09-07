@@ -1,5 +1,4 @@
 import { Button, Group, Popover, Stack, Text } from '@mantine/core';
-import { useHover } from '@mantine/hooks';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
@@ -13,8 +12,6 @@ import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 import { type Measurement } from '~types/types';
 
-import { Td } from './row-td';
-
 interface RowProps {
     item: Measurement;
     page: number;
@@ -26,30 +23,9 @@ export const Row = ({ item, page }: RowProps) => {
     const supabaseClient = useSupabaseClient<Database>();
     const queryClient = useQueryClient();
     const { profile: user } = useProfile();
-    const { hovered, ref: hoverRef } = useHover<HTMLTableRowElement>();
-    const [edit, setEdit] = useState(false);
-    const [newWeight, setNewWeight] = useState(item.weight);
-    const [newFat, setNewFat] = useState(item.fat_percentage);
+
     const [openConfirmation, setOpenConfirmation] = useState(false);
     const [deleteInProgress, setDeleteInProgress] = useState(false);
-
-    const handleSave = async () => {
-        const { error } = await supabaseClient
-            .from('measurements')
-            .update({ weight: newWeight, fat_percentage: newFat })
-            .eq('id', item.id);
-
-        if (error) {
-            showNotification({
-                title: t('error'),
-                message: `${t('errors.measurement_update')}. ${t('try_again')}`,
-                color: 'red',
-            });
-        } else {
-            queryClient.invalidateQueries(['measurements', page]);
-            setEdit(false);
-        }
-    };
 
     const handleDelete = async () => {
         setDeleteInProgress(true);
@@ -66,37 +42,20 @@ export const Row = ({ item, page }: RowProps) => {
                 color: 'red',
             });
         } else {
-            queryClient.invalidateQueries(['measurements', page]);
+            await queryClient.invalidateQueries(['measurements', page]);
+
             setDeleteInProgress(false);
             setOpenConfirmation(false);
         }
     };
 
-    const handleCancel = () => setEdit(false);
-
     return (
-        <tr style={{ width: '100%', height: '3rem' }} ref={hoverRef}>
+        <tr style={{ width: '100%', height: '3rem' }}>
             <td style={{ width: '25%' }}>
                 {format(parseISO(item.date), 'dd/MM/yy')}
             </td>
-            <Td
-                cancel={handleCancel}
-                edit={edit}
-                hovered={hovered}
-                save={handleSave}
-                set={setNewWeight}
-                setEdit={() => setEdit(true)}
-                value={item.weight}
-            />
-            <Td
-                cancel={handleCancel}
-                edit={edit}
-                hovered={hovered}
-                save={handleSave}
-                set={setNewFat}
-                setEdit={() => setEdit(true)}
-                value={item.fat_percentage}
-            />
+            <td style={{ width: '20%' }}>{item.weight}</td>
+            <td style={{ width: '20%' }}>{item.fat_percentage}</td>
             <td style={{ width: '35%' }}>
                 <Group spacing="md" grow>
                     <Button
