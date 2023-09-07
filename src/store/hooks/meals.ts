@@ -1,4 +1,3 @@
-import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { endOfWeek, startOfWeek } from 'date-fns';
@@ -19,10 +18,8 @@ export const useMeals = () => {
     const { currentWeek } = useCurrentWeek();
     const queryClient = useQueryClient();
     const supabaseClient = useSupabaseClient<Database>();
-    const modals = useModals();
 
-    const { unsavedChanges, removeChanges, removeChange, addChange } =
-        useUnsavedChanges();
+    const { unsavedChanges, removeChanges, addChange } = useUnsavedChanges();
 
     const [submitting, setSubmitting] = useState(false);
 
@@ -59,18 +56,30 @@ export const useMeals = () => {
         setSubmitting(true);
 
         // The edited meals will have the id from the db
-        const [editedMeals, newMeals] = partition(
+        const [changedMeals, newMeals] = partition(
             'id',
             Object.values(unsavedChanges),
         );
 
+        const [editedMeals, deletedMeals] = partition('meal', changedMeals);
+
+        const deletedIds = deletedMeals.map(({ id }) => id);
+
+        const deletePromise = supabaseClient
+            .from('meals')
+            .delete()
+            .in('id', deletedIds);
+
         const updatePromise = supabaseClient.from('meals').upsert(editedMeals);
         const insertPromise = supabaseClient.from('meals').insert(newMeals);
 
-        const [{ error: updateError }, { error: createError }] =
-            await Promise.all([updatePromise, insertPromise]);
+        const [
+            { error: updateError },
+            { error: createError },
+            { error: deleteError },
+        ] = await Promise.all([updatePromise, insertPromise, deletePromise]);
 
-        if (updateError || createError) {
+        if (updateError || createError || deleteError) {
             setSubmitting(false);
 
             showNotification({
@@ -92,39 +101,13 @@ export const useMeals = () => {
         removeChanges();
     };
 
-    const deleteEntryCell = async ({
-        id,
-        meal,
-    }: {
-        id: string;
-        meal: Meal | EditedMeal;
-    }) => {
-        removeChange(id);
+    const deleteEntryCell = async ({ meal }: { meal: Meal | EditedMeal }) => {
+        const deletedMeal = {
+            ...meal,
+            meal: '',
+        };
 
-        if (!meal.id) {
-            return;
-        }
-
-        setSubmitting(true);
-
-        const { error } = await supabaseClient
-            .from('meals')
-            .delete()
-            .eq('id', meal.id);
-
-        if (error) {
-            setSubmitting(false);
-
-            showNotification({
-                title: t('error'),
-                message: `${t('errors.meal_delete')}. ${t('try_again')}`,
-                color: 'red',
-            });
-        } else {
-            await queryClient.invalidateQueries(['meals', currentWeek]);
-
-            modals.closeAll();
-        }
+        addChange(deletedMeal);
     };
 
     const deleteEntryRow = async ({
@@ -138,34 +121,9 @@ export const useMeals = () => {
         const daysOfWeek = getDaysOfWeek(currentWeek);
 
         for (const { label } of daysOfWeek) {
-            removeChange(`${row}_${label}`);
-        }
-
-        if (!meal.id) {
-            return;
-        }
-
-        setSubmitting(true);
-
-        const sectionKeys = daysOfWeek.map(({ label }) => `${row}_${label}`);
-
-        const { error } = await supabaseClient
-            .from('meals')
-            .delete()
-            .in('section_key', sectionKeys);
-
-        if (error) {
-            setSubmitting(false);
-
-            showNotification({
-                title: t('error'),
-                message: `${t('errors.meal_delete')}. ${t('try_again')}`,
-                color: 'red',
+            deleteEntryCell({
+                meal: { ...meal, section_key: `${row}_${label}` },
             });
-        } else {
-            await queryClient.invalidateQueries(['meals', currentWeek]);
-
-            modals.closeAll();
         }
     };
 

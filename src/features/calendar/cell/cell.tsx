@@ -58,7 +58,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
         if (isRow) {
             deleteEntryRow({ id, meal });
         } else {
-            deleteEntryCell({ id, meal });
+            deleteEntryCell({ meal });
         }
     };
 
