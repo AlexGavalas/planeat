@@ -81,6 +81,8 @@ export interface Database {
                 Row: {
                     created_at: string;
                     email: string;
+                    food_preferences_negative: string | null;
+                    food_preferences_positive: string | null;
                     full_name: string;
                     height: number | null;
                     id: number;
@@ -91,6 +93,8 @@ export interface Database {
                 Insert: {
                     created_at?: string;
                     email: string;
+                    food_preferences_negative?: string | null;
+                    food_preferences_positive?: string | null;
                     full_name: string;
                     height?: number | null;
                     id?: number;
@@ -101,6 +105,8 @@ export interface Database {
                 Update: {
                     created_at?: string;
                     email?: string;
+                    food_preferences_negative?: string | null;
+                    food_preferences_positive?: string | null;
                     full_name?: string;
                     height?: number | null;
                     id?: number;
