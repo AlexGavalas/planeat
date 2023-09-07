@@ -89,6 +89,10 @@
         "success": {
             "title": "Success",
             "message": "Your changes where successfully saved"
+        },
+        "error": {
+            "title": "Error",
+            "message": "We could not save your changes. Please try again."
         }
     },
     "confirmation": {
@@ -129,6 +133,17 @@
                     "banner": "IMPORTANT: This action cannot be undone.",
                     "cancel": "Cancel",
                     "confirm": "Delete my account"
+                }
+            },
+            "food_preferences": {
+                "title": "Food preferences",
+                "positive": {
+                    "label": "I like",
+                    "placeholder": "Write here"
+                },
+                "negative": {
+                    "label": "I don't like",
+                    "placeholder": "Write here"
                 }
             }
         }
