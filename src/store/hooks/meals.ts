@@ -1,11 +1,12 @@
 import { showNotification } from '@mantine/notifications';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { endOfWeek, startOfWeek } from 'date-fns';
+import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
+import { fetchMeals } from '~api/meal';
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 import { type Database } from '~types/supabase';
 import { getDaysOfWeek, getUTCDate } from '~util/date';
@@ -17,23 +18,24 @@ export const useMeals = () => {
     const { t } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const queryClient = useQueryClient();
-    const supabaseClient = useSupabaseClient<Database>();
+    const supabase = useSupabaseClient<Database>();
 
     const { unsavedChanges, removeChanges, addChange } = useUnsavedChanges();
 
     const [submitting, setSubmitting] = useState(false);
 
     const { data: meals = [], isFetching: fetchingMeals } = useQuery(
-        ['meals', currentWeek],
+        ['meals', format(getUTCDate(currentWeek), 'yyyy-MM-dd')],
         async () => {
-            return supabaseClient
-                .from('meals')
-                .select('*')
-                .gte('day', getUTCDate(startOfWeek(currentWeek)).toUTCString())
-                .lte('day', getUTCDate(endOfWeek(currentWeek)).toUTCString());
+            const result = await fetchMeals({
+                endDate: getUTCDate(endOfWeek(currentWeek)).toUTCString(),
+                startDate: getUTCDate(startOfWeek(currentWeek)).toUTCString(),
+                supabase,
+            });
+
+            return result.data || [];
         },
         {
-            select: ({ data }) => data || [],
             onSuccess: () => {
                 removeChanges();
             },
@@ -65,13 +67,13 @@ export const useMeals = () => {
 
         const deletedIds = deletedMeals.map(({ id }) => id);
 
-        const deletePromise = supabaseClient
+        const deletePromise = supabase
             .from('meals')
             .delete()
             .in('id', deletedIds);
 
-        const updatePromise = supabaseClient.from('meals').upsert(editedMeals);
-        const insertPromise = supabaseClient.from('meals').insert(newMeals);
+        const updatePromise = supabase.from('meals').upsert(editedMeals);
+        const insertPromise = supabase.from('meals').insert(newMeals);
 
         const [
             { error: updateError },

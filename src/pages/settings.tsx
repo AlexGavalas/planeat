@@ -64,12 +64,12 @@ export default function Settings() {
     const [language, setLanguage] = useState<string>();
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 250);
     const { profile, updateProfile } = useProfile();
-    const supabaseClient = useSupabaseClient<Database>();
+    const supabase = useSupabaseClient<Database>();
 
     const { data: nutritionists = [], isFetching } = useQuery(
         ['nutritionists', debouncedSearchQuery],
         async () => {
-            return supabaseClient
+            return supabase
                 .from('users')
                 .select('*')
                 .ilike('full_name', `%${debouncedSearchQuery}%`)

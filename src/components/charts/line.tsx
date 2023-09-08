@@ -1,9 +1,16 @@
 import { Card, useMantineTheme } from '@mantine/core';
-import { type CustomLayerProps, ResponsiveLine } from '@nivo/line';
+import { type CustomLayerProps } from '@nivo/line';
 import { format, parse } from 'date-fns';
 import { maxBy, minBy } from 'lodash';
-import { type SVGAttributes } from 'react';
-import { useMemo } from 'react';
+import dynamic from 'next/dynamic';
+import { type SVGAttributes, useMemo } from 'react';
+
+const ResponsiveLine = dynamic(
+    () => import('@nivo/line').then((mod) => ({ default: mod.ResponsiveLine })),
+    {
+        ssr: false,
+    },
+);
 
 type NumFn = (prop: number) => number;
 type TextAnchor = NonNullable<

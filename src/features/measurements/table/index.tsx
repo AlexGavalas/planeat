@@ -26,37 +26,41 @@ const PAGE_SIZE = 10;
 export const MeasurementsTable = () => {
     const { t } = useTranslation();
     const modals = useModals();
-    const { profile: user } = useProfile();
+    const { profile } = useProfile();
     const queryClient = useQueryClient();
-    const supabaseClient = useSupabaseClient<Database>();
+    const supabase = useSupabaseClient<Database>();
     const [page, setPage] = useState(1);
 
     const { data: count = 0, isFetched } = useQuery(
         ['measurements-count'],
         async () => {
-            if (!user) throw new Error(`User not logged in`);
+            if (!profile) {
+                throw new Error(`User not logged in`);
+            }
 
-            const { count } = await supabaseClient
+            const { count } = await supabase
                 .from('measurements')
                 .select('id', { count: 'exact' })
-                .eq('user_id', user.id);
+                .eq('user_id', profile.id);
 
             return (count || 0) / PAGE_SIZE;
         },
         {
-            enabled: Boolean(user),
+            enabled: Boolean(profile),
         },
     );
 
     const { data: measurements = [], isFetching } = useQuery(
         ['measurements', page],
         async () => {
-            if (!user) throw new Error(`User not logged in`);
+            if (!profile) {
+                throw new Error(`User not logged in`);
+            }
 
-            return supabaseClient
+            return supabase
                 .from('measurements')
                 .select('*')
-                .eq('user_id', user.id)
+                .eq('user_id', profile.id)
                 .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
                 .order('date', { ascending: false });
         },
@@ -81,7 +85,9 @@ export const MeasurementsTable = () => {
                     title={t('add_measurement')}
                     size="lg"
                     onClick={() => {
-                        if (!user) return;
+                        if (!profile) {
+                            return;
+                        }
 
                         modals.openModal({
                             title: t('new_measurement'),
@@ -89,7 +95,7 @@ export const MeasurementsTable = () => {
                             size: 'sm',
                             children: (
                                 <MeasurementModal
-                                    userId={user.id}
+                                    userId={profile.id}
                                     onSave={onNewWeightSave}
                                 />
                             ),

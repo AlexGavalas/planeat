@@ -20,9 +20,9 @@ interface RowProps {
 export const Row = ({ item, page }: RowProps) => {
     const { t } = useTranslation();
     const modals = useModals();
-    const supabaseClient = useSupabaseClient<Database>();
+    const supabase = useSupabaseClient<Database>();
     const queryClient = useQueryClient();
-    const { profile: user } = useProfile();
+    const { profile } = useProfile();
 
     const [openConfirmation, setOpenConfirmation] = useState(false);
     const [deleteInProgress, setDeleteInProgress] = useState(false);
@@ -30,7 +30,7 @@ export const Row = ({ item, page }: RowProps) => {
     const handleDelete = async () => {
         setDeleteInProgress(true);
 
-        const { error } = await supabaseClient
+        const { error } = await supabase
             .from('measurements')
             .delete()
             .eq('id', item.id);
@@ -61,7 +61,9 @@ export const Row = ({ item, page }: RowProps) => {
                     <Button
                         size="xs"
                         onClick={() => {
-                            if (!user) return;
+                            if (!profile) {
+                                return;
+                            }
 
                             modals.openModal({
                                 title: t('new_measurement'),
@@ -69,7 +71,7 @@ export const Row = ({ item, page }: RowProps) => {
                                 size: 'sm',
                                 children: (
                                     <MeasurementModal
-                                        userId={user.id}
+                                        userId={profile.id}
                                         initialData={{
                                             id: item.id,
                                             date: parseISO(item.date),

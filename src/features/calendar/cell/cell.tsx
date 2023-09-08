@@ -18,21 +18,21 @@ export type CellProps = {
 };
 
 export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
-    const { profile: user } = useProfile();
+    const { profile } = useProfile();
     const { hovered, ref } = useHover();
 
     const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =
         useMeals();
 
     const handleSave = async (newMeal: Partial<Meal>) => {
-        if (!user || !newMeal.meal) {
+        if (!profile || !newMeal.meal) {
             return;
         }
 
         if (isRow) {
             saveEntryRow({
                 sectionKey: id,
-                userId: user.id,
+                userId: profile.id,
                 value: newMeal.meal,
                 note: newMeal.note,
                 rating: newMeal.rating,
@@ -42,7 +42,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                 meal,
                 sectionKey: id,
                 timestamp,
-                userId: user.id,
+                userId: profile.id,
                 value: newMeal.meal,
                 note: newMeal.note,
                 rating: newMeal.rating,
