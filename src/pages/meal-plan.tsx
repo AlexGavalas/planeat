@@ -1,14 +1,20 @@
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { type GetServerSideProps } from 'next';
+import { QueryClient, dehydrate } from 'react-query';
 import invariant from 'tiny-invariant';
 
+import { fetchMeals } from '~api/meal';
 import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
 import { Calendar } from '~features/calendar';
 import { type Database } from '~types/supabase';
+import { getUTCDate } from '~util/date';
 import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    const queryClient = new QueryClient();
+
     const supabase = createPagesServerClient<Database>(context);
 
     const session = await getServerSession(context);
@@ -28,8 +34,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const profile = await fetchUser({ email: user.email, supabase });
 
+    invariant(profile, `Profile was not found for user email ${user.email}`);
+
+    const NOW = new Date();
+
+    const startDate = getUTCDate(startOfWeek(NOW)).toUTCString();
+    const endDate = getUTCDate(endOfWeek(NOW)).toUTCString();
+
+    await queryClient.prefetchQuery(['user'], async () => profile);
+
+    await queryClient.prefetchQuery(
+        ['meals', format(getUTCDate(NOW), 'yyyy-MM-dd')],
+        async () => {
+            const result = await fetchMeals({ supabase, endDate, startDate });
+
+            return result.data || [];
+        },
+    );
+
     return {
         props: {
+            dehydratedState: dehydrate(queryClient),
             ...(await getServerSideTranslations({ locale: profile?.language })),
         },
     };

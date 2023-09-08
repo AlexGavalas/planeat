@@ -10,7 +10,7 @@ import { type Database } from '~types/supabase';
 
 export const FoodPreferences = () => {
     const { t } = useTranslation();
-    const supabaseClient = useSupabaseClient<Database>();
+    const supabase = useSupabaseClient<Database>();
     const { profile } = useProfile();
 
     const handleSavePreferences: FormEventHandler<HTMLFormElement> = async (
@@ -30,7 +30,7 @@ export const FoodPreferences = () => {
         const { error } = await updateFoodPreferences({
             positive,
             negative,
-            supabase: supabaseClient,
+            supabase,
             email: profile.email,
         });
 

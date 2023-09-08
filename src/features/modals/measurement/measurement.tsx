@@ -31,7 +31,7 @@ export const MeasurementModal = ({
     initialData,
 }: ModalContentProps) => {
     const { t, i18n } = useTranslation();
-    const supabaseClient = useSupabaseClient<Database>();
+    const supabase = useSupabaseClient<Database>();
     const modals = useModals();
     const [date, setDate] = useState<Date | null>(
         initialData?.date ?? new Date(),
@@ -51,7 +51,7 @@ export const MeasurementModal = ({
         let error;
 
         if (initialData) {
-            const result = await supabaseClient
+            const result = await supabase
                 .from('measurements')
                 .update({
                     date: getUTCDate(date).toUTCString(),
@@ -62,7 +62,7 @@ export const MeasurementModal = ({
 
             error = result.error;
         } else {
-            const result = await supabaseClient.from('measurements').insert({
+            const result = await supabase.from('measurements').insert({
                 user_id: userId,
                 date: getUTCDate(date).toUTCString(),
                 weight,

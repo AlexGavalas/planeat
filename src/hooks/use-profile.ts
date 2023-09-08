@@ -20,23 +20,17 @@ interface MutationProps {
 export const useProfile = () => {
     const router = useRouter();
     const queryClient = useQueryClient();
-    const supabaseClient = useSupabaseClient<Database>();
+    const supabase = useSupabaseClient<Database>();
     const { t } = useTranslation();
     const user = useUser();
 
-    const { data: profile, isFetching } = useQuery(
-        ['user'],
-        async () => {
-            if (!user?.email) {
-                return;
-            }
+    const { data: profile, isFetching } = useQuery(['user'], async () => {
+        if (!user?.email) {
+            return;
+        }
 
-            return fetchUser({ email: user.email, supabase: supabaseClient });
-        },
-        {
-            enabled: !!user,
-        },
-    );
+        return fetchUser({ email: user.email, supabase });
+    });
 
     const { mutate: updateProfile, isLoading } = useMutation(
         async ({
@@ -49,7 +43,7 @@ export const useProfile = () => {
                 return;
             }
 
-            const { data, error } = await supabaseClient
+            const { data, error } = await supabase
                 .from('users')
                 .update({
                     is_nutritionist: isNutritionist,
@@ -85,7 +79,7 @@ export const useProfile = () => {
                 return;
             }
 
-            const { data, error } = await supabaseClient
+            const { data, error } = await supabase
                 .from('users')
                 .delete()
                 .eq('email', user.email)

@@ -11,11 +11,11 @@ import { useProfile } from '~hooks/use-profile';
 export const Fab = () => {
     const { t } = useTranslation();
     const modals = useModals();
-    const { profile: user } = useProfile();
+    const { profile } = useProfile();
     const queryClient = useQueryClient();
     const [showMenu, setShowMenu] = useState(false);
 
-    if (!user) {
+    if (!profile) {
         return null;
     }
 
@@ -42,7 +42,7 @@ export const Fab = () => {
                                 size: 'md',
                                 children: (
                                     <MeasurementModal
-                                        userId={user.id}
+                                        userId={profile.id}
                                         onSave={handleNewMeasurement}
                                     />
                                 ),
