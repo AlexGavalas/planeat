@@ -8,7 +8,12 @@ import { appWithTranslation } from 'next-i18next';
 import { type AppProps } from 'next/app';
 import Head from 'next/head';
 import { useState } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import {
+    type DehydratedState,
+    Hydrate,
+    QueryClient,
+    QueryClientProvider,
+} from 'react-query';
 
 import { Header } from '~features/header';
 import { UserContext } from '~store/user-context';
@@ -16,23 +21,27 @@ import { type Database } from '~types/supabase';
 
 import '../styles/globals.css';
 
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            refetchOnWindowFocus: false,
-        },
-    },
-});
-
 const App = ({
     Component,
     pageProps,
 }: AppProps<{
     session: SessionProviderProps['session'];
+    dehydratedState: DehydratedState;
 }>) => {
     const [supabaseClient] = useState(() =>
         createPagesBrowserClient<Database>(),
     );
+
+    const [queryClient] = useState(() => {
+        return new QueryClient({
+            defaultOptions: {
+                queries: {
+                    refetchOnWindowFocus: false,
+                    refetchOnMount: false,
+                },
+            },
+        });
+    });
 
     return (
         <>
@@ -63,15 +72,17 @@ const App = ({
                 <SessionContextProvider supabaseClient={supabaseClient}>
                     <SessionProvider session={pageProps.session}>
                         <QueryClientProvider client={queryClient}>
-                            <ModalsProvider>
-                                <UserContext>
-                                    <Header />
-                                    <div className="container">
-                                        <Component {...pageProps} />
-                                    </div>
-                                </UserContext>
-                                <Notifications />
-                            </ModalsProvider>
+                            <Hydrate state={pageProps.dehydratedState}>
+                                <ModalsProvider>
+                                    <UserContext>
+                                        <Header />
+                                        <div className="container">
+                                            <Component {...pageProps} />
+                                        </div>
+                                    </UserContext>
+                                    <Notifications />
+                                </ModalsProvider>
+                            </Hydrate>
                         </QueryClientProvider>
                     </SessionProvider>
                 </SessionContextProvider>

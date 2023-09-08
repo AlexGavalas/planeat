@@ -2,46 +2,43 @@ import { Box, Center, Title } from '@mantine/core';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { sub } from 'date-fns';
 import { useTranslation } from 'next-i18next';
-import dynamic from 'next/dynamic';
 import { useQuery } from 'react-query';
 
+import { fetchMeasurements } from '~api/measurement';
+import LineChart from '~components/charts/line';
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 import { getUTCDate } from '~util/date';
 
-const LineChart = dynamic(() => import('~components/charts/line'), {
-    ssr: false,
-});
-
 export const BMITimeline = () => {
     const { t } = useTranslation();
-    const supabaseClient = useSupabaseClient<Database>();
-    const { profile: user } = useProfile();
+    const supabase = useSupabaseClient<Database>();
+    const { profile } = useProfile();
 
     const { data, isFetching } = useQuery(
         ['bmi-timeline'],
         async () => {
-            if (!user) throw new Error(`User not logged in`);
+            if (!profile) {
+                throw new Error(`User not logged in`);
+            }
 
             const startDate = getUTCDate(
                 sub(new Date(), { years: 1 }),
             ).toUTCString();
 
-            return supabaseClient
-                .from('measurements')
-                .select('date, weight')
-                .eq('user_id', user.id)
-                .not('weight', 'is', null)
-                .gte('date', startDate)
-                .order('date', { ascending: true });
+            const result = await fetchMeasurements({
+                startDate,
+                supabase,
+                userId: profile.id,
+            });
+
+            return result.data?.length
+                ? result.data.map(({ date: x, weight: y }) => ({ x, y }))
+                : null;
         },
         {
-            enabled: Boolean(user),
-            select: ({ data }) =>
-                data?.length
-                    ? data.map(({ date: x, weight: y }) => ({ x, y }))
-                    : null,
+            enabled: Boolean(profile),
         },
     );
 
@@ -62,7 +59,7 @@ export const BMITimeline = () => {
                 {data && (
                     <LineChart
                         unit={t('kg')}
-                        target={Number(user?.target_weight)}
+                        target={Number(profile?.target_weight)}
                         data={[{ id: 'bmi-timeline', data }]}
                     />
                 )}
