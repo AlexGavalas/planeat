@@ -34,8 +34,10 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
         label: t(`row.${row.key}`),
     }));
 
+    const now = getUTCDate(new Date());
+
     const activeIndex =
-        ROWS.findIndex(({ key }) => isAfter(MEAL_TIMES[key], new Date())) - 1;
+        ROWS.findIndex(({ key }) => isAfter(MEAL_TIMES[key], now)) - 1;
 
     return (
         <>
@@ -45,10 +47,7 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
                 bulletSize={40}
             >
                 {translatedRows.map((row) => {
-                    const key = `${row.key}_${format(
-                        new Date(),
-                        'EEE dd/MM/yyyy',
-                    )}`;
+                    const key = `${row.key}_${format(now, 'EEE dd/MM/yyyy')}`;
 
                     const meal = dailyMeals[key]?.meal || 'N/A';
 

@@ -81,7 +81,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return result.data?.[0].weight ?? 0;
     });
 
-    const startDate = getUTCDate(sub(new Date(), { years: 1 })).toUTCString();
+    const startDate = getUTCDate(sub(NOW, { years: 1 })).toUTCString();
 
     await queryClient.prefetchQuery(['bmi-timeline'], async () => {
         const result = await fetchMeasurements({
