@@ -1,5 +1,5 @@
 import { Spoiler, Text, Timeline, Title } from '@mantine/core';
-import { format, isAfter, set } from 'date-fns';
+import { format, isAfter, set, startOfDay } from 'date-fns';
 import { AppleHalf, Bbq, CrackedEgg, OrangeSliceAlt } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 
@@ -16,7 +16,7 @@ const MEAL_ICON = {
     dinner: Bbq,
 };
 
-const NOW = getUTCDate(new Date());
+const NOW = getUTCDate(startOfDay(new Date()));
 
 const MEAL_TIMES = {
     morning: set(NOW, { hours: 9, minutes: 0, seconds: 0 }),
