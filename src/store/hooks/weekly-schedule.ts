@@ -10,7 +10,7 @@ import { useUnsavedChanges } from './unsaved-changes';
 const cloneState = (meals: Meal[]) => {
     return meals.reduce((acc: MealsMap, meal) => {
         const newKey = meal.section_key.replace(/(\d+\/\d+\/\d+)$/, (match) => {
-            const prevDate = parse(match, 'dd/MM/yyyy', new Date());
+            const prevDate = parse(match, 'dd/MM/yyyy', getUTCDate(new Date()));
 
             return format(add(prevDate, { weeks: 1 }), 'dd/MM/yyyy');
         });
