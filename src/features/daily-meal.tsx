@@ -16,7 +16,7 @@ const MEAL_ICON = {
     dinner: Bbq,
 };
 
-const NOW = getUTCDate(startOfDay(new Date()));
+const NOW = startOfDay(getUTCDate(new Date()));
 
 const MEAL_TIMES = {
     morning: set(NOW, { hours: 9, minutes: 0, seconds: 0 }),
