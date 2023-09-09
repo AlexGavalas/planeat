@@ -16,14 +16,15 @@ const MEAL_ICON = {
     dinner: Bbq,
 };
 
-const NOW = startOfDay(getUTCDate(new Date()));
+const startOfDayTimestamp = getUTCDate(startOfDay(new Date()));
+const now = getUTCDate(new Date());
 
 const MEAL_TIMES = {
-    morning: set(NOW, { hours: 9, minutes: 0, seconds: 0 }),
-    snack1: set(NOW, { hours: 11, minutes: 0, seconds: 0 }),
-    lunch: set(NOW, { hours: 13, minutes: 0, seconds: 0 }),
-    snack2: set(NOW, { hours: 17, minutes: 0, seconds: 0 }),
-    dinner: set(NOW, { hours: 20, minutes: 0, seconds: 0 }),
+    morning: set(startOfDayTimestamp, { hours: 9, minutes: 0, seconds: 0 }),
+    snack1: set(startOfDayTimestamp, { hours: 11, minutes: 0, seconds: 0 }),
+    lunch: set(startOfDayTimestamp, { hours: 13, minutes: 0, seconds: 0 }),
+    snack2: set(startOfDayTimestamp, { hours: 17, minutes: 0, seconds: 0 }),
+    dinner: set(startOfDayTimestamp, { hours: 20, minutes: 0, seconds: 0 }),
 };
 
 export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
@@ -33,8 +34,6 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
         ...row,
         label: t(`row.${row.key}`),
     }));
-
-    const now = getUTCDate(new Date());
 
     const activeIndex =
         ROWS.findIndex(({ key }) => isAfter(MEAL_TIMES[key], now)) - 1;
