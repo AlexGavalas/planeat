@@ -24,8 +24,10 @@ export const useMeals = () => {
 
     const [submitting, setSubmitting] = useState(false);
 
+    const currentWeekKey = format(getUTCDate(currentWeek), 'yyyy-MM-dd');
+
     const { data: meals = [], isFetching: fetchingMeals } = useQuery(
-        ['meals', format(getUTCDate(currentWeek), 'yyyy-MM-dd')],
+        ['meals', currentWeekKey],
         async () => {
             const result = await fetchMeals({
                 endDate: getUTCDate(endOfWeek(currentWeek)).toUTCString(),
@@ -90,7 +92,7 @@ export const useMeals = () => {
                 color: 'red',
             });
         } else {
-            await queryClient.invalidateQueries(['meals', currentWeek]);
+            await queryClient.invalidateQueries(['meals', currentWeekKey]);
 
             showNotification({
                 title: t('notification.success.title'),
