@@ -29,18 +29,23 @@ export const useMeals = () => {
     const { data: meals = [], isFetching: fetchingMeals } = useQuery(
         ['meals', currentWeekKey],
         async () => {
+            const endDate = getUTCDate(
+                endOfWeek(currentWeek, { weekStartsOn: 1 }),
+            ).toUTCString();
+
+            const startDate = getUTCDate(
+                startOfWeek(currentWeek, { weekStartsOn: 1 }),
+            ).toUTCString();
+
             const result = await fetchMeals({
-                endDate: getUTCDate(endOfWeek(currentWeek)).toUTCString(),
-                startDate: getUTCDate(startOfWeek(currentWeek)).toUTCString(),
+                endDate,
+                startDate,
                 supabase,
             });
 
             return result.data || [];
         },
         {
-            onSuccess: () => {
-                removeChanges();
-            },
             onSettled: () => {
                 setSubmitting(false);
             },
@@ -93,6 +98,8 @@ export const useMeals = () => {
             });
         } else {
             await queryClient.invalidateQueries(['meals', currentWeekKey]);
+
+            removeChanges();
 
             showNotification({
                 title: t('notification.success.title'),
