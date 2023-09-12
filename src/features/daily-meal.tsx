@@ -1,5 +1,5 @@
 import { Spoiler, Text, Timeline, Title } from '@mantine/core';
-import { format, isAfter, set } from 'date-fns';
+import { format, isAfter, set, startOfDay } from 'date-fns';
 import { AppleHalf, Bbq, CrackedEgg, OrangeSliceAlt } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 
@@ -17,13 +17,14 @@ const MEAL_ICON = {
 };
 
 const now = getUTCDate(new Date());
+const startOfDayTimestamp = startOfDay(now);
 
 const MEAL_TIMES = {
-    morning: set(now, { hours: 9, minutes: 0, seconds: 0 }),
-    snack1: set(now, { hours: 11, minutes: 0, seconds: 0 }),
-    lunch: set(now, { hours: 13, minutes: 0, seconds: 0 }),
-    snack2: set(now, { hours: 17, minutes: 0, seconds: 0 }),
-    dinner: set(now, { hours: 20, minutes: 0, seconds: 0 }),
+    morning: set(startOfDayTimestamp, { hours: 9, minutes: 0, seconds: 0 }),
+    snack1: set(startOfDayTimestamp, { hours: 11, minutes: 0, seconds: 0 }),
+    lunch: set(startOfDayTimestamp, { hours: 13, minutes: 0, seconds: 0 }),
+    snack2: set(startOfDayTimestamp, { hours: 17, minutes: 0, seconds: 0 }),
+    dinner: set(startOfDayTimestamp, { hours: 20, minutes: 0, seconds: 0 }),
 };
 
 export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
