@@ -3,12 +3,12 @@ import { DatePicker } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { endOfDay } from 'date-fns';
 import 'dayjs/locale/el';
 import { useTranslation } from 'next-i18next';
 import { type FormEventHandler, useState } from 'react';
 
 import { type Database } from '~types/supabase';
-import { getUTCDate } from '~util/date';
 
 const localeMap = {
     gr: 'el',
@@ -34,7 +34,7 @@ export const MeasurementModal = ({
     const supabase = useSupabaseClient<Database>();
     const modals = useModals();
     const [date, setDate] = useState<Date | null>(
-        initialData?.date ?? new Date(),
+        initialData?.date ?? endOfDay(new Date()),
     );
     const [weight, setWeight] = useState(initialData?.weight);
     const [fatPercent, setFatPercent] = useState(initialData?.fat_percentage);
@@ -54,7 +54,7 @@ export const MeasurementModal = ({
             const result = await supabase
                 .from('measurements')
                 .update({
-                    date: getUTCDate(date).toUTCString(),
+                    date: endOfDay(date).toUTCString(),
                     weight,
                     fat_percentage: fatPercent,
                 })
@@ -64,7 +64,7 @@ export const MeasurementModal = ({
         } else {
             const result = await supabase.from('measurements').insert({
                 user_id: userId,
-                date: getUTCDate(date).toUTCString(),
+                date: endOfDay(date).toUTCString(),
                 weight,
                 fat_percentage: fatPercent,
             });
