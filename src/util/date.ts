@@ -24,4 +24,5 @@ export const getDaysOfWeek = (
     }));
 };
 
-export const getUTCDate = (date: Date) => zonedTimeToUtc(date, 'UTC');
+export const getUTCDate = (date: Date, timeZone: string = 'Europe/Athens') =>
+    zonedTimeToUtc(date, timeZone);

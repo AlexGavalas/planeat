@@ -1,5 +1,5 @@
 import { Spoiler, Text, Timeline, Title } from '@mantine/core';
-import { format } from 'date-fns';
+import { format, isAfter, set } from 'date-fns';
 import { AppleHalf, Bbq, CrackedEgg, OrangeSliceAlt } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 
@@ -18,6 +18,14 @@ const MEAL_ICON = {
 
 const now = getUTCDate(new Date());
 
+const MEAL_TIMES = {
+    morning: set(now, { hours: 9, minutes: 0, seconds: 0 }),
+    snack1: set(now, { hours: 11, minutes: 0, seconds: 0 }),
+    lunch: set(now, { hours: 13, minutes: 0, seconds: 0 }),
+    snack2: set(now, { hours: 17, minutes: 0, seconds: 0 }),
+    dinner: set(now, { hours: 20, minutes: 0, seconds: 0 }),
+};
+
 export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
     const { t } = useTranslation();
 
@@ -26,10 +34,16 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
         label: t(`row.${row.key}`),
     }));
 
+    const activeIndex =
+        ROWS.findIndex(({ key }) => isAfter(MEAL_TIMES[key], now)) - 1;
+
     return (
         <>
             <Title order={3}>{t('day_plan')}</Title>
-            <Timeline active={ROWS.length} bulletSize={40}>
+            <Timeline
+                active={activeIndex < 0 ? ROWS.length : activeIndex}
+                bulletSize={40}
+            >
                 {translatedRows.map((row) => {
                     const key = `${row.key}_${format(now, 'EEE dd/MM/yyyy')}`;
 
