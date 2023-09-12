@@ -38,8 +38,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const NOW = new Date();
 
-    const startDate = getUTCDate(startOfWeek(NOW)).toUTCString();
-    const endDate = getUTCDate(endOfWeek(NOW)).toUTCString();
+    const startDate = getUTCDate(
+        startOfWeek(NOW, { weekStartsOn: 1 }),
+    ).toUTCString();
+
+    const endDate = getUTCDate(
+        endOfWeek(NOW, { weekStartsOn: 1 }),
+    ).toUTCString();
 
     await queryClient.prefetchQuery(['user'], async () => profile);
 
