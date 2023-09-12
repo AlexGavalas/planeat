@@ -35,7 +35,8 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
     }));
 
     const activeIndex =
-        ROWS.findIndex(({ key }) => isAfter(MEAL_TIMES[key], now)) - 1;
+        ROWS.findIndex(({ key }) => isAfter(getUTCDate(MEAL_TIMES[key]), now)) -
+        1;
 
     return (
         <>
