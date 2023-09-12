@@ -44,7 +44,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     invariant(user?.email, 'User email must exist in session');
 
-    const NOW = new Date();
+    const NOW = getUTCDate(new Date());
 
     const startOfDayTimestamp = getUTCDate(startOfDay(NOW)).toUTCString();
     const endOfDayTimestamp = getUTCDate(endOfDay(NOW)).toUTCString();
