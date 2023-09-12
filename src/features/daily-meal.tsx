@@ -38,9 +38,7 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
     const now = new Date();
 
     const activeIndex =
-        ROWS.findIndex(({ key }) =>
-            isAfter(MEAL_TIMES[key], currentTimestamp),
-        ) - 1;
+        ROWS.findIndex(({ key }) => isAfter(MEAL_TIMES[key], now)) - 1;
 
     return (
         <>
