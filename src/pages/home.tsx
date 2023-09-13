@@ -46,8 +46,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const NOW = getUTCDate(new Date());
 
-    const startOfDayTimestamp = startOfDay(NOW).toUTCString();
-    const endOfDayTimestamp = endOfDay(NOW).toUTCString();
+    const startOfDayTimestamp = startOfDay(NOW).toISOString();
+    const endOfDayTimestamp = endOfDay(NOW).toISOString();
 
     const { data } = await fetchMeals({
         supabase,
