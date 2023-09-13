@@ -22,7 +22,7 @@ import { type Database } from '~types/supabase';
 
 import { Row } from './row';
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 5;
 
 export const MeasurementsTable = () => {
     const { t } = useTranslation();
