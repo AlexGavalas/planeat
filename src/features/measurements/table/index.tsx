@@ -4,6 +4,7 @@ import {
     Center,
     Group,
     Pagination,
+    Stack,
     Table,
     Title,
 } from '@mantine/core';
@@ -21,7 +22,7 @@ import { type Database } from '~types/supabase';
 
 import { Row } from './row';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 3;
 
 export const MeasurementsTable = () => {
     const { t } = useTranslation();
@@ -43,7 +44,7 @@ export const MeasurementsTable = () => {
                 .select('id', { count: 'exact' })
                 .eq('user_id', profile.id);
 
-            return (count || 0) / PAGE_SIZE;
+            return count;
         },
         {
             enabled: Boolean(profile),
@@ -69,6 +70,8 @@ export const MeasurementsTable = () => {
             enabled: isFetched,
         },
     );
+
+    const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
 
     const onNewWeightSave = () => {
         setPage(1);
@@ -108,7 +111,7 @@ export const MeasurementsTable = () => {
             <Card style={{ minHeight: 100 }}>
                 <LoadingOverlay visible={loading} />
                 {measurements.length > 0 ? (
-                    <>
+                    <Stack spacing="md">
                         <Table highlightOnHover>
                             <thead>
                                 <tr>
@@ -136,14 +139,16 @@ export const MeasurementsTable = () => {
                                 ))}
                             </tbody>
                         </Table>
-                        {count > PAGE_SIZE && (
+                        {totalPages > 1 && (
                             <Pagination
-                                total={count}
+                                total={totalPages}
                                 position="right"
+                                value={page}
                                 onChange={setPage}
+                                withEdges
                             />
                         )}
-                    </>
+                    </Stack>
                 ) : (
                     !loading && (
                         <Center style={{ height: 100 }}>
