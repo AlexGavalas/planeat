@@ -4,6 +4,7 @@ import { AppleHalf, Bbq, CrackedEgg, OrangeSliceAlt } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 
 import { type MealsMap } from '~types/meal';
+import { getUTCDate } from '~util/date';
 
 import { ROWS } from './calendar/constants';
 
@@ -15,8 +16,8 @@ const MEAL_ICON = {
     dinner: Bbq,
 };
 
-const currentTimestamp = new Date();
-const startOfDayTimestamp = startOfDay(currentTimestamp);
+const now = new Date();
+const startOfDayTimestamp = getUTCDate(startOfDay(now));
 
 const MEAL_TIMES = {
     morning: set(startOfDayTimestamp, { hours: 9, minutes: 0, seconds: 0 }),
@@ -33,8 +34,6 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
         ...row,
         label: t(`row.${row.key}`),
     }));
-
-    const now = new Date();
 
     const activeIndex =
         ROWS.findIndex(({ key }) => isAfter(MEAL_TIMES[key], now)) - 1;
