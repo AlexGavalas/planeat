@@ -3,9 +3,3 @@
     gap: var(--grid-gap);
     grid-template-columns: var(--grid-config);
 }
-
-.wrapper h3 {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 1rem;
-}

@@ -15,6 +15,11 @@
     "fat_measurements": "Fat measurements",
     "measurements": "Measurements",
     "add_measurement": "Add a new measurement",
+    "activity": {
+        "label": "Activity",
+        "placeholder": "Write here"
+    },
+    "add_activity": "Add a new activity",
     "new_weight": "New weight",
     "new_measurement": "New measurement",
     "weight": "Weight",
@@ -79,7 +84,10 @@
         "measurement_empty": "You forgot to input your measurement",
         "note_save": "We could not save your changes",
         "note_delete": "We could not delete this note",
-        "note_empty": "You forgot to input the note"
+        "note_empty": "You forgot to input the note",
+        "activity_save": "We could not save your activity",
+        "activity_delete": "We could not delete this activity",
+        "activity_empty": "You forgot to input the activity"
     },
     "hide": "Hide",
     "show_more": "Show more",

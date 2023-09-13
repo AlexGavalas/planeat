@@ -1,0 +1,1 @@
+export { ActivitiesTable } from './table';

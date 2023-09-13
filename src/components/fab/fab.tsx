@@ -1,10 +1,11 @@
 import { ActionIcon, Box, Button, Stack } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import { EditPencil, Plus } from 'iconoir-react';
+import { EditPencil, Plus, Running } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQueryClient } from 'react-query';
 
+import { ActivityModal } from '~features/modals/activity';
 import { MeasurementModal } from '~features/modals/measurement';
 import { useProfile } from '~hooks/use-profile';
 
@@ -24,6 +25,8 @@ export const Fab = () => {
         await queryClient.invalidateQueries(['fat-percent-timeline']);
         await queryClient.invalidateQueries(['measurements']);
     };
+
+    const handleNewActivity = async () => {};
 
     return (
         <Box style={{ position: 'fixed', bottom: 20, left: 20 }}>
@@ -51,6 +54,29 @@ export const Fab = () => {
                         leftIcon={<EditPencil />}
                     >
                         {t('add_measurement')}
+                    </Button>
+                    <Button
+                        style={{ maxWidth: 'fit-content' }}
+                        size="sm"
+                        radius="xl"
+                        variant="filled"
+                        onClick={() => {
+                            setShowMenu(!showMenu);
+
+                            modals.openModal({
+                                title: t('add_activity'),
+                                size: 'md',
+                                children: (
+                                    <ActivityModal
+                                        userId={profile.id}
+                                        onSave={handleNewActivity}
+                                    />
+                                ),
+                            });
+                        }}
+                        leftIcon={<Running />}
+                    >
+                        {t('add_activity')}
                     </Button>
                 </Stack>
             )}
