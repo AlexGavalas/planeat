@@ -17,7 +17,7 @@ export const getDaysOfWeek = (
         start: startOfWeek(date, { weekStartsOn: 1 }),
         end: endOfWeek(date, { weekStartsOn: 1 }),
     }).map((day) => ({
-        timestamp: day,
+        timestamp: getUTCDate(day),
         label: format(day, formatString, {
             locale: localeMap[locale],
         }),
