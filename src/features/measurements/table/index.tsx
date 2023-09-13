@@ -22,6 +22,7 @@ import { type Database } from '~types/supabase';
 
 import { Row } from './row';
 
+const INITIAL_PAGE = 1;
 const PAGE_SIZE = 5;
 
 export const MeasurementsTable = () => {
@@ -30,7 +31,7 @@ export const MeasurementsTable = () => {
     const { profile } = useProfile();
     const queryClient = useQueryClient();
     const supabase = useSupabaseClient<Database>();
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(INITIAL_PAGE);
 
     const { data: count = 0, isFetched } = useQuery(
         ['measurements-count'],
@@ -73,9 +74,11 @@ export const MeasurementsTable = () => {
 
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
 
-    const onNewWeightSave = () => {
-        setPage(1);
-        queryClient.invalidateQueries(['measurements']);
+    const onNewWeightSave = async () => {
+        setPage(INITIAL_PAGE);
+
+        await queryClient.invalidateQueries(['measurements-count']);
+        await queryClient.invalidateQueries(['measurements']);
     };
 
     const loading = (!measurements.length && !isFetched) || isFetching;

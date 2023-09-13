@@ -42,7 +42,8 @@ export const Row = ({ item, page }: RowProps) => {
                 color: 'red',
             });
         } else {
-            await queryClient.invalidateQueries(['measurements', page]);
+            await queryClient.invalidateQueries(['measurements-count']);
+            await queryClient.invalidateQueries(['measurements']);
 
             setDeleteInProgress(false);
             setOpenConfirmation(false);
