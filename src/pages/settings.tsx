@@ -22,6 +22,7 @@ import invariant from 'tiny-invariant';
 import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
 import { LoadingOverlay } from '~components/loading-overlay';
+import { ActivitiesTable } from '~features/activities/table';
 import { DeleteAccount } from '~features/delete-account';
 import { FoodPreferences } from '~features/food-preferences';
 import { MeasurementsTable } from '~features/measurements/table';
@@ -160,6 +161,8 @@ export default function Settings() {
             )}
             <Space h="lg" />
             <MeasurementsTable />
+            <Space h="lg" />
+            <ActivitiesTable />
             <Space h="lg" />
             <FoodPreferences />
             <Space h="lg" />

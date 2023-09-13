@@ -7,13 +7,13 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { MeasurementModal } from '~features/modals/measurement';
+import { ActivityModal } from '~features/modals/activity';
 import { useProfile } from '~hooks/use-profile';
+import { type Activity } from '~types/activity';
 import { type Database } from '~types/supabase';
-import { type Measurement } from '~types/types';
 
 interface RowProps {
-    item: Measurement;
+    item: Activity;
     page: number;
 }
 
@@ -31,23 +31,28 @@ export const Row = ({ item, page }: RowProps) => {
         setDeleteInProgress(true);
 
         const { error } = await supabase
-            .from('measurements')
+            .from('activities')
             .delete()
             .eq('id', item.id);
 
         if (error) {
             showNotification({
                 title: t('error'),
-                message: `${t('errors.measurement_delete')}. ${t('try_again')}`,
+                message: `${t('errors.activity_delete')}. ${t('try_again')}`,
                 color: 'red',
             });
         } else {
-            await queryClient.invalidateQueries(['measurements-count']);
-            await queryClient.invalidateQueries(['measurements']);
+            await queryClient.invalidateQueries(['activities-count']);
+            await queryClient.invalidateQueries(['activities']);
 
             setDeleteInProgress(false);
             setOpenConfirmation(false);
         }
+    };
+
+    const handleSave = async () => {
+        await queryClient.invalidateQueries(['activities-count']);
+        await queryClient.invalidateQueries(['activities', page]);
     };
 
     return (
@@ -55,8 +60,7 @@ export const Row = ({ item, page }: RowProps) => {
             <td style={{ width: '25%' }}>
                 {format(parseISO(item.date), 'dd/MM/yy')}
             </td>
-            <td style={{ width: '20%' }}>{item.weight}</td>
-            <td style={{ width: '20%' }}>{item.fat_percentage}</td>
+            <td style={{ width: '40%' }}>{item.activity}</td>
             <td style={{ width: '35%' }}>
                 <Group spacing="md" grow>
                     <Button
@@ -67,29 +71,18 @@ export const Row = ({ item, page }: RowProps) => {
                             }
 
                             modals.openModal({
-                                title: t('new_measurement'),
+                                title: t('add_activity'),
                                 centered: true,
                                 size: 'sm',
                                 children: (
-                                    <MeasurementModal
+                                    <ActivityModal
                                         userId={profile.id}
                                         initialData={{
                                             id: item.id,
                                             date: parseISO(item.date),
-                                            ...(item.fat_percentage && {
-                                                fat_percentage:
-                                                    item.fat_percentage,
-                                            }),
-                                            ...(item.weight && {
-                                                weight: item.weight,
-                                            }),
+                                            activity: item.activity,
                                         }}
-                                        onSave={() => {
-                                            queryClient.invalidateQueries([
-                                                'measurements',
-                                                page,
-                                            ]);
-                                        }}
+                                        onSave={handleSave}
                                     />
                                 ),
                             });

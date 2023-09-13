@@ -9,6 +9,34 @@ export type Json =
 export interface Database {
     public: {
         Tables: {
+            activities: {
+                Row: {
+                    activity: string;
+                    date: string;
+                    id: string;
+                    user_id: number;
+                };
+                Insert: {
+                    activity: string;
+                    date: string;
+                    id?: string;
+                    user_id: number;
+                };
+                Update: {
+                    activity?: string;
+                    date?: string;
+                    id?: string;
+                    user_id?: number;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'activities_user_id_fkey';
+                        columns: ['user_id'];
+                        referencedRelation: 'users';
+                        referencedColumns: ['id'];
+                    },
+                ];
+            };
             meals: {
                 Row: {
                     day: string;
