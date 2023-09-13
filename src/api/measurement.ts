@@ -56,7 +56,7 @@ export const fetchMeasurements = async ({
         .select('date, weight')
         .eq('user_id', userId)
         .not('weight', 'is', null)
-        .limit(20)
+        .limit(10)
         .order('date', { ascending: true });
 
     return result;
@@ -76,7 +76,7 @@ export const fetchFatMeasurements = async ({
         .select('date, fat_percentage')
         .eq('user_id', userId)
         .not('fat_percentage', 'is', null)
-        .limit(20)
+        .limit(10)
         .order('date', { ascending: true });
 
     return result;
