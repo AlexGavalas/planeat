@@ -44,10 +44,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     invariant(user?.email, 'User email must exist in session');
 
-    const NOW = getUTCDate(new Date());
+    const NOW = new Date();
 
-    const startOfDayTimestamp = startOfDay(NOW).toISOString();
-    const endOfDayTimestamp = endOfDay(NOW).toISOString();
+    const startOfDayTimestamp = getUTCDate(startOfDay(NOW)).toUTCString();
+    const endOfDayTimestamp = getUTCDate(endOfDay(NOW)).toUTCString();
 
     const { data } = await fetchMeals({
         supabase,
