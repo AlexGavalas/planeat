@@ -1,6 +1,5 @@
 import { Box, Center, Title } from '@mantine/core';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { sub } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 import { useQuery } from 'react-query';
 
@@ -9,7 +8,6 @@ import LineChart from '~components/charts/line';
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
-import { getUTCDate } from '~util/date';
 
 export const BMITimeline = () => {
     const { t } = useTranslation();
@@ -23,12 +21,7 @@ export const BMITimeline = () => {
                 throw new Error(`User not logged in`);
             }
 
-            const startDate = getUTCDate(
-                sub(new Date(), { years: 1 }),
-            ).toUTCString();
-
             const result = await fetchMeasurements({
-                startDate,
                 supabase,
                 userId: profile.id,
             });

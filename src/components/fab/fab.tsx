@@ -19,10 +19,10 @@ export const Fab = () => {
         return null;
     }
 
-    const handleNewMeasurement = () => {
-        queryClient.invalidateQueries(['bmi-timeline']);
-        queryClient.invalidateQueries(['fat-percent-timeline']);
-        queryClient.invalidateQueries(['measurements']);
+    const handleNewMeasurement = async () => {
+        await queryClient.invalidateQueries(['bmi-timeline']);
+        await queryClient.invalidateQueries(['fat-percent-timeline']);
+        await queryClient.invalidateQueries(['measurements']);
     };
 
     return (

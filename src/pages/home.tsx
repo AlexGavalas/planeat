@@ -1,6 +1,6 @@
 import { Box, Divider, Group, Space, Stack } from '@mantine/core';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { endOfDay, startOfDay, sub } from 'date-fns';
+import { endOfDay, startOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
 import { type GetServerSideProps } from 'next';
 import { QueryClient, dehydrate } from 'react-query';
@@ -81,11 +81,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return result.data?.[0].weight ?? 0;
     });
 
-    const startDate = getUTCDate(sub(NOW, { years: 1 })).toUTCString();
-
     await queryClient.prefetchQuery(['bmi-timeline'], async () => {
         const result = await fetchMeasurements({
-            startDate,
             supabase,
             userId: profile.id,
         });
@@ -97,7 +94,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     await queryClient.prefetchQuery(['fat-percent-timeline'], async () => {
         const result = await fetchFatMeasurements({
-            startDate,
             supabase,
             userId: profile.id,
         });

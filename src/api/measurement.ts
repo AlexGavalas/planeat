@@ -43,13 +43,11 @@ export const fetchLatestWeightMeasurement = async ({
 };
 
 type FetchMeasurementsProps = {
-    startDate: string;
     supabase: SupabaseClient<Database>;
     userId: number;
 };
 
 export const fetchMeasurements = async ({
-    startDate,
     supabase,
     userId,
 }: FetchMeasurementsProps) => {
@@ -58,20 +56,18 @@ export const fetchMeasurements = async ({
         .select('date, weight')
         .eq('user_id', userId)
         .not('weight', 'is', null)
-        .gte('date', startDate)
+        .limit(20)
         .order('date', { ascending: true });
 
     return result;
 };
 
 type FetchFatMeasurementsProps = {
-    startDate: string;
     supabase: SupabaseClient<Database>;
     userId: number;
 };
 
 export const fetchFatMeasurements = async ({
-    startDate,
     supabase,
     userId,
 }: FetchFatMeasurementsProps) => {
@@ -80,7 +76,7 @@ export const fetchFatMeasurements = async ({
         .select('date, fat_percentage')
         .eq('user_id', userId)
         .not('fat_percentage', 'is', null)
-        .gte('date', startDate)
+        .limit(20)
         .order('date', { ascending: true });
 
     return result;
