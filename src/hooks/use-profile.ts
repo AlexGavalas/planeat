@@ -11,7 +11,7 @@ import { type Database } from '~types/supabase';
 import { useUser } from './use-user';
 
 interface MutationProps {
-    isNutritionist?: boolean;
+    isDiscoverable?: boolean;
     height?: number;
     targetWeight?: number;
     language?: string;
@@ -34,7 +34,7 @@ export const useProfile = () => {
 
     const { mutate: updateProfile, isLoading } = useMutation(
         async ({
-            isNutritionist,
+            isDiscoverable,
             height,
             targetWeight,
             language,
@@ -46,7 +46,7 @@ export const useProfile = () => {
             const { data, error } = await supabase
                 .from('users')
                 .update({
-                    is_nutritionist: isNutritionist,
+                    is_discoverable: isDiscoverable,
                     target_weight: targetWeight,
                     height,
                     language,

@@ -114,7 +114,7 @@ export interface Database {
                     full_name: string;
                     height: number | null;
                     id: number;
-                    is_nutritionist: boolean;
+                    is_discoverable: boolean;
                     language: string;
                     target_weight: number | null;
                 };
@@ -126,7 +126,7 @@ export interface Database {
                     full_name: string;
                     height?: number | null;
                     id?: number;
-                    is_nutritionist?: boolean;
+                    is_discoverable?: boolean;
                     language: string;
                     target_weight?: number | null;
                 };
@@ -138,7 +138,7 @@ export interface Database {
                     full_name?: string;
                     height?: number | null;
                     id?: number;
-                    is_nutritionist?: boolean;
+                    is_discoverable?: boolean;
                     language?: string;
                     target_weight?: number | null;
                 };

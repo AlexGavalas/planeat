@@ -84,9 +84,9 @@ export const ActivitiesTable = () => {
     const loading = (!activities.length && !isFetched) || isFetching;
 
     return (
-        <>
-            <Group position="apart" py={20}>
-                <Title order={3}>{t('measurements')}</Title>
+        <Stack spacing="md">
+            <Group position="apart">
+                <Title order={3}>{t('activities')}</Title>
                 <ActionIcon
                     title={t('add_measurement')}
                     size="lg"
@@ -157,6 +157,6 @@ export const ActivitiesTable = () => {
                     )
                 )}
             </Card>
-        </>
+        </Stack>
     );
 };

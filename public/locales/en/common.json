@@ -3,7 +3,6 @@
     "login": {
         "google": "Login with Google"
     },
-    "am_nutritionist": "I am a nutritionist",
     "find_your_nutritionist": "Find your nutritionist",
     "search": "Search",
     "edit": "Edit",
@@ -19,6 +18,9 @@
         "label": "Activity",
         "placeholder": "Write here"
     },
+    "activities": "Activities",
+    "personal_info": "Personal Information",
+    "advanced_settings": "Advanced settings",
     "add_activity": "Add a new activity",
     "new_weight": "New weight",
     "new_measurement": "New measurement",
@@ -128,6 +130,13 @@
     },
     "account_settings": {
         "sections": {
+            "advanced": {
+                "title": "Advanced settings",
+                "profile": {
+                    "toggle_discoverable_label": "Is my profile visible to other users?",
+                    "toggle_discoverable_description": "Other users can discover your profile and send you a request to connect."
+                }
+            },
             "general": {
                 "title": "General settings"
             },

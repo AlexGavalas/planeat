@@ -84,8 +84,8 @@ export const MeasurementsTable = () => {
     const loading = (!measurements.length && !isFetched) || isFetching;
 
     return (
-        <>
-            <Group position="apart" py={20}>
+        <Stack spacing="md">
+            <Group position="apart">
                 <Title order={3}>{t('measurements')}</Title>
                 <ActionIcon
                     title={t('add_measurement')}
@@ -160,6 +160,6 @@ export const MeasurementsTable = () => {
                     )
                 )}
             </Card>
-        </>
+        </Stack>
     );
 };

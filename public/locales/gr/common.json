@@ -3,7 +3,6 @@
     "login": {
         "google": "Είσοδος με Google"
     },
-    "am_nutritionist": "Είμαι διαιτολόγος",
     "find_your_nutritionist": "Βρες τον διαιτολόγο σου",
     "search": "Αναζήτηση",
     "edit": "Επεξεργασία",
@@ -19,6 +18,9 @@
         "label": "Δραστηριότητα",
         "placeholder": "Γράψτε εδώ"
     },
+    "activities": "Δραστηριότητες",
+    "personal_info": "Προσωπικές Πληροφορίες",
+    "advanced_settings": "Προχωρημένες Ρυθμίσεις",
     "add_activity": "Προσθήκη νέας δραστηριότητας",
     "new_weight": "Νέο βάρος",
     "new_measurement": "Νέα μέτρηση",
@@ -128,6 +130,13 @@
     },
     "account_settings": {
         "sections": {
+            "advanced": {
+                "title": "Προχωρημένες ρυθμίσεις",
+                "profile": {
+                    "toggle_discoverable_label": "Βλέπουν άλλοι χρήστες το προφίλ μου?",
+                    "toggle_discoverable_description": "Άλλοι χρήστες μπορούν να βρουν το προφίλ σας και να σας στείλουν αίτημα σύνδεσης."
+                }
+            },
             "general": {
                 "title": "Γενικές ρυθμίσεις"
             },
