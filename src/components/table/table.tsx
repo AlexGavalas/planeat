@@ -37,8 +37,16 @@ export const Table = ({
             <MantineTable highlightOnHover>
                 <thead>
                     <tr>
-                        {headers.map(({ label, width }) => (
-                            <th style={{ width }} key={label}>
+                        {headers.map(({ key, label, width }) => (
+                            <th
+                                key={label}
+                                style={{
+                                    width,
+                                    ...(key === 'actions' && {
+                                        textAlign: 'center',
+                                    }),
+                                }}
+                            >
                                 {label}
                             </th>
                         ))}

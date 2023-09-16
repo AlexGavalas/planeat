@@ -115,7 +115,7 @@ export const Activities = () => {
         };
 
         modals.openModal({
-            title: t('add_activity'),
+            title: t('edit_activity'),
             centered: true,
             size: 'sm',
             children: (
@@ -141,7 +141,7 @@ export const Activities = () => {
             <Group position="apart">
                 <Title order={3}>{t('activities')}</Title>
                 <ActionIcon
-                    title={t('add_measurement')}
+                    title={t('add_activity')}
                     size="lg"
                     onClick={() => {
                         if (!profile) {
@@ -149,7 +149,7 @@ export const Activities = () => {
                         }
 
                         modals.openModal({
-                            title: t('new_measurement'),
+                            title: t('add_activity'),
                             centered: true,
                             size: 'sm',
                             children: (

@@ -14,6 +14,7 @@
     "fat_measurements": "Fat measurements",
     "measurements": "Measurements",
     "add_measurement": "Add a new measurement",
+    "edit_measurement": "Edit measurement",
     "activity": {
         "label": "Activity",
         "placeholder": "Write here"
@@ -22,6 +23,7 @@
     "personal_info": "Personal Information",
     "advanced_settings": "Advanced settings",
     "add_activity": "Add a new activity",
+    "edit_activity": "Edit activity",
     "new_weight": "New weight",
     "new_measurement": "New measurement",
     "weight": "Weight",

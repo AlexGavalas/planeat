@@ -1,4 +1,5 @@
-import { Button, Group, Popover, Stack, Text } from '@mantine/core';
+import { ActionIcon, Button, Group, Popover, Stack, Text } from '@mantine/core';
+import { EditPencil, Trash } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
@@ -43,10 +44,10 @@ export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
                     </td>
                 ))}
             <td style={{ width: '35%' }}>
-                <Group spacing="md" grow>
-                    <Button size="xs" onClick={() => onEdit(item)}>
-                        {t('edit')}
-                    </Button>
+                <Group spacing="md" position="center">
+                    <ActionIcon onClick={() => onEdit(item)} variant="light">
+                        <EditPencil />
+                    </ActionIcon>
                     <Popover
                         shadow="md"
                         withArrow
@@ -58,13 +59,13 @@ export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
                         onChange={setOpenConfirmation}
                     >
                         <Popover.Target>
-                            <Button
+                            <ActionIcon
                                 color="red"
-                                size="xs"
                                 onClick={() => setOpenConfirmation(true)}
+                                variant="light"
                             >
-                                {t('delete')}
-                            </Button>
+                                <Trash />
+                            </ActionIcon>
                         </Popover.Target>
                         <Popover.Dropdown>
                             <Stack spacing="md" align="center">

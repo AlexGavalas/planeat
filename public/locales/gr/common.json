@@ -14,6 +14,7 @@
     "fat_measurements": "Μετρήσεις λίπους",
     "measurements": "Μέτρήσεις",
     "add_measurement": "Προσθήκη νέας μέτρησης",
+    "edit_measurement": "Επεξεργασία μέτρησης",
     "activity": {
         "label": "Δραστηριότητα",
         "placeholder": "Γράψτε εδώ"
@@ -22,6 +23,7 @@
     "personal_info": "Προσωπικές Πληροφορίες",
     "advanced_settings": "Προχωρημένες Ρυθμίσεις",
     "add_activity": "Προσθήκη νέας δραστηριότητας",
+    "edit_activity": "Επεξεργασία δραστηριότητας",
     "new_weight": "Νέο βάρος",
     "new_measurement": "Νέα μέτρηση",
     "weight": "Βάρος",

@@ -24,13 +24,19 @@ export const useProfile = () => {
     const { t } = useTranslation();
     const user = useUser();
 
-    const { data: profile, isFetching } = useQuery(['user'], async () => {
-        if (!user?.email) {
-            return;
-        }
+    const { data: profile, isFetching } = useQuery(
+        ['user'],
+        async () => {
+            if (!user?.email) {
+                return;
+            }
 
-        return fetchUser({ email: user.email, supabase });
-    });
+            return fetchUser({ email: user.email, supabase });
+        },
+        {
+            enabled: Boolean(user?.email),
+        },
+    );
 
     const { mutate: updateProfile, isLoading } = useMutation(
         async ({

@@ -125,8 +125,12 @@ export const Measurements = () => {
             return;
         }
 
+        const onSave = async () => {
+            await queryClient.invalidateQueries(['measurements', page]);
+        };
+
         modals.openModal({
-            title: t('new_measurement'),
+            title: t('edit_measurement'),
             centered: true,
             size: 'sm',
             children: (
@@ -142,9 +146,7 @@ export const Measurements = () => {
                             weight: item.weight,
                         }),
                     }}
-                    onSave={() => {
-                        queryClient.invalidateQueries(['measurements', page]);
-                    }}
+                    onSave={onSave}
                 />
             ),
         });
@@ -185,16 +187,14 @@ export const Measurements = () => {
             <Card style={{ minHeight: 100 }}>
                 <LoadingOverlay visible={loading} />
                 {measurements.length > 0 ? (
-                    <Stack spacing="md">
-                        <Table
-                            data={measurements ?? []}
-                            headers={headers}
-                            onDelete={onDelete}
-                            onEdit={onEdit}
-                            onPageChange={onPageChange}
-                            totalPages={totalPages}
-                        />
-                    </Stack>
+                    <Table
+                        data={measurements}
+                        headers={headers}
+                        onDelete={onDelete}
+                        onEdit={onEdit}
+                        onPageChange={onPageChange}
+                        totalPages={totalPages}
+                    />
                 ) : (
                     !loading && (
                         <Center style={{ height: 100 }}>
