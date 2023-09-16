@@ -1,1 +1,0 @@
-export { ActivitiesTable } from './table';

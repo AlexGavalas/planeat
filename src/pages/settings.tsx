@@ -6,7 +6,7 @@ import invariant from 'tiny-invariant';
 
 import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
-import { ActivitiesTable } from '~features/activities/table';
+import { Activities } from '~features/activities';
 import { AdvancedSettings } from '~features/advanced-settings';
 import { DeleteAccount } from '~features/delete-account';
 import { FoodPreferences } from '~features/food-preferences';
@@ -60,7 +60,7 @@ export default function Settings() {
                 <Tabs.Panel value="measurements" pt="md">
                     <Measurements />
                     <Space h="lg" />
-                    <ActivitiesTable />
+                    <Activities />
                 </Tabs.Panel>
                 <Tabs.Panel value="personal" pt="md">
                     <PersonalSettings />
