@@ -1,29 +1,19 @@
-import {
-    ActionIcon,
-    Card,
-    Center,
-    Group,
-    Pagination,
-    Stack,
-    Table,
-    Title,
-} from '@mantine/core';
+import { ActionIcon, Card, Center, Group, Stack, Title } from '@mantine/core';
 import { useModals } from '@mantine/modals';
+import { showNotification } from '@mantine/notifications';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
+import { INITIAL_PAGE, PAGE_SIZE, Table } from '~components/table';
 import { MeasurementModal } from '~features/modals/measurement';
 import { useProfile } from '~hooks/use-profile';
+import { type Measurement } from '~types/measurement';
 import { type Database } from '~types/supabase';
-
-import { Row } from './row';
-
-const INITIAL_PAGE = 1;
-const PAGE_SIZE = 5;
 
 export const MeasurementsTable = () => {
     const { t } = useTranslation();
@@ -59,15 +49,17 @@ export const MeasurementsTable = () => {
                 throw new Error(`User not logged in`);
             }
 
-            return supabase
+            const { data } = await supabase
                 .from('measurements')
                 .select('*')
                 .eq('user_id', profile.id)
                 .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
                 .order('date', { ascending: false });
+
+            return data ?? [];
         },
         {
-            select: ({ data }) => data || [],
+            keepPreviousData: true,
             enabled: isFetched,
         },
     );
@@ -82,6 +74,85 @@ export const MeasurementsTable = () => {
     };
 
     const loading = (!measurements.length && !isFetched) || isFetching;
+
+    const headers = [
+        {
+            label: t('date'),
+            width: '25%',
+            key: 'date',
+            formatValue: (item: Measurement) =>
+                format(parseISO(item.date), 'dd/MM/yy'),
+        },
+        {
+            label: t('weight'),
+            width: '20%',
+            key: 'weight',
+        },
+        {
+            label: t('fat_label'),
+            width: '20%',
+            key: 'fat',
+            formatValue: (item: Measurement) =>
+                item.fat_percentage ? `${item.fat_percentage}%` : '-',
+        },
+        {
+            label: t('actions'),
+            width: '35%',
+            key: 'actions',
+        },
+    ];
+
+    const onDelete = async (item: Measurement) => {
+        const { error } = await supabase
+            .from('measurements')
+            .delete()
+            .eq('id', item.id);
+
+        if (error) {
+            showNotification({
+                title: t('error'),
+                message: `${t('errors.measurement_delete')}. ${t('try_again')}`,
+                color: 'red',
+            });
+        } else {
+            await queryClient.invalidateQueries(['measurements-count']);
+            await queryClient.invalidateQueries(['measurements']);
+        }
+    };
+
+    const onEdit = async (item: Measurement) => {
+        if (!profile) {
+            return;
+        }
+
+        modals.openModal({
+            title: t('new_measurement'),
+            centered: true,
+            size: 'sm',
+            children: (
+                <MeasurementModal
+                    userId={profile.id}
+                    initialData={{
+                        id: item.id,
+                        date: parseISO(item.date),
+                        ...(item.fat_percentage && {
+                            fat_percentage: item.fat_percentage,
+                        }),
+                        ...(item.weight && {
+                            weight: item.weight,
+                        }),
+                    }}
+                    onSave={() => {
+                        queryClient.invalidateQueries(['measurements', page]);
+                    }}
+                />
+            ),
+        });
+    };
+
+    const onPageChange = (page: number) => {
+        setPage(page);
+    };
 
     return (
         <Stack spacing="md">
@@ -115,42 +186,14 @@ export const MeasurementsTable = () => {
                 <LoadingOverlay visible={loading} />
                 {measurements.length > 0 ? (
                     <Stack spacing="md">
-                        <Table highlightOnHover>
-                            <thead>
-                                <tr>
-                                    <th style={{ width: '25%' }}>
-                                        {t('date')}
-                                    </th>
-                                    <th style={{ width: '20%' }}>
-                                        {t('weight')}
-                                    </th>
-                                    <th style={{ width: '20%' }}>
-                                        {t('fat_label')}
-                                    </th>
-                                    <th style={{ width: '35%' }}>
-                                        {t('actions')}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {measurements.map((item) => (
-                                    <Row
-                                        key={item.id}
-                                        item={item}
-                                        page={page}
-                                    />
-                                ))}
-                            </tbody>
-                        </Table>
-                        {totalPages > 1 && (
-                            <Pagination
-                                total={totalPages}
-                                position="right"
-                                value={page}
-                                onChange={setPage}
-                                withEdges
-                            />
-                        )}
+                        <Table
+                            data={measurements ?? []}
+                            headers={headers}
+                            onDelete={onDelete}
+                            onEdit={onEdit}
+                            onPageChange={onPageChange}
+                            totalPages={totalPages}
+                        />
                     </Stack>
                 ) : (
                     !loading && (
