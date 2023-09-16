@@ -15,7 +15,7 @@ import { useProfile } from '~hooks/use-profile';
 import { type Measurement } from '~types/measurement';
 import { type Database } from '~types/supabase';
 
-export const MeasurementsTable = () => {
+export const Measurements = () => {
     const { t } = useTranslation();
     const modals = useModals();
     const { profile } = useProfile();

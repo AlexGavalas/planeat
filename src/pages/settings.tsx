@@ -10,7 +10,7 @@ import { ActivitiesTable } from '~features/activities/table';
 import { AdvancedSettings } from '~features/advanced-settings';
 import { DeleteAccount } from '~features/delete-account';
 import { FoodPreferences } from '~features/food-preferences';
-import { MeasurementsTable } from '~features/measurements/table';
+import { Measurements } from '~features/measurements';
 import { PersonalSettings } from '~features/personal-settings';
 import { type Database } from '~types/supabase';
 import { getServerSideTranslations } from '~util/i18n';
@@ -58,7 +58,7 @@ export default function Settings() {
                     </Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panel value="measurements" pt="md">
-                    <MeasurementsTable />
+                    <Measurements />
                     <Space h="lg" />
                     <ActivitiesTable />
                 </Tabs.Panel>
