@@ -105,6 +105,43 @@ export interface Database {
                     },
                 ];
             };
+            notifications: {
+                Row: {
+                    date: string;
+                    id: string;
+                    notification_type: string;
+                    request_user_id: number;
+                    target_user_id: number;
+                };
+                Insert: {
+                    date: string;
+                    id?: string;
+                    notification_type: string;
+                    request_user_id: number;
+                    target_user_id: number;
+                };
+                Update: {
+                    date?: string;
+                    id?: string;
+                    notification_type?: string;
+                    request_user_id?: number;
+                    target_user_id?: number;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'notifications_request_user_id_fkey';
+                        columns: ['request_user_id'];
+                        referencedRelation: 'users';
+                        referencedColumns: ['id'];
+                    },
+                    {
+                        foreignKeyName: 'notifications_target_user_id_fkey';
+                        columns: ['target_user_id'];
+                        referencedRelation: 'users';
+                        referencedColumns: ['id'];
+                    },
+                ];
+            };
             users: {
                 Row: {
                     created_at: string;

@@ -3,7 +3,6 @@
     "login": {
         "google": "Login with Google"
     },
-    "find_your_nutritionist": "Find your nutritionist",
     "search": "Search",
     "edit": "Edit",
     "cancel": "Cancel",
@@ -134,6 +133,20 @@
         },
         "week_overview": {
             "title": "Week Overview"
+        }
+    },
+    "connections": {
+        "label": "Connections",
+        "search": {
+            "label": "Search",
+            "placeholder": "Write here"
+        },
+        "request": {
+            "add": "Add",
+            "to_connections": "to your connections",
+            "send": "Send connection request",
+            "error": "We could not send your connection request. Please try again.",
+            "success": "Your connection request was sent successfully"
         }
     },
     "account_settings": {
