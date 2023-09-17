@@ -11,7 +11,6 @@ import styles from './content.module.css';
 
 export const Content = () => {
     const { t } = useTranslation();
-
     const { currentWeek } = useCurrentWeek();
     const { unsavedChanges } = useUnsavedChanges();
     const { meals } = useMeals();
