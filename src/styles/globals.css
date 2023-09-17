@@ -36,6 +36,7 @@ a {
 
 :root {
     --color-primary: #a7d3a5;
+    --bg-light: #ecf5ec;
 }
 
 ::selection {
@@ -43,11 +44,24 @@ a {
 }
 
 .container {
+    --dot-size: 1px;
     border-top: 5px solid var(--color-primary);
     height: 100%;
     padding: 2rem;
     position: relative;
-    background: #ecf5ec;
+    background-color: var(--bg-light);
+    background-size: 20px 20px;
+    background-image: radial-gradient(
+            var(--color-primary) var(--dot-size),
+            transparent var(--dot-size)
+        ),
+        radial-gradient(
+            var(--color-primary) var(--dot-size),
+            var(--bg-light) var(--dot-size)
+        );
+    background-position:
+        0 0,
+        10px 10px;
 }
 
 .container .content {

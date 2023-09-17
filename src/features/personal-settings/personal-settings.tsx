@@ -1,6 +1,5 @@
 import {
     Button,
-    Card,
     Group,
     NumberInput,
     type NumberInputProps,
@@ -80,9 +79,9 @@ export const PersonalSettings = () => {
                     <Button onClick={handleSave}>{t('save')}</Button>
                 </Group>
             ) : (
-                <Card h={100}>
+                <div style={{ height: 100 }}>
                     <LoadingOverlay visible />
-                </Card>
+                </div>
             )}
         </Stack>
     );

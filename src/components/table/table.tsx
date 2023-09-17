@@ -2,6 +2,7 @@ import { Table as MantineTable, Pagination, Stack } from '@mantine/core';
 import { useState } from 'react';
 
 import { type Header, type Item, Row } from './row';
+import styles from './table.module.css';
 
 export const INITIAL_PAGE = 1;
 export const PAGE_SIZE = 5;
@@ -34,7 +35,7 @@ export const Table = ({
 
     return (
         <Stack spacing="md">
-            <MantineTable highlightOnHover>
+            <MantineTable className={styles.table}>
                 <thead>
                     <tr>
                         {headers.map(({ key, label, width }) => (

@@ -45,7 +45,7 @@ export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
                 ))}
             <td style={{ width: '35%' }}>
                 <Group spacing="md" position="center">
-                    <ActionIcon onClick={() => onEdit(item)} variant="light">
+                    <ActionIcon onClick={() => onEdit(item)} variant="subtle">
                         <EditPencil />
                     </ActionIcon>
                     <Popover
@@ -62,7 +62,7 @@ export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
                             <ActionIcon
                                 color="red"
                                 onClick={() => setOpenConfirmation(true)}
-                                variant="light"
+                                variant="subtle"
                             >
                                 <Trash />
                             </ActionIcon>

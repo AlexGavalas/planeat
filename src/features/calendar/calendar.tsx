@@ -1,7 +1,6 @@
 import { Space } from '@mantine/core';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import { Card } from '~components/card';
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useMeals } from '~store/hooks';
 
@@ -19,9 +18,9 @@ export const Calendar = () => {
             <Controls />
             <Space h="md" />
             <Header />
-            <DndProvider backend={HTML5Backend}>
+            <Card>
                 <Content />
-            </DndProvider>
+            </Card>
         </section>
     );
 };

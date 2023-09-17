@@ -1,4 +1,4 @@
-import { ActionIcon, Card, Center, Group, Stack, Title } from '@mantine/core';
+import { ActionIcon, Center, Group, Stack, Title } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
@@ -164,7 +164,7 @@ export const Activities = () => {
                     <Plus />
                 </ActionIcon>
             </Group>
-            <Card style={{ minHeight: 100 }}>
+            <div style={{ minHeight: 100 }}>
                 <LoadingOverlay visible={loading} />
                 {activities.length > 0 ? (
                     <Table
@@ -182,7 +182,7 @@ export const Activities = () => {
                         </Center>
                     )
                 )}
-            </Card>
+            </div>
         </Stack>
     );
 };

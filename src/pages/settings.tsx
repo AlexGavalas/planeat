@@ -6,6 +6,7 @@ import invariant from 'tiny-invariant';
 
 import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
+import { Card } from '~components/card';
 import { Activities } from '~features/activities';
 import { AdvancedSettings } from '~features/advanced-settings';
 import { DeleteAccount } from '~features/delete-account';
@@ -58,19 +59,31 @@ export default function Settings() {
                     </Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panel value="measurements" pt="md">
-                    <Measurements />
+                    <Card>
+                        <Measurements />
+                    </Card>
                     <Space h="lg" />
-                    <Activities />
+                    <Card>
+                        <Activities />
+                    </Card>
                 </Tabs.Panel>
                 <Tabs.Panel value="personal" pt="md">
-                    <PersonalSettings />
+                    <Card>
+                        <PersonalSettings />
+                    </Card>
                     <Space h="lg" />
-                    <FoodPreferences />
+                    <Card>
+                        <FoodPreferences />
+                    </Card>
                 </Tabs.Panel>
                 <Tabs.Panel value="advanced" pt="md">
-                    <AdvancedSettings />
+                    <Card>
+                        <AdvancedSettings />
+                    </Card>
                     <Space h="lg" />
-                    <DeleteAccount />
+                    <Card>
+                        <DeleteAccount />
+                    </Card>
                 </Tabs.Panel>
             </Tabs>
         </Container>

@@ -46,7 +46,7 @@ export const Controls = () => {
                 <Button
                     onClick={toggleWeekOverview}
                     rightIcon={<StatsReport />}
-                    variant="outline"
+                    variant="white"
                 >
                     {t('see_overview')}
                 </Button>

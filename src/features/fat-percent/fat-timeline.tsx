@@ -1,4 +1,4 @@
-import { Card, Center, Title } from '@mantine/core';
+import { Center, Title } from '@mantine/core';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useTranslation } from 'next-i18next';
 import { useQuery } from 'react-query';
@@ -40,9 +40,7 @@ export const FatTimeline = () => {
             <Title order={4} pt={20}>
                 {t('fat_change')}
             </Title>
-            <Card
-                bg="transparent"
-                px={0}
+            <div
                 style={{
                     height: 200,
                     position: 'relative',
@@ -57,7 +55,7 @@ export const FatTimeline = () => {
                         <Title order={4}>{t('no_measurements_yet')}</Title>
                     </Center>
                 )}
-            </Card>
+            </div>
         </>
     );
 };

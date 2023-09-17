@@ -1,4 +1,4 @@
-import { Spoiler, Text, Timeline, Title } from '@mantine/core';
+import { Spoiler, Stack, Text, Timeline, Title } from '@mantine/core';
 import { format, isAfter, set, startOfDay } from 'date-fns';
 import { useTranslation } from 'next-i18next';
 
@@ -29,7 +29,7 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
         ROWS.findIndex(({ key }) => isAfter(MEAL_TIMES[key], now)) - 1;
 
     return (
-        <>
+        <Stack spacing="md">
             <Title order={3}>{t('day_plan')}</Title>
             <Timeline
                 active={activeIndex < 0 ? ROWS.length : activeIndex}
@@ -59,6 +59,6 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
                     );
                 })}
             </Timeline>
-        </>
+        </Stack>
     );
 };
