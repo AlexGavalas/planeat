@@ -59,6 +59,9 @@
         "next": "Next week",
         "copy_to_next_week": "Copy to next week"
     },
+    "see_overview": "See overview",
+    "note": "Note",
+    "rating": "Rating",
     "edit_meal": "Edit meal",
     "meal_placeholder": "Write here",
     "meal_label": "The meal",
@@ -128,6 +131,9 @@
         },
         "meal_rate": {
             "title": "Rate this meal"
+        },
+        "week_overview": {
+            "title": "Week Overview"
         }
     },
     "account_settings": {
