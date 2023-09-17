@@ -1,13 +1,16 @@
 import { Button, Group } from '@mantine/core';
+import { useModals } from '@mantine/modals';
 import {
     Cancel,
     Copy,
     FastArrowLeft,
     FastArrowRight,
     SaveFloppyDisk,
+    StatsReport,
 } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 
+import { WeekOverview } from '~features/modals/week-overview';
 import {
     useCurrentWeek,
     useMeals,
@@ -17,10 +20,19 @@ import {
 
 export const Controls = () => {
     const { t } = useTranslation();
+    const modals = useModals();
     const { nextWeek, previousWeek } = useCurrentWeek();
     const { hasUnsavedChanges } = useUnsavedChanges();
     const { copyToNextWeek } = useWeeklyScheduleOps();
     const { meals, revert, savePlan } = useMeals();
+
+    const toggleWeekOverview = () => {
+        modals.openModal({
+            title: t('modals.week_overview.title'),
+            size: 'lg',
+            children: <WeekOverview />,
+        });
+    };
 
     return (
         <Group position="apart">
@@ -30,6 +42,13 @@ export const Controls = () => {
                 </Button>
                 <Button onClick={nextWeek} rightIcon={<FastArrowRight />}>
                     {t('week.next')}
+                </Button>
+                <Button
+                    onClick={toggleWeekOverview}
+                    rightIcon={<StatsReport />}
+                    variant="outline"
+                >
+                    {t('see_overview')}
                 </Button>
             </Group>
             <Group spacing="sm">

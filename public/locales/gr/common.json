@@ -31,7 +31,7 @@
     "no_measurements_yet": "Δεν έχεις ακόμα καμία μέτρηση",
     "welcome": "Καλώς ήρθατε",
     "view_weekly_meal": "Διαιτολόγιο",
-    "user_settings": "Ρυθμίσεις χρήστη",
+    "settings": "Ρυθμίσεις",
     "height_input": "Το ύψος σας (σε εκ)",
     "target_weight_input": "Το βάρος-στόχος σας (σε κιλά)",
     "bmi_label": "Δείκτης Μάζας Σώματος (BMI)",
@@ -59,6 +59,9 @@
         "next": "Επόμενη εβδομάδα",
         "copy_to_next_week": "Αντιγραφή στην επόμενη εβδομάδα"
     },
+    "see_overview": "Προβολή επισκόπησης",
+    "note": "Σημείωση",
+    "rating": "Αξιολόγηση",
     "edit_meal": "Επεξεργασία γεύματος",
     "meal_placeholder": "Γράψτε εδώ",
     "meal_label": "Το γεύμα",
@@ -128,6 +131,9 @@
         },
         "meal_rate": {
             "title": "Αξιολογήστε αυτό το γεύμα"
+        },
+        "week_overview": {
+            "title": "Επισκόπηση Εβδομάδας"
         }
     },
     "account_settings": {

@@ -1,20 +1,10 @@
 import { Spoiler, Text, Timeline, Title } from '@mantine/core';
 import { format, isAfter, set, startOfDay } from 'date-fns';
-import { AppleHalf, Bbq, CrackedEgg, OrangeSliceAlt } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 
+import { MEAL_ICON, ROWS } from '~constants/calendar';
 import { type MealsMap } from '~types/meal';
 import { getUTCDate } from '~util/date';
-
-import { ROWS } from './calendar/constants';
-
-const MEAL_ICON = {
-    morning: CrackedEgg,
-    snack1: AppleHalf,
-    lunch: OrangeSliceAlt,
-    snack2: AppleHalf,
-    dinner: Bbq,
-};
 
 const now = new Date();
 const startOfDayTimestamp = getUTCDate(startOfDay(now));

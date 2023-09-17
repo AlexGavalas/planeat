@@ -1,17 +1,16 @@
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
+import { ROWS } from '~constants/calendar';
 import { useCurrentWeek, useMeals, useUnsavedChanges } from '~store/hooks';
 import { type MealsMap } from '~types/meal';
 import { getDaysOfWeek } from '~util/date';
 
 import { Cell } from './cell';
-import { ROWS } from './constants';
 import styles from './content.module.css';
 
 export const Content = () => {
     const { t } = useTranslation();
-
     const { currentWeek } = useCurrentWeek();
     const { unsavedChanges } = useUnsavedChanges();
     const { meals } = useMeals();

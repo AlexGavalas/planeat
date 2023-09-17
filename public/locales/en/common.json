@@ -31,7 +31,7 @@
     "no_measurements_yet": "You don't have any measurements yet",
     "welcome": "Welcome",
     "view_weekly_meal": "Meal plan",
-    "user_settings": "User settings",
+    "settings": "Settings",
     "height_input": "Your height (in cm)",
     "target_weight_input": "Your target weight (in kg)",
     "bmi_label": "Body Mass Index (BMI)",
@@ -59,6 +59,9 @@
         "next": "Next week",
         "copy_to_next_week": "Copy to next week"
     },
+    "see_overview": "See overview",
+    "note": "Note",
+    "rating": "Rating",
     "edit_meal": "Edit meal",
     "meal_placeholder": "Write here",
     "meal_label": "The meal",
@@ -128,6 +131,9 @@
         },
         "meal_rate": {
             "title": "Rate this meal"
+        },
+        "week_overview": {
+            "title": "Week Overview"
         }
     },
     "account_settings": {

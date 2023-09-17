@@ -18,6 +18,7 @@
         "paths": {
             "~api/*": ["api/*"],
             "~components/*": ["components/*"],
+            "~constants/*": ["constants/*"],
             "~features/*": ["features/*"],
             "~hooks/*": ["hooks/*"],
             "~store/*": ["store/*"],

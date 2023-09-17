@@ -121,20 +121,20 @@ export const useMeals = () => {
         addChange(deletedMeal);
     };
 
-    const deleteEntryRow = async ({
-        id,
-        meal,
-    }: {
-        id: string;
-        meal: Meal | EditedMeal;
-    }) => {
+    const deleteEntryRow = async (id: string) => {
         const [row] = id.split('_');
         const daysOfWeek = getDaysOfWeek(currentWeek);
 
         for (const { label } of daysOfWeek) {
-            deleteEntryCell({
-                meal: { ...meal, section_key: `${row}_${label}` },
-            });
+            const sectionKey = `${row}_${label}`;
+            const meal = meals.find((m) => m.section_key === sectionKey);
+
+            if (!meal) {
+                console.warn('No meal found for row', row);
+                continue;
+            }
+
+            deleteEntryCell({ meal });
         }
     };
 
