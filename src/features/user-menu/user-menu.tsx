@@ -1,6 +1,7 @@
 import { Menu, UnstyledButton } from '@mantine/core';
 import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { forwardRef } from 'react';
 
@@ -26,7 +27,12 @@ export const UserMenu = () => {
                 <MenuTrigger />
             </Menu.Target>
             <Menu.Dropdown>
+                <Menu.Item component={Link} href="/settings">
+                    {t('settings')}
+                </Menu.Item>
+                <Menu.Divider />
                 <Menu.Item
+                    color="red"
                     onClick={async () => {
                         await signOut();
                         router.push('/');

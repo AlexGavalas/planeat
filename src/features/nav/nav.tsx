@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 const LINKS = [
     { href: '/home', label: 'home' },
     { href: '/meal-plan', label: 'view_weekly_meal' },
-    { href: '/settings', label: 'user_settings' },
 ];
 
 export const Nav = () => {
