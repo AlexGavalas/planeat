@@ -69,7 +69,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             userId: profile.id,
         });
 
-        return result.data?.[0].fat_percentage ?? 0;
+        return result.data?.[0]?.fat_percentage ?? 0;
     });
 
     await queryClient.prefetchQuery(['current-weight'], async () => {
@@ -78,7 +78,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             userId: profile.id,
         });
 
-        return result.data?.[0].weight ?? 0;
+        return result.data?.[0]?.weight ?? 0;
     });
 
     await queryClient.prefetchQuery(['bmi-timeline'], async () => {
