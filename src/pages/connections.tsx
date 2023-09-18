@@ -1,4 +1,4 @@
-import { Container, Stack, Title } from '@mantine/core';
+import { Container, Title } from '@mantine/core';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import type { GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
@@ -45,11 +45,9 @@ export default function Connections() {
 
     return (
         <Container>
+            <Title order={3}>{t('connections.label')}</Title>
             <Card>
-                <Stack>
-                    <Title order={3}>{t('connections.label')}</Title>
-                    <FindUsers />
-                </Stack>
+                <FindUsers />
             </Card>
         </Container>
     );

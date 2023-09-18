@@ -145,6 +145,7 @@
             "add": "Add",
             "to_connections": "to your connections",
             "send": "Send connection request",
+            "already_sent": "You have already sent a connection request to {{fullName}}!",
             "error": "We could not send your connection request. Please try again.",
             "success": "Your connection request was sent successfully"
         }
