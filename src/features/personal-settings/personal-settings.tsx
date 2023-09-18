@@ -75,6 +75,7 @@ export const PersonalSettings = () => {
                         defaultValue={profile.language}
                         onChange={handleLanguageChange}
                         data={availableLanguages}
+                        withinPortal
                     />
                     <Button onClick={handleSave}>{t('save')}</Button>
                 </Group>

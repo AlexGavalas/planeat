@@ -31,6 +31,19 @@ exports[`<Nav /> renders 1`] = `
         </div>
       </span>
     </a>
+    <a
+      href="/connections"
+    >
+      <span
+        class="mantine-Text-root mantine-Anchor-root mantine-qdotc7"
+      >
+        <div
+          class="mantine-Text-root mantine-1d564l0"
+        >
+          Connections
+        </div>
+      </span>
+    </a>
   </div>
 </div>
 `;
