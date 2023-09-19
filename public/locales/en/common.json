@@ -154,6 +154,8 @@
             "accept": "Accept",
             "decline": "Decline",
             "no_requests": "You don't have any connection requests",
+            "accept_error": "We could not accept this connection request. Please try again.",
+            "accept_success": "This connection request was accepted successfully",
             "decline_error": "We could not decline this connection request. Please try again.",
             "decline_success": "This connection request was declined successfully"
         }

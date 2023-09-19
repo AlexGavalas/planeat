@@ -37,6 +37,37 @@ export interface Database {
                     },
                 ];
             };
+            connections: {
+                Row: {
+                    connection_user_id: number;
+                    id: string;
+                    user_id: number;
+                };
+                Insert: {
+                    connection_user_id: number;
+                    id?: string;
+                    user_id: number;
+                };
+                Update: {
+                    connection_user_id?: number;
+                    id?: string;
+                    user_id?: number;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'connections_connection_user_id_fkey';
+                        columns: ['connection_user_id'];
+                        referencedRelation: 'users';
+                        referencedColumns: ['id'];
+                    },
+                    {
+                        foreignKeyName: 'connections_user_id_fkey';
+                        columns: ['user_id'];
+                        referencedRelation: 'users';
+                        referencedColumns: ['id'];
+                    },
+                ];
+            };
             meals: {
                 Row: {
                     day: string;

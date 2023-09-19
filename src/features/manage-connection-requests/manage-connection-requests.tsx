@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
+import { type Notification } from '~types/notification';
 import { type Database } from '~types/supabase';
 
 export const ManageConnectionRequests = () => {
@@ -40,27 +41,37 @@ export const ManageConnectionRequests = () => {
     const hasConnectionsRequests =
         !isFetchingConnectionRequests && connectionRequests.length > 0;
 
-    const removeConnectionRequest = async (connectionRequestId: string) => {
+    const removeConnectionRequest = async ({
+        connectionRequestId,
+        shouldShowNotification = true,
+    }: {
+        connectionRequestId: string;
+        shouldShowNotification: boolean;
+    }) => {
         const { error } = await supabase
             .from('notifications')
             .delete()
             .eq('id', connectionRequestId);
 
         if (error) {
-            showNotification({
-                title: t('error'),
-                message: t(
-                    'connections.manage_connection_requests.decline_error',
-                ),
-                color: 'red',
-            });
+            if (shouldShowNotification) {
+                showNotification({
+                    title: t('error'),
+                    message: t(
+                        'connections.manage_connection_requests.decline_error',
+                    ),
+                    color: 'red',
+                });
+            }
         } else {
-            showNotification({
-                title: t('error'),
-                message: t(
-                    'connections.manage_connection_requests.decline_success',
-                ),
-            });
+            if (shouldShowNotification) {
+                showNotification({
+                    title: t('success'),
+                    message: t(
+                        'connections.manage_connection_requests.decline_success',
+                    ),
+                });
+            }
 
             await queryClient.invalidateQueries([
                 'connection-requests',
@@ -70,15 +81,53 @@ export const ManageConnectionRequests = () => {
     };
 
     const handleAcceptConnectionRequest = async (
-        connectionRequestId: string,
+        connectionRequest: Notification,
     ) => {
-        await removeConnectionRequest(connectionRequestId);
+        if (!profile) {
+            return;
+        }
+
+        const { error } = await supabase.from('connections').insert([
+            {
+                user_id: connectionRequest.request_user_id,
+                connection_user_id: connectionRequest.target_user_id,
+            },
+            {
+                user_id: connectionRequest.target_user_id,
+                connection_user_id: connectionRequest.request_user_id,
+            },
+        ]);
+
+        if (error) {
+            showNotification({
+                title: t('error'),
+                message: t(
+                    'connections.manage_connection_requests.accept_error',
+                ),
+                color: 'red',
+            });
+        } else {
+            showNotification({
+                title: t('success'),
+                message: t(
+                    'connections.manage_connection_requests.accept_success',
+                ),
+            });
+
+            await removeConnectionRequest({
+                connectionRequestId: connectionRequest.id,
+                shouldShowNotification: false,
+            });
+        }
     };
 
     const handleDeclineConnectionRequest = async (
         connectionRequestId: string,
     ) => {
-        await removeConnectionRequest(connectionRequestId);
+        await removeConnectionRequest({
+            connectionRequestId,
+            shouldShowNotification: true,
+        });
     };
 
     return (
@@ -102,7 +151,7 @@ export const ManageConnectionRequests = () => {
                                     size="sm"
                                     onClick={() => {
                                         handleAcceptConnectionRequest(
-                                            connectionRequest.id,
+                                            connectionRequest,
                                         );
                                     }}
                                 >
