@@ -136,7 +136,7 @@
         }
     },
     "connections": {
-        "label": "Connections",
+        "title": "Connections",
         "search": {
             "label": "Search",
             "placeholder": "Write here"
@@ -148,6 +148,16 @@
             "already_sent": "You have already sent a connection request to {{fullName}}!",
             "error": "We could not send your connection request. Please try again.",
             "success": "Your connection request was sent successfully"
+        },
+        "manage_connection_requests": {
+            "title": "Manage connection requests",
+            "accept": "Accept",
+            "decline": "Decline",
+            "no_requests": "You don't have any connection requests",
+            "accept_error": "We could not accept this connection request. Please try again.",
+            "accept_success": "This connection request was accepted successfully",
+            "decline_error": "We could not decline this connection request. Please try again.",
+            "decline_success": "This connection request was declined successfully"
         }
     },
     "account_settings": {

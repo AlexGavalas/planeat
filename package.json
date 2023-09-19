@@ -15,7 +15,7 @@
         "test:coverage": "jest --coverage",
         "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --watch",
         "test:watch": "jest --watch",
-        "sync:types:local": "supabase gen types typescript --local > ./src/types/supabase.ts",
+        "sync:types:local": "supabase gen types typescript --local > ./src/types/supabase.ts && prettier --write ./src/types/supabase.ts",
         "lint": "eslint --ignore-path .gitignore .",
         "prettier": "prettier .",
         "check:format": "pnpm prettier --list-different",

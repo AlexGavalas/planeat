@@ -1,4 +1,4 @@
-import { Container, Title } from '@mantine/core';
+import { Container, Stack, Title } from '@mantine/core';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import type { GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
@@ -8,6 +8,7 @@ import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
 import { Card } from '~components/card';
 import { FindUsers } from '~features/find-users';
+import { ManageConnectionRequests } from '~features/manage-connection-requests';
 import { type Database } from '~types/supabase';
 import { getServerSideTranslations } from '~util/i18n';
 
@@ -45,10 +46,18 @@ export default function Connections() {
 
     return (
         <Container>
-            <Title order={3}>{t('connections.label')}</Title>
-            <Card>
-                <FindUsers />
-            </Card>
+            <Stack spacing="md">
+                <Title order={3}>{t('connections.title')}</Title>
+                <Card>
+                    <FindUsers />
+                </Card>
+                <Card>
+                    <Title order={3}>
+                        {t('connections.manage_connection_requests.title')}
+                    </Title>
+                    <ManageConnectionRequests />
+                </Card>
+            </Stack>
         </Container>
     );
 }
