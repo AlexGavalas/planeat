@@ -107,8 +107,8 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
                     return (
                         <g>
                             <text
-                                dominant-baseline="text-before-edge"
-                                text-anchor={textAnchor}
+                                dominantBaseline="text-before-edge"
+                                textAnchor={textAnchor}
                                 transform={`translate(${tick.x}, ${tick.y})`}
                                 y={tick.textY}
                                 style={{
