@@ -158,6 +158,12 @@
             "accept_success": "This connection request was accepted successfully",
             "decline_error": "We could not decline this connection request. Please try again.",
             "decline_success": "This connection request was declined successfully"
+        },
+        "manage_connections": {
+            "title": "Manage connections",
+            "no_connections": "You don't have any connections",
+            "remove_connection": "Remove connection",
+            "remove_connection_error": "We could not remove this connection. Please try again."
         }
     },
     "account_settings": {
