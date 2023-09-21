@@ -9,6 +9,7 @@ import { fetchUser } from '~api/user';
 import { Card } from '~components/card';
 import { FindUsers } from '~features/find-users';
 import { ManageConnectionRequests } from '~features/manage-connection-requests';
+import { ManageConnections } from '~features/manage-connections';
 import { type Database } from '~types/supabase';
 import { getServerSideTranslations } from '~util/i18n';
 
@@ -56,6 +57,12 @@ export default function Connections() {
                         {t('connections.manage_connection_requests.title')}
                     </Title>
                     <ManageConnectionRequests />
+                </Card>
+                <Card>
+                    <Title order={3}>
+                        {t('connections.manage_connections.title')}
+                    </Title>
+                    <ManageConnections />
                 </Card>
             </Stack>
         </Container>
