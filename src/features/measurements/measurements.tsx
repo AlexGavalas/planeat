@@ -157,10 +157,11 @@ export const Measurements = () => {
     };
 
     return (
-        <Stack spacing="md">
-            <Group position="apart">
+        <Stack gap="md">
+            <Group justify="space-between">
                 <Title order={3}>{t('measurements')}</Title>
                 <ActionIcon
+                    variant="light"
                     title={t('add_measurement')}
                     size="lg"
                     onClick={() => {

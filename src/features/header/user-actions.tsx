@@ -15,7 +15,7 @@ export const UserActions = () => {
     if (!hasUser) {
         return (
             <Button
-                leftIcon={<Google />}
+                leftSection={<Google />}
                 onClick={async () => {
                     await signIn('google');
                 }}

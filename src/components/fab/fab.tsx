@@ -31,7 +31,7 @@ export const Fab = () => {
     return (
         <Box style={{ position: 'fixed', bottom: 20, left: 20 }}>
             {showMenu && (
-                <Stack spacing="sm" mb={10}>
+                <Stack gap="sm" mb={10}>
                     <Button
                         style={{ maxWidth: 'fit-content' }}
                         size="sm"
@@ -51,7 +51,7 @@ export const Fab = () => {
                                 ),
                             });
                         }}
-                        leftIcon={<EditPencil />}
+                        leftSection={<EditPencil />}
                     >
                         {t('add_measurement')}
                     </Button>
@@ -74,7 +74,7 @@ export const Fab = () => {
                                 ),
                             });
                         }}
-                        leftIcon={<Running />}
+                        leftSection={<Running />}
                     >
                         {t('add_activity')}
                     </Button>

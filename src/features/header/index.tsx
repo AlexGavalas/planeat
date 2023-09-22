@@ -12,13 +12,13 @@ export const Header = () => {
     const hasUser = router.pathname !== '/';
 
     return (
-        <Group position="apart" align="center" py={10} px={20}>
+        <Group justify="space-between" align="center" py={10} px={20}>
             <Link href="/">
                 <Title order={1} style={{ cursor: 'pointer' }}>
                     PLANEAT
                 </Title>
             </Link>
-            <Group position="apart" align="center" py={10} px={20}>
+            <Group justify="space-between" align="center" py={10} px={20}>
                 {hasUser && <Nav />}
                 <UserActions />
             </Group>

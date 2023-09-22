@@ -137,10 +137,11 @@ export const Activities = () => {
     };
 
     return (
-        <Stack spacing="md">
-            <Group position="apart">
+        <Stack gap="md">
+            <Group justify="space-between">
                 <Title order={3}>{t('activities')}</Title>
                 <ActionIcon
+                    variant="light"
                     title={t('add_activity')}
                     size="lg"
                     onClick={() => {

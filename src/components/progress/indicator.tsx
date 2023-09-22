@@ -19,7 +19,7 @@ export const ProgressIndicator = ({
     sections,
 }: ProgressIndicatorProps) => {
     return (
-        <Stack spacing="xs">
+        <Stack gap="xs">
             <Title order={3}>{label}</Title>
             {Boolean(value) && (
                 <div
@@ -32,17 +32,22 @@ export const ProgressIndicator = ({
                     <NavArrowDown />
                 </div>
             )}
-            <Progress
+            <Progress.Root
                 size="xl"
                 style={{
                     height: '2rem',
                 }}
-                sections={sections.map((section) => ({
-                    color: section.bg,
-                    value: section.percent,
-                    label: section.label,
-                }))}
-            />
+            >
+                {sections.map((section) => (
+                    <Progress.Section
+                        key={section.label}
+                        value={section.percent}
+                        color={section.bg}
+                    >
+                        <Progress.Label>{section.label}</Progress.Label>
+                    </Progress.Section>
+                ))}
+            </Progress.Root>
         </Stack>
     );
 };

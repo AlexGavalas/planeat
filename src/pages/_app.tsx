@@ -1,6 +1,9 @@
 import { MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
+import '@mantine/notifications/styles.css';
 import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { SessionProvider, type SessionProviderProps } from 'next-auth/react';
@@ -15,6 +18,7 @@ import {
     QueryClientProvider,
 } from 'react-query';
 
+import { BRAND_COLORS } from '~constants/colors';
 import { Header } from '~features/header';
 import { UserContext } from '~store/user-context';
 import { type Database } from '~types/supabase';
@@ -49,24 +53,11 @@ const App = ({
                 <title>Planeat</title>
             </Head>
             <MantineProvider
-                withGlobalStyles
-                withNormalizeCSS
                 theme={{
-                    colors: {
-                        brand: [
-                            '#04A670',
-                            '#049766',
-                            '#04895D',
-                            '#047D55',
-                            '#04724D',
-                            '#046745',
-                            '#045D3E',
-                            '#045438',
-                            '#044C32',
-                        ],
-                    },
                     primaryColor: 'brand',
-                    colorScheme: 'light',
+                    colors: {
+                        brand: BRAND_COLORS,
+                    },
                 }}
             >
                 <SessionContextProvider supabaseClient={supabaseClient}>

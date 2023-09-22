@@ -47,7 +47,7 @@ export default function Connections() {
 
     return (
         <Container>
-            <Stack spacing="md">
+            <Stack gap="md">
                 <Title order={3}>{t('connections.title')}</Title>
                 <Card>
                     <FindUsers />

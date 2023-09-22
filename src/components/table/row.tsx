@@ -1,4 +1,13 @@
-import { ActionIcon, Button, Group, Popover, Stack, Text } from '@mantine/core';
+import {
+    ActionIcon,
+    Button,
+    Group,
+    Popover,
+    Stack,
+    TableTd,
+    TableTr,
+    Text,
+} from '@mantine/core';
 import { EditPencil, Trash } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -35,16 +44,16 @@ export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
     };
 
     return (
-        <tr style={{ width: '100%', height: '3rem' }}>
+        <TableTr style={{ width: '100%', height: '3rem' }}>
             {headers
                 .filter((header) => header.key !== 'actions')
                 .map(({ key, width, formatValue }) => (
-                    <td style={{ width }} key={key}>
+                    <TableTd style={{ width }} key={key}>
                         {formatValue?.(item) ?? item[key]}
-                    </td>
+                    </TableTd>
                 ))}
-            <td style={{ width: '35%' }}>
-                <Group spacing="md" position="center">
+            <TableTd style={{ width: '35%' }}>
+                <Group gap="md" justify="center">
                     <ActionIcon onClick={() => onEdit(item)} variant="subtle">
                         <EditPencil />
                     </ActionIcon>
@@ -68,9 +77,9 @@ export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
                             </ActionIcon>
                         </Popover.Target>
                         <Popover.Dropdown>
-                            <Stack spacing="md" align="center">
+                            <Stack gap="md" align="center">
                                 <Text>{t('confirmation.generic')}</Text>
-                                <Group spacing="md">
+                                <Group gap="md">
                                     <Button
                                         color="red"
                                         size="xs"
@@ -93,7 +102,7 @@ export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
                         </Popover.Dropdown>
                     </Popover>
                 </Group>
-            </td>
-        </tr>
+            </TableTd>
+        </TableTr>
     );
 };

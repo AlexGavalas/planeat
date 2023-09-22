@@ -40,14 +40,14 @@ export const MealRatingModal = ({
 
     return (
         <form onSubmit={onSubmit}>
-            <Stack spacing="xl">
+            <Stack gap="xl">
                 <Center>
                     <Rating
                         defaultValue={Number(meal.rating)}
                         onChange={setRating}
                     />
                 </Center>
-                <Group position="apart" spacing="sm">
+                <Group justify="space-between" gap="sm">
                     <Button variant="light" color="red" onClick={closeModal}>
                         {t('cancel')}
                     </Button>

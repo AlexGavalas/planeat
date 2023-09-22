@@ -33,7 +33,7 @@ export default function LandingPage() {
 
     return (
         <Center>
-            <Stack spacing="xl" className="content">
+            <Stack gap="xl" className="content">
                 <Blobs />
                 <Title order={1}>Welcome to Planeat!</Title>
                 <Title order={2}>

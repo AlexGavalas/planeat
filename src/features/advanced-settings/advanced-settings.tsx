@@ -14,7 +14,7 @@ export const AdvancedSettings = () => {
     };
 
     return (
-        <Stack spacing="md">
+        <Stack gap="md">
             <Title order={3}>
                 {t('account_settings.sections.advanced.title')}
             </Title>

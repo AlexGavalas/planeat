@@ -95,7 +95,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                         ...(hovered && { opacity: 0.15 }),
                     }}
                 >
-                    <Text p={5} align="center">
+                    <Text p={5} ta="center">
                         {meal?.meal || 'N/A '}
                     </Text>
                 </Center>

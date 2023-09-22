@@ -38,7 +38,7 @@ export const MealModal = ({
 
     return (
         <form onSubmit={onSubmit}>
-            <Stack spacing="sm">
+            <Stack gap="sm">
                 <Textarea
                     data-autofocus
                     name="meal"
@@ -51,7 +51,7 @@ export const MealModal = ({
                     error={error}
                     onFocus={() => setError('')}
                 />
-                <Group position="apart" spacing="sm">
+                <Group justify="space-between" gap="sm">
                     <Button variant="light" color="red" onClick={closeModal}>
                         {t('cancel')}
                     </Button>

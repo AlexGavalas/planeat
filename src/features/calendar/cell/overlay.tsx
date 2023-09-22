@@ -49,70 +49,80 @@ export const CellOverlay = ({
     };
 
     return (
-        <Overlay opacity={0.05}>
+        <Overlay style={{ background: 'rgba(255, 255, 255, 0.5)' }}>
             <Center style={{ height: '100%' }}>
-                <ActionIcon
-                    size="lg"
-                    title={t('edit')}
-                    onClick={() => {
-                        modals.openModal({
-                            title: t('edit_meal'),
-                            centered: true,
-                            children: (
-                                <MealModal
-                                    handleSave={handleMealSave}
-                                    initialMeal={meal?.meal || ''}
-                                    deleteMeal={handleDelete}
-                                />
-                            ),
-                        });
-                    }}
-                >
-                    <EditPencil />
-                </ActionIcon>
-                {isMealSaved && (
-                    <>
-                        <ActionIcon
-                            size="lg"
-                            title={t('edit')}
-                            onClick={() => {
-                                modals.openModal({
-                                    title: t('notes'),
-                                    centered: true,
-                                    children: (
-                                        <MealNoteModal
-                                            meal={meal}
-                                            handleSave={handleMealNoteSave}
-                                            handleDelete={handleMealNoteDelete}
-                                        />
-                                    ),
-                                });
-                            }}
-                        >
-                            <Notes />
-                        </ActionIcon>
-                        <ActionIcon
-                            title={t('modals.meal_rate.title')}
-                            onClick={() => {
-                                modals.openModal({
-                                    title: t('modals.meal_rate.title'),
-                                    centered: true,
-                                    children: (
-                                        <MealRatingModal
-                                            meal={meal}
-                                            handleSave={handleMealRatingSave}
-                                            handleDelete={
-                                                handleMealRatingDelete
-                                            }
-                                        />
-                                    ),
-                                });
-                            }}
-                        >
-                            <ThreeStars />
-                        </ActionIcon>
-                    </>
-                )}
+                <ActionIcon.Group>
+                    <ActionIcon
+                        variant="light"
+                        size="lg"
+                        title={t('edit')}
+                        onClick={() => {
+                            modals.openModal({
+                                title: t('edit_meal'),
+                                centered: true,
+                                children: (
+                                    <MealModal
+                                        handleSave={handleMealSave}
+                                        initialMeal={meal?.meal || ''}
+                                        deleteMeal={handleDelete}
+                                    />
+                                ),
+                            });
+                        }}
+                    >
+                        <EditPencil />
+                    </ActionIcon>
+                    {isMealSaved && (
+                        <>
+                            <ActionIcon
+                                variant="light"
+                                size="lg"
+                                title={t('edit')}
+                                onClick={() => {
+                                    modals.openModal({
+                                        title: t('notes'),
+                                        centered: true,
+                                        children: (
+                                            <MealNoteModal
+                                                meal={meal}
+                                                handleSave={handleMealNoteSave}
+                                                handleDelete={
+                                                    handleMealNoteDelete
+                                                }
+                                            />
+                                        ),
+                                    });
+                                }}
+                            >
+                                <Notes />
+                            </ActionIcon>
+                            <ActionIcon
+                                variant="light"
+                                size="lg"
+                                title={t('modals.meal_rate.title')}
+                                onClick={() => {
+                                    modals.openModal({
+                                        title: t('modals.meal_rate.title'),
+                                        centered: true,
+                                        children: (
+                                            <MealRatingModal
+                                                meal={meal}
+                                                handleSave={
+                                                    handleMealRatingSave
+                                                }
+                                                handleDelete={
+                                                    handleMealRatingDelete
+                                                }
+                                            />
+                                        ),
+                                    });
+                                }}
+                            >
+                                <ThreeStars />
+                            </ActionIcon>
+                        </>
+                    )}
+                </ActionIcon.Group>
             </Center>
         </Overlay>
     );

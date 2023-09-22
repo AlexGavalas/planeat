@@ -49,14 +49,15 @@ export const FoodPreferences = () => {
     };
 
     return (
-        <Stack spacing="md" align="start">
+        <Stack gap="md" align="start">
             <Title order={3}>
                 {t('account_settings.sections.food_preferences.title')}
             </Title>
             <form onSubmit={handleSavePreferences} style={{ width: '100%' }}>
-                <Stack spacing="md" align="start" style={{ width: '100%' }}>
-                    <Group spacing="md" grow style={{ width: '100%' }}>
+                <Stack gap="md" align="start" style={{ width: '100%' }}>
+                    <Group gap="md" grow style={{ width: '100%' }}>
                         <Textarea
+                            autosize
                             name="positive"
                             minRows={4}
                             defaultValue={
@@ -70,6 +71,7 @@ export const FoodPreferences = () => {
                             )}
                         />
                         <Textarea
+                            autosize
                             name="negative"
                             minRows={4}
                             defaultValue={

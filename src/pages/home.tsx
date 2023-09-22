@@ -116,7 +116,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default function Home({ dailyMeals }: { dailyMeals: MealsMap }) {
     return (
-        <Group align="start" grow noWrap>
+        <Group align="start" wrap="nowrap">
             <Stack
                 style={{
                     width: '20%',

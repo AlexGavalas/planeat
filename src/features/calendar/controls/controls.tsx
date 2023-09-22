@@ -35,37 +35,37 @@ export const Controls = () => {
     };
 
     return (
-        <Group position="apart">
-            <Group spacing="sm">
-                <Button onClick={previousWeek} leftIcon={<FastArrowLeft />}>
+        <Group justify="space-between">
+            <Group gap="sm">
+                <Button onClick={previousWeek} leftSection={<FastArrowLeft />}>
                     {t('week.previous')}
                 </Button>
-                <Button onClick={nextWeek} rightIcon={<FastArrowRight />}>
+                <Button onClick={nextWeek} rightSection={<FastArrowRight />}>
                     {t('week.next')}
                 </Button>
                 <Button
                     onClick={toggleWeekOverview}
-                    rightIcon={<StatsReport />}
+                    rightSection={<StatsReport />}
                     variant="white"
                 >
                     {t('see_overview')}
                 </Button>
             </Group>
-            <Group spacing="sm">
+            <Group gap="sm">
                 <Button
                     onClick={() => copyToNextWeek(meals)}
-                    rightIcon={<Copy />}
+                    rightSection={<Copy />}
                 >
                     {t('week.copy_to_next_week')}
                 </Button>
                 {hasUnsavedChanges && (
                     <>
-                        <Button onClick={revert} rightIcon={<Cancel />}>
+                        <Button onClick={revert} rightSection={<Cancel />}>
                             {t('cancel')}
                         </Button>
                         <Button
                             onClick={savePlan}
-                            rightIcon={<SaveFloppyDisk />}
+                            rightSection={<SaveFloppyDisk />}
                         >
                             {t('save')}
                         </Button>

@@ -28,7 +28,7 @@ export const WeekOverview = () => {
     });
 
     return (
-        <Stack spacing="md">
+        <Stack gap="md">
             {sortedKeys.map((key) => {
                 const dayMeals = mealsMap[key];
 
@@ -38,7 +38,7 @@ export const WeekOverview = () => {
                 );
 
                 return (
-                    <Stack spacing="xs" key={key}>
+                    <Stack gap="xs" key={key}>
                         <Text fw={500} fz="lg" c="green.9">
                             {timeslot}
                         </Text>

@@ -1,4 +1,13 @@
-import { Table as MantineTable, Pagination, Stack } from '@mantine/core';
+import {
+    Group,
+    Table as MantineTable,
+    Pagination,
+    Stack,
+    TableTbody,
+    TableTh,
+    TableThead,
+    TableTr,
+} from '@mantine/core';
 import { useState } from 'react';
 
 import { type Header, type Item, Row } from './row';
@@ -34,26 +43,25 @@ export const Table = ({
     };
 
     return (
-        <Stack spacing="md">
+        <Stack gap="md">
             <MantineTable className={styles.table}>
-                <thead>
-                    <tr>
+                <TableThead>
+                    <TableTr>
                         {headers.map(({ key, label, width }) => (
-                            <th
+                            <TableTh
                                 key={label}
                                 style={{
                                     width,
-                                    ...(key === 'actions' && {
-                                        textAlign: 'center',
-                                    }),
+                                    textAlign:
+                                        key === 'actions' ? 'center' : 'left',
                                 }}
                             >
                                 {label}
-                            </th>
+                            </TableTh>
                         ))}
-                    </tr>
-                </thead>
-                <tbody>
+                    </TableTr>
+                </TableThead>
+                <TableTbody>
                     {data.map((item) => (
                         <Row
                             key={item.id}
@@ -63,16 +71,17 @@ export const Table = ({
                             onEdit={onEdit}
                         />
                     ))}
-                </tbody>
+                </TableTbody>
             </MantineTable>
             {shouldShowPagination && (
-                <Pagination
-                    total={totalPages}
-                    position="right"
-                    value={page}
-                    onChange={handlePageChange}
-                    withEdges
-                />
+                <Group justify="end">
+                    <Pagination
+                        total={totalPages}
+                        value={page}
+                        onChange={handlePageChange}
+                        withEdges
+                    />
+                </Group>
             )}
         </Stack>
     );

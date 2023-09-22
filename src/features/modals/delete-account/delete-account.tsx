@@ -16,7 +16,7 @@ export const DeleteAccountModal = ({
     const canDelete = userEmail === user?.email;
 
     return (
-        <Stack spacing="md" align="center">
+        <Stack gap="md" align="center">
             <TextInput
                 label={t(
                     'account_settings.sections.delete_account.modal.label',

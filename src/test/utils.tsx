@@ -1,3 +1,4 @@
+import { MantineProvider } from '@mantine/core';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
@@ -11,7 +12,9 @@ export const renderWithUser = (renderParams: RenderParameters[0]) => {
         user: userEvent.setup(),
         ...render(renderParams, {
             wrapper: ({ children }) => (
-                <I18nextProvider i18n={testI18n}>{children}</I18nextProvider>
+                <I18nextProvider i18n={testI18n}>
+                    <MantineProvider>{children}</MantineProvider>
+                </I18nextProvider>
             ),
         }),
     };

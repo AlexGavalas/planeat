@@ -131,7 +131,7 @@ export const ManageConnectionRequests = () => {
     };
 
     return (
-        <Stack spacing="md" mt="sm">
+        <Stack gap="md" mt="sm">
             {!hasConnectionsRequests && (
                 <Text>
                     {t('connections.manage_connection_requests.no_requests')}
@@ -142,11 +142,14 @@ export const ManageConnectionRequests = () => {
             ) : (
                 connectionRequests.map((connectionRequest) => {
                     return (
-                        <Group key={connectionRequest.id} position="apart">
+                        <Group
+                            key={connectionRequest.id}
+                            justify="space-between"
+                        >
                             {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                             {/* @ts-ignore */}
                             <Text>{connectionRequest.users.full_name}</Text>
-                            <Group spacing="xs">
+                            <Group gap="xs">
                                 <Button
                                     size="sm"
                                     onClick={() => {

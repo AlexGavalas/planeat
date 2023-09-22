@@ -21,7 +21,7 @@ export const DeleteAccount = () => {
     };
 
     return (
-        <Stack spacing="md" align="start">
+        <Stack gap="md" align="start">
             <Title order={3}>
                 {t('account_settings.sections.delete_account.title')}
             </Title>

@@ -53,7 +53,7 @@ export const PersonalSettings = () => {
     ];
 
     return (
-        <Stack spacing="md">
+        <Stack gap="md">
             <Title order={3}>
                 {t('account_settings.sections.general.title')}
             </Title>
@@ -75,7 +75,6 @@ export const PersonalSettings = () => {
                         defaultValue={profile.language}
                         onChange={handleLanguageChange}
                         data={availableLanguages}
-                        withinPortal
                     />
                     <Button onClick={handleSave}>{t('save')}</Button>
                 </Group>

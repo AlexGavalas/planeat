@@ -92,6 +92,7 @@ export const ActivityModal = ({
             </Center>
             <Space h={20} />
             <Textarea
+                autosize
                 minRows={4}
                 defaultValue={activity}
                 onChange={(e) => setActivity(e.currentTarget.value)}
@@ -101,7 +102,7 @@ export const ActivityModal = ({
                 onFocus={() => setError('')}
             />
             <Space h={20} />
-            <Group position="apart">
+            <Group justify="space-between">
                 <Button variant="light" color="red" onClick={closeModal}>
                     {t('cancel')}
                 </Button>

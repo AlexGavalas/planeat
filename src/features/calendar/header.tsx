@@ -70,8 +70,8 @@ export const Header = () => {
                     style={{ position: 'relative' }}
                 >
                     <Title
-                        color={isToday(timestamp) ? 'green.8' : undefined}
-                        align="center"
+                        c={isToday(timestamp) ? 'green.8' : undefined}
+                        ta="center"
                         order={4}
                     >
                         {label}

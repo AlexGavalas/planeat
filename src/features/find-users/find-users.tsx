@@ -30,7 +30,7 @@ export const FindUsers = () => {
     const supabase = useSupabaseClient<Database>();
     const queryClient = useQueryClient();
 
-    const { data: users = [], isFetching } = useQuery(
+    const { data: users = [] } = useQuery(
         ['users', debouncedSearchQuery],
         async () => {
             const { data } = await supabase
@@ -89,12 +89,7 @@ export const FindUsers = () => {
         },
     );
 
-    const nothingFoundLabel =
-        debouncedSearchQuery && !isFetching && !users?.length
-            ? t('no_data')
-            : '';
-
-    const handleUserSelect: AutocompleteProps['onItemSubmit'] = ({ value }) => {
+    const handleUserSelect: AutocompleteProps['onOptionSubmit'] = (value) => {
         setSelectedUserFullname(value);
     };
 
@@ -138,22 +133,20 @@ export const FindUsers = () => {
         selectedUser && !isFetchingHasAlreadySentRequest;
 
     return (
-        <Stack spacing="md">
+        <Stack gap="md">
             <Autocomplete
                 data={users}
                 disabled={isFetchingSelectedUser}
-                icon={<ProfileCircle />}
+                leftSection={<ProfileCircle />}
                 rightSection={
-                    <ActionIcon onClick={clearInput}>
+                    <ActionIcon onClick={clearInput} variant="subtle">
                         <Cancel />
                     </ActionIcon>
                 }
                 label={t('connections.search.label')}
-                nothingFound={nothingFoundLabel}
                 placeholder={t('connections.search.placeholder')}
                 onChange={setSearchQuery}
-                onItemSubmit={handleUserSelect}
-                withinPortal
+                onOptionSubmit={handleUserSelect}
                 value={searchQuery}
             />
             {shouldShowConnectionInfo &&
@@ -164,7 +157,7 @@ export const FindUsers = () => {
                         })}
                     </Text>
                 ) : (
-                    <Group position="apart">
+                    <Group justify="space-between">
                         <div>
                             <Text span>{t('connections.request.add')} </Text>
                             <Text fw={600} span>
@@ -177,7 +170,7 @@ export const FindUsers = () => {
                         </div>
                         <Button
                             onClick={handleConnectionRequest}
-                            rightIcon={<AddUser />}
+                            rightSection={<AddUser />}
                             size="xs"
                         >
                             {t('connections.request.send')}

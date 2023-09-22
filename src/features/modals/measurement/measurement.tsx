@@ -102,7 +102,7 @@ export const MeasurementModal = ({
                 min={0}
                 value={weight}
                 onChange={(value) => setWeight(Number(value))}
-                precision={2}
+                decimalScale={2}
             />
             <Space h={20} />
             <NumberInput
@@ -111,10 +111,10 @@ export const MeasurementModal = ({
                 max={100}
                 value={fatPercent}
                 onChange={(value) => setFatPercent(Number(value))}
-                precision={2}
+                decimalScale={2}
             />
             <Space h={20} />
-            <Group position="apart">
+            <Group justify="space-between">
                 <Button variant="light" color="red" onClick={closeModal}>
                     {t('cancel')}
                 </Button>

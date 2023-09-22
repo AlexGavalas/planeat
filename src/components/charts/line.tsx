@@ -1,9 +1,11 @@
-import { Card, useMantineTheme } from '@mantine/core';
+import { Card } from '@mantine/core';
 import { type CustomLayerProps } from '@nivo/line';
 import { format, parse } from 'date-fns';
 import { maxBy, minBy } from 'lodash';
 import dynamic from 'next/dynamic';
 import { type SVGAttributes, useMemo } from 'react';
+
+import { BRAND_COLORS } from '~constants/colors';
 
 const ResponsiveLine = dynamic(
     () => import('@nivo/line').then((mod) => ({ default: mod.ResponsiveLine })),
@@ -49,15 +51,13 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
     target,
     unit,
 }: LineChartProps<DataItem>) => {
-    const colorScheme = useMantineTheme();
-
     const max = useMemo(() => maxBy(data[0].data, 'y')?.y || 0, [data]);
     const min = useMemo(() => minBy(data[0].data, 'y')?.y || 0, [data]);
 
     return (
         <ResponsiveLine
             data={data}
-            colors={colorScheme.colors.brand}
+            colors={BRAND_COLORS}
             lineWidth={2}
             margin={{
                 top: 10,

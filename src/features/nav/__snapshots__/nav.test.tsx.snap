@@ -2,46 +2,54 @@
 
 exports[`<Nav /> renders 1`] = `
 <div>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
   <div
-    class="mantine-Group-root mantine-k3ov3c"
+    class="m-4081bf90 mantine-Group-root"
   >
     <a
       href="/home"
     >
       <span
-        class="mantine-Text-root mantine-Anchor-root mantine-qdotc7"
+        class="mantine-focus-auto m-849cf0da m-b6d8b162 mantine-Text-root mantine-Anchor-root"
+        data-underline="hover"
       >
-        <div
-          class="mantine-Text-root mantine-1d564l0"
+        <p
+          class="mantine-focus-auto m-b6d8b162 mantine-Text-root"
         >
           Home
-        </div>
+        </p>
       </span>
     </a>
     <a
       href="/meal-plan"
     >
       <span
-        class="mantine-Text-root mantine-Anchor-root mantine-qdotc7"
+        class="mantine-focus-auto m-849cf0da m-b6d8b162 mantine-Text-root mantine-Anchor-root"
+        data-underline="hover"
       >
-        <div
-          class="mantine-Text-root mantine-1d564l0"
+        <p
+          class="mantine-focus-auto m-b6d8b162 mantine-Text-root"
         >
           Meal plan
-        </div>
+        </p>
       </span>
     </a>
     <a
       href="/connections"
     >
       <span
-        class="mantine-Text-root mantine-Anchor-root mantine-qdotc7"
+        class="mantine-focus-auto m-849cf0da m-b6d8b162 mantine-Text-root mantine-Anchor-root"
+        data-underline="hover"
       >
-        <div
-          class="mantine-Text-root mantine-1d564l0"
+        <p
+          class="mantine-focus-auto m-b6d8b162 mantine-Text-root"
         >
           Connections
-        </div>
+        </p>
       </span>
     </a>
   </div>

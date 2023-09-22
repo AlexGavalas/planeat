@@ -29,7 +29,7 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
         ROWS.findIndex(({ key }) => isAfter(MEAL_TIMES[key], now)) - 1;
 
     return (
-        <Stack spacing="md">
+        <Stack gap="md">
             <Title order={3}>{t('day_plan')}</Title>
             <Timeline
                 active={activeIndex < 0 ? ROWS.length : activeIndex}
@@ -45,7 +45,7 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
                     return (
                         <Timeline.Item
                             key={key}
-                            title={<Text weight="bold">{row.label}</Text>}
+                            title={<Text fw="bold">{row.label}</Text>}
                             bullet={<Icon />}
                         >
                             <Spoiler

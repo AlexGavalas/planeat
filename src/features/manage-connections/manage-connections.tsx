@@ -63,7 +63,7 @@ export const ManageConnections = () => {
     const hasConnections = !isFetchingConnections && connections.length > 0;
 
     return (
-        <Stack spacing="md" mt="sm">
+        <Stack gap="md" mt="sm">
             <LoadingOverlay visible={isFetchingConnections} />
             {!hasConnections && (
                 <Text>
@@ -72,13 +72,13 @@ export const ManageConnections = () => {
             )}
             {connections.map((connection) => {
                 return (
-                    <Group key={connection.id} position="apart">
+                    <Group key={connection.id} justify="space-between">
                         {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                         {/* @ts-ignore */}
                         <Text>{connection.users.full_name}</Text>
-                        <Group spacing="xs">
+                        <Group gap="xs">
                             <Button
-                                compact
+                                size="compact-md"
                                 onClick={() => removeConnection(connection)}
                             >
                                 {t(

@@ -21,7 +21,9 @@ export const Nav = () => {
                 return (
                     <Link href={href} key={href}>
                         <Anchor component="span">
-                            <Text underline={isCurrent}>{t(label)}</Text>
+                            <Text td={isCurrent ? 'underline' : undefined}>
+                                {t(label)}
+                            </Text>
                         </Anchor>
                     </Link>
                 );
