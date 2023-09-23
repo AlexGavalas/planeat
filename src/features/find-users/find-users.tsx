@@ -9,17 +9,13 @@ import {
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { AddUser, Cancel, ProfileCircle } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { useProfile } from '~hooks/use-profile';
-import { type Database } from '~types/supabase';
-import { getUTCDate } from '~util/date';
-
-const MAX_QUERY_RESULTS = 5;
+import { type User } from '~types/user';
 
 export const FindUsers = () => {
     const { t } = useTranslation();
@@ -27,21 +23,18 @@ export const FindUsers = () => {
     const [selectedUserFullname, setSelectedUserFullname] = useState('');
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 350);
     const { profile } = useProfile();
-    const supabase = useSupabaseClient<Database>();
     const queryClient = useQueryClient();
 
     const { data: users = [] } = useQuery(
         ['users', debouncedSearchQuery],
         async () => {
-            const { data } = await supabase
-                .from('users')
-                .select('full_name')
-                .ilike('full_name', `%${debouncedSearchQuery}%`)
-                .eq('is_discoverable', true)
-                .neq('email', profile?.email)
-                .limit(MAX_QUERY_RESULTS);
+            const response = await fetch(
+                `/api/v1/user?type=search&fullName=${debouncedSearchQuery}`,
+            );
 
-            return data?.map(({ full_name }) => full_name) ?? [];
+            const { data } = await response.json();
+
+            return (data as User[])?.map(({ full_name }) => full_name) ?? [];
         },
         {
             enabled: Boolean(debouncedSearchQuery),
@@ -51,12 +44,13 @@ export const FindUsers = () => {
     const { data: selectedUser, isFetching: isFetchingSelectedUser } = useQuery(
         ['connection', selectedUserFullname],
         async () => {
-            const { data } = await supabase
-                .from('users')
-                .select('id, full_name')
-                .eq('full_name', selectedUserFullname);
+            const response = await fetch(
+                `/api/v1/user?type=profile&fullName=${selectedUserFullname}`,
+            );
 
-            return data;
+            const { data } = await response.json();
+
+            return data as User[];
         },
         {
             enabled: Boolean(selectedUserFullname),
@@ -75,12 +69,11 @@ export const FindUsers = () => {
                 return null;
             }
 
-            const { data } = await supabase
-                .from('notifications')
-                .select('id')
-                .eq('request_user_id', profile.id)
-                .eq('target_user_id', selectedUserId)
-                .maybeSingle();
+            const response = await fetch(
+                `/api/v1/notification?requestUserId=${profile.id}&targetUserId=${selectedUserId}`,
+            );
+
+            const { data } = await response.json();
 
             return data;
         },
@@ -103,12 +96,17 @@ export const FindUsers = () => {
             return;
         }
 
-        const { error } = await supabase.from('notifications').insert({
-            date: getUTCDate(new Date()).toUTCString(),
-            notification_type: 'connection_request',
-            request_user_id: profile.id,
-            target_user_id: selectedUser[0].id,
+        const response = await fetch('/api/v1/notification', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                targetUserId: selectedUser[0].id,
+            }),
         });
+
+        const { error } = await response.json();
 
         if (error) {
             showNotification({

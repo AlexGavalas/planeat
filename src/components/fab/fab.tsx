@@ -13,7 +13,6 @@ import { useQueryClient } from 'react-query';
 
 import { ActivityModal } from '~features/modals/activity';
 import { MeasurementModal } from '~features/modals/measurement';
-import { useProfile } from '~hooks/use-profile';
 
 import styles from './fab.module.css';
 
@@ -27,7 +26,6 @@ const buttonProps = {
 export const Fab = () => {
     const { t } = useTranslation();
     const modals = useModals();
-    const { profile } = useProfile();
     const queryClient = useQueryClient();
     const [showMenu, setShowMenu] = useState(false);
 
@@ -49,42 +47,24 @@ export const Fab = () => {
     }, [queryClient]);
 
     const handleAddMeasurement = useCallback(() => {
-        if (!profile) {
-            return;
-        }
-
         toggleMenu();
 
         modals.openModal({
             title: t('add_measurement'),
             size: 'md',
-            children: (
-                <MeasurementModal
-                    userId={profile.id}
-                    onSave={handleMeasurementSave}
-                />
-            ),
+            children: <MeasurementModal onSave={handleMeasurementSave} />,
         });
-    }, [handleMeasurementSave, modals, profile, t, toggleMenu]);
+    }, [handleMeasurementSave, modals, t, toggleMenu]);
 
     const handleAddActivity = useCallback(() => {
-        if (!profile) {
-            return;
-        }
-
         toggleMenu();
 
         modals.openModal({
             title: t('add_activity'),
             size: 'md',
-            children: (
-                <ActivityModal
-                    userId={profile.id}
-                    onSave={handleActivitySave}
-                />
-            ),
+            children: <ActivityModal onSave={handleActivitySave} />,
         });
-    }, [handleActivitySave, modals, profile, t, toggleMenu]);
+    }, [handleActivitySave, modals, t, toggleMenu]);
 
     return (
         <Box className={styles.container}>

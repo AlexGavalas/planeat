@@ -1,18 +1,15 @@
 import { Button, Group, Stack, Text } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useTranslation } from 'next-i18next';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Notification } from '~types/notification';
-import { type Database } from '~types/supabase';
 
 export const ManageConnectionRequests = () => {
     const { t } = useTranslation();
     const { profile } = useProfile();
-    const supabase = useSupabaseClient<Database>();
     const queryClient = useQueryClient();
 
     const {
@@ -21,17 +18,13 @@ export const ManageConnectionRequests = () => {
     } = useQuery(
         ['connection-requests', profile?.id],
         async () => {
-            if (!profile) {
-                return;
-            }
+            const response = await fetch(
+                '/api/v1/notification?type=connection_request',
+            );
 
-            const { data } = await supabase
-                .from('notifications')
-                .select('*, users:request_user_id(full_name)')
-                .eq('notification_type', 'connection_request')
-                .eq('target_user_id', profile.id);
+            const { data } = await response.json();
 
-            return data ?? [];
+            return (data ?? []) as Notification[];
         },
         {
             enabled: Boolean(profile),
@@ -48,10 +41,14 @@ export const ManageConnectionRequests = () => {
         connectionRequestId: string;
         shouldShowNotification: boolean;
     }) => {
-        const { error } = await supabase
-            .from('notifications')
-            .delete()
-            .eq('id', connectionRequestId);
+        const response = await fetch(
+            `/api/v1/notification?id=${connectionRequestId}`,
+            {
+                method: 'DELETE',
+            },
+        );
+
+        const { error } = await response.json();
 
         if (error) {
             if (shouldShowNotification) {
@@ -77,26 +74,25 @@ export const ManageConnectionRequests = () => {
                 'connection-requests',
                 profile?.id,
             ]);
+
+            await queryClient.invalidateQueries(['connections']);
         }
     };
 
     const handleAcceptConnectionRequest = async (
         connectionRequest: Notification,
     ) => {
-        if (!profile) {
-            return;
-        }
+        const response = await fetch('/api/v1/connection', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                connectionUserId: connectionRequest.request_user_id,
+            }),
+        });
 
-        const { error } = await supabase.from('connections').insert([
-            {
-                user_id: connectionRequest.request_user_id,
-                connection_user_id: connectionRequest.target_user_id,
-            },
-            {
-                user_id: connectionRequest.target_user_id,
-                connection_user_id: connectionRequest.request_user_id,
-            },
-        ]);
+        const { error } = await response.json();
 
         if (error) {
             showNotification({

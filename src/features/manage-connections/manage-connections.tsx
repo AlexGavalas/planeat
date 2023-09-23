@@ -1,34 +1,26 @@
 import { Button, Group, Stack, Text } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useTranslation } from 'next-i18next';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Connection } from '~types/connection';
-import { type Database } from '~types/supabase';
 
 export const ManageConnections = () => {
     const { t } = useTranslation();
     const { profile } = useProfile();
-    const supabase = useSupabaseClient<Database>();
     const queryClient = useQueryClient();
 
     const { data: connections = [], isFetching: isFetchingConnections } =
         useQuery(
-            ['connections', profile?.id],
+            ['connections'],
             async () => {
-                if (!profile) {
-                    return;
-                }
+                const response = await fetch('/api/v1/connection');
 
-                const { data } = await supabase
-                    .from('connections')
-                    .select('*, users:connection_user_id(full_name)')
-                    .eq('user_id', profile.id);
+                const { data } = await response.json();
 
-                return data ?? [];
+                return (data ?? []) as Connection[];
             },
             {
                 enabled: Boolean(profile),
@@ -36,18 +28,20 @@ export const ManageConnections = () => {
         );
 
     const removeConnection = async (connection: Connection) => {
-        const { error: currentUserError } = await supabase
-            .from('connections')
-            .delete()
-            .eq('id', connection.id);
+        const response = await fetch('/api/v1/connection', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                connectionId: connection.id,
+                connectionUserId: connection.connection_user_id,
+            }),
+        });
 
-        const { error: connectionUserError } = await supabase
-            .from('connections')
-            .delete()
-            .eq('connection_user_id', connection.user_id)
-            .eq('user_id', connection.connection_user_id);
+        const { error } = await response.json();
 
-        if (currentUserError || connectionUserError) {
+        if (error) {
             showNotification({
                 color: 'red',
                 title: t('error'),

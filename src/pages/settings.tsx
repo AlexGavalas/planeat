@@ -2,6 +2,7 @@ import { Container, Space, Tabs } from '@mantine/core';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { type GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
+import { QueryClient, dehydrate } from 'react-query';
 import invariant from 'tiny-invariant';
 
 import { getServerSession } from '~api/session';
@@ -17,6 +18,8 @@ import { type Database } from '~types/supabase';
 import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    const queryClient = new QueryClient();
+
     const supabase = createPagesServerClient<Database>(context);
 
     const session = await getServerSession(context);
@@ -36,8 +39,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const profile = await fetchUser({ email: user.email, supabase });
 
+    await queryClient.prefetchQuery(['user'], async () => profile);
+
     return {
         props: {
+            dehydratedState: dehydrate(queryClient),
             ...(await getServerSideTranslations({ locale: profile?.language })),
         },
     };

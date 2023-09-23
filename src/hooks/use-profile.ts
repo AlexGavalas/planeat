@@ -1,12 +1,8 @@
 import { showNotification } from '@mantine/notifications';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-
-import { fetchUser } from '~api/user';
-import { type Database } from '~types/supabase';
 
 import { useUser } from './use-user';
 
@@ -20,18 +16,17 @@ interface MutationProps {
 export const useProfile = () => {
     const router = useRouter();
     const queryClient = useQueryClient();
-    const supabase = useSupabaseClient<Database>();
     const { t } = useTranslation();
     const user = useUser();
 
     const { data: profile, isFetching } = useQuery(
         ['user'],
         async () => {
-            if (!user?.email) {
-                return;
-            }
+            const response = await fetch('/api/v1/user');
 
-            return fetchUser({ email: user.email, supabase });
+            const { data } = await response.json();
+
+            return data;
         },
         {
             enabled: Boolean(user?.email),
@@ -45,19 +40,20 @@ export const useProfile = () => {
             targetWeight,
             language,
         }: MutationProps) => {
-            if (!user?.email) {
-                return;
-            }
-
-            const { data, error } = await supabase
-                .from('users')
-                .update({
-                    is_discoverable: isDiscoverable,
-                    target_weight: targetWeight,
+            const response = await fetch('/api/v1/user', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    isDiscoverable,
                     height,
+                    targetWeight,
                     language,
-                })
-                .eq('email', user.email);
+                }),
+            });
+
+            const { data, error } = await response.json();
 
             if (error) {
                 throw error;
@@ -81,15 +77,11 @@ export const useProfile = () => {
 
     const { mutate: deleteProfile } = useMutation(
         async () => {
-            if (!user?.email) {
-                return;
-            }
+            const response = await fetch('/api/v1/user', {
+                method: 'DELETE',
+            });
 
-            const { data, error } = await supabase
-                .from('users')
-                .delete()
-                .eq('email', user.email)
-                .single();
+            const { data, error } = await response.json();
 
             if (error) {
                 throw error;
