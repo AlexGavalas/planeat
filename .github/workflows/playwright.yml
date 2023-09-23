@@ -1,22 +1,44 @@
 name: Playwright Tests
 on:
+    deployment_status:
     pull_request:
         branches: [master]
 jobs:
     test:
         timeout-minutes: 60
+        if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
+            - name: Checkout Repository
+              uses: actions/checkout@v4
             - uses: actions/setup-node@v3
               with:
-                  node-version: 18
-            - name: Install dependencies
-              run: pnpm install
-            - name: Install Playwright Browsers
-              run: pnpm exec playwright install --with-deps
-            - name: Run Playwright tests
-              run: pnpm exec playwright test
+                  node-version-file: '.nvmrc'
+            - uses: pnpm/action-setup@v2
+              name: Install pnpm
+              id: pnpm-install
+              with:
+                  version: 8.7.5
+                  run_install: false
+            - name: Get pnpm store directory
+              id: pnpm-cache
+              shell: bash
+              run: |
+                  echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+            - uses: actions/cache@v3
+              name: Setup pnpm cache
+              with:
+                  path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
+            - name: Install Dependencies
+              run: pnpm install && pnpm playwright install --with-deps
+            - name: Run e2e script
+              run: pnpm test:e2e
+              env:
+                  CI: true
+                  PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
             - uses: actions/upload-artifact@v3
               if: always()
               with:

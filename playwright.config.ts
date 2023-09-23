@@ -1,5 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const envVarBaseUrl = process.env.PLAYWRIGHT_TEST_BASE_URL;
+
+const baseURL =
+    typeof envVarBaseUrl === 'string' ? envVarBaseUrl : 'http://localhost:3000';
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -23,11 +28,19 @@ export default defineConfig({
     reporter: 'html',
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
-        baseURL: 'http://127.0.0.1:3000',
+        baseURL,
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry',
     },
+
+    expect: {
+        toHaveScreenshot: {
+            maxDiffPixelRatio: 0.1,
+        },
+    },
+
+    snapshotPathTemplate: '{testDir}/__snapshots__/{testFilePath}/{arg}{ext}',
 
     /* Configure projects for major browsers */
     projects: [
@@ -67,9 +80,10 @@ export default defineConfig({
         // },
     ],
 
-    webServer: {
-        command: 'pnpm run build && pnpm run start',
-        url: 'http://127.0.0.1:3000',
-        reuseExistingServer: !process.env.CI,
-    },
+    ...(!process.env.CI && {
+        webServer: {
+            command: 'pnpm dev',
+            url: 'http://localhost:3000',
+        },
+    }),
 });
