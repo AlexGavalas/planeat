@@ -8,14 +8,8 @@
 /.next/
 tsconfig.tsbuildinfo
 
-# production
-/build
-
 # misc
 .DS_Store
-
-# debug
-npm-debug.log*
 
 # local env files
 .env
@@ -28,3 +22,8 @@ npm-debug.log*
 # Supabase
 **/supabase/.branches
 **/supabase/.temp
+
+# E2E tests
+/test-results/
+/playwright-report/
+/playwright/.cache/

@@ -22,6 +22,8 @@ const config: Config = {
         },
     },
 
+    testPathIgnorePatterns: ['./e2e/'],
+
     testEnvironment: 'jsdom',
 
     transform: {
