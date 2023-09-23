@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<UserAvatar /> when the user is logged in render the avatar 1`] = `
+<div>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <div
+    class="m-f85678b6 mantine-Avatar-root"
+    data-size="sm"
+    style="--avatar-size: var(--avatar-size-sm); --avatar-radius: var(--mantine-radius-xl);"
+  >
+    <span
+      class="m-104cd71f mantine-Avatar-placeholder"
+    >
+      <img
+        alt="Test User"
+        data-nimg="1"
+        decoding="async"
+        height="32"
+        loading="lazy"
+        src="/_next/image?url=http%3A%2F%2Fplaneat%2Fimage&w=64&q=75"
+        srcset="/_next/image?url=http%3A%2F%2Fplaneat%2Fimage&w=32&q=75 1x, /_next/image?url=http%3A%2F%2Fplaneat%2Fimage&w=64&q=75 2x"
+        style="color: transparent;"
+        width="32"
+      />
+    </span>
+  </div>
+</div>
+`;

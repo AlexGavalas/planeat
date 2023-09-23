@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { useQuery } from 'react-query';
 
 import { fetchLatestWeightMeasurement } from '~api/measurement';
-import { ProgressIndicator } from '~components/progress/indicator';
+import { ProgressIndicator } from '~components/progress';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
 

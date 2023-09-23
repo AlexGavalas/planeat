@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ProgressIndicator /> renders the sections 1`] = `
+<div>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <div
+    class="m-6d731127 mantine-Stack-root"
+    style="--stack-gap: var(--mantine-spacing-xs);"
+  >
+    <h3
+      class="m-8a5d1357 mantine-Title-root"
+      data-order="3"
+      style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size);"
+    >
+      Test
+    </h3>
+    <div
+      class="indicator"
+      style="left: calc(50% - 50px);"
+    >
+      <p
+        class="mantine-focus-auto m-b6d8b162 mantine-Text-root"
+      >
+        50
+        %
+      </p>
+      <svg
+        color="currentColor"
+        fill="none"
+        height="1.5em"
+        stroke-width="1.5"
+        viewBox="0 0 24 24"
+        width="1.5em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M6 9l6 6 6-6"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+    <div
+      class="m-db6d6462 mantine-Progress-root"
+      data-size="xl"
+      style="--progress-size: var(--progress-size-xl); height: 2rem;"
+    >
+      <div
+        aria-valuemax="100"
+        aria-valuemin="0"
+        aria-valuenow="50"
+        aria-valuetext="50%"
+        class="m-2242eb65 mantine-Progress-section"
+        role="progressbar"
+        style="--progress-section-width: 50%; --progress-section-color: var(--mantine-color-blue-filled);"
+      >
+        <div
+          class="m-91e40b74 mantine-Progress-label"
+        >
+          Test
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

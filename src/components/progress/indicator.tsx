@@ -40,7 +40,7 @@ export const ProgressIndicator = ({
             >
                 {sections.map((section) => (
                     <Progress.Section
-                        key={section.label}
+                        key={section.key}
                         value={section.percent}
                         color={section.bg}
                     >

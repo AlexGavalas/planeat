@@ -1,13 +1,28 @@
-import { ActionIcon, Box, Button, Stack } from '@mantine/core';
+import {
+    ActionIcon,
+    Box,
+    Button,
+    type ButtonProps,
+    Stack,
+} from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { EditPencil, Plus, Running } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
 import { ActivityModal } from '~features/modals/activity';
 import { MeasurementModal } from '~features/modals/measurement';
 import { useProfile } from '~hooks/use-profile';
+
+import styles from './fab.module.css';
+
+const buttonProps = {
+    className: styles.button,
+    size: 'sm',
+    radius: 'xl',
+    variant: 'filled',
+} satisfies ButtonProps;
 
 export const Fab = () => {
     const { t } = useTranslation();
@@ -16,65 +31,76 @@ export const Fab = () => {
     const queryClient = useQueryClient();
     const [showMenu, setShowMenu] = useState(false);
 
-    if (!profile) {
-        return null;
-    }
+    const toggleMenu = useCallback(() => {
+        setShowMenu((prev) => !prev);
+    }, []);
 
-    const handleNewMeasurement = async () => {
-        await queryClient.invalidateQueries(['bmi-timeline']);
-        await queryClient.invalidateQueries(['fat-percent-timeline']);
-        await queryClient.invalidateQueries(['measurements']);
-    };
+    const handleMeasurementSave = useCallback(async () => {
+        await queryClient.resetQueries({ queryKey: ['bmi-timeline'] });
+        await queryClient.resetQueries({ queryKey: ['measurements'] });
+        await queryClient.resetQueries({
+            queryKey: ['fat-percent-timeline'],
+        });
+    }, [queryClient]);
 
-    const handleNewActivity = async () => {};
+    const handleActivitySave = useCallback(async () => {
+        await queryClient.resetQueries({ queryKey: ['activities-count'] });
+        await queryClient.resetQueries({ queryKey: ['activities'] });
+    }, [queryClient]);
+
+    const handleAddMeasurement = useCallback(() => {
+        if (!profile) {
+            return;
+        }
+
+        toggleMenu();
+
+        modals.openModal({
+            title: t('add_measurement'),
+            size: 'md',
+            children: (
+                <MeasurementModal
+                    userId={profile.id}
+                    onSave={handleMeasurementSave}
+                />
+            ),
+        });
+    }, [handleMeasurementSave, modals, profile, t, toggleMenu]);
+
+    const handleAddActivity = useCallback(() => {
+        if (!profile) {
+            return;
+        }
+
+        toggleMenu();
+
+        modals.openModal({
+            title: t('add_activity'),
+            size: 'md',
+            children: (
+                <ActivityModal
+                    userId={profile.id}
+                    onSave={handleActivitySave}
+                />
+            ),
+        });
+    }, [handleActivitySave, modals, profile, t, toggleMenu]);
 
     return (
-        <Box style={{ position: 'fixed', bottom: 20, left: 20 }}>
+        <Box className={styles.container}>
             {showMenu && (
                 <Stack gap="sm" mb={10}>
                     <Button
-                        style={{ maxWidth: 'fit-content' }}
-                        size="sm"
-                        radius="xl"
-                        variant="filled"
-                        onClick={() => {
-                            setShowMenu(!showMenu);
-
-                            modals.openModal({
-                                title: t('add_measurement'),
-                                size: 'md',
-                                children: (
-                                    <MeasurementModal
-                                        userId={profile.id}
-                                        onSave={handleNewMeasurement}
-                                    />
-                                ),
-                            });
-                        }}
+                        {...buttonProps}
                         leftSection={<EditPencil />}
+                        onClick={handleAddMeasurement}
                     >
                         {t('add_measurement')}
                     </Button>
                     <Button
-                        style={{ maxWidth: 'fit-content' }}
-                        size="sm"
-                        radius="xl"
-                        variant="filled"
-                        onClick={() => {
-                            setShowMenu(!showMenu);
-
-                            modals.openModal({
-                                title: t('add_activity'),
-                                size: 'md',
-                                children: (
-                                    <ActivityModal
-                                        userId={profile.id}
-                                        onSave={handleNewActivity}
-                                    />
-                                ),
-                            });
-                        }}
+                        {...buttonProps}
                         leftSection={<Running />}
+                        onClick={handleAddActivity}
                     >
                         {t('add_activity')}
                     </Button>
@@ -85,7 +111,7 @@ export const Fab = () => {
                 size="xl"
                 radius="xl"
                 variant="filled"
-                onClick={() => setShowMenu(!showMenu)}
+                onClick={toggleMenu}
             >
                 <Plus />
             </ActionIcon>
