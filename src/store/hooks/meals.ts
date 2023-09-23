@@ -1,14 +1,11 @@
 import { showNotification } from '@mantine/notifications';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
-import { fetchMeals } from '~api/meal';
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
-import { type Database } from '~types/supabase';
 import { getDaysOfWeek, getUTCDate } from '~util/date';
 
 import { useCurrentWeek } from './current-week';
@@ -18,7 +15,6 @@ export const useMeals = () => {
     const { t } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const queryClient = useQueryClient();
-    const supabase = useSupabaseClient<Database>();
 
     const { unsavedChanges, removeChanges, addChange } = useUnsavedChanges();
 
@@ -31,19 +27,19 @@ export const useMeals = () => {
         async () => {
             const endDate = getUTCDate(
                 endOfWeek(currentWeek, { weekStartsOn: 1 }),
-            ).toUTCString();
+            ).toISOString();
 
             const startDate = getUTCDate(
                 startOfWeek(currentWeek, { weekStartsOn: 1 }),
-            ).toUTCString();
+            ).toISOString();
 
-            const result = await fetchMeals({
-                endDate,
-                startDate,
-                supabase,
-            });
+            const response = await fetch(
+                `/api/v1/meal?startDate=${startDate}&endDate=${endDate}`,
+            );
 
-            return result.data || [];
+            const { data } = await response.json();
+
+            return (data || []) as Meal[];
         },
         {
             onSettled: () => {
@@ -74,21 +70,21 @@ export const useMeals = () => {
 
         const deletedIds = deletedMeals.map(({ id }) => id);
 
-        const deletePromise = supabase
-            .from('meals')
-            .delete()
-            .in('id', deletedIds);
+        const response = await fetch('/api/v1/meal', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                deletedIds,
+                editedMeals,
+                newMeals,
+            }),
+        });
 
-        const updatePromise = supabase.from('meals').upsert(editedMeals);
-        const insertPromise = supabase.from('meals').insert(newMeals);
+        const { error } = await response.json();
 
-        const [
-            { error: updateError },
-            { error: createError },
-            { error: deleteError },
-        ] = await Promise.all([updatePromise, insertPromise, deletePromise]);
-
-        if (updateError || createError || deleteError) {
+        if (error) {
             setSubmitting(false);
 
             showNotification({

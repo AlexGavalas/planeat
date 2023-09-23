@@ -20,6 +20,7 @@ type PageProps = {
     data: Item[];
     headers: Header[];
     totalPages: number;
+    page: number;
     onDelete: (item: Item) => Promise<void>;
     onEdit: (item: Item) => Promise<void>;
     onPageChange: (page: number) => void;
@@ -32,8 +33,9 @@ export const Table = ({
     onPageChange,
     onDelete,
     onEdit,
+    page: initialPage,
 }: PageProps) => {
-    const [page, setPage] = useState(INITIAL_PAGE);
+    const [page, setPage] = useState(initialPage);
 
     const shouldShowPagination = totalPages > 1;
 

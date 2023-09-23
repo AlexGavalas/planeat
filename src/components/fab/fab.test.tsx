@@ -7,12 +7,6 @@ import { Fab } from './fab';
 
 jest.mock('next/router', () => jest.requireActual('next-router-mock'));
 
-jest.mock('~hooks/use-profile', () => ({
-    useProfile: jest.fn().mockReturnValue({
-        profile: { id: '1' },
-    }),
-}));
-
 describe('<Fab />', () => {
     it('renders initially closed', () => {
         const { container } = renderWithUser(<Fab />, {

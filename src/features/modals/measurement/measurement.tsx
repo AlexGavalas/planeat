@@ -2,20 +2,16 @@ import { Button, Center, Group, NumberInput, Space, Text } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { endOfDay } from 'date-fns';
 import 'dayjs/locale/el';
 import { useTranslation } from 'next-i18next';
 import { type FormEventHandler, useState } from 'react';
-
-import { type Database } from '~types/supabase';
 
 const localeMap = {
     gr: 'el',
 };
 
 interface ModalContentProps {
-    userId: number;
     onSave?: () => void;
     initialData?: {
         id: string;
@@ -26,12 +22,10 @@ interface ModalContentProps {
 }
 
 export const MeasurementModal = ({
-    userId,
     onSave,
     initialData,
 }: ModalContentProps) => {
     const { t, i18n } = useTranslation();
-    const supabase = useSupabaseClient<Database>();
     const modals = useModals();
     const [date, setDate] = useState<Date | null>(
         initialData?.date ?? endOfDay(new Date()),
@@ -48,29 +42,23 @@ export const MeasurementModal = ({
         if (!weight) return setError(t('errors.weight_empty'));
         if (!date) return setError(t('errors.date_empty'));
 
-        let error;
+        const url = initialData?.id
+            ? `/api/v1/measurement?id=${initialData.id}`
+            : '/api/v1/measurement';
 
-        if (initialData) {
-            const result = await supabase
-                .from('measurements')
-                .update({
-                    date: endOfDay(date).toUTCString(),
-                    weight,
-                    fat_percentage: fatPercent,
-                })
-                .eq('id', initialData.id);
-
-            error = result.error;
-        } else {
-            const result = await supabase.from('measurements').insert({
-                user_id: userId,
-                date: endOfDay(date).toUTCString(),
+        const response = await fetch(url, {
+            method: initialData ? 'PATCH' : 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                date: date.toISOString(),
                 weight,
-                fat_percentage: fatPercent,
-            });
+                fatPercent,
+            }),
+        });
 
-            error = result.error;
-        }
+        const { error } = await response.json();
 
         if (error) {
             showNotification({

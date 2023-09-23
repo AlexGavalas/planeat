@@ -2,20 +2,16 @@ import { Button, Center, Group, Space, Text, Textarea } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { endOfDay } from 'date-fns';
 import 'dayjs/locale/el';
 import { useTranslation } from 'next-i18next';
 import { type FormEventHandler, useState } from 'react';
-
-import { type Database } from '~types/supabase';
 
 const localeMap = {
     gr: 'el',
 };
 
 interface ActivityModalProps {
-    userId: number;
     onSave?: () => void;
     initialData?: {
         id: string;
@@ -24,13 +20,8 @@ interface ActivityModalProps {
     };
 }
 
-export const ActivityModal = ({
-    userId,
-    onSave,
-    initialData,
-}: ActivityModalProps) => {
+export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
     const { t, i18n } = useTranslation();
-    const supabase = useSupabaseClient<Database>();
     const modals = useModals();
     const [date, setDate] = useState<Date | null>(
         initialData?.date ?? endOfDay(new Date()),
@@ -46,27 +37,22 @@ export const ActivityModal = ({
         if (!activity) return setError(t('errors.activity_empty'));
         if (!date) return setError(t('errors.date_empty'));
 
-        let error;
+        const url = initialData?.id
+            ? `/api/v1/activity?id=${initialData.id}`
+            : '/api/v1/activity';
 
-        if (initialData) {
-            const result = await supabase
-                .from('activities')
-                .update({
-                    date: endOfDay(date).toUTCString(),
-                    activity,
-                })
-                .eq('id', initialData.id);
-
-            error = result.error;
-        } else {
-            const result = await supabase.from('activities').insert({
-                user_id: userId,
-                date: endOfDay(date).toUTCString(),
+        const response = await fetch(url, {
+            method: initialData ? 'PATCH' : 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
                 activity,
-            });
+                date: date.toISOString(),
+            }),
+        });
 
-            error = result.error;
-        }
+        const { error } = await response.json();
 
         if (error) {
             showNotification({

@@ -1,11 +1,10 @@
-import { ActionIcon, Center, Group, Stack, Title } from '@mantine/core';
+import { ActionIcon, Box, Center, Group, Stack, Title } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
@@ -13,27 +12,20 @@ import { INITIAL_PAGE, PAGE_SIZE, Table } from '~components/table';
 import { MeasurementModal } from '~features/modals/measurement';
 import { useProfile } from '~hooks/use-profile';
 import { type Measurement } from '~types/measurement';
-import { type Database } from '~types/supabase';
 
 export const Measurements = () => {
     const { t } = useTranslation();
     const modals = useModals();
     const { profile } = useProfile();
     const queryClient = useQueryClient();
-    const supabase = useSupabaseClient<Database>();
     const [page, setPage] = useState(INITIAL_PAGE);
 
     const { data: count = 0, isFetched } = useQuery(
         ['measurements-count'],
         async () => {
-            if (!profile) {
-                throw new Error(`User not logged in`);
-            }
+            const response = await fetch('/api/v1/measurement?count=true');
 
-            const { count } = await supabase
-                .from('measurements')
-                .select('id', { count: 'exact' })
-                .eq('user_id', profile.id);
+            const { count } = await response.json();
 
             return count;
         },
@@ -45,16 +37,14 @@ export const Measurements = () => {
     const { data: measurements = [], isFetching } = useQuery(
         ['measurements', page],
         async () => {
-            if (!profile) {
-                throw new Error(`User not logged in`);
-            }
+            const start = (page - 1) * PAGE_SIZE;
+            const end = page * PAGE_SIZE - 1;
 
-            const { data } = await supabase
-                .from('measurements')
-                .select('*')
-                .eq('user_id', profile.id)
-                .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
-                .order('date', { ascending: false });
+            const response = await fetch(
+                `/api/v1/measurement?end=${end}&start=${start}`,
+            );
+
+            const { data } = await response.json();
 
             return data ?? [];
         },
@@ -65,48 +55,21 @@ export const Measurements = () => {
     );
 
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
+    const loading = (!measurements.length && !isFetched) || isFetching;
 
-    const onNewWeightSave = async () => {
+    const onNewWeightSave = useCallback(async () => {
         setPage(INITIAL_PAGE);
 
         await queryClient.invalidateQueries(['measurements-count']);
         await queryClient.invalidateQueries(['measurements']);
-    };
-
-    const loading = (!measurements.length && !isFetched) || isFetching;
-
-    const headers = [
-        {
-            label: t('date'),
-            width: '25%',
-            key: 'date',
-            formatValue: (item: Measurement) =>
-                format(parseISO(item.date), 'dd/MM/yy'),
-        },
-        {
-            label: t('weight'),
-            width: '20%',
-            key: 'weight',
-        },
-        {
-            label: t('fat_label'),
-            width: '20%',
-            key: 'fat',
-            formatValue: (item: Measurement) =>
-                item.fat_percentage ? `${item.fat_percentage}%` : '-',
-        },
-        {
-            label: t('actions'),
-            width: '35%',
-            key: 'actions',
-        },
-    ];
+    }, [queryClient]);
 
     const onDelete = async (item: Measurement) => {
-        const { error } = await supabase
-            .from('measurements')
-            .delete()
-            .eq('id', item.id);
+        const response = await fetch(`/api/v1/measurement?id=${item.id}`, {
+            method: 'DELETE',
+        });
+
+        const { error } = await response.json();
 
         if (error) {
             showNotification({
@@ -120,41 +83,78 @@ export const Measurements = () => {
         }
     };
 
-    const onEdit = async (item: Measurement) => {
-        if (!profile) {
-            return;
-        }
+    const onEdit = useCallback(
+        async (item: Measurement) => {
+            const onSave = async () => {
+                await queryClient.invalidateQueries(['measurements', page]);
+            };
 
-        const onSave = async () => {
-            await queryClient.invalidateQueries(['measurements', page]);
-        };
+            modals.openModal({
+                title: t('edit_measurement'),
+                centered: true,
+                size: 'sm',
+                children: (
+                    <MeasurementModal
+                        onSave={onSave}
+                        initialData={{
+                            id: item.id,
+                            date: parseISO(item.date),
+                            ...(item.fat_percentage && {
+                                fat_percentage: item.fat_percentage,
+                            }),
+                            ...(item.weight && {
+                                weight: item.weight,
+                            }),
+                        }}
+                    />
+                ),
+            });
+        },
+        [modals, page, queryClient, t],
+    );
 
+    const onPageChange = useCallback((page: number) => {
+        setPage(page);
+    }, []);
+
+    const handleAddMeasurement = useCallback(() => {
         modals.openModal({
-            title: t('edit_measurement'),
+            title: t('new_measurement'),
             centered: true,
             size: 'sm',
-            children: (
-                <MeasurementModal
-                    userId={profile.id}
-                    initialData={{
-                        id: item.id,
-                        date: parseISO(item.date),
-                        ...(item.fat_percentage && {
-                            fat_percentage: item.fat_percentage,
-                        }),
-                        ...(item.weight && {
-                            weight: item.weight,
-                        }),
-                    }}
-                    onSave={onSave}
-                />
-            ),
+            children: <MeasurementModal onSave={onNewWeightSave} />,
         });
-    };
+    }, [modals, onNewWeightSave, t]);
 
-    const onPageChange = (page: number) => {
-        setPage(page);
-    };
+    const headers = useMemo(
+        () => [
+            {
+                label: t('date'),
+                width: '25%',
+                key: 'date',
+                formatValue: (item: Measurement) =>
+                    format(parseISO(item.date), 'dd/MM/yy'),
+            },
+            {
+                label: t('weight'),
+                width: '20%',
+                key: 'weight',
+            },
+            {
+                label: t('fat_label'),
+                width: '20%',
+                key: 'fat',
+                formatValue: (item: Measurement) =>
+                    item.fat_percentage ? `${item.fat_percentage}%` : '-',
+            },
+            {
+                label: t('actions'),
+                width: '35%',
+                key: 'actions',
+            },
+        ],
+        [t],
+    );
 
     return (
         <Stack gap="md">
@@ -164,28 +164,12 @@ export const Measurements = () => {
                     variant="light"
                     title={t('add_measurement')}
                     size="lg"
-                    onClick={() => {
-                        if (!profile) {
-                            return;
-                        }
-
-                        modals.openModal({
-                            title: t('new_measurement'),
-                            centered: true,
-                            size: 'sm',
-                            children: (
-                                <MeasurementModal
-                                    userId={profile.id}
-                                    onSave={onNewWeightSave}
-                                />
-                            ),
-                        });
-                    }}
+                    onClick={handleAddMeasurement}
                 >
                     <Plus />
                 </ActionIcon>
             </Group>
-            <div style={{ minHeight: 100 }}>
+            <Box style={{ minHeight: 100 }}>
                 <LoadingOverlay visible={loading} />
                 {measurements.length > 0 ? (
                     <Table
@@ -195,6 +179,7 @@ export const Measurements = () => {
                         onEdit={onEdit}
                         onPageChange={onPageChange}
                         totalPages={totalPages}
+                        page={page}
                     />
                 ) : (
                     !loading && (
@@ -203,7 +188,7 @@ export const Measurements = () => {
                         </Center>
                     )
                 )}
-            </div>
+            </Box>
         </Stack>
     );
 };

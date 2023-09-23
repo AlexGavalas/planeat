@@ -1,11 +1,10 @@
-import { ActionIcon, Center, Group, Stack, Title } from '@mantine/core';
+import { ActionIcon, Box, Center, Group, Stack, Title } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
@@ -13,27 +12,20 @@ import { INITIAL_PAGE, PAGE_SIZE, Table } from '~components/table';
 import { ActivityModal } from '~features/modals/activity';
 import { useProfile } from '~hooks/use-profile';
 import { type Activity } from '~types/activity';
-import { type Database } from '~types/supabase';
 
 export const Activities = () => {
     const { t } = useTranslation();
     const modals = useModals();
     const { profile } = useProfile();
     const queryClient = useQueryClient();
-    const supabase = useSupabaseClient<Database>();
     const [page, setPage] = useState(INITIAL_PAGE);
 
     const { data: count = 0, isFetched: isCountFetched } = useQuery(
         ['activities-count'],
         async () => {
-            if (!profile) {
-                throw new Error(`User not logged in`);
-            }
+            const response = await fetch('/api/v1/activity?count=true');
 
-            const { count } = await supabase
-                .from('activities')
-                .select('id', { count: 'exact' })
-                .eq('user_id', profile.id);
+            const { count } = await response.json();
 
             return count;
         },
@@ -45,16 +37,14 @@ export const Activities = () => {
     const { data: activities = [], isFetching } = useQuery(
         ['activities', page],
         async () => {
-            if (!profile) {
-                throw new Error(`User not logged in`);
-            }
+            const start = (page - 1) * PAGE_SIZE;
+            const end = page * PAGE_SIZE - 1;
 
-            const { data } = await supabase
-                .from('activities')
-                .select('*')
-                .eq('user_id', profile.id)
-                .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
-                .order('date', { ascending: false });
+            const response = await fetch(
+                `/api/v1/activity?end=${end}&start=${start}`,
+            );
+
+            const { data } = await response.json();
 
             return data ?? [];
         },
@@ -64,33 +54,44 @@ export const Activities = () => {
     );
 
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
+    const loading = (!activities.length && !isCountFetched) || isFetching;
 
-    const onNewActivitySave = async () => {
+    const onNewActivitySave = useCallback(async () => {
         setPage(INITIAL_PAGE);
 
         await queryClient.invalidateQueries(['activities-count']);
         await queryClient.invalidateQueries(['activities']);
-    };
+    }, [queryClient]);
 
-    const loading = (!activities.length && !isCountFetched) || isFetching;
-
-    const headers = [
-        {
-            label: t('date'),
-            width: '25%',
-            key: 'date',
-            formatValue: (item: Activity) =>
-                format(parseISO(item.date), 'dd/MM/yy'),
-        },
-        { label: t('activity.label'), key: 'activity', width: '40%' },
-        { label: t('actions'), key: 'actions', width: '35%' },
-    ];
+    const headers = useMemo(
+        () => [
+            {
+                label: t('date'),
+                width: '25%',
+                key: 'date',
+                formatValue: (item: Activity) =>
+                    format(parseISO(item.date), 'dd/MM/yy'),
+            },
+            {
+                label: t('activity.label'),
+                key: 'activity',
+                width: '40%',
+            },
+            {
+                label: t('actions'),
+                key: 'actions',
+                width: '35%',
+            },
+        ],
+        [t],
+    );
 
     const onDelete = async (item: Activity) => {
-        const { error } = await supabase
-            .from('activities')
-            .delete()
-            .eq('id', item.id);
+        const response = await fetch(`/api/v1/activity?id=${item.id}`, {
+            method: 'DELETE',
+        });
+
+        const { error } = await response.json();
 
         if (error) {
             showNotification({
@@ -105,12 +106,7 @@ export const Activities = () => {
     };
 
     const onEdit = async (item: Activity) => {
-        if (!profile) {
-            return;
-        }
-
         const onSave = async () => {
-            await queryClient.invalidateQueries(['activities-count']);
             await queryClient.invalidateQueries(['activities', page]);
         };
 
@@ -120,21 +116,20 @@ export const Activities = () => {
             size: 'sm',
             children: (
                 <ActivityModal
-                    userId={profile.id}
+                    onSave={onSave}
                     initialData={{
                         id: item.id,
                         date: parseISO(item.date),
                         activity: item.activity,
                     }}
-                    onSave={onSave}
                 />
             ),
         });
     };
 
-    const onPageChange = (page: number) => {
+    const onPageChange = useCallback((page: number) => {
         setPage(page);
-    };
+    }, []);
 
     return (
         <Stack gap="md">
@@ -145,19 +140,12 @@ export const Activities = () => {
                     title={t('add_activity')}
                     size="lg"
                     onClick={() => {
-                        if (!profile) {
-                            return;
-                        }
-
                         modals.openModal({
                             title: t('add_activity'),
                             centered: true,
                             size: 'sm',
                             children: (
-                                <ActivityModal
-                                    userId={profile.id}
-                                    onSave={onNewActivitySave}
-                                />
+                                <ActivityModal onSave={onNewActivitySave} />
                             ),
                         });
                     }}
@@ -165,7 +153,7 @@ export const Activities = () => {
                     <Plus />
                 </ActionIcon>
             </Group>
-            <div style={{ minHeight: 100 }}>
+            <Box style={{ minHeight: 100 }}>
                 <LoadingOverlay visible={loading} />
                 {activities.length > 0 ? (
                     <Table
@@ -175,15 +163,16 @@ export const Activities = () => {
                         onEdit={onEdit}
                         onPageChange={onPageChange}
                         totalPages={totalPages}
+                        page={page}
                     />
                 ) : (
                     !loading && (
                         <Center style={{ height: 100 }}>
-                            <Title order={4}>{t('no_measurements_yet')}</Title>
+                            <Title order={4}>{t('no_activities_yet')}</Title>
                         </Center>
                     )
                 )}
-            </div>
+            </Box>
         </Stack>
     );
 };

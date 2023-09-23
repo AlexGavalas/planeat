@@ -105,3 +105,94 @@ export const fetchFatMeasurements = async ({
 
     return result;
 };
+
+type FetchMeasurementsCount = {
+    supabase: SupabaseClient<Database>;
+    userId: number;
+};
+
+export const fetchMeasurementsCount = async ({
+    supabase,
+    userId,
+}: FetchMeasurementsCount) => {
+    const { count } = await supabase
+        .from('measurements')
+        .select('id', { count: 'exact' })
+        .eq('user_id', userId);
+
+    return count;
+};
+
+type FetchMeasurementsPaginated = {
+    supabase: SupabaseClient<Database>;
+    start: number;
+    end: number;
+    userId: number;
+};
+
+export const fetchMeasurementsPaginated = async ({
+    supabase,
+    start,
+    end,
+    userId,
+}: FetchMeasurementsPaginated) => {
+    const { data } = await supabase
+        .from('measurements')
+        .select('*')
+        .eq('user_id', userId)
+        .range(start, end)
+        .order('date', { ascending: false });
+
+    return data;
+};
+
+type DeleteMeasurement = {
+    supabase: SupabaseClient<Database>;
+    measurementId: string;
+    userId: number;
+};
+
+export const deleteMeasurement = async ({
+    supabase,
+    measurementId,
+    userId,
+}: DeleteMeasurement) => {
+    const { error } = await supabase
+        .from('measurements')
+        .delete()
+        .eq('id', measurementId)
+        .eq('user_id', userId);
+
+    return { error };
+};
+
+type UpdateMeasurement = {
+    supabase: SupabaseClient<Database>;
+    date: string;
+    fatPercent: number;
+    weight: number;
+    userId: number;
+    measurementId?: string;
+};
+
+export const updateMeasurement = async ({
+    date,
+    fatPercent,
+    supabase,
+    measurementId,
+    weight,
+    userId,
+}: UpdateMeasurement) => {
+    const { error } = await supabase
+        .from('measurements')
+        .upsert({
+            id: measurementId,
+            user_id: userId,
+            date,
+            weight,
+            fat_percentage: fatPercent,
+        })
+        .eq('user_id', userId);
+
+    return { error };
+};
