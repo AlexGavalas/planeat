@@ -10,7 +10,7 @@ import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
 import { Calendar } from '~features/calendar';
 import { type Database } from '~types/supabase';
-import { getUTCDate } from '~util/date';
+import { getUTCDate, getUTCDateV2 } from '~util/date';
 import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -37,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     invariant(profile, `Profile was not found for user email ${user.email}`);
 
-    const NOW = getUTCDate(new Date());
+    const NOW = getUTCDateV2(new Date(), 'HH:mm dd/MM/yyyy');
 
     const startDate = getUTCDate(
         startOfWeek(NOW, { weekStartsOn: 1 }),

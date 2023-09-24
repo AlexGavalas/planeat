@@ -1,4 +1,10 @@
-import { eachDayOfInterval, endOfWeek, format, startOfWeek } from 'date-fns';
+import {
+    eachDayOfInterval,
+    endOfWeek,
+    format,
+    parse,
+    startOfWeek,
+} from 'date-fns';
 import { formatInTimeZone, utcToZonedTime } from 'date-fns-tz';
 import el from 'date-fns/locale/el';
 import enGB from 'date-fns/locale/en-GB';
@@ -29,5 +35,6 @@ export const getUTCDate = (date: Date, timeZone: string = 'Europe/Athens') => {
 };
 
 export const getUTCDateV2 = (date: Date, format: string) => {
-    return formatInTimeZone(date, 'UTC', format);
+    const formatted = formatInTimeZone(date, 'UTC', format);
+    return parse(formatted, format, new Date());
 };
