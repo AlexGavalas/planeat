@@ -1,6 +1,6 @@
 import { Box, Group, Space, Stack } from '@mantine/core';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { endOfDay, startOfDay } from 'date-fns';
+import { endOfDay, format, startOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
 import { type GetServerSideProps } from 'next';
 import { QueryClient, dehydrate } from 'react-query';
@@ -22,7 +22,6 @@ import { DailyMeal } from '~features/daily-meal';
 import { CurrentFat, FatTimeline } from '~features/fat-percent';
 import { type MealsMap } from '~types/meal';
 import { type Database } from '~types/supabase';
-import { getUTCDate } from '~util/date';
 import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -47,8 +46,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const NOW = new Date();
 
-    const startOfDayTimestamp = getUTCDate(startOfDay(NOW)).toISOString();
-    const endOfDayTimestamp = getUTCDate(endOfDay(NOW)).toISOString();
+    const startOfDayTimestamp = format(startOfDay(NOW), 'yyyy-MM-dd HH:mm');
+    const endOfDayTimestamp = format(endOfDay(NOW), 'yyyy-MM-dd HH:mm');
 
     const profile = await fetchUser({ email: user.email, supabase });
 

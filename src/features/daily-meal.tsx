@@ -4,10 +4,9 @@ import { useTranslation } from 'next-i18next';
 
 import { MEAL_ICON, ROWS } from '~constants/calendar';
 import { type MealsMap } from '~types/meal';
-import { getUTCDate } from '~util/date';
 
 const now = new Date();
-const startOfDayTimestamp = getUTCDate(startOfDay(now));
+const startOfDayTimestamp = startOfDay(now);
 
 const MEAL_TIMES = {
     morning: set(startOfDayTimestamp, { hours: 9, minutes: 0, seconds: 0 }),

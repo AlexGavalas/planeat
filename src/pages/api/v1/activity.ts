@@ -1,5 +1,4 @@
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import { endOfDay, parseISO } from 'date-fns';
 import type { NextApiHandler } from 'next';
 import invariant from 'tiny-invariant';
 
@@ -61,7 +60,7 @@ const handler: NextApiHandler = async (req, res) => {
 
         const { error } = await updateActivity({
             activity,
-            date: endOfDay(parseISO(date)).toISOString(),
+            date,
             activityId: req.query.id ? String(req.query.id) : undefined,
             supabase,
             userId: user.id,

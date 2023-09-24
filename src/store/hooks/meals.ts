@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
-import { getDaysOfWeek, getUTCDate } from '~util/date';
+import { getDaysOfWeek } from '~util/date';
 
 import { useCurrentWeek } from './current-week';
 import { useUnsavedChanges } from './unsaved-changes';
@@ -20,18 +20,20 @@ export const useMeals = () => {
 
     const [submitting, setSubmitting] = useState(false);
 
-    const currentWeekKey = format(getUTCDate(currentWeek), 'yyyy-MM-dd');
+    const currentWeekKey = format(currentWeek, 'yyyy-MM-dd');
 
     const { data: meals = [], isFetching: fetchingMeals } = useQuery(
         ['meals', currentWeekKey],
         async () => {
-            const endDate = getUTCDate(
+            const endDate = format(
                 endOfWeek(currentWeek, { weekStartsOn: 1 }),
-            ).toISOString();
+                'yyyy-MM-dd',
+            );
 
-            const startDate = getUTCDate(
+            const startDate = format(
                 startOfWeek(currentWeek, { weekStartsOn: 1 }),
-            ).toISOString();
+                'yyyy-MM-dd',
+            );
 
             const response = await fetch(
                 `/api/v1/meal?startDate=${startDate}&endDate=${endDate}`,
@@ -151,7 +153,7 @@ export const useMeals = () => {
         note: EditedMeal['note'];
         rating: EditedMeal['rating'];
     }) => {
-        const day = getUTCDate(timestamp).toISOString();
+        const day = format(timestamp, 'yyyy-MM-dd HH:mm');
 
         const editedMeal = {
             ...meal,
