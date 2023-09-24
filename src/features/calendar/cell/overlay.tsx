@@ -4,6 +4,7 @@ import {
     Center,
     Overlay,
     SimpleGrid,
+    Tooltip,
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { EditPencil, Notes, ThreeStars } from 'iconoir-react';
@@ -149,32 +150,52 @@ export const CellOverlay = ({
                     verticalSpacing={4}
                     cols={shouldShowColumnLayout ? 2 : 1}
                 >
-                    <ActionIcon
-                        {...commonButtonProps}
-                        title={t('edit')}
-                        onClick={handleEditClick}
+                    <Tooltip
+                        withArrow
+                        label={t('tooltip.edit')}
+                        position={shouldShowColumnLayout ? 'left' : 'top'}
                     >
-                        <EditPencil />
-                    </ActionIcon>
+                        <ActionIcon
+                            {...commonButtonProps}
+                            title={t('edit')}
+                            onClick={handleEditClick}
+                        >
+                            <EditPencil />
+                        </ActionIcon>
+                    </Tooltip>
                     {isMealSaved && (
                         <>
-                            <ActionIcon
-                                {...commonButtonProps}
-                                title={t('edit')}
-                                onClick={handleNoteClick}
+                            <Tooltip
+                                withArrow
+                                label={t('tooltip.edit_note')}
+                                position="right"
                             >
-                                <Notes />
-                            </ActionIcon>
-                            <ActionIcon
-                                {...commonButtonProps}
-                                title={t('modals.meal_rate.title')}
-                                onClick={handleRateClick}
+                                <ActionIcon
+                                    {...commonButtonProps}
+                                    title={t('edit')}
+                                    onClick={handleNoteClick}
+                                >
+                                    <Notes />
+                                </ActionIcon>
+                            </Tooltip>
+                            <Tooltip
+                                withArrow
+                                label={t('tooltip.rate')}
+                                position="left"
                             >
-                                <ThreeStars />
-                            </ActionIcon>
+                                <ActionIcon
+                                    {...commonButtonProps}
+                                    title={t('modals.meal_rate.title')}
+                                    onClick={handleRateClick}
+                                >
+                                    <ThreeStars />
+                                </ActionIcon>
+                            </Tooltip>
                         </>
                     )}
-                    {mealHasContent && <CopyButton value={meal.meal} />}
+                    {mealHasContent && (
+                        <CopyButton value={meal.meal} tooltipPosition="right" />
+                    )}
                 </SimpleGrid>
             </Center>
         </Overlay>

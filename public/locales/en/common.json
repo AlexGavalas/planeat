@@ -208,5 +208,10 @@
     "util": {
         "copy": "Copy",
         "copied": "Copied"
+    },
+    "tooltip": {
+        "edit": "Edit",
+        "edit_note": "Edit note",
+        "rate": "Rate"
     }
 }
