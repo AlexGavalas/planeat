@@ -24,8 +24,9 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
         label: t(`row.${row.key}`),
     }));
 
-    const activeIndex =
-        ROWS.findIndex(({ key }) => isAfter(MEAL_TIMES[key], now)) - 1;
+    const activeIndex = ROWS.findIndex(({ key }) =>
+        isAfter(MEAL_TIMES[key], now),
+    );
 
     return (
         <Stack gap="md">
