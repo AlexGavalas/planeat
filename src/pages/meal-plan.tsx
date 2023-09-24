@@ -5,7 +5,6 @@ import { QueryClient, dehydrate } from 'react-query';
 import invariant from 'tiny-invariant';
 
 import { fetchActivities } from '~api/activity';
-// import { fetchMeals } from '~api/meal';
 import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
 import { Calendar } from '~features/calendar';
@@ -50,12 +49,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await queryClient.prefetchQuery(['user'], async () => profile);
 
     const currentWeekKey = format(getUTCDate(NOW), 'yyyy-MM-dd');
-
-    // await queryClient.prefetchQuery(['meals', currentWeekKey], async () => {
-    //     const result = await fetchMeals({ supabase, endDate, startDate });
-
-    //     return result.data || [];
-    // });
 
     await queryClient.prefetchQuery(
         ['activities', currentWeekKey],

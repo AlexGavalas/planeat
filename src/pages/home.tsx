@@ -50,17 +50,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const startOfDayTimestamp = getUTCDate(startOfDay(NOW)).toISOString();
     const endOfDayTimestamp = getUTCDate(endOfDay(NOW)).toISOString();
 
+    const profile = await fetchUser({ email: user.email, supabase });
+
+    invariant(profile, `Profile was not found for user email ${user.email}`);
+
     const { data } = await fetchMeals({
         supabase,
         endDate: endOfDayTimestamp,
         startDate: startOfDayTimestamp,
+        userId: profile.id,
     });
 
     const dailyMeals = fromPairs(map(data, (item) => [item.section_key, item]));
-
-    const profile = await fetchUser({ email: user.email, supabase });
-
-    invariant(profile, `Profile was not found for user email ${user.email}`);
 
     await queryClient.prefetchQuery(['user'], async () => profile);
 

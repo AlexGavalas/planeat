@@ -29,6 +29,7 @@ const handler: NextApiHandler = async (req, res) => {
             endDate,
             startDate,
             supabase,
+            userId: user.id,
         });
 
         res.json({ data });

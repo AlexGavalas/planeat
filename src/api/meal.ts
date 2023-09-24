@@ -7,18 +7,21 @@ type FetchMealsProps = {
     startDate: string;
     endDate: string;
     supabase: SupabaseClient<Database>;
+    userId: number;
 };
 
 export const fetchMeals = async ({
     startDate,
     endDate,
     supabase,
+    userId,
 }: FetchMealsProps) => {
     const result = await supabase
         .from('meals')
         .select('*')
         .gte('day', startDate)
-        .lte('day', endDate);
+        .lte('day', endDate)
+        .eq('user_id', userId);
 
     return result;
 };
