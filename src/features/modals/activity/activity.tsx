@@ -6,6 +6,8 @@ import 'dayjs/locale/el';
 import { useTranslation } from 'next-i18next';
 import { type FormEventHandler, useState } from 'react';
 
+import { getUTCDate } from '~util/date';
+
 const localeMap = {
     gr: 'el',
 };
@@ -47,7 +49,7 @@ export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
             },
             body: JSON.stringify({
                 activity,
-                date: date.toISOString(),
+                date: getUTCDate(date).toISOString(),
             }),
         });
 
