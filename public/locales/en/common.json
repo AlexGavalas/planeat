@@ -204,5 +204,9 @@
                 }
             }
         }
+    },
+    "util": {
+        "copy": "Copy",
+        "copied": "Copied"
     }
 }
