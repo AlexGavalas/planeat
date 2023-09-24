@@ -5,12 +5,12 @@ import { QueryClient, dehydrate } from 'react-query';
 import invariant from 'tiny-invariant';
 
 import { fetchActivities } from '~api/activity';
-import { fetchMeals } from '~api/meal';
+// import { fetchMeals } from '~api/meal';
 import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
 import { Calendar } from '~features/calendar';
 import { type Database } from '~types/supabase';
-import { getUTCDate, getUTCDateV2 } from '~util/date';
+import { getUTCDate } from '~util/date';
 import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
