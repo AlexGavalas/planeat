@@ -6,18 +6,21 @@ type FetchActivitiesProps = {
     startDate: string;
     endDate: string;
     supabase: SupabaseClient<Database>;
+    userId: number;
 };
 
 export const fetchActivities = async ({
     startDate,
     endDate,
     supabase,
+    userId,
 }: FetchActivitiesProps) => {
     const result = await supabase
         .from('activities')
         .select('*')
         .gte('date', startDate)
-        .lte('date', endDate);
+        .lte('date', endDate)
+        .eq('user_id', userId);
 
     return result;
 };

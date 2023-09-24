@@ -1,4 +1,4 @@
-import { getDaysOfWeek, getUTCDateV2 } from './date';
+import { getDaysOfWeek } from './date';
 
 describe('getDaysOfWeek', () => {
     beforeAll(() => {
@@ -40,19 +40,5 @@ describe('getDaysOfWeek', () => {
                 timestamp: new Date('2023-09-02T21:00:00.000Z'),
             },
         ]);
-    });
-});
-
-describe('getUTCDate', () => {
-    beforeAll(() => {
-        jest.useFakeTimers({
-            now: new Date('2023-09-01T00:00:00.000Z'),
-        });
-    });
-
-    it('returns a date in UTC', () => {
-        const date = getUTCDateV2(new Date(), 'yyyy-MM-dd HH:mm:ss');
-
-        expect(date).toBe('2023-09-01 00:00:00');
     });
 });

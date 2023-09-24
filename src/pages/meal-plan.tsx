@@ -10,7 +10,6 @@ import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
 import { Calendar } from '~features/calendar';
 import { type Database } from '~types/supabase';
-import { getUTCDate } from '~util/date';
 import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -39,21 +38,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const NOW = new Date();
 
-    const startDate = getUTCDate(
-        startOfWeek(NOW, { weekStartsOn: 1 }),
-    ).toISOString();
+    const endDate = format(endOfWeek(NOW, { weekStartsOn: 1 }), 'yyyy-MM-dd');
 
-    const endDate = getUTCDate(
-        endOfWeek(NOW, { weekStartsOn: 1 }),
-    ).toISOString();
+    const startDate = format(
+        startOfWeek(NOW, { weekStartsOn: 1 }),
+        'yyyy-MM-dd',
+    );
 
     await queryClient.prefetchQuery(['user'], async () => profile);
 
-    const currentWeekKey = format(getUTCDate(NOW), 'yyyy-MM-dd');
+    const currentWeekKey = format(NOW, 'yyyy-MM-dd');
 
     await queryClient.prefetchQuery(['meals', currentWeekKey], async () => {
-        console.log({ endDate, startDate });
-        const result = await fetchMeals({ supabase, endDate, startDate });
+        const result = await fetchMeals({
+            supabase,
+            endDate,
+            startDate,
+            userId: profile.id,
+        });
 
         return result.data || [];
     });
@@ -65,6 +67,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 supabase,
                 endDate,
                 startDate,
+                userId: profile.id,
             });
 
             return result.data || [];

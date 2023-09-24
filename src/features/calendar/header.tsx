@@ -1,21 +1,23 @@
 import { Flex, Title } from '@mantine/core';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { endOfWeek, format, isToday, parse, startOfWeek } from 'date-fns';
+import { endOfWeek, format, isToday, startOfWeek } from 'date-fns';
 import { Running } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useQuery } from 'react-query';
 
 import { fetchActivities } from '~api/activity';
+import { useProfile } from '~hooks/use-profile';
 import { useCurrentWeek } from '~store/hooks';
 import { type ActivitysMap } from '~types/activity';
 import { type Database } from '~types/supabase';
-import { getDaysOfWeek, getUTCDate } from '~util/date';
+import { getDaysOfWeek } from '~util/date';
 
 import styles from './header.module.css';
 
 export const Header = () => {
     const { i18n } = useTranslation();
     const { currentWeek } = useCurrentWeek();
+    const { profile } = useProfile();
     const supabase = useSupabaseClient<Database>();
 
     const currentWeekKey = format(currentWeek, 'yyyy-MM-dd');
@@ -29,18 +31,21 @@ export const Header = () => {
     const { data: activities = [] } = useQuery(
         ['activities', currentWeekKey],
         async () => {
-            const endDate = getUTCDate(
-                endOfWeek(currentWeek, { weekStartsOn: 1 }),
-            ).toISOString();
-
-            const startDate = getUTCDate(
+            const startDate = format(
                 startOfWeek(currentWeek, { weekStartsOn: 1 }),
-            ).toISOString();
+                'yyyy-MM-dd',
+            );
+
+            const endDate = format(
+                endOfWeek(currentWeek, { weekStartsOn: 1 }),
+                'yyyy-MM-dd',
+            );
 
             const result = await fetchActivities({
                 endDate,
                 startDate,
                 supabase,
+                userId: profile.id,
             });
 
             return result.data || [];
@@ -48,9 +53,7 @@ export const Header = () => {
     );
 
     const activitiesMap = activities.reduce<ActivitysMap>((acc, activity) => {
-        const dateKey = getUTCDate(
-            parse(activity.date, 'yyyy-MM-dd', new Date()),
-        ).toISOString();
+        const dateKey = activity.date;
 
         acc[dateKey] = activity;
 
@@ -76,7 +79,9 @@ export const Header = () => {
                     >
                         {label}
                     </Title>
-                    {activitiesMap[timestamp.toISOString()] && <Running />}
+                    {activitiesMap[format(timestamp, 'yyyy-MM-dd')] && (
+                        <Running />
+                    )}
                 </Flex>
             ))}
         </div>

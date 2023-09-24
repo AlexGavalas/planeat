@@ -2,7 +2,7 @@ import { Button, Center, Group, NumberInput, Space, Text } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { endOfDay } from 'date-fns';
+import { format } from 'date-fns';
 import 'dayjs/locale/el';
 import { useTranslation } from 'next-i18next';
 import { type FormEventHandler, useState } from 'react';
@@ -28,7 +28,7 @@ export const MeasurementModal = ({
     const { t, i18n } = useTranslation();
     const modals = useModals();
     const [date, setDate] = useState<Date | null>(
-        initialData?.date ?? endOfDay(new Date()),
+        initialData?.date ?? new Date(),
     );
     const [weight, setWeight] = useState(initialData?.weight);
     const [fatPercent, setFatPercent] = useState(initialData?.fat_percentage);
@@ -52,7 +52,7 @@ export const MeasurementModal = ({
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                date: date.toISOString(),
+                date: format(date, 'yyyy-MM-dd'),
                 weight,
                 fatPercent,
             }),

@@ -1,7 +1,6 @@
 import { type SupabaseClient } from '@supabase/supabase-js';
 
 import { type Database } from '~types/supabase';
-import { getUTCDate } from '~util/date';
 
 type FetchNotification = {
     supabase: SupabaseClient<Database>;
@@ -36,7 +35,7 @@ export const createConnectionRequestNotification = async ({
     targetUserId,
 }: CreateNotification) => {
     const { error } = await supabase.from('notifications').insert({
-        date: getUTCDate(new Date()).toISOString(),
+        date: new Date().toISOString(),
         notification_type: 'connection_request',
         request_user_id: requestUserId,
         target_user_id: targetUserId,
