@@ -37,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     invariant(profile, `Profile was not found for user email ${user.email}`);
 
-    const NOW = new Date();
+    const NOW = getUTCDate(new Date());
 
     const startDate = getUTCDate(
         startOfWeek(NOW, { weekStartsOn: 1 }),
@@ -52,7 +52,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const currentWeekKey = format(getUTCDate(NOW), 'yyyy-MM-dd');
 
     await queryClient.prefetchQuery(['meals', currentWeekKey], async () => {
-        console.log({ endDate, startDate });
         const result = await fetchMeals({ supabase, endDate, startDate });
 
         return result.data || [];
