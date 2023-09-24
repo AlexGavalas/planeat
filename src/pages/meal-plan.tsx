@@ -41,17 +41,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const startDate = getUTCDate(
         startOfWeek(NOW, { weekStartsOn: 1 }),
-    ).toUTCString();
+    ).toISOString();
 
     const endDate = getUTCDate(
         endOfWeek(NOW, { weekStartsOn: 1 }),
-    ).toUTCString();
+    ).toISOString();
 
     await queryClient.prefetchQuery(['user'], async () => profile);
 
     const currentWeekKey = format(getUTCDate(NOW), 'yyyy-MM-dd');
 
     await queryClient.prefetchQuery(['meals', currentWeekKey], async () => {
+        console.log({ endDate, startDate });
         const result = await fetchMeals({ supabase, endDate, startDate });
 
         return result.data || [];

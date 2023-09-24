@@ -151,7 +151,7 @@ export const useMeals = () => {
         note: EditedMeal['note'];
         rating: EditedMeal['rating'];
     }) => {
-        const day = getUTCDate(timestamp).toUTCString();
+        const day = getUTCDate(timestamp).toISOString();
 
         const editedMeal = {
             ...meal,

@@ -18,7 +18,7 @@ const cloneState = (meals: Meal[]) => {
 
         const day = getUTCDate(
             add(parseISO(meal.day), { weeks: 1 }),
-        ).toUTCString();
+        ).toISOString();
 
         acc[newKey] = {
             ...meal,

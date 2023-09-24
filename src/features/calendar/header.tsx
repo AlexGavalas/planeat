@@ -31,11 +31,11 @@ export const Header = () => {
         async () => {
             const endDate = getUTCDate(
                 endOfWeek(currentWeek, { weekStartsOn: 1 }),
-            ).toUTCString();
+            ).toISOString();
 
             const startDate = getUTCDate(
                 startOfWeek(currentWeek, { weekStartsOn: 1 }),
-            ).toUTCString();
+            ).toISOString();
 
             const result = await fetchActivities({
                 endDate,
@@ -50,7 +50,7 @@ export const Header = () => {
     const activitiesMap = activities.reduce<ActivitysMap>((acc, activity) => {
         const dateKey = getUTCDate(
             parse(activity.date, 'yyyy-MM-dd', new Date()),
-        ).toUTCString();
+        ).toISOString();
 
         acc[dateKey] = activity;
 
@@ -76,7 +76,7 @@ export const Header = () => {
                     >
                         {label}
                     </Title>
-                    {activitiesMap[timestamp.toUTCString()] && <Running />}
+                    {activitiesMap[timestamp.toISOString()] && <Running />}
                 </Flex>
             ))}
         </div>
