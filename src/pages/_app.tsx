@@ -20,6 +20,7 @@ import {
 
 import { BRAND_COLORS } from '~constants/colors';
 import { Header } from '~features/header';
+import { Onboarding } from '~features/onboarding';
 import { UserContext } from '~store/user-context';
 import { type Database } from '~types/supabase';
 
@@ -66,6 +67,7 @@ const App = ({
                             <Hydrate state={pageProps.dehydratedState}>
                                 <ModalsProvider>
                                     <UserContext>
+                                        <Onboarding />
                                         <Header />
                                         <div className="container">
                                             <Component {...pageProps} />

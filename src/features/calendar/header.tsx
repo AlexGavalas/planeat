@@ -31,6 +31,10 @@ export const Header = () => {
     const { data: activities = [] } = useQuery(
         ['activities', currentWeekKey],
         async () => {
+            if (!profile?.id) {
+                return;
+            }
+
             const startDate = format(
                 startOfWeek(currentWeek, { weekStartsOn: 1 }),
                 'yyyy-MM-dd',

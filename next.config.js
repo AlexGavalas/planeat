@@ -1,5 +1,9 @@
 // @ts-check
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+});
+
 const { i18n } = require('./next-i18next.config');
 
 /**
@@ -24,6 +28,7 @@ const config = {
     experimental: {
         esmExternals: false,
     },
+    swcMinify: false,
 };
 
-module.exports = config;
+module.exports = withBundleAnalyzer(config);

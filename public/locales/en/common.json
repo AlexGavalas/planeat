@@ -213,5 +213,24 @@
         "edit": "Edit",
         "edit_note": "Edit note",
         "rate": "Rate"
+    },
+    "onboarding": {
+        "labels": {
+            "close": "Close",
+            "next": "Next",
+            "open": "Open",
+            "skip": "Skip tour",
+            "back": "Back",
+            "last": "Done"
+        },
+        "content": {
+            "daily_meals": "Here you can see your meals for the day.",
+            "fat_timeline": "Here you can see your fat percentage timeline, along with a small comparison.",
+            "weight_timeline": "Here you can see your weight timeline, along with your BMI index.",
+            "meal_plan": "Here you can see and edit your meal plan for the week.",
+            "measurements": "Here you can see and edit your measurements.",
+            "personal_settings": "Here you can see and edit your personal settings.",
+            "advanced_settings": "Here you can see and edit some advanced settings."
+        }
     }
 }

@@ -54,7 +54,7 @@ export default function Settings() {
 
     return (
         <Container>
-            <Tabs defaultValue="measurements">
+            <Tabs defaultValue="measurements" id="settings">
                 <Tabs.List>
                     <Tabs.Tab value="measurements">
                         {t('measurements')}
