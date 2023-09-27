@@ -118,6 +118,7 @@ export default function Home({ dailyMeals }: { dailyMeals: MealsMap }) {
     return (
         <Group align="start" wrap="nowrap">
             <Stack
+                id="daily-meals-container"
                 style={{
                     width: '20%',
                     maxWidth: '20%',
@@ -134,13 +135,17 @@ export default function Home({ dailyMeals }: { dailyMeals: MealsMap }) {
                 }}
             >
                 <Card>
-                    <CurrentFat />
-                    <FatTimeline />
+                    <Stack id="fat-container">
+                        <CurrentFat />
+                        <FatTimeline />
+                    </Stack>
                 </Card>
                 <Space h="md" />
                 <Card>
-                    <CurrentBMI />
-                    <BMITimeline />
+                    <Stack id="weight-container">
+                        <CurrentBMI />
+                        <BMITimeline />
+                    </Stack>
                 </Card>
             </Box>
             <Fab />

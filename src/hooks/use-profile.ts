@@ -4,6 +4,8 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import { type User } from '~types/user';
+
 import { useUser } from './use-user';
 
 interface MutationProps {
@@ -11,6 +13,8 @@ interface MutationProps {
     height?: number;
     targetWeight?: number;
     language?: string;
+    hasCompletedOnboarding?: boolean;
+    silent?: boolean;
 }
 
 export const useProfile = () => {
@@ -26,7 +30,7 @@ export const useProfile = () => {
 
             const { data } = await response.json();
 
-            return data;
+            return data as User;
         },
         {
             enabled: Boolean(user?.email),
@@ -39,6 +43,8 @@ export const useProfile = () => {
             height,
             targetWeight,
             language,
+            hasCompletedOnboarding,
+            silent = false,
         }: MutationProps) => {
             const response = await fetch('/api/v1/user', {
                 method: 'PATCH',
@@ -50,6 +56,7 @@ export const useProfile = () => {
                     height,
                     targetWeight,
                     language,
+                    hasCompletedOnboarding,
                 }),
             });
 
@@ -59,17 +66,20 @@ export const useProfile = () => {
                 throw error;
             }
 
-            return data;
+            return { ...data, silent };
         },
         {
-            onSuccess: (_, { language }) => {
-                showNotification({
-                    title: t('notification.success.title', { lng: language }),
-                    message: t('notification.success.message', {
-                        lng: language,
-                    }),
-                });
-
+            onSuccess: (_, { language, silent }) => {
+                if (!silent) {
+                    showNotification({
+                        title: t('notification.success.title', {
+                            lng: language,
+                        }),
+                        message: t('notification.success.message', {
+                            lng: language,
+                        }),
+                    });
+                }
                 queryClient.invalidateQueries(['user']);
             },
         },

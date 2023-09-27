@@ -90,6 +90,7 @@ type UpdateProfile = {
     height?: number;
     targetWeight?: number;
     language?: string;
+    hasCompletedOnboarding?: boolean;
 };
 
 export const updateProfile = async ({
@@ -99,6 +100,7 @@ export const updateProfile = async ({
     isDiscoverable,
     language,
     targetWeight,
+    hasCompletedOnboarding,
 }: UpdateProfile) => {
     const { data, error } = await supabase
         .from('users')
@@ -107,6 +109,11 @@ export const updateProfile = async ({
             target_weight: targetWeight,
             height,
             language,
+            has_completed_onboarding:
+                typeof hasCompletedOnboarding === 'boolean' &&
+                !hasCompletedOnboarding
+                    ? true
+                    : hasCompletedOnboarding,
         })
         .eq('id', userId);
 

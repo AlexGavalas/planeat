@@ -180,6 +180,7 @@ export interface Database {
                     food_preferences_negative: string | null;
                     food_preferences_positive: string | null;
                     full_name: string;
+                    has_completed_onboarding: boolean | null;
                     height: number | null;
                     id: number;
                     is_discoverable: boolean;
@@ -192,6 +193,7 @@ export interface Database {
                     food_preferences_negative?: string | null;
                     food_preferences_positive?: string | null;
                     full_name: string;
+                    has_completed_onboarding?: boolean | null;
                     height?: number | null;
                     id?: number;
                     is_discoverable?: boolean;
@@ -204,6 +206,7 @@ export interface Database {
                     food_preferences_negative?: string | null;
                     food_preferences_positive?: string | null;
                     full_name?: string;
+                    has_completed_onboarding?: boolean | null;
                     height?: number | null;
                     id?: number;
                     is_discoverable?: boolean;

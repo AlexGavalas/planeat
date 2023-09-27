@@ -46,7 +46,13 @@ const handler: NextApiHandler = async (req, res) => {
             res.json({ data: user });
         }
     } else if (req.method === 'PATCH') {
-        const { height, isDiscoverable, language, targetWeight } = req.body;
+        const {
+            height,
+            isDiscoverable,
+            language,
+            targetWeight,
+            hasCompletedOnboarding,
+        } = req.body;
 
         const { data, error } = await updateProfile({
             supabase,
@@ -55,6 +61,7 @@ const handler: NextApiHandler = async (req, res) => {
             isDiscoverable,
             language,
             targetWeight,
+            hasCompletedOnboarding,
         });
 
         res.json({ data, error });

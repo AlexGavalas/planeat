@@ -13,7 +13,7 @@ export const Calendar = () => {
     const { loading } = useMeals();
 
     return (
-        <section className={styles.container}>
+        <section className={styles.container} id="meal-plan-container">
             <LoadingOverlay visible={loading} />
             <Controls />
             <Space h="md" />
