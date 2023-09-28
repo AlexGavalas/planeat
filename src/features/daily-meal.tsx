@@ -8,7 +8,8 @@ import { type MealsMap } from '~types/meal';
 const now = new Date();
 const startOfDayTimestamp = startOfDay(now);
 
-const MEAL_TIMES = {
+//
+const MEAL_TIMES: Record<RowKey, Date> = {
     morning: set(startOfDayTimestamp, { hours: 9, minutes: 0, seconds: 0 }),
     snack1: set(startOfDayTimestamp, { hours: 11, minutes: 0, seconds: 0 }),
     lunch: set(startOfDayTimestamp, { hours: 13, minutes: 0, seconds: 0 }),

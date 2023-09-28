@@ -1,5 +1,4 @@
 import { Button, Group, Stack, Textarea, Title } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useTranslation } from 'next-i18next';
 import { type FormEventHandler } from 'react';
@@ -7,6 +6,10 @@ import { type FormEventHandler } from 'react';
 import { updateFoodPreferences } from '~api/user';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
+import {
+    showErrorNotification,
+    showSuccessNotification,
+} from '~util/notification';
 
 export const FoodPreferences = () => {
     const { t } = useTranslation();
@@ -35,13 +38,12 @@ export const FoodPreferences = () => {
         });
 
         if (error) {
-            showNotification({
+            showErrorNotification({
                 title: t('notification.error.title'),
                 message: t('notification.error.message'),
-                color: 'red',
             });
         } else {
-            showNotification({
+            showSuccessNotification({
                 title: t('notification.success.title'),
                 message: t('notification.success.message'),
             });

@@ -1,11 +1,14 @@
 import { Button, Group, Stack, Text } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
 import { useTranslation } from 'next-i18next';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Notification } from '~types/notification';
+import {
+    showErrorNotification,
+    showSuccessNotification,
+} from '~util/notification';
 
 export const ManageConnectionRequests = () => {
     const { t } = useTranslation();
@@ -34,13 +37,7 @@ export const ManageConnectionRequests = () => {
     const hasConnectionsRequests =
         !isFetchingConnectionRequests && connectionRequests.length > 0;
 
-    const removeConnectionRequest = async ({
-        connectionRequestId,
-        shouldShowNotification = true,
-    }: {
-        connectionRequestId: string;
-        shouldShowNotification: boolean;
-    }) => {
+    const removeConnectionRequest = async (connectionRequestId: string) => {
         const response = await fetch(
             `/api/v1/notification?id=${connectionRequestId}`,
             {
@@ -48,35 +45,7 @@ export const ManageConnectionRequests = () => {
             },
         );
 
-        const { error } = await response.json();
-
-        if (error) {
-            if (shouldShowNotification) {
-                showNotification({
-                    title: t('error'),
-                    message: t(
-                        'connections.manage_connection_requests.decline_error',
-                    ),
-                    color: 'red',
-                });
-            }
-        } else {
-            if (shouldShowNotification) {
-                showNotification({
-                    title: t('success'),
-                    message: t(
-                        'connections.manage_connection_requests.decline_success',
-                    ),
-                });
-            }
-
-            await queryClient.invalidateQueries([
-                'connection-requests',
-                profile?.id,
-            ]);
-
-            await queryClient.invalidateQueries(['connections']);
-        }
+        return await response.json();
     };
 
     const handleAcceptConnectionRequest = async (
@@ -95,35 +64,62 @@ export const ManageConnectionRequests = () => {
         const { error } = await response.json();
 
         if (error) {
-            showNotification({
+            showErrorNotification({
                 title: t('error'),
                 message: t(
                     'connections.manage_connection_requests.accept_error',
                 ),
-                color: 'red',
             });
         } else {
-            showNotification({
+            showSuccessNotification({
                 title: t('success'),
                 message: t(
                     'connections.manage_connection_requests.accept_success',
                 ),
             });
 
-            await removeConnectionRequest({
-                connectionRequestId: connectionRequest.id,
-                shouldShowNotification: false,
-            });
+            const { error } = await removeConnectionRequest(
+                connectionRequest.id,
+            );
+
+            if (!error) {
+                await queryClient.invalidateQueries([
+                    'connection-requests',
+                    profile?.id,
+                ]);
+
+                await queryClient.invalidateQueries(['connections']);
+            }
         }
     };
 
     const handleDeclineConnectionRequest = async (
         connectionRequestId: string,
     ) => {
-        await removeConnectionRequest({
-            connectionRequestId,
-            shouldShowNotification: true,
-        });
+        const { error } = await removeConnectionRequest(connectionRequestId);
+
+        if (error) {
+            showErrorNotification({
+                title: t('error'),
+                message: t(
+                    'connections.manage_connection_requests.decline_error',
+                ),
+            });
+        } else {
+            showSuccessNotification({
+                title: t('success'),
+                message: t(
+                    'connections.manage_connection_requests.decline_success',
+                ),
+            });
+
+            await queryClient.invalidateQueries([
+                'connection-requests',
+                profile?.id,
+            ]);
+
+            await queryClient.invalidateQueries(['connections']);
+        }
     };
 
     return (

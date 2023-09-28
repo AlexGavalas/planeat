@@ -1,11 +1,11 @@
 import { Button, Group, Stack, Text } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
 import { useTranslation } from 'next-i18next';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Connection } from '~types/connection';
+import { showErrorNotification } from '~util/notification';
 
 export const ManageConnections = () => {
     const { t } = useTranslation();
@@ -42,8 +42,7 @@ export const ManageConnections = () => {
         const { error } = await response.json();
 
         if (error) {
-            showNotification({
-                color: 'red',
+            showErrorNotification({
                 title: t('error'),
                 message: t(
                     'connections.manage_connections.remove_connection_error',

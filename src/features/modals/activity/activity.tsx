@@ -1,11 +1,12 @@
 import { Button, Center, Group, Space, Text, Textarea } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
-import { showNotification } from '@mantine/notifications';
 import { format } from 'date-fns';
 import 'dayjs/locale/el';
 import { useTranslation } from 'next-i18next';
 import { type FormEventHandler, useState } from 'react';
+
+import { showErrorNotification } from '~util/notification';
 
 const localeMap = {
     gr: 'el',
@@ -55,10 +56,9 @@ export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
         const { error } = await response.json();
 
         if (error) {
-            showNotification({
+            showErrorNotification({
                 title: t('error'),
                 message: `${t('errors.activity_save')}. ${t('try_again')}`,
-                color: 'red',
             });
         } else {
             onSave?.();

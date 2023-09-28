@@ -8,7 +8,6 @@ import {
     Text,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
 import { AddUser, Cancel, ProfileCircle } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -16,6 +15,10 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import { useProfile } from '~hooks/use-profile';
 import { type User } from '~types/user';
+import {
+    showErrorNotification,
+    showSuccessNotification,
+} from '~util/notification';
 
 export const FindUsers = () => {
     const { t } = useTranslation();
@@ -109,13 +112,12 @@ export const FindUsers = () => {
         const { error } = await response.json();
 
         if (error) {
-            showNotification({
+            showErrorNotification({
                 title: t('error'),
                 message: t('connections.request.error'),
-                color: 'red',
             });
         } else {
-            showNotification({
+            showSuccessNotification({
                 title: t('success'),
                 message: t('connections.request.success'),
             });

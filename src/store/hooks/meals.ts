@@ -1,4 +1,3 @@
-import { showNotification } from '@mantine/notifications';
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
 import { useTranslation } from 'next-i18next';
@@ -7,6 +6,10 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 import { getDaysOfWeek } from '~util/date';
+import {
+    showErrorNotification,
+    showSuccessNotification,
+} from '~util/notification';
 
 import { useCurrentWeek } from './current-week';
 import { useUnsavedChanges } from './unsaved-changes';
@@ -89,17 +92,16 @@ export const useMeals = () => {
         if (error) {
             setSubmitting(false);
 
-            showNotification({
+            showErrorNotification({
                 title: t('error'),
                 message: `${t('errors.meal_save')}. ${t('try_again')}`,
-                color: 'red',
             });
         } else {
             await queryClient.invalidateQueries(['meals', currentWeekKey]);
 
             removeChanges();
 
-            showNotification({
+            showSuccessNotification({
                 title: t('notification.success.title'),
                 message: t('notification.success.message'),
             });

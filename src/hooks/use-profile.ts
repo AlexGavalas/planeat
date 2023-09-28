@@ -1,10 +1,10 @@
-import { showNotification } from '@mantine/notifications';
 import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { type User } from '~types/user';
+import { showSuccessNotification } from '~util/notification';
 
 import { useUser } from './use-user';
 
@@ -71,7 +71,7 @@ export const useProfile = () => {
         {
             onSuccess: (_, { language, silent }) => {
                 if (!silent) {
-                    showNotification({
+                    showSuccessNotification({
                         title: t('notification.success.title', {
                             lng: language,
                         }),
@@ -101,7 +101,7 @@ export const useProfile = () => {
         },
         {
             onSuccess: async () => {
-                showNotification({
+                showSuccessNotification({
                     title: t('notification.success.title'),
                     message: t('notification.success.message'),
                 });

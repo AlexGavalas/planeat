@@ -57,9 +57,7 @@ export const Header = () => {
     );
 
     const activitiesMap = activities.reduce<ActivitysMap>((acc, activity) => {
-        const dateKey = activity.date;
-
-        acc[dateKey] = activity;
+        acc[activity.date] = activity;
 
         return acc;
     }, {});

@@ -1,6 +1,5 @@
 import { ActionIcon, Box, Center, Group, Stack, Title } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import { showNotification } from '@mantine/notifications';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
@@ -12,6 +11,7 @@ import { INITIAL_PAGE, PAGE_SIZE, Table } from '~components/table';
 import { MeasurementModal } from '~features/modals/measurement';
 import { useProfile } from '~hooks/use-profile';
 import { type Measurement } from '~types/measurement';
+import { showErrorNotification } from '~util/notification';
 
 export const Measurements = () => {
     const { t } = useTranslation();
@@ -72,10 +72,9 @@ export const Measurements = () => {
         const { error } = await response.json();
 
         if (error) {
-            showNotification({
+            showErrorNotification({
                 title: t('error'),
                 message: `${t('errors.measurement_delete')}. ${t('try_again')}`,
-                color: 'red',
             });
         } else {
             await queryClient.invalidateQueries(['measurements-count']);
