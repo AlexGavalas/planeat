@@ -16,14 +16,14 @@ import styles from './table.module.css';
 export const INITIAL_PAGE = 1;
 export const PAGE_SIZE = 5;
 
-type PageProps = {
+export type TableProps = {
     data: Item[];
     headers: Header[];
     totalPages: number;
     page: number;
     onDelete: (item: Item) => Promise<void>;
     onEdit: (item: Item) => Promise<void>;
-    onPageChange: (page: number) => void;
+    onPageChange?: (page: number) => void;
 };
 
 export const Table = ({
@@ -34,14 +34,14 @@ export const Table = ({
     onDelete,
     onEdit,
     page: initialPage,
-}: PageProps) => {
+}: TableProps) => {
     const [page, setPage] = useState(initialPage);
 
     const shouldShowPagination = totalPages > 1;
 
     const handlePageChange = (page: number) => {
         setPage(page);
-        onPageChange(page);
+        onPageChange?.(page);
     };
 
     return (

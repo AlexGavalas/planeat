@@ -66,6 +66,7 @@ export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
                         closeOnClickOutside
                         opened={openConfirmation}
                         onChange={setOpenConfirmation}
+                        id="delete-confirmation"
                     >
                         <Popover.Target>
                             <ActionIcon
