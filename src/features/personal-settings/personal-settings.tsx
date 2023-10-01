@@ -35,20 +35,20 @@ export const PersonalSettings = () => {
 
     const handleSave = () => {
         updateProfile({
-            language,
             height,
+            language,
             targetWeight,
         });
     };
 
     const availableLanguages = [
         {
-            value: 'en',
             label: t('languages.options.en'),
+            value: 'en',
         },
         {
-            value: 'gr',
             label: t('languages.options.el'),
+            value: 'gr',
         },
     ];
 

@@ -37,15 +37,15 @@ export const updateFoodPreferences: UpdateFoodPreferences = async ({
     const { data: profile, error } = await supabase
         .from('users')
         .update({
-            food_preferences_positive: positive,
             food_preferences_negative: negative,
+            food_preferences_positive: positive,
         })
         .eq('email', email)
         .single();
 
     return {
-        profile,
         error,
+        profile,
     };
 };
 
@@ -120,15 +120,15 @@ export const updateProfile: UpdateProfile = async ({
     const { error } = await supabase
         .from('users')
         .update({
-            is_discoverable: isDiscoverable,
-            target_weight: targetWeight,
-            height,
-            language,
             has_completed_onboarding:
                 typeof hasCompletedOnboarding === 'boolean' &&
                 !hasCompletedOnboarding
                     ? true
                     : hasCompletedOnboarding,
+            height,
+            is_discoverable: isDiscoverable,
+            language,
+            target_weight: targetWeight,
         })
         .eq('id', userId);
 

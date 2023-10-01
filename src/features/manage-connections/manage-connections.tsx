@@ -31,22 +31,22 @@ export const ManageConnections = () => {
 
     const removeConnection = async (connection: Connection) => {
         const response = await fetch('/api/v1/connection', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify({
                 connectionId: connection.id,
                 connectionUserId: connection.connection_user_id,
             }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'DELETE',
         });
 
         if (!response.ok) {
             showErrorNotification({
-                title: t('error'),
                 message: t(
                     'connections.manage_connections.remove_connection_error',
                 ),
+                title: t('error'),
             });
         } else {
             await queryClient.invalidateQueries(['connections']);

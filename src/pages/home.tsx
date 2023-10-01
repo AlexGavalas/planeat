@@ -54,9 +54,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     invariant(profile, `Profile was not found for user email ${user.email}`);
 
     const { data } = await fetchMeals({
-        supabase,
         endDate: endOfDayTimestamp,
         startDate: startOfDayTimestamp,
+        supabase,
         userId: profile.id,
     });
 
@@ -107,8 +107,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props: {
             dailyMeals,
-            user,
             dehydratedState: dehydrate(queryClient),
+            user,
             ...(await getServerSideTranslations({ locale: profile.language })),
         },
     };
@@ -120,8 +120,8 @@ export default function Home({ dailyMeals }: { dailyMeals: MealsMap }) {
             <Stack
                 id="daily-meals-container"
                 style={{
-                    width: '20%',
                     maxWidth: '20%',
+                    width: '20%',
                 }}
             >
                 <Card>
@@ -130,8 +130,8 @@ export default function Home({ dailyMeals }: { dailyMeals: MealsMap }) {
             </Stack>
             <Box
                 style={{
-                    width: '80%',
                     maxWidth: '80%',
+                    width: '80%',
                 }}
             >
                 <Card>

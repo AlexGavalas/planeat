@@ -14,9 +14,9 @@ export const DeleteAccount = () => {
         };
 
         const modalId = modals.openModal({
-            title: t('account_settings.sections.delete_account.title'),
             centered: true,
             children: <DeleteAccountModal onCancel={closeModal} />,
+            title: t('account_settings.sections.delete_account.title'),
         });
     };
 

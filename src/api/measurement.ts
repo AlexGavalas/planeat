@@ -197,11 +197,11 @@ export const updateMeasurement: UpdateMeasurement = async ({
     const { error } = await supabase
         .from('measurements')
         .upsert({
+            date,
+            fat_percentage: fatPercent,
             id: measurementId,
             user_id: userId,
-            date,
             weight,
-            fat_percentage: fatPercent,
         })
         .eq('user_id', userId);
 

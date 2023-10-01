@@ -43,8 +43,8 @@ const App = ({
             new QueryClient({
                 defaultOptions: {
                     queries: {
-                        refetchOnWindowFocus: false,
                         refetchOnMount: false,
+                        refetchOnWindowFocus: false,
                     },
                 },
             }),
@@ -58,10 +58,10 @@ const App = ({
             </Head>
             <MantineProvider
                 theme={{
-                    primaryColor: 'brand',
                     colors: {
                         brand: BRAND_COLORS,
                     },
+                    primaryColor: 'brand',
                 }}
             >
                 <SessionContextProvider supabaseClient={supabaseClient}>

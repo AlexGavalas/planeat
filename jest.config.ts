@@ -7,42 +7,43 @@ const config: Config = {
     clearMocks: true,
 
     collectCoverage: false,
-    coverageReporters: ['text'],
     collectCoverageFrom: [
         'src/{components,features,hooks}/**/*.{ts,tsx}',
         '!**/index.ts',
     ],
+    coverageReporters: ['text'],
 
     coverageThreshold: {
         global: {
-            statements: 90,
             branches: 80,
             functions: 90,
             lines: 90,
+            statements: 90,
         },
     },
 
-    testPathIgnorePatterns: ['./e2e/'],
+    moduleNameMapper: {
+        ...pathsToModuleNameMapper(compilerOptions.paths),
+        '\\.css$': 'identity-obj-proxy',
+    },
+    modulePaths: [compilerOptions.baseUrl],
+
+    roots: ['<rootDir>'],
+
+    setupFilesAfterEnv: ['<rootDir>/src/test/setup.ts'],
 
     testEnvironment: 'jsdom',
+
+    testPathIgnorePatterns: ['./e2e/'],
 
     transform: {
         '^.+\\.tsx?$': [
             'ts-jest',
             {
-                tsconfig: './tsconfig.test.json',
                 isolatedModules: true,
+                tsconfig: './tsconfig.test.json',
             },
         ],
-    },
-
-    setupFilesAfterEnv: ['<rootDir>/src/test/setup.ts'],
-
-    roots: ['<rootDir>'],
-    modulePaths: [compilerOptions.baseUrl],
-    moduleNameMapper: {
-        ...pathsToModuleNameMapper(compilerOptions.paths),
-        '\\.css$': 'identity-obj-proxy',
     },
 };
 

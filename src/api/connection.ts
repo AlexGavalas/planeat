@@ -69,12 +69,12 @@ export const createConnection: CreateConnection = async ({
 }) => {
     const { error } = await supabase.from('connections').insert([
         {
-            user_id: userId,
             connection_user_id: connectionUserId,
+            user_id: userId,
         },
         {
-            user_id: connectionUserId,
             connection_user_id: userId,
+            user_id: connectionUserId,
         },
     ]);
 

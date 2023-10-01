@@ -25,25 +25,6 @@ const isGoogleProfile = (profile: unknown): profile is GoogleProfile => {
 };
 
 export const authOptions: AuthOptions = {
-    providers: [
-        GoogleProvider({
-            clientId: process.env.GOOGLE_ID,
-            clientSecret: process.env.GOOGLE_SECRET,
-            profile(profile) {
-                if (isGoogleProfile(profile)) {
-                    return {
-                        id: profile.sub,
-                        name: profile.name,
-                        email: profile.email,
-                        image: profile.picture,
-                        locale: profile.locale,
-                    };
-                }
-
-                throw new Error('Could not parse Google profile');
-            },
-        }),
-    ],
     events: {
         signIn: async ({ user }) => {
             invariant(
@@ -77,6 +58,25 @@ export const authOptions: AuthOptions = {
             }
         },
     },
+    providers: [
+        GoogleProvider({
+            clientId: process.env.GOOGLE_ID,
+            clientSecret: process.env.GOOGLE_SECRET,
+            profile(profile) {
+                if (isGoogleProfile(profile)) {
+                    return {
+                        email: profile.email,
+                        id: profile.sub,
+                        image: profile.picture,
+                        locale: profile.locale,
+                        name: profile.name,
+                    };
+                }
+
+                throw new Error('Could not parse Google profile');
+            },
+        }),
+    ],
 };
 
 export default NextAuth(authOptions);

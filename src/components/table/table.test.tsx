@@ -11,8 +11,8 @@ describe('<Table />', () => {
         headers: [{ key: 'key', label: 'test label', width: '100%' }],
         onDelete,
         onEdit,
-        totalPages: 1,
         page: 1,
+        totalPages: 1,
     } satisfies TableProps<{ id: number; key: string }>;
 
     describe('when passed no data', () => {

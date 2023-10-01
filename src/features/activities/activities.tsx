@@ -66,20 +66,20 @@ export const Activities = () => {
     const headers = useMemo(
         () => [
             {
-                label: t('date'),
-                width: '25%',
-                key: 'date',
                 formatValue: (item: Activity) =>
                     format(parseISO(item.date), 'dd/MM/yy'),
+                key: 'date',
+                label: t('date'),
+                width: '25%',
             },
             {
-                label: t('activity.label'),
                 key: 'activity',
+                label: t('activity.label'),
                 width: '40%',
             },
             {
-                label: t('actions'),
                 key: 'actions',
+                label: t('actions'),
                 width: '35%',
             },
         ],
@@ -93,8 +93,8 @@ export const Activities = () => {
 
         if (!response.ok) {
             showErrorNotification({
-                title: t('error'),
                 message: `${t('errors.activity_delete')}. ${t('try_again')}`,
+                title: t('error'),
             });
         } else {
             await queryClient.invalidateQueries(['activities-count']);
@@ -108,19 +108,19 @@ export const Activities = () => {
         };
 
         modals.openModal({
-            title: t('edit_activity'),
             centered: true,
-            size: 'sm',
             children: (
                 <ActivityModal
                     initialData={{
-                        id: item.id,
-                        date: parseISO(item.date),
                         activity: item.activity,
+                        date: parseISO(item.date),
+                        id: item.id,
                     }}
                     onSave={onSave}
                 />
             ),
+            size: 'sm',
+            title: t('edit_activity'),
         });
     };
 
@@ -130,10 +130,10 @@ export const Activities = () => {
 
     const handleAddActivity = useCallback(() => {
         modals.openModal({
-            title: t('add_activity'),
             centered: true,
-            size: 'sm',
             children: <ActivityModal onSave={onNewActivitySave} />,
+            size: 'sm',
+            title: t('add_activity'),
         });
     }, [modals, onNewActivitySave, t]);
 

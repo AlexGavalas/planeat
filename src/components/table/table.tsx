@@ -53,9 +53,9 @@ export const Table = <ItemType extends Item>({
                             <TableTh
                                 key={label}
                                 style={{
-                                    width,
                                     textAlign:
                                         key === 'actions' ? 'center' : 'left',
+                                    width,
                                 }}
                             >
                                 {label}

@@ -54,28 +54,28 @@ export const ManageConnectionRequests = () => {
         connectionRequest: Notification,
     ) => {
         const response = await fetch('/api/v1/connection', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify({
                 connectionUserId: connectionRequest.request_user_id,
             }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
         });
 
         if (!response.ok) {
             showErrorNotification({
-                title: t('error'),
                 message: t(
                     'connections.manage_connection_requests.accept_error',
                 ),
+                title: t('error'),
             });
         } else {
             showSuccessNotification({
-                title: t('success'),
                 message: t(
                     'connections.manage_connection_requests.accept_success',
                 ),
+                title: t('success'),
             });
 
             const removeConnectionRes = await removeConnectionRequest(
@@ -100,17 +100,17 @@ export const ManageConnectionRequests = () => {
 
         if (!response.ok) {
             showErrorNotification({
-                title: t('error'),
                 message: t(
                     'connections.manage_connection_requests.decline_error',
                 ),
+                title: t('error'),
             });
         } else {
             showSuccessNotification({
-                title: t('success'),
                 message: t(
                     'connections.manage_connection_requests.decline_success',
                 ),
+                title: t('success'),
             });
 
             await queryClient.invalidateQueries([

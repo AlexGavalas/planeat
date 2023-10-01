@@ -68,20 +68,20 @@ export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
                 : '/api/v1/activity';
 
             const response = await fetch(url, {
-                method: initialData ? 'PATCH' : 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify({
                     activity,
                     date: format(date, 'yyyy-MM-dd'),
                 }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: initialData ? 'PATCH' : 'POST',
             });
 
             if (!response.ok) {
                 showErrorNotification({
-                    title: t('error'),
                     message: `${t('errors.activity_save')}. ${t('try_again')}`,
+                    title: t('error'),
                 });
             } else {
                 await onSave?.();

@@ -29,9 +29,9 @@ export const Controls = () => {
 
     const toggleWeekOverview = useCallback(() => {
         modals.openModal({
-            title: t('modals.week_overview.title'),
-            size: 'lg',
             children: <WeekOverview />,
+            size: 'lg',
+            title: t('modals.week_overview.title'),
         });
     }, [modals, t]);
 

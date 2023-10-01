@@ -51,8 +51,8 @@ export const Measurements = () => {
             return data ?? [];
         },
         {
-            keepPreviousData: true,
             enabled: isFetched,
+            keepPreviousData: true,
         },
     );
 
@@ -73,8 +73,8 @@ export const Measurements = () => {
 
         if (!response.ok) {
             showErrorNotification({
-                title: t('error'),
                 message: `${t('errors.measurement_delete')}. ${t('try_again')}`,
+                title: t('error'),
             });
         } else {
             await queryClient.invalidateQueries(['measurements-count']);
@@ -89,14 +89,12 @@ export const Measurements = () => {
             };
 
             modals.openModal({
-                title: t('edit_measurement'),
                 centered: true,
-                size: 'sm',
                 children: (
                     <MeasurementModal
                         initialData={{
-                            id: item.id,
                             date: parseISO(item.date),
+                            id: item.id,
                             ...(item.fat_percentage && {
                                 fat_percentage: item.fat_percentage,
                             }),
@@ -107,6 +105,8 @@ export const Measurements = () => {
                         onSave={handleSave}
                     />
                 ),
+                size: 'sm',
+                title: t('edit_measurement'),
             });
         },
         [modals, page, queryClient, t],
@@ -118,38 +118,38 @@ export const Measurements = () => {
 
     const handleAddMeasurement = useCallback(() => {
         modals.openModal({
-            title: t('new_measurement'),
             centered: true,
-            size: 'sm',
             children: <MeasurementModal onSave={handleNewWeightSave} />,
+            size: 'sm',
+            title: t('new_measurement'),
         });
     }, [modals, handleNewWeightSave, t]);
 
     const headers = useMemo(
         () => [
             {
-                label: t('date'),
-                width: '25%',
-                key: 'date',
                 formatValue: (item: Measurement) =>
                     format(parseISO(item.date), 'dd/MM/yy'),
+                key: 'date',
+                label: t('date'),
+                width: '25%',
             },
             {
+                key: 'weight',
                 label: t('weight'),
                 width: '20%',
-                key: 'weight',
             },
             {
-                label: t('fat_label'),
-                width: '20%',
-                key: 'fat',
                 formatValue: (item: Measurement) =>
                     item.fat_percentage ? `${item.fat_percentage}%` : '-',
+                key: 'fat',
+                label: t('fat_label'),
+                width: '20%',
             },
             {
+                key: 'actions',
                 label: t('actions'),
                 width: '35%',
-                key: 'actions',
             },
         ],
         [t],

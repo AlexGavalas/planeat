@@ -48,7 +48,7 @@ export const FatTimeline = () => {
             >
                 <LoadingOverlay visible={isFetching} />
                 {data && (
-                    <LineChart data={[{ id: 'fat-percent', data }]} unit="%" />
+                    <LineChart data={[{ data, id: 'fat-percent' }]} unit="%" />
                 )}
                 {!isFetching && !data && (
                     <Center style={{ height: '100%' }}>

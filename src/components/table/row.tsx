@@ -68,7 +68,7 @@ export const Row = <ItemType extends Item>({
     }, []);
 
     return (
-        <TableTr style={{ width: '100%', height: '3rem' }}>
+        <TableTr style={{ height: '3rem', width: '100%' }}>
             {headers
                 .filter((header) => header.key !== 'actions')
                 .map(({ key, width, formatValue }) => (

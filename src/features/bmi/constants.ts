@@ -2,29 +2,29 @@ import { type Section } from '~types/types';
 
 export const SECTIONS: Section[] = [
     {
-        percent: 40,
-        key: 'bmi1',
         bg: '#339af0',
+        key: 'bmi1',
+        percent: 40,
     },
     {
-        percent: 20,
-        key: 'bmi2',
         bg: '#165b99',
+        key: 'bmi2',
+        percent: 20,
     },
     {
-        percent: 10,
-        key: 'bmi3',
         bg: '#32ad4c',
+        key: 'bmi3',
+        percent: 10,
     },
     {
-        percent: 15,
-        key: 'bmi4',
         bg: '#ff7600',
+        key: 'bmi4',
+        percent: 15,
     },
     {
-        percent: 15,
-        key: 'bmi5',
         bg: '#ff0000',
+        key: 'bmi5',
+        percent: 15,
     },
 ];
 

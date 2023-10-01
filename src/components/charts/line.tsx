@@ -84,9 +84,9 @@ export const LineChart = <DataItem extends { x: string; y: number | null }>({
                             <text
                                 dominantBaseline="text-before-edge"
                                 style={{
-                                    textAnchor,
-                                    fontSize: 12,
                                     fill: 'rgb(51, 51, 51)',
+                                    fontSize: 12,
+                                    textAnchor,
                                 }}
                                 textAnchor={textAnchor}
                                 transform={`translate(${tick.x}, ${tick.y})`}
@@ -97,8 +97,8 @@ export const LineChart = <DataItem extends { x: string; y: number | null }>({
                         </g>
                     );
                 },
-                tickSize: 0,
                 tickPadding: 10,
+                tickSize: 0,
             }}
             axisLeft={{
                 tickSize: 10,
@@ -108,10 +108,10 @@ export const LineChart = <DataItem extends { x: string; y: number | null }>({
             data={data}
             lineWidth={2}
             margin={{
-                top: 10,
                 bottom: 25,
-                right: 0,
                 left: 40,
+                right: 0,
+                top: 10,
             }}
             pointSize={0}
             theme={{
@@ -153,9 +153,9 @@ export const LineChart = <DataItem extends { x: string; y: number | null }>({
                 return format(date, 'dd/MM/yy');
             }}
             yScale={{
-                type: 'linear',
-                min: Math.min(min, target ?? Infinity) - 2,
                 max: Math.max(max, target ?? -Infinity) + 2,
+                min: Math.min(min, target ?? Infinity) - 2,
+                type: 'linear',
             }}
             {...(target && {
                 layers: [

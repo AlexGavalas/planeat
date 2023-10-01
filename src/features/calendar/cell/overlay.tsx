@@ -32,8 +32,8 @@ const isFilledMeal = (meal?: Meal | EditedMeal): meal is Meal => {
 };
 
 const commonButtonProps = {
-    variant: 'light',
     size: 'lg',
+    variant: 'light',
 } satisfies ActionIconProps;
 
 export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
@@ -74,8 +74,8 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
 
     const handleEditClick = useCallback(() => {
         modals.openModal({
-            title: t('edit_meal'),
             centered: true,
+
             children: (
                 <MealModal
                     initialMeal={meal?.meal ?? ''}
@@ -83,6 +83,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                     onSave={handleMealSave}
                 />
             ),
+            title: t('edit_meal'),
         });
     }, [onDelete, handleMealSave, meal?.meal, modals, t]);
 
@@ -92,7 +93,6 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
         }
 
         modals.openModal({
-            title: t('notes'),
             centered: true,
             children: (
                 <MealNoteModal
@@ -101,6 +101,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                     onSave={handleMealNoteSave}
                 />
             ),
+            title: t('notes'),
         });
     }, [
         handleMealNoteDelete,
@@ -117,7 +118,6 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
         }
 
         modals.openModal({
-            title: t('modals.meal_rate.title'),
             centered: true,
             children: (
                 <MealRatingModal
@@ -126,6 +126,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                     onSave={handleMealRatingSave}
                 />
             ),
+            title: t('modals.meal_rate.title'),
         });
     }, [
         handleMealRatingDelete,

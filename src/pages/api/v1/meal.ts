@@ -18,7 +18,7 @@ const handler: NextApiHandler = async (req, res) => {
 
         const supabase = createPagesServerClient({ req, res });
 
-        const user = await fetchUser({ supabase, email: session.user.email });
+        const user = await fetchUser({ email: session.user.email, supabase });
 
         invariant(user, 'User must exist');
 

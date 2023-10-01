@@ -135,6 +135,11 @@
                 "ignoreCase": false
             }
         ],
-        "react/void-dom-elements-no-children": ["error"]
+        "react/void-dom-elements-no-children": ["error"],
+        "sort-keys": [
+            "warn",
+            "asc",
+            { "caseSensitive": true, "natural": true, "minKeys": 2 }
+        ]
     }
 }

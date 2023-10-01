@@ -9,9 +9,9 @@ export const ROWS: RowItem[] = [
 ];
 
 export const MEAL_ICON = {
+    dinner: Bbq,
+    lunch: OrangeSliceAlt,
     morning: CrackedEgg,
     snack1: AppleHalf,
-    lunch: OrangeSliceAlt,
     snack2: AppleHalf,
-    dinner: Bbq,
 };

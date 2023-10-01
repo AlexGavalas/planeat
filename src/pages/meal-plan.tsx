@@ -51,9 +51,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     await queryClient.prefetchQuery(['meals', currentWeekKey], async () => {
         const result = await fetchMeals({
-            supabase,
             endDate,
             startDate,
+            supabase,
             userId: profile.id,
         });
 
@@ -64,9 +64,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         ['activities', currentWeekKey],
         async () => {
             const result = await fetchActivities({
-                supabase,
                 endDate,
                 startDate,
+                supabase,
                 userId: profile.id,
             });
 

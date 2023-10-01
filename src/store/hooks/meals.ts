@@ -109,23 +109,23 @@ export const useMeals: UseMeals = () => {
         const deletedIds = deletedMeals.map(({ id }) => id);
 
         const response = await fetch('/api/v1/meal', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify({
                 deletedIds,
                 editedMeals,
                 newMeals,
             }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'PATCH',
         });
 
         if (!response.ok) {
             setIsSubmitting(false);
 
             showErrorNotification({
-                title: t('error'),
                 message: `${t('errors.meal_save')}. ${t('try_again')}`,
+                title: t('error'),
             });
         } else {
             await queryClient.invalidateQueries(['meals', currentWeekKey]);
@@ -133,8 +133,8 @@ export const useMeals: UseMeals = () => {
             removeChanges();
 
             showSuccessNotification({
-                title: t('notification.success.title'),
                 message: t('notification.success.message'),
+                title: t('notification.success.title'),
             });
         }
     };
@@ -182,12 +182,12 @@ export const useMeals: UseMeals = () => {
 
         const editedMeal = {
             ...meal,
-            meal: value,
-            section_key: sectionKey,
-            user_id: userId,
             day,
+            meal: value,
             note,
             rating,
+            section_key: sectionKey,
+            user_id: userId,
         };
 
         addChange(editedMeal);
@@ -209,25 +209,25 @@ export const useMeals: UseMeals = () => {
             const meal = mealsMap[key];
 
             saveEntryCell({
+                meal,
+                note,
+                rating,
                 sectionKey: key,
                 timestamp,
                 userId,
                 value,
-                meal,
-                note,
-                rating,
             });
         }
     };
 
     return {
-        meals,
-        isLoading: isFetchingMeals || isSubmitting,
-        savePlan,
-        revert,
         deleteEntryCell,
         deleteEntryRow,
+        isLoading: isFetchingMeals || isSubmitting,
+        meals,
+        revert,
         saveEntryCell,
         saveEntryRow,
+        savePlan,
     };
 };

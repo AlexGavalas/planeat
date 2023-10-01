@@ -106,24 +106,24 @@ export const FindUsers = () => {
         }
 
         const response = await fetch('/api/v1/notification', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify({
                 targetUserId: selectedUser[0].id,
             }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
         });
 
         if (!response.ok) {
             showErrorNotification({
-                title: t('error'),
                 message: t('connections.request.error'),
+                title: t('error'),
             });
         } else {
             showSuccessNotification({
-                title: t('success'),
                 message: t('connections.request.success'),
+                title: t('success'),
             });
 
             await queryClient.invalidateQueries([

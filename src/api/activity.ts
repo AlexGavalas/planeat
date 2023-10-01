@@ -107,10 +107,10 @@ export const updateActivity: UpdateActivity = async ({
     const { error } = await supabase
         .from('activities')
         .upsert({
+            activity,
+            date,
             id: activityId,
             user_id: userId,
-            date,
-            activity,
         })
         .eq('user_id', userId);
 

@@ -11,38 +11,38 @@ export const useSteps = (): Step[] => {
 
     const steps: Step[] = [
         {
-            target: '#daily-meals-container',
             content: t('onboarding.content.daily_meals'),
+            target: '#daily-meals-container',
             ...commonStepProps,
         },
         {
-            target: '#fat-container',
             content: t('onboarding.content.fat_timeline'),
+            target: '#fat-container',
             ...commonStepProps,
         },
         {
-            target: '#weight-container',
             content: t('onboarding.content.weight_timeline'),
+            target: '#weight-container',
             ...commonStepProps,
         },
         {
-            target: '#meal-plan-container',
             content: t('onboarding.content.meal_plan'),
+            target: '#meal-plan-container',
             ...commonStepProps,
         },
         {
-            target: '#settings-tab-measurements',
             content: t('onboarding.content.measurements'),
+            target: '#settings-tab-measurements',
             ...commonStepProps,
         },
         {
-            target: '#settings-tab-personal',
             content: t('onboarding.content.personal_settings'),
+            target: '#settings-tab-personal',
             ...commonStepProps,
         },
         {
-            target: '#settings-tab-advanced',
             content: t('onboarding.content.advanced_settings'),
+            target: '#settings-tab-advanced',
             ...commonStepProps,
         },
     ];

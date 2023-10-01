@@ -73,31 +73,31 @@ export const Onboarding = () => {
                     }
                 }}
                 locale={{
+                    back: t('onboarding.labels.back'),
                     close: t('onboarding.labels.close'),
+                    last: t('onboarding.labels.last'),
                     next: t('onboarding.labels.next'),
                     open: t('onboarding.labels.open'),
                     skip: t('onboarding.labels.skip'),
-                    back: t('onboarding.labels.back'),
-                    last: t('onboarding.labels.last'),
                 }}
                 run={shouldRun}
                 stepIndex={stepIndex}
                 steps={steps}
                 styles={{
-                    options: {
-                        primaryColor: BRAND_COLORS[5],
-                    },
-                    buttonNext: {
+                    buttonBack: {
                         outlineColor,
                     },
-                    buttonBack: {
+                    buttonClose: {
+                        outlineColor,
+                    },
+                    buttonNext: {
                         outlineColor,
                     },
                     buttonSkip: {
                         outlineColor,
                     },
-                    buttonClose: {
-                        outlineColor,
+                    options: {
+                        primaryColor: BRAND_COLORS[5],
                     },
                 }}
             />

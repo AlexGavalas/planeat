@@ -7,12 +7,12 @@ jest.mock('~hooks/use-profile');
 
 describe('<UserAvatar />', () => {
     const defaultProfile = {
-        user: undefined,
         deleteProfile: jest.fn(),
         isDeleting: false,
         isFetching: false,
         profile: undefined,
         updateProfile: jest.fn(),
+        user: undefined,
     } satisfies ReturnType<typeof useProfile>;
 
     describe('when the user is not logged in', () => {

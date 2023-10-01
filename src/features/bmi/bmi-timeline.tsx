@@ -51,7 +51,7 @@ export const BMITimeline = () => {
                 <LoadingOverlay visible={isFetching} />
                 {data && (
                     <LineChart
-                        data={[{ id: 'bmi-timeline', data }]}
+                        data={[{ data, id: 'bmi-timeline' }]}
                         target={Number(profile?.target_weight)}
                         unit={t('kg')}
                     />

@@ -18,8 +18,8 @@ import styles from './fab.module.css';
 
 const buttonProps = {
     className: styles.button,
-    size: 'sm',
     radius: 'xl',
+    size: 'sm',
     variant: 'filled',
 } satisfies ButtonProps;
 
@@ -50,9 +50,9 @@ export const Fab = () => {
         handleToggleMenu();
 
         modals.openModal({
-            title: t('add_measurement'),
-            size: 'md',
             children: <MeasurementModal onSave={handleMeasurementSave} />,
+            size: 'md',
+            title: t('add_measurement'),
         });
     }, [handleMeasurementSave, modals, t, handleToggleMenu]);
 
@@ -60,9 +60,9 @@ export const Fab = () => {
         handleToggleMenu();
 
         modals.openModal({
-            title: t('add_activity'),
-            size: 'md',
             children: <ActivityModal onSave={handleActivitySave} />,
+            size: 'md',
+            title: t('add_activity'),
         });
     }, [handleActivitySave, modals, t, handleToggleMenu]);
 

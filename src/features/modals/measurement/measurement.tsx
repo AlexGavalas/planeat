@@ -82,23 +82,23 @@ export const MeasurementModal = ({
                 : '/api/v1/measurement';
 
             const response = await fetch(url, {
-                method: initialData ? 'PATCH' : 'POST',
+                body: JSON.stringify({
+                    date: format(date, 'yyyy-MM-dd'),
+                    fatPercent,
+                    weight,
+                }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    date: format(date, 'yyyy-MM-dd'),
-                    weight,
-                    fatPercent,
-                }),
+                method: initialData ? 'PATCH' : 'POST',
             });
 
             if (!response.ok) {
                 showErrorNotification({
-                    title: t('error'),
                     message: `${t('errors.measurement_save')}. ${t(
                         'try_again',
                     )}`,
+                    title: t('error'),
                 });
             } else {
                 await onSave?.();

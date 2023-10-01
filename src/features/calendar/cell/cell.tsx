@@ -31,21 +31,21 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
 
         if (isRow) {
             saveEntryRow({
+                note: newMeal.note,
+                rating: newMeal.rating,
                 sectionKey: id,
                 userId: profile.id,
                 value: newMeal.meal,
-                note: newMeal.note,
-                rating: newMeal.rating,
             });
         } else {
             saveEntryCell({
                 meal,
+                note: newMeal.note,
+                rating: newMeal.rating,
                 sectionKey: id,
                 timestamp,
                 userId: profile.id,
                 value: newMeal.meal,
-                note: newMeal.note,
-                rating: newMeal.rating,
             });
         }
     };

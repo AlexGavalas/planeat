@@ -32,21 +32,21 @@ export const FoodPreferences = () => {
             const negative = formData.get('negative')?.toString() ?? null;
 
             const { error } = await updateFoodPreferences({
-                positive,
-                negative,
-                supabase,
                 email: profile.email,
+                negative,
+                positive,
+                supabase,
             });
 
             if (error) {
                 showErrorNotification({
-                    title: t('notification.error.title'),
                     message: t('notification.error.message'),
+                    title: t('notification.error.title'),
                 });
             } else {
                 showSuccessNotification({
-                    title: t('notification.success.title'),
                     message: t('notification.success.message'),
+                    title: t('notification.success.title'),
                 });
             }
         },

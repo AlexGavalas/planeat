@@ -56,17 +56,17 @@ export const useProfile: UseProfile = () => {
             hasCompletedOnboarding,
         }: MutationProps) => {
             const response = await fetch('/api/v1/user', {
-                method: 'PATCH',
+                body: JSON.stringify({
+                    hasCompletedOnboarding,
+                    height,
+                    isDiscoverable,
+                    language,
+                    targetWeight,
+                }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    isDiscoverable,
-                    height,
-                    targetWeight,
-                    language,
-                    hasCompletedOnboarding,
-                }),
+                method: 'PATCH',
             });
 
             if (!response.ok) {
@@ -77,10 +77,10 @@ export const useProfile: UseProfile = () => {
             onSuccess: async (_, { language, silent }) => {
                 if (!silent) {
                     showSuccessNotification({
-                        title: t('notification.success.title', {
+                        message: t('notification.success.message', {
                             lng: language,
                         }),
-                        message: t('notification.success.message', {
+                        title: t('notification.success.title', {
                             lng: language,
                         }),
                     });
@@ -104,8 +104,8 @@ export const useProfile: UseProfile = () => {
         {
             onSuccess: async () => {
                 showSuccessNotification({
-                    title: t('notification.success.title'),
                     message: t('notification.success.message'),
+                    title: t('notification.success.title'),
                 });
 
                 queryClient.clear();
@@ -118,11 +118,11 @@ export const useProfile: UseProfile = () => {
     );
 
     return {
-        profile,
-        isFetching,
-        updateProfile,
-        user,
         deleteProfile,
         isDeleting: isLoading,
+        isFetching,
+        profile,
+        updateProfile,
+        user,
     };
 };

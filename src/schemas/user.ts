@@ -19,9 +19,9 @@ export const userSchema: UserSchema = z.object({
 });
 
 export const patchRequestSchema = z.object({
+    hasCompletedOnboarding: z.boolean().nullable().optional(),
     height: z.number().nullable().optional(),
     isDiscoverable: z.boolean().optional(),
     language: z.string().optional(),
     targetWeight: z.number().nullable().optional(),
-    hasCompletedOnboarding: z.boolean().nullable().optional(),
 });
