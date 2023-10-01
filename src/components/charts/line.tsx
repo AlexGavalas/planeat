@@ -46,7 +46,7 @@ type LineChartProps<DataItem> = {
     }[];
 };
 
-const LineChart = <DataItem extends { x: string; y: number | null }>({
+export const LineChart = <DataItem extends { x: string; y: number | null }>({
     data,
     target,
     unit,
@@ -173,5 +173,3 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
         />
     );
 };
-
-export default LineChart;

@@ -14,4 +14,4 @@ i18n.use(initReactI18next)
     })
     .catch(console.error);
 
-export default i18n;
+export { i18n };

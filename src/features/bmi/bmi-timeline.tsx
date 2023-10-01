@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 import { useQuery } from 'react-query';
 
 import { fetchMeasurements } from '~api/measurement';
-import LineChart from '~components/charts/line';
+import { LineChart } from '~components/charts/line';
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
