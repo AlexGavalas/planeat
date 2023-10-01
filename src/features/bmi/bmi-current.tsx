@@ -41,7 +41,7 @@ export const CurrentBMI = () => {
 
     const userBMI = +calculateBMI({
         weight,
-        height: profile?.height || 0,
+        height: profile?.height ?? 0,
     }).toFixed(1);
 
     return (

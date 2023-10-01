@@ -24,7 +24,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
     const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =
         useMeals();
 
-    const handleSave = async (newMeal: Partial<Meal>) => {
+    const handleSave = (newMeal: Partial<Meal>) => {
         if (!profile || !newMeal.meal) {
             return;
         }
@@ -50,7 +50,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
         }
     };
 
-    const handleDelete = async () => {
+    const handleDelete = () => {
         if (!meal) {
             return;
         }
@@ -96,7 +96,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                     }}
                 >
                     <Text p={5} ta="center">
-                        {meal?.meal || 'N/A '}
+                        {meal?.meal || 'N/A'}
                     </Text>
                 </Center>
             </Box>

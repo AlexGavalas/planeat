@@ -8,7 +8,6 @@ import { type MealsMap } from '~types/meal';
 const now = new Date();
 const startOfDayTimestamp = startOfDay(now);
 
-//
 const MEAL_TIMES: Record<RowKey, Date> = {
     morning: set(startOfDayTimestamp, { hours: 9, minutes: 0, seconds: 0 }),
     snack1: set(startOfDayTimestamp, { hours: 11, minutes: 0, seconds: 0 }),
@@ -39,6 +38,7 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
                 {translatedRows.map((row) => {
                     const key = `${row.key}_${format(now, 'EEE dd/MM/yyyy')}`;
 
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                     const meal = dailyMeals[key]?.meal || 'N/A';
 
                     const Icon = MEAL_ICON[row.key];

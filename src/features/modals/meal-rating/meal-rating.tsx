@@ -1,7 +1,7 @@
 import { Button, Center, Group, Rating, Stack } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
-import { type FormEventHandler, useState } from 'react';
+import { type FormEventHandler, type MouseEventHandler, useState } from 'react';
 
 import { type Meal } from '~types/meal';
 
@@ -20,8 +20,11 @@ export const MealRatingModal = ({
     const modals = useModals();
     const [rating, setRating] = useState<number>();
 
-    const closeModal = () => modals.closeAll();
+    const closeModal = () => {
+        modals.closeAll();
+    };
 
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
     const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
@@ -33,7 +36,8 @@ export const MealRatingModal = ({
         closeModal();
     };
 
-    const onDelete = async () => {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+    const onDelete: MouseEventHandler<HTMLButtonElement> = async () => {
         await handleDelete();
         closeModal();
     };

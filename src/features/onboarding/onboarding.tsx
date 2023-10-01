@@ -51,14 +51,14 @@ export const Onboarding = () => {
                         step.target === '#weight-container'
                     ) {
                         setRun(false);
-                        router.push('/meal-plan');
+                        router.push('/meal-plan').catch(console.error);
                     } else if (
                         type === 'step:after' &&
                         action === 'next' &&
                         step.target === '#meal-plan-container'
                     ) {
                         setRun(false);
-                        router.push('/settings');
+                        router.push('/settings').catch(console.error);
                     } else if (type === 'tour:end') {
                         setRun(false);
                         setTourEnded(true);

@@ -10,7 +10,7 @@ import {
 import { useDebouncedValue } from '@mantine/hooks';
 import { AddUser, Cancel, ProfileCircle } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { type MouseEventHandler, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { useProfile } from '~hooks/use-profile';
@@ -35,9 +35,9 @@ export const FindUsers = () => {
                 `/api/v1/user?type=search&fullName=${debouncedSearchQuery}`,
             );
 
-            const { data } = await response.json();
+            const { data } = (await response.json()) as { data?: string[] };
 
-            return (data as User[])?.map(({ full_name }) => full_name) ?? [];
+            return data ?? [];
         },
         {
             enabled: Boolean(debouncedSearchQuery),
@@ -51,9 +51,9 @@ export const FindUsers = () => {
                 `/api/v1/user?type=profile&fullName=${selectedUserFullname}`,
             );
 
-            const { data } = await response.json();
+            const { data } = (await response.json()) as { data?: User[] };
 
-            return data as User[];
+            return data;
         },
         {
             enabled: Boolean(selectedUserFullname),
@@ -76,7 +76,7 @@ export const FindUsers = () => {
                 `/api/v1/notification?requestUserId=${profile.id}&targetUserId=${selectedUserId}`,
             );
 
-            const { data } = await response.json();
+            const { data } = (await response.json()) as { data?: boolean };
 
             return data;
         },
@@ -94,7 +94,10 @@ export const FindUsers = () => {
         setSelectedUserFullname('');
     };
 
-    const handleConnectionRequest = async () => {
+    const handleConnectionRequest: MouseEventHandler<
+        HTMLButtonElement
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+    > = async () => {
         if (!profile || !selectedUser) {
             return;
         }
@@ -109,9 +112,7 @@ export const FindUsers = () => {
             }),
         });
 
-        const { error } = await response.json();
-
-        if (error) {
+        if (!response.ok) {
             showErrorNotification({
                 title: t('error'),
                 message: t('connections.request.error'),

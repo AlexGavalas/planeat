@@ -45,7 +45,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         'yyyy-MM-dd',
     );
 
-    await queryClient.prefetchQuery(['user'], async () => profile);
+    await queryClient.prefetchQuery(['user'], () => profile);
 
     const currentWeekKey = format(NOW, 'yyyy-MM-dd');
 
@@ -57,7 +57,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             userId: profile.id,
         });
 
-        return result.data || [];
+        return result.data ?? [];
     });
 
     await queryClient.prefetchQuery(
@@ -70,14 +70,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 userId: profile.id,
             });
 
-            return result.data || [];
+            return result.data ?? [];
         },
     );
 
     return {
         props: {
             dehydratedState: dehydrate(queryClient),
-            ...(await getServerSideTranslations({ locale: profile?.language })),
+            ...(await getServerSideTranslations({ locale: profile.language })),
         },
     };
 };

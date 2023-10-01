@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const profile = await fetchUser({ email: user.email, supabase });
 
-    await queryClient.prefetchQuery(['user'], async () => profile);
+    await queryClient.prefetchQuery(['user'], () => profile);
 
     return {
         props: {

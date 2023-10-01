@@ -1,12 +1,12 @@
 import { add, format, parse, parseISO } from 'date-fns';
 import { useCallback } from 'react';
 
-import { type Meal, type MealsMap } from '~types/meal';
+import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 
 import { useCurrentWeek } from './current-week';
 import { useUnsavedChanges } from './unsaved-changes';
 
-const cloneState = (meals: Meal[]) => {
+const cloneState = (meals: (EditedMeal | Meal)[]) => {
     return meals.reduce((acc: MealsMap, meal) => {
         const newKey = meal.section_key.replace(/(\d+\/\d+\/\d+)$/, (match) => {
             const prevDate = parse(match, 'dd/MM/yyyy', new Date());
@@ -37,7 +37,7 @@ export const useWeeklyScheduleOps = () => {
     const { addChange } = useUnsavedChanges();
 
     const copyToNextWeek = useCallback(
-        (meals: Meal[]) => {
+        (meals: (EditedMeal | Meal)[]) => {
             nextWeek();
 
             Object.values(cloneState(meals)).forEach(addChange);

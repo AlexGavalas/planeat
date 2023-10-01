@@ -8,7 +8,7 @@ export const UserContext: FC<{ children?: ReactNode }> = ({ children }) => {
 
     useEffect(() => {
         if (profile) {
-            i18n?.changeLanguage(profile.language);
+            i18n?.changeLanguage(profile.language).catch(console.error);
         }
     }, [profile]);
 

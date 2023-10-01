@@ -21,6 +21,7 @@
             "~constants/*": ["constants/*"],
             "~features/*": ["features/*"],
             "~hooks/*": ["hooks/*"],
+            "~schemas/*": ["schemas/*"],
             "~store/*": ["store/*"],
             "~styles/*": ["styles/*"],
             "~test/*": ["test/*"],

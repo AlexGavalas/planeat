@@ -18,9 +18,11 @@ export const ManageConnections = () => {
             async () => {
                 const response = await fetch('/api/v1/connection');
 
-                const { data } = await response.json();
+                const { data } = (await response.json()) as {
+                    data?: Connection[];
+                };
 
-                return (data ?? []) as Connection[];
+                return data ?? [];
             },
             {
                 enabled: Boolean(profile),
@@ -39,9 +41,7 @@ export const ManageConnections = () => {
             }),
         });
 
-        const { error } = await response.json();
-
-        if (error) {
+        if (!response.ok) {
             showErrorNotification({
                 title: t('error'),
                 message: t(
@@ -49,7 +49,7 @@ export const ManageConnections = () => {
                 ),
             });
         } else {
-            queryClient.invalidateQueries(['connections']);
+            await queryClient.invalidateQueries(['connections']);
         }
     };
 
@@ -66,13 +66,17 @@ export const ManageConnections = () => {
             {connections.map((connection) => {
                 return (
                     <Group key={connection.id} justify="space-between">
+                        {/* eslint-disable @typescript-eslint/no-unsafe-member-access */}
                         {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                        {/* @ts-ignore */}
+                        {/* @ts-expect-error */}
                         <Text>{connection.users.full_name}</Text>
                         <Group gap="xs">
                             <Button
                                 size="compact-md"
-                                onClick={() => removeConnection(connection)}
+                                // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+                                onClick={async () => {
+                                    await removeConnection(connection);
+                                }}
                             >
                                 {t(
                                     'connections.manage_connections.remove_connection',

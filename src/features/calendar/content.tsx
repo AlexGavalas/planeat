@@ -50,6 +50,7 @@ export const Content = () => {
                                 id={`${row.key}_${label}`}
                                 timestamp={timestamp}
                                 meal={
+                                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                                     unsavedChanges[`${row.key}_${label}`] ||
                                     mealsMap[`${row.key}_${label}`]
                                 }
@@ -71,6 +72,7 @@ export const Content = () => {
                                 id={`${row.key}_${label}`}
                                 timestamp={timestamp}
                                 meal={
+                                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                                     unsavedChanges[`${row.key}_${label}`] ||
                                     mealsMap[`${row.key}_${label}`]
                                 }

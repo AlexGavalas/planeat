@@ -29,8 +29,8 @@ export const CopyButton = ({
             {({ copied, copy }) => (
                 <Tooltip
                     label={copied ? t('util.copied') : t('util.copy')}
-                    withArrow
                     position={tooltipPosition}
+                    withArrow
                 >
                     <ActionIcon variant={variant} onClick={copy} size={size}>
                         {copied ? <Check /> : <Copy />}

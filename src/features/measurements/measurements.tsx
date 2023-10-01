@@ -25,7 +25,7 @@ export const Measurements = () => {
         async () => {
             const response = await fetch('/api/v1/measurement?count=true');
 
-            const { count } = await response.json();
+            const { count } = (await response.json()) as { count?: number };
 
             return count;
         },
@@ -44,7 +44,9 @@ export const Measurements = () => {
                 `/api/v1/measurement?end=${end}&start=${start}`,
             );
 
-            const { data } = await response.json();
+            const { data } = (await response.json()) as {
+                data?: Measurement[];
+            };
 
             return data ?? [];
         },
@@ -69,9 +71,7 @@ export const Measurements = () => {
             method: 'DELETE',
         });
 
-        const { error } = await response.json();
-
-        if (error) {
+        if (!response.ok) {
             showErrorNotification({
                 title: t('error'),
                 message: `${t('errors.measurement_delete')}. ${t('try_again')}`,
@@ -83,7 +83,7 @@ export const Measurements = () => {
     };
 
     const onEdit = useCallback(
-        async (item: Measurement) => {
+        (item: Measurement) => {
             const onSave = async () => {
                 await queryClient.invalidateQueries(['measurements', page]);
             };

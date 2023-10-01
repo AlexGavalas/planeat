@@ -6,4 +6,4 @@ export const getServerSideTranslations = async ({
     locale,
 }: {
     locale?: string;
-}) => serverSideTranslations(locale || 'en', ['common'], null, allLocales);
+}) => serverSideTranslations(locale ?? 'en', ['common'], null, allLocales);

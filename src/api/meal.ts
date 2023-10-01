@@ -1,6 +1,6 @@
 import { type SupabaseClient } from '@supabase/supabase-js';
 
-import { type Meal } from '~types/meal';
+import { type EditedMeal } from '~types/meal';
 import { type Database } from '~types/supabase';
 
 type FetchMealsProps = {
@@ -48,7 +48,7 @@ export const deleteMeals = async ({
 
 type UpdateMealsProps = {
     supabase: SupabaseClient<Database>;
-    editedMeals: Meal[];
+    editedMeals: EditedMeal[];
     userId: number;
 };
 
@@ -67,7 +67,7 @@ export const updateMeals = async ({
 
 type CreateMealsProps = {
     supabase: SupabaseClient<Database>;
-    newMeals: Meal[];
+    newMeals: EditedMeal[];
     userId: number;
 };
 

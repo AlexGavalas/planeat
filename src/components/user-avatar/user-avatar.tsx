@@ -6,7 +6,7 @@ import { useProfile } from '~hooks/use-profile';
 export const UserAvatar = () => {
     const { user } = useProfile();
 
-    if (!user || !user.image || !user.name) {
+    if (!user?.image || !user.name) {
         return null;
     }
 

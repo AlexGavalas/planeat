@@ -52,7 +52,7 @@ export const Header = () => {
                 userId: profile.id,
             });
 
-            return result.data || [];
+            return result.data ?? [];
         },
     );
 
@@ -81,6 +81,7 @@ export const Header = () => {
                     >
                         {label}
                     </Title>
+                    {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
                     {activitiesMap[format(timestamp, 'yyyy-MM-dd')] && (
                         <Running />
                     )}

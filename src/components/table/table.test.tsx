@@ -13,7 +13,7 @@ describe('<Table />', () => {
         onEdit,
         totalPages: 1,
         page: 1,
-    } satisfies TableProps;
+    } satisfies TableProps<{ id: number; key: string }>;
 
     describe('when passed no data', () => {
         it('renders a table', () => {

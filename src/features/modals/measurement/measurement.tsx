@@ -12,15 +12,15 @@ const localeMap = {
     gr: 'el',
 };
 
-interface ModalContentProps {
-    onSave?: () => void;
+type ModalContentProps = {
+    onSave?: () => Promise<void>;
     initialData?: {
         id: string;
         date: Date;
         weight?: number;
         fat_percentage?: number;
     };
-}
+};
 
 export const MeasurementModal = ({
     onSave,
@@ -35,13 +35,23 @@ export const MeasurementModal = ({
     const [fatPercent, setFatPercent] = useState(initialData?.fat_percentage);
     const [error, setError] = useState('');
 
-    const closeModal = () => modals.closeAll();
+    const closeModal = () => {
+        modals.closeAll();
+    };
 
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
     const handleSave: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
-        if (!weight) return setError(t('errors.weight_empty'));
-        if (!date) return setError(t('errors.date_empty'));
+        if (!weight) {
+            setError(t('errors.weight_empty'));
+            return;
+        }
+
+        if (!date) {
+            setError(t('errors.date_empty'));
+            return;
+        }
 
         const url = initialData?.id
             ? `/api/v1/measurement?id=${initialData.id}`
@@ -59,15 +69,13 @@ export const MeasurementModal = ({
             }),
         });
 
-        const { error } = await response.json();
-
-        if (error) {
+        if (!response.ok) {
             showErrorNotification({
                 title: t('error'),
                 message: `${t('errors.measurement_save')}. ${t('try_again')}`,
             });
         } else {
-            onSave?.();
+            await onSave?.();
             closeModal();
         }
     };
@@ -86,10 +94,14 @@ export const MeasurementModal = ({
             <NumberInput
                 label={t('weight')}
                 error={error}
-                onFocus={() => setError('')}
+                onFocus={() => {
+                    setError('');
+                }}
                 min={0}
                 value={weight}
-                onChange={(value) => setWeight(Number(value))}
+                onChange={(value) => {
+                    setWeight(Number(value));
+                }}
                 decimalScale={2}
             />
             <Space h={20} />
@@ -98,7 +110,9 @@ export const MeasurementModal = ({
                 min={0}
                 max={100}
                 value={fatPercent}
-                onChange={(value) => setFatPercent(Number(value))}
+                onChange={(value) => {
+                    setFatPercent(Number(value));
+                }}
                 decimalScale={2}
             />
             <Space h={20} />

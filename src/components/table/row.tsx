@@ -9,27 +9,33 @@ import {
     Text,
 } from '@mantine/core';
 import { EditPencil, Trash } from 'iconoir-react';
+import get from 'lodash/fp/get';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Item = any;
+export type Item = Record<string, any> & { id: string | number };
 
-export type Header = {
+export type Header<T> = {
     width: string;
     label: string;
     key: string;
-    formatValue?: (item: Item) => string;
+    formatValue?: (item: T) => string;
 };
 
-interface RowProps {
-    item: Item;
-    headers: Header[];
-    onDelete: (item: Item) => Promise<void>;
-    onEdit: (item: Item) => Promise<void>;
-}
+type RowProps<T> = {
+    item: T;
+    headers: Header<T>[];
+    onDelete: (item: T) => Promise<void> | void;
+    onEdit: (item: T) => Promise<void> | void;
+};
 
-export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
+export const Row = <T extends Item>({
+    item,
+    headers,
+    onDelete,
+    onEdit,
+}: RowProps<T>) => {
     const { t } = useTranslation();
     const [openConfirmation, setOpenConfirmation] = useState(false);
     const [deleteInProgress, setDeleteInProgress] = useState(false);
@@ -49,12 +55,18 @@ export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
                 .filter((header) => header.key !== 'actions')
                 .map(({ key, width, formatValue }) => (
                     <TableTd style={{ width }} key={key}>
-                        {formatValue?.(item) ?? item[key]}
+                        {formatValue?.(item) ?? get(key, item)}
                     </TableTd>
                 ))}
             <TableTd style={{ width: '35%' }}>
                 <Group gap="md" justify="center">
-                    <ActionIcon onClick={() => onEdit(item)} variant="subtle">
+                    <ActionIcon
+                        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+                        onClick={async () => {
+                            await onEdit(item);
+                        }}
+                        variant="subtle"
+                    >
                         <EditPencil />
                     </ActionIcon>
                     <Popover
@@ -71,7 +83,9 @@ export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
                         <Popover.Target>
                             <ActionIcon
                                 color="red"
-                                onClick={() => setOpenConfirmation(true)}
+                                onClick={() => {
+                                    setOpenConfirmation(true);
+                                }}
                                 variant="subtle"
                             >
                                 <Trash />
@@ -93,7 +107,10 @@ export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
                                     </Button>
                                     <Button
                                         size="xs"
-                                        onClick={handleDelete}
+                                        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+                                        onClick={async () => {
+                                            await handleDelete();
+                                        }}
                                         loading={deleteInProgress}
                                     >
                                         {t('confirmation.yes')}

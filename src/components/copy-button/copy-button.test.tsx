@@ -9,25 +9,35 @@ describe('<CopyButton />', () => {
         expect(container).toMatchSnapshot();
     });
 
-    describe('when the user hovers the button', () => {});
+    describe('when the user hovers the button', () => {
+        it('shows the tooltip', async () => {
+            const { user, baseElement } = renderWithUser(
+                <CopyButton value="test" />,
+            );
+
+            const button = screen.getByRole('button');
+
+            await user.hover(button);
+
+            expect(baseElement).toMatchSnapshot();
+        });
+    });
 
     describe('when user clicks the button', () => {
-        beforeAll(() => {
-            jest.spyOn(navigator.clipboard, 'writeText');
-        });
-
-        afterAll(() => {
+        afterEach(() => {
             jest.restoreAllMocks();
         });
 
         it('copies the value to the clipboard', async () => {
+            const writeText = jest.spyOn(navigator.clipboard, 'writeText');
+
             const { user } = renderWithUser(<CopyButton value="test" />);
 
             const button = screen.getByRole('button');
 
             await user.click(button);
 
-            expect(navigator.clipboard.writeText).toHaveBeenCalledWith('test');
+            expect(writeText).toHaveBeenCalledWith('test');
         });
     });
 });

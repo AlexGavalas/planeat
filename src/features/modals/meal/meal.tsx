@@ -1,13 +1,13 @@
 import { Button, Group, Stack, Textarea } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
-import { type FormEventHandler, useState } from 'react';
+import { type FormEventHandler, type MouseEventHandler, useState } from 'react';
 
-interface MealModalProps {
-    deleteMeal: () => Promise<void>;
-    handleSave: (meal: string) => Promise<void>;
+type MealModalProps = {
+    deleteMeal: () => Promise<void> | void;
+    handleSave: (meal: string) => Promise<void> | void;
     initialMeal: string;
-}
+};
 
 export const MealModal = ({
     handleSave,
@@ -18,21 +18,29 @@ export const MealModal = ({
     const modals = useModals();
     const [error, setError] = useState('');
 
-    const closeModal = () => modals.closeAll();
+    const closeModal = () => {
+        modals.closeAll();
+    };
 
-    const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+    const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
         const meal = new FormData(e.currentTarget).get('meal')?.toString();
 
-        if (!meal) return setError(t('errors.meal_empty'));
+        if (!meal) {
+            setError(t('errors.meal_empty'));
+            return;
+        }
 
-        handleSave(meal);
+        await handleSave(meal);
+
         closeModal();
     };
 
-    const onDelete = () => {
-        deleteMeal();
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    const onDelete: MouseEventHandler<HTMLButtonElement> = async () => {
+        await deleteMeal();
         closeModal();
     };
 
@@ -49,7 +57,9 @@ export const MealModal = ({
                     minRows={5}
                     maxRows={20}
                     error={error}
-                    onFocus={() => setError('')}
+                    onFocus={() => {
+                        setError('');
+                    }}
                 />
                 <Group justify="space-between" gap="sm">
                     <Button variant="light" color="red" onClick={closeModal}>

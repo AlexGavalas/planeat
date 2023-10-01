@@ -25,7 +25,7 @@ export const Activities = () => {
         async () => {
             const response = await fetch('/api/v1/activity?count=true');
 
-            const { count } = await response.json();
+            const { count } = (await response.json()) as { count?: number };
 
             return count;
         },
@@ -44,7 +44,7 @@ export const Activities = () => {
                 `/api/v1/activity?end=${end}&start=${start}`,
             );
 
-            const { data } = await response.json();
+            const { data } = (await response.json()) as { data?: Activity[] };
 
             return data ?? [];
         },
@@ -91,9 +91,7 @@ export const Activities = () => {
             method: 'DELETE',
         });
 
-        const { error } = await response.json();
-
-        if (error) {
+        if (!response.ok) {
             showErrorNotification({
                 title: t('error'),
                 message: `${t('errors.activity_delete')}. ${t('try_again')}`,
@@ -104,7 +102,7 @@ export const Activities = () => {
         }
     };
 
-    const onEdit = async (item: Activity) => {
+    const onEdit = (item: Activity) => {
         const onSave = async () => {
             await queryClient.invalidateQueries(['activities', page]);
         };

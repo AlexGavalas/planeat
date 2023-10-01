@@ -8,14 +8,14 @@ import { showSuccessNotification } from '~util/notification';
 
 import { useUser } from './use-user';
 
-interface MutationProps {
+type MutationProps = {
     isDiscoverable?: boolean;
     height?: number;
     targetWeight?: number;
     language?: string;
     hasCompletedOnboarding?: boolean;
     silent?: boolean;
-}
+};
 
 export const useProfile = () => {
     const router = useRouter();
@@ -28,9 +28,9 @@ export const useProfile = () => {
         async () => {
             const response = await fetch('/api/v1/user');
 
-            const { data } = await response.json();
+            const { data } = (await response.json()) as { data?: User };
 
-            return data as User;
+            return data;
         },
         {
             enabled: Boolean(user?.email),
@@ -44,7 +44,6 @@ export const useProfile = () => {
             targetWeight,
             language,
             hasCompletedOnboarding,
-            silent = false,
         }: MutationProps) => {
             const response = await fetch('/api/v1/user', {
                 method: 'PATCH',
@@ -60,16 +59,12 @@ export const useProfile = () => {
                 }),
             });
 
-            const { data, error } = await response.json();
-
-            if (error) {
-                throw error;
+            if (!response.ok) {
+                // TODO: Handle error
             }
-
-            return { ...data, silent };
         },
         {
-            onSuccess: (_, { language, silent }) => {
+            onSuccess: async (_, { language, silent }) => {
                 if (!silent) {
                     showSuccessNotification({
                         title: t('notification.success.title', {
@@ -80,7 +75,8 @@ export const useProfile = () => {
                         }),
                     });
                 }
-                queryClient.invalidateQueries(['user']);
+
+                await queryClient.invalidateQueries(['user']);
             },
         },
     );
@@ -91,13 +87,9 @@ export const useProfile = () => {
                 method: 'DELETE',
             });
 
-            const { data, error } = await response.json();
-
-            if (error) {
-                throw error;
+            if (!response.ok) {
+                // TODO: Handle error
             }
-
-            return data;
         },
         {
             onSuccess: async () => {
@@ -110,7 +102,7 @@ export const useProfile = () => {
 
                 await signOut();
 
-                router.push('/');
+                await router.push('/');
             },
         },
     );

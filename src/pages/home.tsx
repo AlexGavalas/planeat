@@ -62,7 +62,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const dailyMeals = fromPairs(map(data, (item) => [item.section_key, item]));
 
-    await queryClient.prefetchQuery(['user'], async () => profile);
+    await queryClient.prefetchQuery(['user'], () => profile);
 
     await queryClient.prefetchQuery(['current-fat-percent'], async () => {
         const result = await fetchLatestFatMeasurement({

@@ -53,7 +53,9 @@ export const Controls = () => {
             </Group>
             <Group gap="sm">
                 <Button
-                    onClick={() => copyToNextWeek(meals)}
+                    onClick={() => {
+                        copyToNextWeek(meals);
+                    }}
                     rightSection={<Copy />}
                 >
                     {t('week.copy_to_next_week')}
@@ -64,7 +66,10 @@ export const Controls = () => {
                             {t('cancel')}
                         </Button>
                         <Button
-                            onClick={savePlan}
+                            // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+                            onClick={async () => {
+                                await savePlan();
+                            }}
                             rightSection={<SaveFloppyDisk />}
                         >
                             {t('save')}

@@ -37,7 +37,9 @@ export const DeleteAccountModal = ({
                 <Button
                     color="red"
                     disabled={!canDelete}
-                    onClick={() => deleteProfile()}
+                    onClick={() => {
+                        deleteProfile();
+                    }}
                     loading={isDeleting}
                 >
                     {t(

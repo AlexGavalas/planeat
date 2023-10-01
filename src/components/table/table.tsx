@@ -16,17 +16,17 @@ import styles from './table.module.css';
 export const INITIAL_PAGE = 1;
 export const PAGE_SIZE = 5;
 
-export type TableProps = {
-    data: Item[];
-    headers: Header[];
+export type TableProps<T> = {
+    data: T[];
+    headers: Header<T>[];
     totalPages: number;
     page: number;
-    onDelete: (item: Item) => Promise<void>;
-    onEdit: (item: Item) => Promise<void>;
+    onDelete: (item: T) => Promise<void> | void;
+    onEdit: (item: T) => Promise<void> | void;
     onPageChange?: (page: number) => void;
 };
 
-export const Table = ({
+export const Table = <T extends Item>({
     data,
     headers,
     totalPages,
@@ -34,7 +34,7 @@ export const Table = ({
     onDelete,
     onEdit,
     page: initialPage,
-}: TableProps) => {
+}: TableProps<T>) => {
     const [page, setPage] = useState(initialPage);
 
     const shouldShowPagination = totalPages > 1;

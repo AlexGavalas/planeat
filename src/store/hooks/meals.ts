@@ -4,6 +4,7 @@ import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
+import { getResponseSchema } from '~schemas/meal';
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 import { getDaysOfWeek } from '~util/date';
 import {
@@ -42,9 +43,11 @@ export const useMeals = () => {
                 `/api/v1/meal?startDate=${startDate}&endDate=${endDate}`,
             );
 
-            const { data } = await response.json();
+            const result = (await response.json()) as { data?: Meal[] };
 
-            return (data || []) as Meal[];
+            const { data } = getResponseSchema.parse(result);
+
+            return data ?? [];
         },
         {
             onSettled: () => {
@@ -87,9 +90,7 @@ export const useMeals = () => {
             }),
         });
 
-        const { error } = await response.json();
-
-        if (error) {
+        if (!response.ok) {
             setSubmitting(false);
 
             showErrorNotification({
@@ -112,7 +113,7 @@ export const useMeals = () => {
         removeChanges();
     };
 
-    const deleteEntryCell = async ({ meal }: { meal: Meal | EditedMeal }) => {
+    const deleteEntryCell = ({ meal }: { meal: Meal | EditedMeal }) => {
         const deletedMeal = {
             ...meal,
             meal: '',
@@ -121,7 +122,7 @@ export const useMeals = () => {
         addChange(deletedMeal);
     };
 
-    const deleteEntryRow = async (id: string) => {
+    const deleteEntryRow = (id: string) => {
         const [row] = id.split('_');
         const daysOfWeek = getDaysOfWeek(currentWeek);
 

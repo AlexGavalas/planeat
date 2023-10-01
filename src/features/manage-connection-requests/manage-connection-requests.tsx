@@ -25,9 +25,11 @@ export const ManageConnectionRequests = () => {
                 '/api/v1/notification?type=connection_request',
             );
 
-            const { data } = await response.json();
+            const { data } = (await response.json()) as {
+                data?: Notification[];
+            };
 
-            return (data ?? []) as Notification[];
+            return data ?? [];
         },
         {
             enabled: Boolean(profile),
@@ -45,7 +47,7 @@ export const ManageConnectionRequests = () => {
             },
         );
 
-        return await response.json();
+        return response;
     };
 
     const handleAcceptConnectionRequest = async (
@@ -61,9 +63,7 @@ export const ManageConnectionRequests = () => {
             }),
         });
 
-        const { error } = await response.json();
-
-        if (error) {
+        if (!response.ok) {
             showErrorNotification({
                 title: t('error'),
                 message: t(
@@ -78,11 +78,11 @@ export const ManageConnectionRequests = () => {
                 ),
             });
 
-            const { error } = await removeConnectionRequest(
+            const removeConnectionRes = await removeConnectionRequest(
                 connectionRequest.id,
             );
 
-            if (!error) {
+            if (!removeConnectionRes.ok) {
                 await queryClient.invalidateQueries([
                     'connection-requests',
                     profile?.id,
@@ -96,9 +96,9 @@ export const ManageConnectionRequests = () => {
     const handleDeclineConnectionRequest = async (
         connectionRequestId: string,
     ) => {
-        const { error } = await removeConnectionRequest(connectionRequestId);
+        const response = await removeConnectionRequest(connectionRequestId);
 
-        if (error) {
+        if (!response.ok) {
             showErrorNotification({
                 title: t('error'),
                 message: t(
@@ -138,14 +138,16 @@ export const ManageConnectionRequests = () => {
                             key={connectionRequest.id}
                             justify="space-between"
                         >
+                            {/* eslint-disable @typescript-eslint/no-unsafe-member-access */}
                             {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                            {/* @ts-ignore */}
+                            {/* @ts-expect-error */}
                             <Text>{connectionRequest.users.full_name}</Text>
                             <Group gap="xs">
                                 <Button
                                     size="sm"
-                                    onClick={() => {
-                                        handleAcceptConnectionRequest(
+                                    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+                                    onClick={async () => {
+                                        await handleAcceptConnectionRequest(
                                             connectionRequest,
                                         );
                                     }}
@@ -157,8 +159,9 @@ export const ManageConnectionRequests = () => {
                                 <Button
                                     size="sm"
                                     variant="outline"
-                                    onClick={() => {
-                                        handleDeclineConnectionRequest(
+                                    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+                                    onClick={async () => {
+                                        await handleDeclineConnectionRequest(
                                             connectionRequest.id,
                                         );
                                     }}

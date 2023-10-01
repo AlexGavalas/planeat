@@ -9,19 +9,28 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/strict-type-checked",
+        "plugin:@typescript-eslint/stylistic-type-checked",
         "prettier"
     ],
-    "ignorePatterns": ["*.config.js", "*.config.mjs"],
+    "ignorePatterns": ["*.config.js", "*.config.mjs", "src/types/supabase.ts"],
     "env": {
         "node": true,
         "browser": true
     },
     "rules": {
+        "@typescript-eslint/consistent-type-definitions": ["error", "type"],
         "@typescript-eslint/consistent-type-imports": [
             "warn",
             {
                 "prefer": "type-imports",
                 "fixStyle": "inline-type-imports"
+            }
+        ],
+        "@typescript-eslint/prefer-nullish-coalescing": [
+            "error",
+            {
+                "ignorePrimitives": true
             }
         ]
     }

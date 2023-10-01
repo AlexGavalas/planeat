@@ -39,3 +39,63 @@ exports[`<CopyButton /> renders the button 1`] = `
   </button>
 </div>
 `;
+
+exports[`<CopyButton /> when the user hovers the button shows the tooltip 1`] = `
+<body>
+  <div>
+    <style
+      data-mantine-styles="classes"
+    >
+      @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+    </style>
+    <button
+      aria-describedby=":r5:"
+      class="mantine-focus-auto mantine-active m-8d3f4000 mantine-ActionIcon-root m-87cf2631 mantine-UnstyledButton-root"
+      data-size="lg"
+      data-variant="light"
+      style="--ai-size: var(--ai-size-lg); --ai-bg: var(--mantine-color-blue-light); --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      type="button"
+    >
+      <svg
+        color="currentColor"
+        fill="none"
+        height="1.5em"
+        stroke-width="1.5"
+        viewBox="0 0 24 24"
+        width="1.5em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M19.4 20H9.6a.6.6 0 01-.6-.6V9.6a.6.6 0 01.6-.6h9.8a.6.6 0 01.6.6v9.8a.6.6 0 01-.6.6z"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M15 9V4.6a.6.6 0 00-.6-.6H4.6a.6.6 0 00-.6.6v9.8a.6.6 0 00.6.6H9"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+  </div>
+  <div>
+    <div>
+      <div
+        class="m-1b3c8819 mantine-Tooltip-tooltip"
+        id=":r5:"
+        role="tooltip"
+        style="transition-property: opacity; transition-duration: 100ms; transition-timing-function: ease; opacity: 1; z-index: 300; top: -7px; left: 8px;"
+        tabindex="-1"
+      >
+        Copy
+        <div
+          class="m-f898399f mantine-Tooltip-arrow"
+          style="transform: rotate(45deg); position: absolute; border-bottom-right-radius: 0; border-top-color: transparent; border-left-color: transparent; left: -1px;"
+        />
+      </div>
+    </div>
+  </div>
+</body>
+`;

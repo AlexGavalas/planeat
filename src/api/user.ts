@@ -87,10 +87,10 @@ type UpdateProfile = {
     supabase: SupabaseClient<Database>;
     userId: number;
     isDiscoverable?: boolean;
-    height?: number;
-    targetWeight?: number;
+    height?: number | null;
+    targetWeight?: number | null;
     language?: string;
-    hasCompletedOnboarding?: boolean;
+    hasCompletedOnboarding?: boolean | null;
 };
 
 export const updateProfile = async ({

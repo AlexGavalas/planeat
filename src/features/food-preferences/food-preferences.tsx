@@ -16,6 +16,7 @@ export const FoodPreferences = () => {
     const supabase = useSupabaseClient<Database>();
     const { profile } = useProfile();
 
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
     const handleSavePreferences: FormEventHandler<HTMLFormElement> = async (
         e,
     ) => {

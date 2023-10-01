@@ -16,7 +16,9 @@ export const fetchUserConnections = async ({
         .select('*, users:connection_user_id(full_name)')
         .eq('user_id', userId);
 
-    return { data };
+    return {
+        data,
+    };
 };
 
 type DeleteConnection = {
@@ -43,7 +45,9 @@ export const deleteConnection = async ({
         .eq('connection_user_id', userId)
         .eq('user_id', connectionUserId);
 
-    return { error: currentUserError || connectionUserError };
+    return {
+        error: currentUserError ?? connectionUserError,
+    };
 };
 
 type CreateConnection = {
@@ -68,5 +72,7 @@ export const createConnection = async ({
         },
     ]);
 
-    return { error };
+    return {
+        error,
+    };
 };

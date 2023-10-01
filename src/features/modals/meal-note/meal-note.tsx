@@ -1,15 +1,15 @@
 import { Button, Group, Stack, Textarea } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
-import { type FormEventHandler, useState } from 'react';
+import { type FormEventHandler, type MouseEventHandler, useState } from 'react';
 
 import { type Meal } from '~types/meal';
 
-interface MealNoteModalProps {
+type MealNoteModalProps = {
     meal: Meal;
     handleSave: (meal: string) => Promise<void>;
     handleDelete: () => Promise<void>;
-}
+};
 
 const NOTE_FIELD_NAME = 'note';
 
@@ -22,8 +22,11 @@ export const MealNoteModal = ({
     const modals = useModals();
     const [error, setError] = useState('');
 
-    const closeModal = () => modals.closeAll();
+    const closeModal = () => {
+        modals.closeAll();
+    };
 
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
     const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
@@ -32,14 +35,16 @@ export const MealNoteModal = ({
             ?.toString();
 
         if (!note) {
-            return setError(t('errors.note_empty'));
+            setError(t('errors.note_empty'));
+            return;
         }
 
         await handleSave(note);
         closeModal();
     };
 
-    const onDelete = async () => {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+    const onDelete: MouseEventHandler<HTMLButtonElement> = async () => {
         await handleDelete();
         closeModal();
     };
@@ -57,7 +62,9 @@ export const MealNoteModal = ({
                     minRows={5}
                     maxRows={20}
                     error={error}
-                    onFocus={() => setError('')}
+                    onFocus={() => {
+                        setError('');
+                    }}
                 />
                 <Group justify="space-between" gap="sm">
                     <Button variant="light" color="red" onClick={closeModal}>

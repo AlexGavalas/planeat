@@ -6,19 +6,41 @@ import invariant from 'tiny-invariant';
 invariant(process.env.GOOGLE_ID, 'Missing GOOGLE_ID env var');
 invariant(process.env.GOOGLE_SECRET, 'Missing GOOGLE_SECRET env var');
 
+type GoogleProfile = {
+    sub: string;
+    name: string;
+    email: string;
+    picture: string;
+    locale: string;
+};
+
+const isGoogleProfile = (profile: unknown): profile is GoogleProfile => {
+    if (typeof profile !== 'object' || profile === null) {
+        return false;
+    }
+
+    const keys = ['sub', 'name', 'email', 'picture', 'locale'];
+
+    return keys.every((key) => key in profile);
+};
+
 export const authOptions: AuthOptions = {
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_ID,
             clientSecret: process.env.GOOGLE_SECRET,
             profile(profile) {
-                return {
-                    id: profile.sub,
-                    name: profile.name,
-                    email: profile.email,
-                    image: profile.picture,
-                    locale: profile.locale,
-                };
+                if (isGoogleProfile(profile)) {
+                    return {
+                        id: profile.sub,
+                        name: profile.name,
+                        email: profile.email,
+                        image: profile.picture,
+                        locale: profile.locale,
+                    };
+                }
+
+                throw new Error('Could not parse Google profile');
             },
         }),
     ],

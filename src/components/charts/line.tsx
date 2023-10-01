@@ -37,22 +37,22 @@ const targetLayer = (targetWeight: number) =>
         );
     };
 
-interface LineChartProps<DataItem> {
+type LineChartProps<DataItem> = {
     target?: number;
     unit: string;
     data: {
         id: string;
         data: DataItem[];
     }[];
-}
+};
 
 const LineChart = <DataItem extends { x: string; y: number | null }>({
     data,
     target,
     unit,
 }: LineChartProps<DataItem>) => {
-    const max = useMemo(() => maxBy(data[0].data, 'y')?.y || 0, [data]);
-    const min = useMemo(() => minBy(data[0].data, 'y')?.y || 0, [data]);
+    const max = useMemo(() => maxBy(data[0].data, 'y')?.y ?? 0, [data]);
+    const min = useMemo(() => minBy(data[0].data, 'y')?.y ?? 0, [data]);
 
     return (
         <ResponsiveLine
@@ -72,8 +72,8 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
             }}
             yScale={{
                 type: 'linear',
-                min: Math.min(min, target || Infinity) - 2,
-                max: Math.max(max, target || -Infinity) + 2,
+                min: Math.min(min, target ?? Infinity) - 2,
+                max: Math.max(max, target ?? -Infinity) + 2,
             }}
             curve="natural"
             theme={{
@@ -100,7 +100,10 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
                         textAnchor = 'middle';
                     }
 
-                    const date = parse(tick.value, 'yyyy-MM-dd', new Date());
+                    const value =
+                        typeof tick.value === 'string' ? tick.value : '-';
+
+                    const date = parse(value, 'yyyy-MM-dd', new Date());
 
                     const formattedDate = format(date, 'dd/MM/yy');
 

@@ -17,11 +17,11 @@ import { MealNoteModal } from '~features/modals/meal-note';
 import { MealRatingModal } from '~features/modals/meal-rating';
 import { type EditedMeal, type Meal } from '~types/meal';
 
-interface CellOverlayProps {
-    handleDelete: () => Promise<void>;
-    handleSave: (value: Partial<Meal>) => Promise<void>;
+type CellOverlayProps = {
+    handleDelete: () => Promise<void> | void;
+    handleSave: (value: Partial<Meal>) => Promise<void> | void;
     meal?: Meal | EditedMeal;
-}
+};
 
 const isSavedMeal = (meal?: Meal | EditedMeal): meal is Meal => {
     return meal?.id !== undefined;
@@ -49,31 +49,31 @@ export const CellOverlay = ({
 
     const handleMealSave = useCallback(
         async (value: string) => {
-            handleSave({ ...meal, meal: value });
+            await handleSave({ ...meal, meal: value });
         },
         [handleSave, meal],
     );
 
     const handleMealNoteSave = useCallback(
         async (note: string) => {
-            handleSave({ ...meal, note });
+            await handleSave({ ...meal, note });
         },
         [handleSave, meal],
     );
 
     const handleMealNoteDelete = useCallback(async () => {
-        handleSave({ ...meal, note: null });
+        await handleSave({ ...meal, note: null });
     }, [handleSave, meal]);
 
     const handleMealRatingSave = useCallback(
         async (rating: number) => {
-            handleSave({ ...meal, rating });
+            await handleSave({ ...meal, rating });
         },
         [handleSave, meal],
     );
 
     const handleMealRatingDelete = useCallback(async () => {
-        handleSave({ ...meal, rating: null });
+        await handleSave({ ...meal, rating: null });
     }, [handleSave, meal]);
 
     const handleEditClick = useCallback(() => {
@@ -83,7 +83,7 @@ export const CellOverlay = ({
             children: (
                 <MealModal
                     handleSave={handleMealSave}
-                    initialMeal={meal?.meal || ''}
+                    initialMeal={meal?.meal ?? ''}
                     deleteMeal={handleDelete}
                 />
             ),

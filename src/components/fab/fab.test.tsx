@@ -1,11 +1,14 @@
 import { ModalsProvider } from '@mantine/modals';
+import { type NextRouter } from 'next/router';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { renderWithUser } from '~test/utils';
 
 import { Fab } from './fab';
 
-jest.mock('next/router', () => jest.requireActual('next-router-mock'));
+jest.mock('next/router', () =>
+    jest.requireActual<NextRouter>('next-router-mock'),
+);
 
 describe('<Fab />', () => {
     it('renders initially closed', () => {

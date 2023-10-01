@@ -1,6 +1,7 @@
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import type { NextApiHandler } from 'next';
 import invariant from 'tiny-invariant';
+import { ZodError } from 'zod';
 
 import {
     createConnectionRequestNotification,
@@ -10,64 +11,81 @@ import {
 } from '~api/notification';
 import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
+import { postRequestSchema } from '~schemas/notification';
+import { assertSession, assertUserEmail } from '~util/session';
 
 const handler: NextApiHandler = async (req, res) => {
-    const supabase = createPagesServerClient({ req, res });
+    try {
+        const session = await getServerSession({ req, res });
 
-    const session = await getServerSession({ req, res });
+        assertSession(session);
+        assertUserEmail(session.user?.email);
 
-    if (!session || !session.user?.email) {
-        return res.status(401).json({
-            error: 'The user does not have an active session or is not authenticated',
-        });
-    }
+        const supabase = createPagesServerClient({ req, res });
 
-    const user = await fetchUser({ supabase, email: session.user.email });
+        const user = await fetchUser({ supabase, email: session.user.email });
 
-    invariant(user, 'User must exist');
+        invariant(user, 'User must exist');
 
-    if (req.method === 'GET') {
-        if (req.query.type === 'connection_request') {
-            const { data } = await fetchConnectionRequestNotifications({
+        if (req.method === 'GET') {
+            if (req.query.type === 'connection_request') {
+                const { data } = await fetchConnectionRequestNotifications({
+                    supabase,
+                    userId: user.id,
+                });
+
+                res.json({ data });
+            } else {
+                const requestUserId = Number(req.query.requestUserId);
+                const targetUserId = Number(req.query.targetUserId);
+
+                const data = await fetchNotification({
+                    requestUserId,
+                    targetUserId,
+                    supabase,
+                });
+
+                res.json({ data: Boolean(data) });
+            }
+        } else if (req.method === 'DELETE') {
+            const id = String(req.query.id);
+
+            const { error } = await deleteConnectionRequestNotification({
+                id,
                 supabase,
                 userId: user.id,
             });
 
-            res.json({ data });
-        } else {
-            const requestUserId = Number(req.query.requestUserId);
-            const targetUserId = Number(req.query.targetUserId);
+            if (error) {
+                throw new Error(error.message);
+            }
 
-            const data = await fetchNotification({
-                requestUserId,
-                targetUserId,
+            res.status(200).json({ message: 'OK' });
+        } else if (req.method === 'POST') {
+            const { targetUserId } = postRequestSchema.parse(req.body);
+
+            const { error } = await createConnectionRequestNotification({
+                requestUserId: user.id,
                 supabase,
+                targetUserId,
             });
 
-            res.json({ data });
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            res.status(200).json({ message: 'OK' });
+        } else {
+            res.status(405).json({ message: 'Method Not Allowed' });
         }
-    } else if (req.method === 'DELETE') {
-        const id = String(req.query.id);
+    } catch (e) {
+        console.error(e);
 
-        const { error } = await deleteConnectionRequestNotification({
-            id,
-            supabase,
-            userId: user.id,
-        });
-
-        res.json({ error: error ? 'Could not delete entry' : null });
-    } else if (req.method === 'POST') {
-        const { targetUserId } = req.body;
-
-        const { error } = await createConnectionRequestNotification({
-            requestUserId: user.id,
-            supabase,
-            targetUserId,
-        });
-
-        res.json({ error: error ? 'Could not update or create entry' : null });
-    } else {
-        res.status(405).json({ message: 'Method Not Allowed' });
+        if (e instanceof ZodError) {
+            res.status(400).json({ message: 'Bad Request' });
+        } else {
+            res.status(500).json({ message: 'Internal Server Error' });
+        }
     }
 };
 

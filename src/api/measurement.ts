@@ -61,7 +61,7 @@ export const fetchMeasurements = async ({
 
     if (count === null) {
         throw new Error(
-            error?.message || 'Could not count weight measurements',
+            error?.message ?? 'Could not count weight measurements',
         );
     }
 
@@ -92,7 +92,7 @@ export const fetchFatMeasurements = async ({
         .not('fat_percentage', 'is', null);
 
     if (count === null) {
-        throw new Error(error?.message || 'Could not count fat measurements');
+        throw new Error(error?.message ?? 'Could not count fat measurements');
     }
 
     const result = await supabase
@@ -163,7 +163,9 @@ export const deleteMeasurement = async ({
         .eq('id', measurementId)
         .eq('user_id', userId);
 
-    return { error };
+    return {
+        error,
+    };
 };
 
 type UpdateMeasurement = {
@@ -194,5 +196,7 @@ export const updateMeasurement = async ({
         })
         .eq('user_id', userId);
 
-    return { error };
+    return {
+        error,
+    };
 };
