@@ -57,7 +57,7 @@ export const Measurements = () => {
     );
 
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
-    const loading = (!measurements.length && !isFetched) || isFetching;
+    const isLoading = (!measurements.length && !isFetched) || isFetching;
 
     const handleNewWeightSave = useCallback(async () => {
         setPage(INITIAL_PAGE);
@@ -169,7 +169,7 @@ export const Measurements = () => {
                 </ActionIcon>
             </Group>
             <Box style={{ minHeight: 100 }}>
-                <LoadingOverlay visible={loading} />
+                <LoadingOverlay visible={isLoading} />
                 {measurements.length > 0 ? (
                     <Table
                         data={measurements}
@@ -181,7 +181,7 @@ export const Measurements = () => {
                         totalPages={totalPages}
                     />
                 ) : (
-                    !loading && (
+                    !isLoading && (
                         <Center style={{ height: 100 }}>
                             <Title order={4}>{t('no_measurements_yet')}</Title>
                         </Center>

@@ -19,7 +19,7 @@ export type CellProps = {
 
 export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
     const { profile } = useProfile();
-    const { hovered, ref } = useHover();
+    const { hovered: isHovered, ref } = useHover();
 
     const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =
         useMeals();
@@ -72,7 +72,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                 ...(isRow && { gridColumn: 'span 7' }),
             }}
         >
-            {hovered && (
+            {isHovered && (
                 <CellOverlay
                     meal={meal}
                     onDelete={handleDelete}
@@ -92,7 +92,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
             >
                 <Center
                     style={{
-                        ...(hovered && { opacity: 0.15 }),
+                        ...(isHovered && { opacity: 0.15 }),
                     }}
                 >
                     <Text p={5} ta="center">

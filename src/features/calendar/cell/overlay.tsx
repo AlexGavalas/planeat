@@ -41,7 +41,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
     const modals = useModals();
 
     const isMealSaved = isSavedMeal(meal);
-    const mealHasContent = isFilledMeal(meal);
+    const isMealFilled = isFilledMeal(meal);
 
     const handleMealSave = useCallback(
         async (value: string) => {
@@ -136,7 +136,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
         t,
     ]);
 
-    const shouldShowColumnLayout = isMealSaved || mealHasContent;
+    const shouldShowColumnLayout = isMealSaved || isMealFilled;
 
     return (
         <Overlay style={{ background: 'rgba(255, 255, 255, 0.5)' }}>
@@ -189,7 +189,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                             </Tooltip>
                         </>
                     )}
-                    {mealHasContent && (
+                    {isMealFilled && (
                         <CopyButton tooltipPosition="right" value={meal.meal} />
                     )}
                 </SimpleGrid>

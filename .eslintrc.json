@@ -43,6 +43,12 @@
                     "regex": "^[A-Z]\\w{1,}",
                     "match": true
                 }
+            },
+            {
+                "selector": "variable",
+                "types": ["boolean"],
+                "format": ["PascalCase"],
+                "prefix": ["is", "should", "has", "can", "did"]
             }
         ],
         "@typescript-eslint/prefer-nullish-coalescing": [
@@ -56,7 +62,7 @@
         "react/boolean-prop-naming": [
             "error",
             {
-                "rule": "^(is|has)[A-Z]([A-Za-z0-9]?)+"
+                "rule": "^(is|has)[A-Z]\\w+"
             }
         ],
         "react/hook-use-state": [

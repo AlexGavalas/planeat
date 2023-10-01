@@ -22,11 +22,11 @@ export const useMeals = () => {
 
     const { unsavedChanges, removeChanges, addChange } = useUnsavedChanges();
 
-    const [submitting, setSubmitting] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const currentWeekKey = format(currentWeek, 'yyyy-MM-dd');
 
-    const { data: meals = [], isFetching: fetchingMeals } = useQuery(
+    const { data: meals = [], isFetching: isFetchingMeals } = useQuery(
         ['meals', currentWeekKey],
         async () => {
             const endDate = format(
@@ -51,7 +51,7 @@ export const useMeals = () => {
         },
         {
             onSettled: () => {
-                setSubmitting(false);
+                setIsSubmitting(false);
             },
         },
     );
@@ -66,7 +66,7 @@ export const useMeals = () => {
     );
 
     const savePlan = async () => {
-        setSubmitting(true);
+        setIsSubmitting(true);
 
         // The edited meals will have the id from the db
         const [changedMeals, newMeals] = partition(
@@ -91,7 +91,7 @@ export const useMeals = () => {
         });
 
         if (!response.ok) {
-            setSubmitting(false);
+            setIsSubmitting(false);
 
             showErrorNotification({
                 title: t('error'),
@@ -206,7 +206,7 @@ export const useMeals = () => {
 
     return {
         meals,
-        loading: fetchingMeals || submitting,
+        isLoading: isFetchingMeals || isSubmitting,
         savePlan,
         revert,
         deleteEntryCell,

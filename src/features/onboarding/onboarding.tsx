@@ -14,9 +14,9 @@ export const Onboarding = () => {
     const { t } = useTranslation();
     const router = useRouter();
     const { profile, updateProfile } = useProfile();
-    const [run, setRun] = useState(false);
+    const [shouldRun, setShouldRun] = useState(false);
     const [stepIndex, setStepIndex] = useState(0);
-    const [tourEnded, setTourEnded] = useState(false);
+    const [hasTourEnded, setHasTourEnded] = useState(false);
     const [isBrowser, setIsBrowser] = useState(false);
 
     const steps = useSteps();
@@ -26,10 +26,10 @@ export const Onboarding = () => {
     }, []);
 
     useEffect(() => {
-        if (isBrowser && !tourEnded) {
-            setRun(true);
+        if (isBrowser && !hasTourEnded) {
+            setShouldRun(true);
         }
-    }, [isBrowser, tourEnded, router.pathname]);
+    }, [isBrowser, hasTourEnded, router.pathname]);
 
     if (!isBrowser || profile?.has_completed_onboarding) {
         return null;
@@ -53,18 +53,18 @@ export const Onboarding = () => {
                         action === 'next' &&
                         step.target === '#weight-container'
                     ) {
-                        setRun(false);
+                        setShouldRun(false);
                         router.push('/meal-plan').catch(console.error);
                     } else if (
                         type === 'step:after' &&
                         action === 'next' &&
                         step.target === '#meal-plan-container'
                     ) {
-                        setRun(false);
+                        setShouldRun(false);
                         router.push('/settings').catch(console.error);
                     } else if (type === 'tour:end') {
-                        setRun(false);
-                        setTourEnded(true);
+                        setShouldRun(false);
+                        setHasTourEnded(true);
 
                         updateProfile({
                             hasCompletedOnboarding: true,
@@ -80,7 +80,7 @@ export const Onboarding = () => {
                     back: t('onboarding.labels.back'),
                     last: t('onboarding.labels.last'),
                 }}
-                run={run}
+                run={shouldRun}
                 stepIndex={stepIndex}
                 steps={steps}
                 styles={{

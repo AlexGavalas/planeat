@@ -27,10 +27,10 @@ export const Fab = () => {
     const { t } = useTranslation();
     const modals = useModals();
     const queryClient = useQueryClient();
-    const [showMenu, setShowMenu] = useState(false);
+    const [shouldShowMenu, setShouldShowMenu] = useState(false);
 
     const handleToggleMenu = useCallback(() => {
-        setShowMenu((prev) => !prev);
+        setShouldShowMenu((prev) => !prev);
     }, []);
 
     const handleMeasurementSave = useCallback(async () => {
@@ -68,7 +68,7 @@ export const Fab = () => {
 
     return (
         <Box className={styles.container}>
-            {showMenu && (
+            {shouldShowMenu && (
                 <Stack gap="sm" mb={10}>
                     <Button
                         {...buttonProps}

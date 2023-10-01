@@ -10,11 +10,11 @@ import { Controls } from './controls';
 import { Header } from './header';
 
 export const Calendar = () => {
-    const { loading } = useMeals();
+    const { isLoading } = useMeals();
 
     return (
         <section className={styles.container} id="meal-plan-container">
-            <LoadingOverlay visible={loading} />
+            <LoadingOverlay visible={isLoading} />
             <Controls />
             <Space h="md" />
             <Header />

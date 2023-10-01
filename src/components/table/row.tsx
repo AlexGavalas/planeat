@@ -44,16 +44,16 @@ export const Row = <ItemType extends Item>({
 }: RowProps<ItemType>) => {
     const { t } = useTranslation();
     const [hasOpenConfirmation, setHasOpenConfirmation] = useState(false);
-    const [deleteInProgress, setDeleteInProgress] = useState(false);
+    const [isDeleteInProgress, setIsDeleteInProgress] = useState(false);
 
     const handleDelete = useCallback<
         MouseEventHandler<HTMLButtonElement>
     >(async () => {
-        setDeleteInProgress(true);
+        setIsDeleteInProgress(true);
 
         await onDelete(item);
 
-        setDeleteInProgress(false);
+        setIsDeleteInProgress(false);
         setHasOpenConfirmation(false);
     }, [item, onDelete]);
 
@@ -114,7 +114,7 @@ export const Row = <ItemType extends Item>({
                                         {t('confirmation.no')}
                                     </Button>
                                     <Button
-                                        loading={deleteInProgress}
+                                        loading={isDeleteInProgress}
                                         onClick={handleDelete}
                                         size="xs"
                                     >

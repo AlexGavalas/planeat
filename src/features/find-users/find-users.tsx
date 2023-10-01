@@ -76,9 +76,11 @@ export const FindUsers = () => {
                 `/api/v1/notification?requestUserId=${profile.id}&targetUserId=${selectedUserId}`,
             );
 
-            const { data } = (await response.json()) as { data?: boolean };
+            const { data: hasAlreadySentRequest } = (await response.json()) as {
+                data?: boolean;
+            };
 
-            return data;
+            return hasAlreadySentRequest;
         },
         {
             enabled: Boolean(selectedUserId),

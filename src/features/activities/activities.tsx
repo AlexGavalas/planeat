@@ -54,7 +54,7 @@ export const Activities = () => {
     );
 
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
-    const loading = (!activities.length && !isCountFetched) || isFetching;
+    const isLoading = (!activities.length && !isCountFetched) || isFetching;
 
     const onNewActivitySave = useCallback(async () => {
         setPage(INITIAL_PAGE);
@@ -151,7 +151,7 @@ export const Activities = () => {
                 </ActionIcon>
             </Group>
             <Box style={{ minHeight: 100 }}>
-                <LoadingOverlay visible={loading} />
+                <LoadingOverlay visible={isLoading} />
                 {activities.length > 0 ? (
                     <Table
                         data={activities}
@@ -163,7 +163,7 @@ export const Activities = () => {
                         totalPages={totalPages}
                     />
                 ) : (
-                    !loading && (
+                    !isLoading && (
                         <Center style={{ height: 100 }}>
                             <Title order={4}>{t('no_activities_yet')}</Title>
                         </Center>
