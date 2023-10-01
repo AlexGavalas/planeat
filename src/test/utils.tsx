@@ -1,6 +1,5 @@
 import { MantineProvider } from '@mantine/core';
-import { render } from '@testing-library/react';
-import { type RenderOptions } from '@testing-library/react';
+import { type RenderOptions, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 

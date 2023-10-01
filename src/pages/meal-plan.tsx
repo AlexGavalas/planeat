@@ -70,7 +70,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 userId: profile.id,
             });
 
-            return result.data ?? [];
+            return result;
         },
     );
 

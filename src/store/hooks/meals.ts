@@ -4,7 +4,6 @@ import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
-import { getResponseSchema } from '~schemas/meal';
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 import { getDaysOfWeek } from '~util/date';
 import {
@@ -15,7 +14,40 @@ import {
 import { useCurrentWeek } from './current-week';
 import { useUnsavedChanges } from './unsaved-changes';
 
-export const useMeals = () => {
+type DeleteEntryCell = (params: { meal: Meal | EditedMeal }) => void;
+
+type DeleteEntryRow = (id: string) => void;
+
+type SaveEntryCell = (params: {
+    meal?: Meal | EditedMeal;
+    sectionKey: string;
+    timestamp: Date;
+    userId: number;
+    value: string;
+    note: EditedMeal['note'];
+    rating: EditedMeal['rating'];
+}) => void;
+
+type SaveEntryRow = (params: {
+    sectionKey: string;
+    userId: number;
+    value: string;
+    note: EditedMeal['note'];
+    rating: EditedMeal['rating'];
+}) => void;
+
+type UseMeals = () => {
+    meals: Meal[];
+    isLoading: boolean;
+    savePlan: () => Promise<void>;
+    revert: () => void;
+    deleteEntryCell: DeleteEntryCell;
+    deleteEntryRow: DeleteEntryRow;
+    saveEntryCell: SaveEntryCell;
+    saveEntryRow: SaveEntryRow;
+};
+
+export const useMeals: UseMeals = () => {
     const { t } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const queryClient = useQueryClient();
@@ -45,9 +77,7 @@ export const useMeals = () => {
 
             const result = (await response.json()) as { data?: Meal[] };
 
-            const { data } = getResponseSchema.parse(result);
-
-            return data ?? [];
+            return result.data ?? [];
         },
         {
             onSettled: () => {
@@ -65,7 +95,7 @@ export const useMeals = () => {
         [meals],
     );
 
-    const savePlan = async () => {
+    const savePlan = async (): Promise<void> => {
         setIsSubmitting(true);
 
         // The edited meals will have the id from the db
@@ -109,11 +139,11 @@ export const useMeals = () => {
         }
     };
 
-    const revert = () => {
+    const revert = (): void => {
         removeChanges();
     };
 
-    const deleteEntryCell = ({ meal }: { meal: Meal | EditedMeal }) => {
+    const deleteEntryCell: DeleteEntryCell = ({ meal }) => {
         const deletedMeal = {
             ...meal,
             meal: '',
@@ -122,7 +152,7 @@ export const useMeals = () => {
         addChange(deletedMeal);
     };
 
-    const deleteEntryRow = (id: string) => {
+    const deleteEntryRow: DeleteEntryRow = (id) => {
         const [row] = id.split('_');
         const daysOfWeek = getDaysOfWeek(currentWeek);
 
@@ -139,7 +169,7 @@ export const useMeals = () => {
         }
     };
 
-    const saveEntryCell = ({
+    const saveEntryCell: SaveEntryCell = ({
         meal,
         sectionKey,
         timestamp,
@@ -147,14 +177,6 @@ export const useMeals = () => {
         value,
         note,
         rating,
-    }: {
-        meal?: Meal | EditedMeal;
-        sectionKey: string;
-        timestamp: Date;
-        userId: number;
-        value: string;
-        note: EditedMeal['note'];
-        rating: EditedMeal['rating'];
     }) => {
         const day = format(timestamp, 'yyyy-MM-dd HH:mm');
 
@@ -171,18 +193,12 @@ export const useMeals = () => {
         addChange(editedMeal);
     };
 
-    const saveEntryRow = ({
+    const saveEntryRow: SaveEntryRow = ({
         sectionKey,
         userId,
         value,
         note,
         rating,
-    }: {
-        sectionKey: string;
-        userId: number;
-        value: string;
-        note: EditedMeal['note'];
-        rating: EditedMeal['rating'];
     }) => {
         const [row] = sectionKey.split('_');
         const daysOfWeek = getDaysOfWeek(currentWeek);

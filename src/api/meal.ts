@@ -1,81 +1,90 @@
-import { type SupabaseClient } from '@supabase/supabase-js';
+import {
+    type PostgrestError,
+    type SupabaseClient,
+} from '@supabase/supabase-js';
 
-import { type EditedMeal } from '~types/meal';
+import { type EditedMeal, type Meal } from '~types/meal';
 import { type Database } from '~types/supabase';
 
-type FetchMealsProps = {
+type FetchMeals = (params: {
     startDate: string;
     endDate: string;
     supabase: SupabaseClient<Database>;
     userId: number;
-};
+}) => Promise<{ data: Meal[] | null }>;
 
-export const fetchMeals = async ({
+export const fetchMeals: FetchMeals = async ({
     startDate,
     endDate,
     supabase,
     userId,
-}: FetchMealsProps) => {
-    const result = await supabase
+}) => {
+    const { data } = await supabase
         .from('meals')
         .select('*')
         .gte('day', startDate)
         .lte('day', endDate)
         .eq('user_id', userId);
 
-    return result;
+    return {
+        data,
+    };
 };
 
-type DeleteMealProps = {
+type DeleteMeals = (params: {
     supabase: SupabaseClient<Database>;
     userId: number;
     deletedIds: string[];
-};
+}) => Promise<{ error: PostgrestError | null }>;
 
-export const deleteMeals = async ({
+export const deleteMeals: DeleteMeals = async ({
     deletedIds,
     supabase,
     userId,
-}: DeleteMealProps) => {
+}) => {
     const { error } = await supabase
         .from('meals')
         .delete()
         .in('id', deletedIds)
         .eq('user_id', userId);
 
-    return { error };
+    return {
+        error,
+    };
 };
 
-type UpdateMealsProps = {
+type UpdateMeals = (params: {
     supabase: SupabaseClient<Database>;
     editedMeals: EditedMeal[];
     userId: number;
-};
+}) => Promise<{ error: PostgrestError | null }>;
 
-export const updateMeals = async ({
+export const updateMeals: UpdateMeals = async ({
     editedMeals,
     supabase,
     userId,
-}: UpdateMealsProps) => {
+}) => {
     const { error } = await supabase
         .from('meals')
         .upsert(editedMeals)
         .eq('user_id', userId);
 
-    return { error };
+    return {
+        error,
+    };
 };
 
-type CreateMealsProps = {
+type CreateMeals = (params: {
     supabase: SupabaseClient<Database>;
     newMeals: EditedMeal[];
     userId: number;
-};
+}) => Promise<{ error: PostgrestError | null }>;
 
-export const createMeals = async ({
+export const createMeals: CreateMeals = async ({
     newMeals,
     supabase,
     userId,
-}: CreateMealsProps) => {
+}) => {
     const newMealsWithUserId = newMeals.map((meal) => ({
         ...meal,
         user_id: userId,
@@ -83,5 +92,7 @@ export const createMeals = async ({
 
     const { error } = await supabase.from('meals').insert(newMealsWithUserId);
 
-    return { error };
+    return {
+        error,
+    };
 };

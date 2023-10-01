@@ -11,7 +11,7 @@ export const getDaysOfWeek = (
     date: Date,
     formatString = 'EEE dd/MM/yyyy',
     locale: keyof typeof localeMap = 'en',
-) => {
+): { timestamp: Date; label: string }[] => {
     return eachDayOfInterval({
         start: startOfWeek(date, { weekStartsOn: 1 }),
         end: endOfWeek(date, { weekStartsOn: 1 }),

@@ -22,7 +22,15 @@
     "overrides": [
         {
             "files": ["src/pages/**/*", "*.config.ts"],
-            "rules": { "import/no-default-export": "off" }
+            "rules": {
+                "import/no-default-export": "off"
+            }
+        },
+        {
+            "files": ["*.tsx"],
+            "rules": {
+                "@typescript-eslint/explicit-function-return-type": "off"
+            }
         }
     ],
     "rules": {
@@ -34,6 +42,7 @@
                 "fixStyle": "inline-type-imports"
             }
         ],
+        "@typescript-eslint/explicit-function-return-type": "warn",
         "@typescript-eslint/naming-convention": [
             "error",
             {
@@ -57,7 +66,6 @@
                 "ignorePrimitives": true
             }
         ],
-        // "@typescript-eslint/explicit-function-return-type": "error",
         "import/no-default-export": "error",
         "react/boolean-prop-naming": [
             "error",

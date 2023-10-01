@@ -1,13 +1,17 @@
-import { type SupabaseClient } from '@supabase/supabase-js';
+import {
+    type PostgrestError,
+    type SupabaseClient,
+} from '@supabase/supabase-js';
 
 import { type Database } from '~types/supabase';
+import { type User } from '~types/user';
 
-type FetchUserProps = {
+type FetchUser = (params: {
     supabase: SupabaseClient<Database>;
     email: string;
-};
+}) => Promise<User | null>;
 
-export const fetchUser = async ({ supabase, email }: FetchUserProps) => {
+export const fetchUser: FetchUser = async ({ supabase, email }) => {
     const { data: profile } = await supabase
         .from('users')
         .select('*')
@@ -17,19 +21,19 @@ export const fetchUser = async ({ supabase, email }: FetchUserProps) => {
     return profile;
 };
 
-type UpdateFoodPreferences = {
+type UpdateFoodPreferences = (params: {
     supabase: SupabaseClient<Database>;
     email: string;
     positive: string | null;
     negative: string | null;
-};
+}) => Promise<{ profile: User | null; error: PostgrestError | null }>;
 
-export const updateFoodPreferences = async ({
+export const updateFoodPreferences: UpdateFoodPreferences = async ({
     supabase,
     email,
     positive,
     negative,
-}: UpdateFoodPreferences) => {
+}) => {
     const { data: profile, error } = await supabase
         .from('users')
         .update({
@@ -39,22 +43,27 @@ export const updateFoodPreferences = async ({
         .eq('email', email)
         .single();
 
-    return { profile, error };
+    return {
+        profile,
+        error,
+    };
 };
 
-type FindUsersByName = {
+type FindUsersByName = (params: {
     supabase: SupabaseClient<Database>;
     fullName: string;
     userId: number;
-};
+}) => Promise<{
+    data: Pick<User, 'full_name'>[] | null;
+}>;
 
 const MAX_QUERY_RESULTS = 5;
 
-export const findUsersByName = async ({
+export const findUsersByName: FindUsersByName = async ({
     fullName,
     supabase,
     userId,
-}: FindUsersByName) => {
+}) => {
     const { data } = await supabase
         .from('users')
         .select('full_name')
@@ -63,27 +72,31 @@ export const findUsersByName = async ({
         .neq('id', userId)
         .limit(MAX_QUERY_RESULTS);
 
-    return { data };
+    return {
+        data,
+    };
 };
 
-type FetchUserByFullname = {
+type FetchUserByFullname = (params: {
     supabase: SupabaseClient<Database>;
     fullName: string;
-};
+}) => Promise<{ data: Pick<User, 'id' | 'full_name'>[] | null }>;
 
-export const fetchUserByFullname = async ({
+export const fetchUserByFullname: FetchUserByFullname = async ({
     fullName,
     supabase,
-}: FetchUserByFullname) => {
+}) => {
     const { data } = await supabase
         .from('users')
         .select('id, full_name')
         .eq('full_name', fullName);
 
-    return { data };
+    return {
+        data,
+    };
 };
 
-type UpdateProfile = {
+type UpdateProfile = (params: {
     supabase: SupabaseClient<Database>;
     userId: number;
     isDiscoverable?: boolean;
@@ -91,9 +104,11 @@ type UpdateProfile = {
     targetWeight?: number | null;
     language?: string;
     hasCompletedOnboarding?: boolean | null;
-};
+}) => Promise<{
+    error: PostgrestError | null;
+}>;
 
-export const updateProfile = async ({
+export const updateProfile: UpdateProfile = async ({
     supabase,
     userId,
     height,
@@ -101,8 +116,8 @@ export const updateProfile = async ({
     language,
     targetWeight,
     hasCompletedOnboarding,
-}: UpdateProfile) => {
-    const { data, error } = await supabase
+}) => {
+    const { error } = await supabase
         .from('users')
         .update({
             is_discoverable: isDiscoverable,
@@ -117,19 +132,22 @@ export const updateProfile = async ({
         })
         .eq('id', userId);
 
-    return { data, error };
+    return {
+        error,
+    };
 };
 
-type DeleteProfile = {
+type DeleteProfile = (params: {
     supabase: SupabaseClient<Database>;
     userId: number;
-};
+}) => Promise<{
+    error: PostgrestError | null;
+}>;
 
-export const deleteProfile = async ({ supabase, userId }: DeleteProfile) => {
-    const { data, error } = await supabase
-        .from('users')
-        .delete()
-        .eq('id', userId);
+export const deleteProfile: DeleteProfile = async ({ supabase, userId }) => {
+    const { error } = await supabase.from('users').delete().eq('id', userId);
 
-    return { data, error };
+    return {
+        error,
+    };
 };

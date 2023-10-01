@@ -1,16 +1,22 @@
-import { type SupabaseClient } from '@supabase/supabase-js';
+import {
+    type PostgrestError,
+    type SupabaseClient,
+} from '@supabase/supabase-js';
 
+import { type Connection } from '~types/connection';
 import { type Database } from '~types/supabase';
 
-type FetchUserConnections = {
+type FetchUserConnections = (params: {
     supabase: SupabaseClient<Database>;
     userId: number;
-};
+}) => Promise<{
+    data: Connection[] | null;
+}>;
 
-export const fetchUserConnections = async ({
+export const fetchUserConnections: FetchUserConnections = async ({
     supabase,
     userId,
-}: FetchUserConnections) => {
+}) => {
     const { data } = await supabase
         .from('connections')
         .select('*, users:connection_user_id(full_name)')
@@ -21,19 +27,19 @@ export const fetchUserConnections = async ({
     };
 };
 
-type DeleteConnection = {
+type DeleteConnection = (params: {
     supabase: SupabaseClient<Database>;
     connectionId: string;
     userId: number;
     connectionUserId: number;
-};
+}) => Promise<{ error: PostgrestError | null }>;
 
-export const deleteConnection = async ({
+export const deleteConnection: DeleteConnection = async ({
     connectionId,
     connectionUserId,
     supabase,
     userId,
-}: DeleteConnection) => {
+}) => {
     const { error: currentUserError } = await supabase
         .from('connections')
         .delete()
@@ -50,17 +56,17 @@ export const deleteConnection = async ({
     };
 };
 
-type CreateConnection = {
+type CreateConnection = (params: {
     supabase: SupabaseClient<Database>;
     userId: number;
     connectionUserId: number;
-};
+}) => Promise<{ error: PostgrestError | null }>;
 
-export const createConnection = async ({
+export const createConnection: CreateConnection = async ({
     supabase,
     userId,
     connectionUserId,
-}: CreateConnection) => {
+}) => {
     const { error } = await supabase.from('connections').insert([
         {
             user_id: userId,

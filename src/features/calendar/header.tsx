@@ -52,7 +52,7 @@ export const Header = () => {
                 userId: profile.id,
             });
 
-            return result.data ?? [];
+            return result;
         },
     );
 

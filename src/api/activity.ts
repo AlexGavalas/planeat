@@ -1,20 +1,24 @@
-import { type SupabaseClient } from '@supabase/supabase-js';
+import {
+    type PostgrestError,
+    type SupabaseClient,
+} from '@supabase/supabase-js';
 
+import { type Activity } from '~types/activity';
 import { type Database } from '~types/supabase';
 
-type FetchActivitiesProps = {
+type FetchActivities = (params: {
     startDate: string;
     endDate: string;
     supabase: SupabaseClient<Database>;
     userId: number;
-};
+}) => Promise<Activity[]>;
 
-export const fetchActivities = async ({
+export const fetchActivities: FetchActivities = async ({
     startDate,
     endDate,
     supabase,
     userId,
-}: FetchActivitiesProps) => {
+}) => {
     const result = await supabase
         .from('activities')
         .select('*')
@@ -22,18 +26,18 @@ export const fetchActivities = async ({
         .lte('date', endDate)
         .eq('user_id', userId);
 
-    return result;
+    return result.data ?? [];
 };
 
-type FetchActivitiesCount = {
+type FetchActivitiesCount = (params: {
     supabase: SupabaseClient<Database>;
     userId: number;
-};
+}) => Promise<number | null>;
 
-export const fetchActivitiesCount = async ({
+export const fetchActivitiesCount: FetchActivitiesCount = async ({
     supabase,
     userId,
-}: FetchActivitiesCount) => {
+}) => {
     const { count } = await supabase
         .from('activities')
         .select('id', { count: 'exact' })
@@ -42,19 +46,19 @@ export const fetchActivitiesCount = async ({
     return count;
 };
 
-type FetchActivitiesPaginated = {
+type FetchActivitiesPaginated = (params: {
     supabase: SupabaseClient<Database>;
     start: number;
     end: number;
     userId: number;
-};
+}) => Promise<Activity[] | null>;
 
-export const fetchActivitiesPaginated = async ({
+export const fetchActivitiesPaginated: FetchActivitiesPaginated = async ({
     supabase,
     start,
     end,
     userId,
-}: FetchActivitiesPaginated) => {
+}) => {
     const { data } = await supabase
         .from('activities')
         .select('*')
@@ -65,17 +69,17 @@ export const fetchActivitiesPaginated = async ({
     return data;
 };
 
-type DeleteActivity = {
+type DeleteActivity = (params: {
     supabase: SupabaseClient<Database>;
     activityId: string;
     userId: number;
-};
+}) => Promise<{ error: PostgrestError | null }>;
 
-export const deleteActivity = async ({
+export const deleteActivity: DeleteActivity = async ({
     supabase,
     activityId,
     userId,
-}: DeleteActivity) => {
+}) => {
     const { error } = await supabase
         .from('activities')
         .delete()
@@ -85,21 +89,21 @@ export const deleteActivity = async ({
     return { error };
 };
 
-type UpdateActivity = {
+type UpdateActivity = (params: {
     supabase: SupabaseClient<Database>;
     date: string;
     activity: string;
     userId: number;
     activityId?: string;
-};
+}) => Promise<{ error: PostgrestError | null }>;
 
-export const updateActivity = async ({
+export const updateActivity: UpdateActivity = async ({
     activity,
     date,
     supabase,
     activityId,
     userId,
-}: UpdateActivity) => {
+}) => {
     const { error } = await supabase
         .from('activities')
         .upsert({

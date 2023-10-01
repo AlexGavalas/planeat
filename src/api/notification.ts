@@ -1,18 +1,22 @@
-import { type SupabaseClient } from '@supabase/supabase-js';
+import {
+    type PostgrestError,
+    type SupabaseClient,
+} from '@supabase/supabase-js';
 
+import { type Notification } from '~types/notification';
 import { type Database } from '~types/supabase';
 
-type FetchNotification = {
+type FetchNotification = (params: {
     supabase: SupabaseClient<Database>;
     requestUserId: number;
     targetUserId: number;
-};
+}) => Promise<{ id: string } | null>;
 
-export const fetchNotification = async ({
+export const fetchNotification: FetchNotification = async ({
     supabase,
     requestUserId,
     targetUserId,
-}: FetchNotification) => {
+}) => {
     const { data } = await supabase
         .from('notifications')
         .select('id')
@@ -23,17 +27,17 @@ export const fetchNotification = async ({
     return data;
 };
 
-type CreateNotification = {
+type CreateNotification = (params: {
     supabase: SupabaseClient<Database>;
     requestUserId: number;
     targetUserId: number;
-};
+}) => Promise<{ error: PostgrestError | null }>;
 
-export const createConnectionRequestNotification = async ({
+export const createConnectionRequestNotification: CreateNotification = async ({
     requestUserId,
     supabase,
     targetUserId,
-}: CreateNotification) => {
+}) => {
     const { error } = await supabase.from('notifications').insert({
         date: new Date().toISOString(),
         notification_type: 'connection_request',
@@ -41,43 +45,46 @@ export const createConnectionRequestNotification = async ({
         target_user_id: targetUserId,
     });
 
-    return { error };
+    return {
+        error,
+    };
 };
 
-type FetchConnectionRequestNotifications = {
+type FetchConnectionRequestNotifications = (params: {
     supabase: SupabaseClient<Database>;
     userId: number;
-};
+}) => Promise<{
+    data: (Notification & { users: unknown })[] | null;
+}>;
 
-export const fetchConnectionRequestNotifications = async ({
-    supabase,
-    userId,
-}: FetchConnectionRequestNotifications) => {
-    const { data } = await supabase
-        .from('notifications')
-        .select('*, users:request_user_id(full_name)')
-        .eq('notification_type', 'connection_request')
-        .eq('target_user_id', userId);
+export const fetchConnectionRequestNotifications: FetchConnectionRequestNotifications =
+    async ({ supabase, userId }) => {
+        const { data } = await supabase
+            .from('notifications')
+            .select('*, users:request_user_id(full_name)')
+            .eq('notification_type', 'connection_request')
+            .eq('target_user_id', userId);
 
-    return { data };
-};
+        return {
+            data,
+        };
+    };
 
-type DeleteConnectionRequestNotification = {
+type DeleteConnectionRequestNotification = (params: {
     supabase: SupabaseClient<Database>;
     id: string;
     userId: number;
-};
+}) => Promise<{ error: PostgrestError | null }>;
 
-export const deleteConnectionRequestNotification = async ({
-    id,
-    supabase,
-    userId,
-}: DeleteConnectionRequestNotification) => {
-    const { error } = await supabase
-        .from('notifications')
-        .delete()
-        .eq('id', id)
-        .eq('target_user_id', userId);
+export const deleteConnectionRequestNotification: DeleteConnectionRequestNotification =
+    async ({ id, supabase, userId }) => {
+        const { error } = await supabase
+            .from('notifications')
+            .delete()
+            .eq('id', id)
+            .eq('target_user_id', userId);
 
-    return { error };
-};
+        return {
+            error,
+        };
+    };

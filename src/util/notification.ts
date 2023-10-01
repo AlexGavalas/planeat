@@ -5,7 +5,7 @@ import {
 
 export const showSuccessNotification = (
     props: Omit<NotificationData, 'color'>,
-) => {
+): void => {
     showNotification({
         ...props,
     });
@@ -13,7 +13,7 @@ export const showSuccessNotification = (
 
 export const showErrorNotification = (
     props: Omit<NotificationData, 'color'>,
-) => {
+): void => {
     showNotification({
         ...props,
         color: 'red',

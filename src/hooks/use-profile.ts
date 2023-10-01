@@ -1,3 +1,4 @@
+import { type Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -17,7 +18,16 @@ type MutationProps = {
     silent?: boolean;
 };
 
-export const useProfile = () => {
+type UseProfile = () => {
+    profile?: User;
+    isFetching: boolean;
+    updateProfile: (params: MutationProps) => void;
+    user: Session['user'];
+    deleteProfile: () => void;
+    isDeleting: boolean;
+};
+
+export const useProfile: UseProfile = () => {
     const router = useRouter();
     const queryClient = useQueryClient();
     const { t } = useTranslation();

@@ -6,7 +6,7 @@ const commonStepProps: Partial<Step> = {
     placement: 'auto',
 };
 
-export const useSteps = () => {
+export const useSteps = (): Step[] => {
     const { t } = useTranslation();
 
     const steps: Step[] = [
