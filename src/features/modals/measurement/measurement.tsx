@@ -43,9 +43,9 @@ export const MeasurementModal = ({
     const [fatPercent, setFatPercent] = useState(initialData?.fat_percentage);
     const [error, setError] = useState('');
 
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
         modals.closeAll();
-    };
+    }, [modals]);
 
     const resetError = useCallback(() => {
         setError('');
@@ -63,46 +63,50 @@ export const MeasurementModal = ({
         setFatPercent(Number(value));
     }, []);
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    const handleSave: FormEventHandler<HTMLFormElement> = async (e) => {
-        e.preventDefault();
+    const handleSave = useCallback<FormEventHandler<HTMLFormElement>>(
+        async (e) => {
+            e.preventDefault();
 
-        if (!weight) {
-            setError(t('errors.weight_empty'));
-            return;
-        }
+            if (!weight) {
+                setError(t('errors.weight_empty'));
+                return;
+            }
 
-        if (!date) {
-            setError(t('errors.date_empty'));
-            return;
-        }
+            if (!date) {
+                setError(t('errors.date_empty'));
+                return;
+            }
 
-        const url = initialData?.id
-            ? `/api/v1/measurement?id=${initialData.id}`
-            : '/api/v1/measurement';
+            const url = initialData?.id
+                ? `/api/v1/measurement?id=${initialData.id}`
+                : '/api/v1/measurement';
 
-        const response = await fetch(url, {
-            method: initialData ? 'PATCH' : 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                date: format(date, 'yyyy-MM-dd'),
-                weight,
-                fatPercent,
-            }),
-        });
-
-        if (!response.ok) {
-            showErrorNotification({
-                title: t('error'),
-                message: `${t('errors.measurement_save')}. ${t('try_again')}`,
+            const response = await fetch(url, {
+                method: initialData ? 'PATCH' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    date: format(date, 'yyyy-MM-dd'),
+                    weight,
+                    fatPercent,
+                }),
             });
-        } else {
-            await onSave?.();
-            closeModal();
-        }
-    };
+
+            if (!response.ok) {
+                showErrorNotification({
+                    title: t('error'),
+                    message: `${t('errors.measurement_save')}. ${t(
+                        'try_again',
+                    )}`,
+                });
+            } else {
+                await onSave?.();
+                closeModal();
+            }
+        },
+        [closeModal, date, fatPercent, initialData, onSave, t, weight],
+    );
 
     return (
         <form className="calendar" onSubmit={handleSave}>

@@ -1,7 +1,7 @@
 import { Button, Group, Stack, Textarea, Title } from '@mantine/core';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useTranslation } from 'next-i18next';
-import { type FormEventHandler } from 'react';
+import { type FormEventHandler, useCallback } from 'react';
 
 import { updateFoodPreferences } from '~api/user';
 import { useProfile } from '~hooks/use-profile';
@@ -16,40 +16,42 @@ export const FoodPreferences = () => {
     const supabase = useSupabaseClient<Database>();
     const { profile } = useProfile();
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    const handleSavePreferences: FormEventHandler<HTMLFormElement> = async (
-        e,
-    ) => {
-        e.preventDefault();
+    const handleSavePreferences = useCallback<
+        FormEventHandler<HTMLFormElement>
+    >(
+        async (e) => {
+            e.preventDefault();
 
-        if (!profile?.email) {
-            return null;
-        }
+            if (!profile?.email) {
+                return null;
+            }
 
-        const formData = new FormData(e.currentTarget);
+            const formData = new FormData(e.currentTarget);
 
-        const positive = formData.get('positive')?.toString() ?? null;
-        const negative = formData.get('negative')?.toString() ?? null;
+            const positive = formData.get('positive')?.toString() ?? null;
+            const negative = formData.get('negative')?.toString() ?? null;
 
-        const { error } = await updateFoodPreferences({
-            positive,
-            negative,
-            supabase,
-            email: profile.email,
-        });
-
-        if (error) {
-            showErrorNotification({
-                title: t('notification.error.title'),
-                message: t('notification.error.message'),
+            const { error } = await updateFoodPreferences({
+                positive,
+                negative,
+                supabase,
+                email: profile.email,
             });
-        } else {
-            showSuccessNotification({
-                title: t('notification.success.title'),
-                message: t('notification.success.message'),
-            });
-        }
-    };
+
+            if (error) {
+                showErrorNotification({
+                    title: t('notification.error.title'),
+                    message: t('notification.error.message'),
+                });
+            } else {
+                showSuccessNotification({
+                    title: t('notification.success.title'),
+                    message: t('notification.success.message'),
+                });
+            }
+        },
+        [profile?.email, supabase, t],
+    );
 
     return (
         <Stack align="start" gap="md">

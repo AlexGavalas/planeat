@@ -21,12 +21,12 @@ export const UserMenu = () => {
     const router = useRouter();
     const { t } = useTranslation();
 
-    const handleLogout: MouseEventHandler<HTMLButtonElement> =
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-        useCallback(async () => {
-            await signOut();
-            await router.push('/');
-        }, [router]);
+    const handleLogout = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
+        await signOut();
+        await router.push('/');
+    }, [router]);
 
     return (
         <Menu withArrow arrowPosition="center" position="bottom-end">

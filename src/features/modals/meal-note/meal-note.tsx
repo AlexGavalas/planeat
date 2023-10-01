@@ -27,36 +27,39 @@ export const MealNoteModal = ({
     const modals = useModals();
     const [error, setError] = useState('');
 
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
         modals.closeAll();
-    };
+    }, [modals]);
 
     const resetError = useCallback(() => {
         setError('');
     }, []);
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-        e.preventDefault();
+    const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
+        async (e) => {
+            e.preventDefault();
 
-        const note = new FormData(e.currentTarget)
-            .get(NOTE_FIELD_NAME)
-            ?.toString();
+            const note = new FormData(e.currentTarget)
+                .get(NOTE_FIELD_NAME)
+                ?.toString();
 
-        if (!note) {
-            setError(t('errors.note_empty'));
-            return;
-        }
+            if (!note) {
+                setError(t('errors.note_empty'));
+                return;
+            }
 
-        await onSave(note);
-        closeModal();
-    };
+            await onSave(note);
+            closeModal();
+        },
+        [closeModal, onSave, t],
+    );
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    const handleDelete: MouseEventHandler<HTMLButtonElement> = async () => {
+    const handleDelete = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
         await onDelete();
         closeModal();
-    };
+    }, [closeModal, onDelete]);
 
     return (
         <form onSubmit={handleSubmit}>

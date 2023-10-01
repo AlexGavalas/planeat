@@ -1,7 +1,12 @@
 import { Button, Center, Group, Rating, Stack } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
-import { type FormEventHandler, type MouseEventHandler, useState } from 'react';
+import {
+    type FormEventHandler,
+    type MouseEventHandler,
+    useCallback,
+    useState,
+} from 'react';
 
 import { type Meal } from '~types/meal';
 
@@ -20,27 +25,30 @@ export const MealRatingModal = ({
     const modals = useModals();
     const [rating, setRating] = useState<number>();
 
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
         modals.closeAll();
-    };
+    }, [modals]);
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-        e.preventDefault();
+    const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
+        async (e) => {
+            e.preventDefault();
 
-        if (!rating) {
-            return;
-        }
+            if (!rating) {
+                return;
+            }
 
-        await onSave(rating);
-        closeModal();
-    };
+            await onSave(rating);
+            closeModal();
+        },
+        [closeModal, onSave, rating],
+    );
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    const handleDelete: MouseEventHandler<HTMLButtonElement> = async () => {
+    const handleDelete = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
         await onDelete();
         closeModal();
-    };
+    }, [closeModal, onDelete]);
 
     return (
         <form onSubmit={handleSubmit}>

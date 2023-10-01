@@ -35,9 +35,9 @@ export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
     const [activity, setActivity] = useState(initialData?.activity);
     const [error, setError] = useState('');
 
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
         modals.closeAll();
-    };
+    }, [modals]);
 
     const resetError = useCallback(() => {
         setError('');
@@ -49,45 +49,47 @@ export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
         setActivity(e.currentTarget.value);
     }, []);
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    const handleSave: FormEventHandler<HTMLFormElement> = async (e) => {
-        e.preventDefault();
+    const handleSave = useCallback<FormEventHandler<HTMLFormElement>>(
+        async (e) => {
+            e.preventDefault();
 
-        if (!activity) {
-            setError(t('errors.activity_empty'));
-            return;
-        }
+            if (!activity) {
+                setError(t('errors.activity_empty'));
+                return;
+            }
 
-        if (!date) {
-            setError(t('errors.date_empty'));
-            return;
-        }
+            if (!date) {
+                setError(t('errors.date_empty'));
+                return;
+            }
 
-        const url = initialData?.id
-            ? `/api/v1/activity?id=${initialData.id}`
-            : '/api/v1/activity';
+            const url = initialData?.id
+                ? `/api/v1/activity?id=${initialData.id}`
+                : '/api/v1/activity';
 
-        const response = await fetch(url, {
-            method: initialData ? 'PATCH' : 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                activity,
-                date: format(date, 'yyyy-MM-dd'),
-            }),
-        });
-
-        if (!response.ok) {
-            showErrorNotification({
-                title: t('error'),
-                message: `${t('errors.activity_save')}. ${t('try_again')}`,
+            const response = await fetch(url, {
+                method: initialData ? 'PATCH' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    activity,
+                    date: format(date, 'yyyy-MM-dd'),
+                }),
             });
-        } else {
-            await onSave?.();
-            closeModal();
-        }
-    };
+
+            if (!response.ok) {
+                showErrorNotification({
+                    title: t('error'),
+                    message: `${t('errors.activity_save')}. ${t('try_again')}`,
+                });
+            } else {
+                await onSave?.();
+                closeModal();
+            }
+        },
+        [activity, date, initialData, onSave, closeModal, t],
+    );
 
     return (
         <form className="calendar" onSubmit={handleSave}>
