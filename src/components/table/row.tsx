@@ -16,26 +16,26 @@ import { useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Item = Record<string, any> & { id: string | number };
 
-export type Header<T> = {
+export type Header<ItemType> = {
     width: string;
     label: string;
     key: string;
-    formatValue?: (item: T) => string;
+    formatValue?: (item: ItemType) => string;
 };
 
-type RowProps<T> = {
-    item: T;
-    headers: Header<T>[];
-    onDelete: (item: T) => Promise<void> | void;
-    onEdit: (item: T) => Promise<void> | void;
+type RowProps<ItemType> = {
+    item: ItemType;
+    headers: Header<ItemType>[];
+    onDelete: (item: ItemType) => Promise<void> | void;
+    onEdit: (item: ItemType) => Promise<void> | void;
 };
 
-export const Row = <T extends Item>({
+export const Row = <ItemType extends Item>({
     item,
     headers,
     onDelete,
     onEdit,
-}: RowProps<T>) => {
+}: RowProps<ItemType>) => {
     const { t } = useTranslation();
     const [openConfirmation, setOpenConfirmation] = useState(false);
     const [deleteInProgress, setDeleteInProgress] = useState(false);

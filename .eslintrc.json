@@ -33,6 +33,17 @@
                 "fixStyle": "inline-type-imports"
             }
         ],
+        "@typescript-eslint/naming-convention": [
+            "error",
+            {
+                "selector": "typeParameter",
+                "format": ["PascalCase"],
+                "custom": {
+                    "regex": "^[A-Z]\\w{1,}",
+                    "match": true
+                }
+            }
+        ],
         "@typescript-eslint/prefer-nullish-coalescing": [
             "error",
             {
