@@ -1,18 +1,23 @@
 import { Button, Group, Stack, Textarea } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
-import { type FormEventHandler, type MouseEventHandler, useState } from 'react';
+import {
+    type FormEventHandler,
+    type MouseEventHandler,
+    useCallback,
+    useState,
+} from 'react';
 
 type MealModalProps = {
-    deleteMeal: () => Promise<void> | void;
-    handleSave: (meal: string) => Promise<void> | void;
+    onDelete: () => Promise<void> | void;
+    onSave: (meal: string) => Promise<void> | void;
     initialMeal: string;
 };
 
 export const MealModal = ({
-    handleSave,
+    onSave,
+    onDelete,
     initialMeal,
-    deleteMeal,
 }: MealModalProps) => {
     const { t } = useTranslation();
     const modals = useModals();
@@ -22,8 +27,12 @@ export const MealModal = ({
         modals.closeAll();
     };
 
+    const resetError = useCallback(() => {
+        setError('');
+    }, []);
+
     // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
         const meal = new FormData(e.currentTarget).get('meal')?.toString();
@@ -33,43 +42,41 @@ export const MealModal = ({
             return;
         }
 
-        await handleSave(meal);
+        await onSave(meal);
 
         closeModal();
     };
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    const onDelete: MouseEventHandler<HTMLButtonElement> = async () => {
-        await deleteMeal();
+    const handleDelete: MouseEventHandler<HTMLButtonElement> = async () => {
+        await onDelete();
         closeModal();
     };
 
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit}>
             <Stack gap="sm">
                 <Textarea
-                    data-autofocus
-                    name="meal"
-                    placeholder={t('meal_placeholder')}
-                    label={t('meal_label')}
-                    defaultValue={initialMeal}
                     autosize
-                    minRows={5}
-                    maxRows={20}
+                    data-autofocus
+                    defaultValue={initialMeal}
                     error={error}
-                    onFocus={() => {
-                        setError('');
-                    }}
+                    label={t('meal_label')}
+                    maxRows={20}
+                    minRows={5}
+                    name="meal"
+                    onFocus={resetError}
+                    placeholder={t('meal_placeholder')}
                 />
-                <Group justify="space-between" gap="sm">
-                    <Button variant="light" color="red" onClick={closeModal}>
+                <Group gap="sm" justify="space-between">
+                    <Button color="red" onClick={closeModal} variant="light">
                         {t('cancel')}
                     </Button>
                     <Group>
                         <Button
                             color="red"
                             hidden={!initialMeal}
-                            onClick={onDelete}
+                            onClick={handleDelete}
                         >
                             {t('delete')}
                         </Button>

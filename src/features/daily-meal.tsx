@@ -46,12 +46,12 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
                     return (
                         <Timeline.Item
                             key={key}
-                            title={<Text fw="bold">{row.label}</Text>}
                             bullet={<Icon />}
+                            title={<Text fw="bold">{row.label}</Text>}
                         >
                             <Spoiler
-                                maxHeight={100}
                                 hideLabel={t('hide')}
+                                maxHeight={100}
                                 showLabel={t('show_more')}
                             >
                                 <Text>{meal}</Text>

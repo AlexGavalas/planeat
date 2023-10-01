@@ -13,15 +13,15 @@ export const UserActions = () => {
 
     const hasUser = router.pathname !== '/';
 
-    const loginWithGoogle: MouseEventHandler<HTMLButtonElement> =
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-        useCallback(async () => {
-            await signIn('google');
-        }, []);
+    const handleLoginWithGoogle = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
+        await signIn('google');
+    }, []);
 
     if (!hasUser) {
         return (
-            <Button leftSection={<Google />} onClick={loginWithGoogle}>
+            <Button leftSection={<Google />} onClick={handleLoginWithGoogle}>
                 {t('login.google')}
             </Button>
         );

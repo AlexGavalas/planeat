@@ -38,8 +38,8 @@ export const WeekOverview = () => {
                 );
 
                 return (
-                    <Stack gap="xs" key={key}>
-                        <Text fw={500} fz="lg" c="green.9">
+                    <Stack key={key} gap="xs">
+                        <Text c="green.9" fw={500} fz="lg">
                             {timeslot}
                         </Text>
                         <List spacing="xs">
@@ -83,7 +83,7 @@ export const WeekOverview = () => {
                                             {meal.meal}
                                             {meal.note && (
                                                 <div>
-                                                    <Text fw={500} span>
+                                                    <Text span fw={500}>
                                                         {t('note')}:{' '}
                                                     </Text>
                                                     <Text span>
@@ -93,7 +93,7 @@ export const WeekOverview = () => {
                                             )}
                                             {meal.rating && (
                                                 <div>
-                                                    <Text fw={500} span>
+                                                    <Text span fw={500}>
                                                         {t('rating')}:{' '}
                                                     </Text>
                                                     <Text span>

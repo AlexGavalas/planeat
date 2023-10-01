@@ -41,9 +41,9 @@ export const CurrentFat = () => {
     return (
         <ProgressIndicator
             label={t('fat_label')}
-            value={fatPercent}
             percent={fatPercent && (fatPercent * 100) / MAX_FAT_PERCENT}
             sections={translatedSections}
+            value={fatPercent}
         />
     );
 };

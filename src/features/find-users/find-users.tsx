@@ -10,7 +10,7 @@ import {
 import { useDebouncedValue } from '@mantine/hooks';
 import { AddUser, Cancel, ProfileCircle } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
-import { type MouseEventHandler, useState } from 'react';
+import { type MouseEventHandler, useCallback, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { useProfile } from '~hooks/use-profile';
@@ -85,19 +85,20 @@ export const FindUsers = () => {
         },
     );
 
-    const handleUserSelect: AutocompleteProps['onOptionSubmit'] = (value) => {
+    const handleUserSelect = useCallback<
+        NonNullable<AutocompleteProps['onOptionSubmit']>
+    >((value) => {
         setSelectedUserFullname(value);
-    };
+    }, []);
 
-    const clearInput = () => {
+    const handleClearInput = useCallback(() => {
         setSearchQuery('');
         setSelectedUserFullname('');
-    };
+    }, []);
 
-    const handleConnectionRequest: MouseEventHandler<
-        HTMLButtonElement
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    > = async () => {
+    const handleConnectionRequest = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
         if (!profile || !selectedUser) {
             return;
         }
@@ -128,7 +129,7 @@ export const FindUsers = () => {
                 selectedUserId,
             ]);
         }
-    };
+    }, [profile, selectedUser, selectedUserId, t, queryClient]);
 
     const shouldShowConnectionInfo =
         selectedUser && !isFetchingHasAlreadySentRequest;
@@ -138,21 +139,21 @@ export const FindUsers = () => {
             <Autocomplete
                 data={users}
                 disabled={isFetchingSelectedUser}
+                label={t('connections.search.label')}
                 leftSection={<ProfileCircle />}
+                onChange={setSearchQuery}
+                onOptionSubmit={handleUserSelect}
+                placeholder={t('connections.search.placeholder')}
                 rightSection={
-                    <ActionIcon onClick={clearInput} variant="subtle">
+                    <ActionIcon onClick={handleClearInput} variant="subtle">
                         <Cancel />
                     </ActionIcon>
                 }
-                label={t('connections.search.label')}
-                placeholder={t('connections.search.placeholder')}
-                onChange={setSearchQuery}
-                onOptionSubmit={handleUserSelect}
                 value={searchQuery}
             />
             {shouldShowConnectionInfo &&
                 (hasAlreadySentRequest ? (
-                    <Text fw={600} c="green.8">
+                    <Text c="green.8" fw={600}>
                         {t('connections.request.already_sent', {
                             fullName: selectedUser[0].full_name,
                         })}
@@ -161,7 +162,7 @@ export const FindUsers = () => {
                     <Group justify="space-between">
                         <div>
                             <Text span>{t('connections.request.add')} </Text>
-                            <Text fw={600} span>
+                            <Text span fw={600}>
                                 {selectedUser[0].full_name}
                             </Text>
                             <Text span>

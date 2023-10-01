@@ -47,9 +47,9 @@ export const CurrentBMI = () => {
     return (
         <ProgressIndicator
             label={t('bmi_label')}
-            value={userBMI}
             percent={(userBMI * 100) / MAX_BMI}
             sections={translatedSections}
+            value={userBMI}
         />
     );
 };

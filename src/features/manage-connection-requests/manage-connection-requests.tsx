@@ -144,27 +144,27 @@ export const ManageConnectionRequests = () => {
                             <Text>{connectionRequest.users.full_name}</Text>
                             <Group gap="xs">
                                 <Button
-                                    size="sm"
-                                    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+                                    // eslint-disable-next-line @typescript-eslint/no-misused-promises, react/jsx-handler-names -- async event handler
                                     onClick={async () => {
                                         await handleAcceptConnectionRequest(
                                             connectionRequest,
                                         );
                                     }}
+                                    size="sm"
                                 >
                                     {t(
                                         'connections.manage_connection_requests.accept',
                                     )}
                                 </Button>
                                 <Button
-                                    size="sm"
-                                    variant="outline"
-                                    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+                                    // eslint-disable-next-line @typescript-eslint/no-misused-promises, react/jsx-handler-names -- async event handler
                                     onClick={async () => {
                                         await handleDeclineConnectionRequest(
                                             connectionRequest.id,
                                         );
                                     }}
+                                    size="sm"
+                                    variant="outline"
                                 >
                                     {t(
                                         'connections.manage_connection_requests.decline',

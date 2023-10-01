@@ -41,8 +41,8 @@ export const ProgressIndicator = ({
                 {sections.map((section) => (
                     <Progress.Section
                         key={section.key}
-                        value={section.percent}
                         color={section.bg}
+                        value={section.percent}
                     >
                         <Progress.Label>{section.label}</Progress.Label>
                     </Progress.Section>

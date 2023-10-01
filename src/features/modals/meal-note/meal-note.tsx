@@ -1,22 +1,27 @@
 import { Button, Group, Stack, Textarea } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
-import { type FormEventHandler, type MouseEventHandler, useState } from 'react';
+import {
+    type FormEventHandler,
+    type MouseEventHandler,
+    useCallback,
+    useState,
+} from 'react';
 
 import { type Meal } from '~types/meal';
 
 type MealNoteModalProps = {
     meal: Meal;
-    handleSave: (meal: string) => Promise<void>;
-    handleDelete: () => Promise<void>;
+    onSave: (meal: string) => Promise<void>;
+    onDelete: () => Promise<void>;
 };
 
 const NOTE_FIELD_NAME = 'note';
 
 export const MealNoteModal = ({
     meal,
-    handleSave,
-    handleDelete,
+    onSave,
+    onDelete,
 }: MealNoteModalProps) => {
     const { t } = useTranslation();
     const modals = useModals();
@@ -26,8 +31,12 @@ export const MealNoteModal = ({
         modals.closeAll();
     };
 
+    const resetError = useCallback(() => {
+        setError('');
+    }, []);
+
     // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
         const note = new FormData(e.currentTarget)
@@ -39,42 +48,40 @@ export const MealNoteModal = ({
             return;
         }
 
-        await handleSave(note);
+        await onSave(note);
         closeModal();
     };
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    const onDelete: MouseEventHandler<HTMLButtonElement> = async () => {
-        await handleDelete();
+    const handleDelete: MouseEventHandler<HTMLButtonElement> = async () => {
+        await onDelete();
         closeModal();
     };
 
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit}>
             <Stack gap="sm">
                 <Textarea
-                    data-autofocus
-                    name={NOTE_FIELD_NAME}
-                    placeholder={t('modals.meal_note.placeholder')}
-                    label={t('modals.meal_note.label')}
-                    defaultValue={meal.note ?? ''}
                     autosize
-                    minRows={5}
-                    maxRows={20}
+                    data-autofocus
+                    defaultValue={meal.note ?? ''}
                     error={error}
-                    onFocus={() => {
-                        setError('');
-                    }}
+                    label={t('modals.meal_note.label')}
+                    maxRows={20}
+                    minRows={5}
+                    name={NOTE_FIELD_NAME}
+                    onFocus={resetError}
+                    placeholder={t('modals.meal_note.placeholder')}
                 />
-                <Group justify="space-between" gap="sm">
-                    <Button variant="light" color="red" onClick={closeModal}>
+                <Group gap="sm" justify="space-between">
+                    <Button color="red" onClick={closeModal} variant="light">
                         {t('cancel')}
                     </Button>
                     <Group>
                         <Button
                             color="red"
                             hidden={!meal.note}
-                            onClick={onDelete}
+                            onClick={handleDelete}
                         >
                             {t('delete')}
                         </Button>

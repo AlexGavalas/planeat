@@ -9,6 +9,7 @@ import {
     StatsReport,
 } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
+import { type MouseEventHandler, useCallback } from 'react';
 
 import { WeekOverview } from '~features/modals/week-overview';
 import {
@@ -26,21 +27,49 @@ export const Controls = () => {
     const { copyToNextWeek } = useWeeklyScheduleOps();
     const { meals, revert, savePlan } = useMeals();
 
-    const toggleWeekOverview = () => {
+    const toggleWeekOverview = useCallback(() => {
         modals.openModal({
             title: t('modals.week_overview.title'),
             size: 'lg',
             children: <WeekOverview />,
         });
-    };
+    }, [modals, t]);
+
+    const handlePreviousWeek = useCallback(() => {
+        previousWeek();
+    }, [previousWeek]);
+
+    const handleNextWeek = useCallback(() => {
+        nextWeek();
+    }, [nextWeek]);
+
+    const handleRevert = useCallback(() => {
+        revert();
+    }, [revert]);
+
+    const handleCopyToNextWeek = useCallback(() => {
+        copyToNextWeek(meals);
+    }, [copyToNextWeek, meals]);
+
+    const handleSave = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
+        await savePlan();
+    }, [savePlan]);
 
     return (
         <Group justify="space-between">
             <Group gap="sm">
-                <Button onClick={previousWeek} leftSection={<FastArrowLeft />}>
+                <Button
+                    leftSection={<FastArrowLeft />}
+                    onClick={handlePreviousWeek}
+                >
                     {t('week.previous')}
                 </Button>
-                <Button onClick={nextWeek} rightSection={<FastArrowRight />}>
+                <Button
+                    onClick={handleNextWeek}
+                    rightSection={<FastArrowRight />}
+                >
                     {t('week.next')}
                 </Button>
                 <Button
@@ -52,24 +81,19 @@ export const Controls = () => {
                 </Button>
             </Group>
             <Group gap="sm">
-                <Button
-                    onClick={() => {
-                        copyToNextWeek(meals);
-                    }}
-                    rightSection={<Copy />}
-                >
+                <Button onClick={handleCopyToNextWeek} rightSection={<Copy />}>
                     {t('week.copy_to_next_week')}
                 </Button>
                 {hasUnsavedChanges && (
                     <>
-                        <Button onClick={revert} rightSection={<Cancel />}>
+                        <Button
+                            onClick={handleRevert}
+                            rightSection={<Cancel />}
+                        >
                             {t('cancel')}
                         </Button>
                         <Button
-                            // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-                            onClick={async () => {
-                                await savePlan();
-                            }}
+                            onClick={handleSave}
                             rightSection={<SaveFloppyDisk />}
                         >
                             {t('save')}

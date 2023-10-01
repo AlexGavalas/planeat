@@ -4,7 +4,12 @@ import { useModals } from '@mantine/modals';
 import { format } from 'date-fns';
 import 'dayjs/locale/el';
 import { useTranslation } from 'next-i18next';
-import { type FormEventHandler, useState } from 'react';
+import {
+    type ChangeEventHandler,
+    type FormEventHandler,
+    useCallback,
+    useState,
+} from 'react';
 
 import { showErrorNotification } from '~util/notification';
 
@@ -33,6 +38,16 @@ export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
     const closeModal = () => {
         modals.closeAll();
     };
+
+    const resetError = useCallback(() => {
+        setError('');
+    }, []);
+
+    const handleActivityChange = useCallback<
+        ChangeEventHandler<HTMLTextAreaElement>
+    >((e) => {
+        setActivity(e.currentTarget.value);
+    }, []);
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
     const handleSave: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -75,33 +90,29 @@ export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
     };
 
     return (
-        <form onSubmit={handleSave} className="calendar">
+        <form className="calendar" onSubmit={handleSave}>
             <Text>{t('date')}</Text>
             <Center>
                 <DatePicker
-                    value={date}
-                    onChange={setDate}
                     locale={localeMap[i18n.language as keyof typeof localeMap]}
+                    onChange={setDate}
+                    value={date}
                 />
             </Center>
             <Space h={20} />
             <Textarea
                 autosize
-                minRows={4}
                 defaultValue={activity}
-                onChange={(e) => {
-                    setActivity(e.currentTarget.value);
-                }}
-                label={t('activity.label')}
-                placeholder={t('activity.placeholder')}
                 error={error}
-                onFocus={() => {
-                    setError('');
-                }}
+                label={t('activity.label')}
+                minRows={4}
+                onChange={handleActivityChange}
+                onFocus={resetError}
+                placeholder={t('activity.placeholder')}
             />
             <Space h={20} />
             <Group justify="space-between">
-                <Button variant="light" color="red" onClick={closeModal}>
+                <Button color="red" onClick={closeModal} variant="light">
                     {t('cancel')}
                 </Button>
                 <Button type="submit">{t('save')}</Button>

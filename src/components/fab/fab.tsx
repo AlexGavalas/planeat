@@ -29,7 +29,7 @@ export const Fab = () => {
     const queryClient = useQueryClient();
     const [showMenu, setShowMenu] = useState(false);
 
-    const toggleMenu = useCallback(() => {
+    const handleToggleMenu = useCallback(() => {
         setShowMenu((prev) => !prev);
     }, []);
 
@@ -47,24 +47,24 @@ export const Fab = () => {
     }, [queryClient]);
 
     const handleAddMeasurement = useCallback(() => {
-        toggleMenu();
+        handleToggleMenu();
 
         modals.openModal({
             title: t('add_measurement'),
             size: 'md',
             children: <MeasurementModal onSave={handleMeasurementSave} />,
         });
-    }, [handleMeasurementSave, modals, t, toggleMenu]);
+    }, [handleMeasurementSave, modals, t, handleToggleMenu]);
 
     const handleAddActivity = useCallback(() => {
-        toggleMenu();
+        handleToggleMenu();
 
         modals.openModal({
             title: t('add_activity'),
             size: 'md',
             children: <ActivityModal onSave={handleActivitySave} />,
         });
-    }, [handleActivitySave, modals, t, toggleMenu]);
+    }, [handleActivitySave, modals, t, handleToggleMenu]);
 
     return (
         <Box className={styles.container}>
@@ -88,10 +88,10 @@ export const Fab = () => {
             )}
             <ActionIcon
                 color="brand"
-                size="xl"
+                onClick={handleToggleMenu}
                 radius="xl"
+                size="xl"
                 variant="filled"
-                onClick={toggleMenu}
             >
                 <Plus />
             </ActionIcon>

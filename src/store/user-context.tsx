@@ -12,5 +12,5 @@ export const UserContext: FC<{ children?: ReactNode }> = ({ children }) => {
         }
     }, [profile]);
 
-    return <>{children}</>;
+    return children;
 };

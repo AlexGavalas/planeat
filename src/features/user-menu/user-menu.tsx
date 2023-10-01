@@ -29,7 +29,7 @@ export const UserMenu = () => {
         }, [router]);
 
     return (
-        <Menu withArrow position="bottom-end" arrowPosition="center">
+        <Menu withArrow arrowPosition="center" position="bottom-end">
             <Menu.Target>
                 <MenuTrigger />
             </Menu.Target>

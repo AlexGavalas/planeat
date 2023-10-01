@@ -12,7 +12,7 @@ export const UserAvatar = () => {
 
     return (
         <Avatar radius="xl" size="sm">
-            <Image src={user.image} alt={user.name} width={32} height={32} />
+            <Image alt={user.name} height={32} src={user.image} width={32} />
         </Avatar>
     );
 };

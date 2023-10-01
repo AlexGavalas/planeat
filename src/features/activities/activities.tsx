@@ -113,12 +113,12 @@ export const Activities = () => {
             size: 'sm',
             children: (
                 <ActivityModal
-                    onSave={onSave}
                     initialData={{
                         id: item.id,
                         date: parseISO(item.date),
                         activity: item.activity,
                     }}
+                    onSave={onSave}
                 />
             ),
         });
@@ -128,24 +128,24 @@ export const Activities = () => {
         setPage(page);
     }, []);
 
+    const handleAddActivity = useCallback(() => {
+        modals.openModal({
+            title: t('add_activity'),
+            centered: true,
+            size: 'sm',
+            children: <ActivityModal onSave={onNewActivitySave} />,
+        });
+    }, [modals, onNewActivitySave, t]);
+
     return (
         <Stack gap="md">
             <Group justify="space-between">
                 <Title order={3}>{t('activities')}</Title>
                 <ActionIcon
-                    variant="light"
-                    title={t('add_activity')}
+                    onClick={handleAddActivity}
                     size="lg"
-                    onClick={() => {
-                        modals.openModal({
-                            title: t('add_activity'),
-                            centered: true,
-                            size: 'sm',
-                            children: (
-                                <ActivityModal onSave={onNewActivitySave} />
-                            ),
-                        });
-                    }}
+                    title={t('add_activity')}
+                    variant="light"
                 >
                     <Plus />
                 </ActionIcon>
@@ -159,8 +159,8 @@ export const Activities = () => {
                         onDelete={onDelete}
                         onEdit={onEdit}
                         onPageChange={onPageChange}
-                        totalPages={totalPages}
                         page={page}
+                        totalPages={totalPages}
                     />
                 ) : (
                     !loading && (

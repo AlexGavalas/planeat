@@ -8,7 +8,6 @@ describe('<ProgressIndicator />', () => {
             <ProgressIndicator
                 label="Test"
                 percent={50}
-                value={50}
                 sections={[
                     {
                         key: 'test',
@@ -17,6 +16,7 @@ describe('<ProgressIndicator />', () => {
                         bg: 'blue',
                     },
                 ]}
+                value={50}
             />,
         );
 

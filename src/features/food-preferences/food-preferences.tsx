@@ -52,37 +52,37 @@ export const FoodPreferences = () => {
     };
 
     return (
-        <Stack gap="md" align="start">
+        <Stack align="start" gap="md">
             <Title order={3}>
                 {t('account_settings.sections.food_preferences.title')}
             </Title>
             <form onSubmit={handleSavePreferences} style={{ width: '100%' }}>
-                <Stack gap="md" align="start" style={{ width: '100%' }}>
-                    <Group gap="md" grow style={{ width: '100%' }}>
+                <Stack align="start" gap="md" style={{ width: '100%' }}>
+                    <Group grow gap="md" style={{ width: '100%' }}>
                         <Textarea
                             autosize
-                            name="positive"
-                            minRows={4}
                             defaultValue={
                                 profile?.food_preferences_positive ?? ''
                             }
                             label={t(
                                 'account_settings.sections.food_preferences.positive.label',
                             )}
+                            minRows={4}
+                            name="positive"
                             placeholder={t(
                                 'account_settings.sections.food_preferences.positive.placeholder',
                             )}
                         />
                         <Textarea
                             autosize
-                            name="negative"
-                            minRows={4}
                             defaultValue={
                                 profile?.food_preferences_negative ?? ''
                             }
                             label={t(
                                 'account_settings.sections.food_preferences.negative.label',
                             )}
+                            minRows={4}
+                            name="negative"
                             placeholder={t(
                                 'account_settings.sections.food_preferences.negative.placeholder',
                             )}

@@ -64,7 +64,7 @@ export default function Settings() {
                         {t('advanced_settings')}
                     </Tabs.Tab>
                 </Tabs.List>
-                <Tabs.Panel value="measurements" pt="md">
+                <Tabs.Panel pt="md" value="measurements">
                     <Card>
                         <Measurements />
                     </Card>
@@ -73,7 +73,7 @@ export default function Settings() {
                         <Activities />
                     </Card>
                 </Tabs.Panel>
-                <Tabs.Panel value="personal" pt="md">
+                <Tabs.Panel pt="md" value="personal">
                     <Card>
                         <PersonalSettings />
                     </Card>
@@ -82,7 +82,7 @@ export default function Settings() {
                         <FoodPreferences />
                     </Card>
                 </Tabs.Panel>
-                <Tabs.Panel value="advanced" pt="md">
+                <Tabs.Panel pt="md" value="advanced">
                     <Card>
                         <AdvancedSettings />
                     </Card>

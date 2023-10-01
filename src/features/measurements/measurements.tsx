@@ -59,14 +59,14 @@ export const Measurements = () => {
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
     const loading = (!measurements.length && !isFetched) || isFetching;
 
-    const onNewWeightSave = useCallback(async () => {
+    const handleNewWeightSave = useCallback(async () => {
         setPage(INITIAL_PAGE);
 
         await queryClient.invalidateQueries(['measurements-count']);
         await queryClient.invalidateQueries(['measurements']);
     }, [queryClient]);
 
-    const onDelete = async (item: Measurement) => {
+    const handleDelete = async (item: Measurement) => {
         const response = await fetch(`/api/v1/measurement?id=${item.id}`, {
             method: 'DELETE',
         });
@@ -82,9 +82,9 @@ export const Measurements = () => {
         }
     };
 
-    const onEdit = useCallback(
+    const handleEdit = useCallback(
         (item: Measurement) => {
-            const onSave = async () => {
+            const handleSave = async () => {
                 await queryClient.invalidateQueries(['measurements', page]);
             };
 
@@ -94,7 +94,6 @@ export const Measurements = () => {
                 size: 'sm',
                 children: (
                     <MeasurementModal
-                        onSave={onSave}
                         initialData={{
                             id: item.id,
                             date: parseISO(item.date),
@@ -105,6 +104,7 @@ export const Measurements = () => {
                                 weight: item.weight,
                             }),
                         }}
+                        onSave={handleSave}
                     />
                 ),
             });
@@ -112,7 +112,7 @@ export const Measurements = () => {
         [modals, page, queryClient, t],
     );
 
-    const onPageChange = useCallback((page: number) => {
+    const handlePageChange = useCallback((page: number) => {
         setPage(page);
     }, []);
 
@@ -121,9 +121,9 @@ export const Measurements = () => {
             title: t('new_measurement'),
             centered: true,
             size: 'sm',
-            children: <MeasurementModal onSave={onNewWeightSave} />,
+            children: <MeasurementModal onSave={handleNewWeightSave} />,
         });
-    }, [modals, onNewWeightSave, t]);
+    }, [modals, handleNewWeightSave, t]);
 
     const headers = useMemo(
         () => [
@@ -160,10 +160,10 @@ export const Measurements = () => {
             <Group justify="space-between">
                 <Title order={3}>{t('measurements')}</Title>
                 <ActionIcon
-                    variant="light"
-                    title={t('add_measurement')}
-                    size="lg"
                     onClick={handleAddMeasurement}
+                    size="lg"
+                    title={t('add_measurement')}
+                    variant="light"
                 >
                     <Plus />
                 </ActionIcon>
@@ -174,11 +174,11 @@ export const Measurements = () => {
                     <Table
                         data={measurements}
                         headers={headers}
-                        onDelete={onDelete}
-                        onEdit={onEdit}
-                        onPageChange={onPageChange}
-                        totalPages={totalPages}
+                        onDelete={handleDelete}
+                        onEdit={handleEdit}
+                        onPageChange={handlePageChange}
                         page={page}
+                        totalPages={totalPages}
                     />
                 ) : (
                     !loading && (

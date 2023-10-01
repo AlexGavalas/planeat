@@ -67,8 +67,8 @@ export const Table = <ItemType extends Item>({
                     {data.map((item) => (
                         <Row
                             key={item.id}
-                            item={item}
                             headers={headers}
+                            item={item}
                             onDelete={onDelete}
                             onEdit={onEdit}
                         />
@@ -78,10 +78,10 @@ export const Table = <ItemType extends Item>({
             {shouldShowPagination && (
                 <Group justify="end">
                     <Pagination
+                        withEdges
+                        onChange={handlePageChange}
                         total={totalPages}
                         value={page}
-                        onChange={handlePageChange}
-                        withEdges
                     />
                 </Group>
             )}

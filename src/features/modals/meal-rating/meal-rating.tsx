@@ -7,14 +7,14 @@ import { type Meal } from '~types/meal';
 
 type MealRatingModalProps = {
     meal: Meal;
-    handleSave: (rating: number) => Promise<void>;
-    handleDelete: () => Promise<void>;
+    onSave: (rating: number) => Promise<void>;
+    onDelete: () => Promise<void>;
 };
 
 export const MealRatingModal = ({
     meal,
-    handleDelete,
-    handleSave,
+    onDelete,
+    onSave,
 }: MealRatingModalProps) => {
     const { t } = useTranslation();
     const modals = useModals();
@@ -25,25 +25,25 @@ export const MealRatingModal = ({
     };
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
 
         if (!rating) {
             return;
         }
 
-        await handleSave(rating);
+        await onSave(rating);
         closeModal();
     };
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-    const onDelete: MouseEventHandler<HTMLButtonElement> = async () => {
-        await handleDelete();
+    const handleDelete: MouseEventHandler<HTMLButtonElement> = async () => {
+        await onDelete();
         closeModal();
     };
 
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit}>
             <Stack gap="xl">
                 <Center>
                     <Rating
@@ -51,19 +51,19 @@ export const MealRatingModal = ({
                         onChange={setRating}
                     />
                 </Center>
-                <Group justify="space-between" gap="sm">
-                    <Button variant="light" color="red" onClick={closeModal}>
+                <Group gap="sm" justify="space-between">
+                    <Button color="red" onClick={closeModal} variant="light">
                         {t('cancel')}
                     </Button>
                     <Group>
                         <Button
                             color="red"
                             hidden={!meal.note}
-                            onClick={onDelete}
+                            onClick={handleDelete}
                         >
                             {t('delete')}
                         </Button>
-                        <Button type="submit" disabled={!rating}>
+                        <Button disabled={!rating} type="submit">
                             {t('save')}
                         </Button>
                     </Group>

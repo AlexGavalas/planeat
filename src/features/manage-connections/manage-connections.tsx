@@ -72,11 +72,11 @@ export const ManageConnections = () => {
                         <Text>{connection.users.full_name}</Text>
                         <Group gap="xs">
                             <Button
-                                size="compact-md"
-                                // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
+                                // eslint-disable-next-line @typescript-eslint/no-misused-promises, react/jsx-handler-names -- async event handler
                                 onClick={async () => {
                                     await removeConnection(connection);
                                 }}
+                                size="compact-md"
                             >
                                 {t(
                                     'connections.manage_connections.remove_connection',

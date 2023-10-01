@@ -1,10 +1,18 @@
-import { Button, Center, Group, NumberInput, Space, Text } from '@mantine/core';
+import {
+    Button,
+    Center,
+    Group,
+    NumberInput,
+    type NumberInputProps,
+    Space,
+    Text,
+} from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useModals } from '@mantine/modals';
 import { format } from 'date-fns';
 import 'dayjs/locale/el';
 import { useTranslation } from 'next-i18next';
-import { type FormEventHandler, useState } from 'react';
+import { type FormEventHandler, useCallback, useState } from 'react';
 
 import { showErrorNotification } from '~util/notification';
 
@@ -38,6 +46,22 @@ export const MeasurementModal = ({
     const closeModal = () => {
         modals.closeAll();
     };
+
+    const resetError = useCallback(() => {
+        setError('');
+    }, []);
+
+    const handleWeightChange = useCallback<
+        NonNullable<NumberInputProps['onChange']>
+    >((value) => {
+        setWeight(Number(value));
+    }, []);
+
+    const handleFatPercentChange = useCallback<
+        NonNullable<NumberInputProps['onChange']>
+    >((value) => {
+        setFatPercent(Number(value));
+    }, []);
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
     const handleSave: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -81,43 +105,37 @@ export const MeasurementModal = ({
     };
 
     return (
-        <form onSubmit={handleSave} className="calendar">
+        <form className="calendar" onSubmit={handleSave}>
             <Text>{t('date')}</Text>
             <Center>
                 <DatePicker
-                    value={date}
-                    onChange={setDate}
                     locale={localeMap[i18n.language as keyof typeof localeMap]}
+                    onChange={setDate}
+                    value={date}
                 />
             </Center>
             <Space h={20} />
             <NumberInput
-                label={t('weight')}
-                error={error}
-                onFocus={() => {
-                    setError('');
-                }}
-                min={0}
-                value={weight}
-                onChange={(value) => {
-                    setWeight(Number(value));
-                }}
                 decimalScale={2}
+                error={error}
+                label={t('weight')}
+                min={0}
+                onChange={handleWeightChange}
+                onFocus={resetError}
+                value={weight}
             />
             <Space h={20} />
             <NumberInput
-                label={t('fat_label')}
-                min={0}
-                max={100}
-                value={fatPercent}
-                onChange={(value) => {
-                    setFatPercent(Number(value));
-                }}
                 decimalScale={2}
+                label={t('fat_label')}
+                max={100}
+                min={0}
+                onChange={handleFatPercentChange}
+                value={fatPercent}
             />
             <Space h={20} />
             <Group justify="space-between">
-                <Button variant="light" color="red" onClick={closeModal}>
+                <Button color="red" onClick={closeModal} variant="light">
                     {t('cancel')}
                 </Button>
                 <Button type="submit">{t('save')}</Button>

@@ -11,7 +11,7 @@ type RenderParameters = Parameters<typeof render>;
 export const renderWithUser = (
     renderParams: RenderParameters[0],
     {
-        Wrapper = ({ children }) => <>{children}</>,
+        Wrapper = ({ children }) => children,
     }: { Wrapper?: RenderOptions['wrapper'] } = {},
 ) => {
     return {

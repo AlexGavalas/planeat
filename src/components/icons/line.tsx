@@ -1,8 +1,8 @@
 export const Line = () => (
     <svg
+        fill="none"
         style={{ width: '100%', height: 50, margin: '1rem' }}
         viewBox="0 0 97 32"
-        fill="none"
         xmlns="http://www.w3.org/2000/svg"
     >
         <path
@@ -88,9 +88,9 @@ export const Line = () => (
 
 export const Blobs = () => (
     <svg
+        fill="none"
         style={{ width: '100%', height: 50, margin: '1rem' }}
         viewBox="0 0 112 38"
-        fill="none"
         xmlns="http://www.w3.org/2000/svg"
     >
         <path

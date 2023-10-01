@@ -51,9 +51,9 @@ export const BMITimeline = () => {
                 <LoadingOverlay visible={isFetching} />
                 {data && (
                     <LineChart
-                        unit={t('kg')}
-                        target={Number(profile?.target_weight)}
                         data={[{ id: 'bmi-timeline', data }]}
+                        target={Number(profile?.target_weight)}
+                        unit={t('kg')}
                     />
                 )}
                 {!isFetching && !data && (

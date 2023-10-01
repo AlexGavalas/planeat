@@ -69,15 +69,15 @@ export const Header = () => {
                 <Flex
                     key={label}
                     align="center"
+                    gap="xs"
                     justify="center"
                     pb="sm"
-                    gap="xs"
                     style={{ position: 'relative' }}
                 >
                     <Title
                         c={isToday(timestamp) ? 'green.8' : undefined}
-                        ta="center"
                         order={4}
+                        ta="center"
                     >
                         {label}
                     </Title>

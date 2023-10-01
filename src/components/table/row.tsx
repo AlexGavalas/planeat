@@ -11,10 +11,16 @@ import {
 import { EditPencil, Trash } from 'iconoir-react';
 import get from 'lodash/fp/get';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import {
+    type MouseEventHandler,
+    type ReactNode,
+    useCallback,
+    useState,
+} from 'react';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Item = Record<string, any> & { id: string | number };
+export type Item = Record<string, ReactNode> & {
+    id: string | number;
+};
 
 export type Header<ItemType> = {
     width: string;
@@ -37,81 +43,80 @@ export const Row = <ItemType extends Item>({
     onEdit,
 }: RowProps<ItemType>) => {
     const { t } = useTranslation();
-    const [openConfirmation, setOpenConfirmation] = useState(false);
+    const [hasOpenConfirmation, setHasOpenConfirmation] = useState(false);
     const [deleteInProgress, setDeleteInProgress] = useState(false);
 
-    const handleDelete = async () => {
+    const handleDelete = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
         setDeleteInProgress(true);
 
         await onDelete(item);
 
         setDeleteInProgress(false);
-        setOpenConfirmation(false);
-    };
+        setHasOpenConfirmation(false);
+    }, [item, onDelete]);
+
+    const handleEdit = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
+        await onEdit(item);
+    }, [item, onEdit]);
+
+    const toggleConfirmation = useCallback(() => {
+        setHasOpenConfirmation(true);
+    }, []);
 
     return (
         <TableTr style={{ width: '100%', height: '3rem' }}>
             {headers
                 .filter((header) => header.key !== 'actions')
                 .map(({ key, width, formatValue }) => (
-                    <TableTd style={{ width }} key={key}>
+                    <TableTd key={key} style={{ width }}>
                         {formatValue?.(item) ?? get(key, item)}
                     </TableTd>
                 ))}
             <TableTd style={{ width: '35%' }}>
                 <Group gap="md" justify="center">
-                    <ActionIcon
-                        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-                        onClick={async () => {
-                            await onEdit(item);
-                        }}
-                        variant="subtle"
-                    >
+                    <ActionIcon onClick={handleEdit} variant="subtle">
                         <EditPencil />
                     </ActionIcon>
                     <Popover
-                        shadow="md"
+                        closeOnClickOutside
+                        closeOnEscape
+                        trapFocus
                         withArrow
                         withinPortal
-                        trapFocus
-                        closeOnEscape
-                        closeOnClickOutside
-                        opened={openConfirmation}
-                        onChange={setOpenConfirmation}
                         id="delete-confirmation"
+                        onChange={setHasOpenConfirmation}
+                        opened={hasOpenConfirmation}
+                        shadow="md"
                     >
                         <Popover.Target>
                             <ActionIcon
                                 color="red"
-                                onClick={() => {
-                                    setOpenConfirmation(true);
-                                }}
+                                onClick={toggleConfirmation}
                                 variant="subtle"
                             >
                                 <Trash />
                             </ActionIcon>
                         </Popover.Target>
                         <Popover.Dropdown>
-                            <Stack gap="md" align="center">
+                            <Stack align="center" gap="md">
                                 <Text>{t('confirmation.generic')}</Text>
                                 <Group gap="md">
                                     <Button
                                         color="red"
+                                        onClick={toggleConfirmation}
                                         size="xs"
                                         variant="outline"
-                                        onClick={() => {
-                                            setOpenConfirmation(false);
-                                        }}
                                     >
                                         {t('confirmation.no')}
                                     </Button>
                                     <Button
-                                        size="xs"
-                                        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- async event handler
-                                        onClick={async () => {
-                                            await handleDelete();
-                                        }}
                                         loading={deleteInProgress}
+                                        onClick={handleDelete}
+                                        size="xs"
                                     >
                                         {t('confirmation.yes')}
                                     </Button>

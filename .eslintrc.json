@@ -7,6 +7,7 @@
     "extends": [
         "next",
         "eslint:recommended",
+        "plugin:react/jsx-runtime",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/strict-type-checked",
@@ -51,6 +52,39 @@
             }
         ],
         // "@typescript-eslint/explicit-function-return-type": "error",
-        "import/no-default-export": "error"
+        "import/no-default-export": "error",
+        "react/boolean-prop-naming": [
+            "error",
+            {
+                "rule": "^(is|has)[A-Z]([A-Za-z0-9]?)+"
+            }
+        ],
+        "react/hook-use-state": [
+            "error",
+            {
+                "allowDestructuredState": true
+            }
+        ],
+        "react/jsx-handler-names": [
+            "warn",
+            {
+                "checkInlineFunction": true,
+                "checkLocalVariables": true,
+                "eventHandlerPrefix": "handle|set|reset|open|close|toggle|on",
+                "eventHandlerPropPrefix": "on"
+            }
+        ],
+        // TODO: Reduce this to a more reasonable 5 or 6
+        "react/jsx-max-depth": ["warn", { "max": 10 }],
+        "react/jsx-no-useless-fragment": "error",
+        "react/jsx-sort-props": [
+            "warn",
+            {
+                "reservedFirst": true,
+                "shorthandFirst": true,
+                "ignoreCase": false
+            }
+        ],
+        "react/void-dom-elements-no-children": ["error"]
     }
 }

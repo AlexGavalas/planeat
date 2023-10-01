@@ -58,23 +58,23 @@ export const PersonalSettings = () => {
                 {t('account_settings.sections.general.title')}
             </Title>
             {profile ? (
-                <Group align="end" grow>
+                <Group grow align="end">
                     <NumberInput
-                        label={t('height_input')}
                         defaultValue={profile.height ?? undefined}
+                        label={t('height_input')}
                         onChange={handleHeightChange}
                     />
                     <NumberInput
-                        label={t('target_weight_input')}
                         defaultValue={profile.target_weight ?? undefined}
+                        label={t('target_weight_input')}
                         onChange={handleTargetWeightChange}
                     />
                     <Select
-                        label={t('languages.label')}
-                        placeholder={t('languages.placeholder')}
-                        defaultValue={profile.language}
-                        onChange={handleLanguageChange}
                         data={availableLanguages}
+                        defaultValue={profile.language}
+                        label={t('languages.label')}
+                        onChange={handleLanguageChange}
+                        placeholder={t('languages.placeholder')}
                     />
                     <Button onClick={handleSave}>{t('save')}</Button>
                 </Group>

@@ -10,7 +10,7 @@ import { SessionProvider, type SessionProviderProps } from 'next-auth/react';
 import { appWithTranslation } from 'next-i18next';
 import { type AppProps } from 'next/app';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useMemo } from 'react';
 import {
     type DehydratedState,
     Hydrate,
@@ -33,20 +33,23 @@ const App = ({
     session: SessionProviderProps['session'];
     dehydratedState: DehydratedState;
 }>) => {
-    const [supabaseClient] = useState(() =>
-        createPagesBrowserClient<Database>(),
+    const supabaseClient = useMemo(
+        () => createPagesBrowserClient<Database>(),
+        [],
     );
 
-    const [queryClient] = useState(() => {
-        return new QueryClient({
-            defaultOptions: {
-                queries: {
-                    refetchOnWindowFocus: false,
-                    refetchOnMount: false,
+    const queryClient = useMemo(
+        () =>
+            new QueryClient({
+                defaultOptions: {
+                    queries: {
+                        refetchOnWindowFocus: false,
+                        refetchOnMount: false,
+                    },
                 },
-            },
-        });
-    });
+            }),
+        [],
+    );
 
     return (
         <>

@@ -74,9 +74,9 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
         >
             {hovered && (
                 <CellOverlay
-                    handleDelete={handleDelete}
-                    handleSave={handleSave}
                     meal={meal}
+                    onDelete={handleDelete}
+                    onSave={handleSave}
                 />
             )}
             {hasNote && (

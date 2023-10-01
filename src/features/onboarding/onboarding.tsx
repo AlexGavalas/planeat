@@ -38,8 +38,11 @@ export const Onboarding = () => {
     return (
         <div style={{ position: 'fixed' }}>
             <Joyride
-                run={run}
-                stepIndex={stepIndex}
+                continuous
+                disableScrolling
+                hideBackButton
+                showProgress
+                showSkipButton
                 callback={({ type, step, action }) => {
                     if (type === 'step:after' && action === 'next') {
                         setStepIndex((p) => p + 1);
@@ -69,9 +72,6 @@ export const Onboarding = () => {
                         });
                     }
                 }}
-                continuous
-                disableScrolling
-                hideBackButton
                 locale={{
                     close: t('onboarding.labels.close'),
                     next: t('onboarding.labels.next'),
@@ -80,8 +80,8 @@ export const Onboarding = () => {
                     back: t('onboarding.labels.back'),
                     last: t('onboarding.labels.last'),
                 }}
-                showSkipButton
-                showProgress
+                run={run}
+                stepIndex={stepIndex}
                 steps={steps}
                 styles={{
                     options: {

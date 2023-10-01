@@ -18,8 +18,8 @@ import { MealRatingModal } from '~features/modals/meal-rating';
 import { type EditedMeal, type Meal } from '~types/meal';
 
 type CellOverlayProps = {
-    handleDelete: () => Promise<void> | void;
-    handleSave: (value: Partial<Meal>) => Promise<void> | void;
+    onDelete: () => Promise<void> | void;
+    onSave: (value: Partial<Meal>) => Promise<void> | void;
     meal?: Meal | EditedMeal;
 };
 
@@ -36,11 +36,7 @@ const commonButtonProps = {
     size: 'lg',
 } satisfies ActionIconProps;
 
-export const CellOverlay = ({
-    handleDelete,
-    handleSave,
-    meal,
-}: CellOverlayProps) => {
+export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
     const { t } = useTranslation();
     const modals = useModals();
 
@@ -49,32 +45,32 @@ export const CellOverlay = ({
 
     const handleMealSave = useCallback(
         async (value: string) => {
-            await handleSave({ ...meal, meal: value });
+            await onSave({ ...meal, meal: value });
         },
-        [handleSave, meal],
+        [onSave, meal],
     );
 
     const handleMealNoteSave = useCallback(
         async (note: string) => {
-            await handleSave({ ...meal, note });
+            await onSave({ ...meal, note });
         },
-        [handleSave, meal],
+        [onSave, meal],
     );
 
     const handleMealNoteDelete = useCallback(async () => {
-        await handleSave({ ...meal, note: null });
-    }, [handleSave, meal]);
+        await onSave({ ...meal, note: null });
+    }, [onSave, meal]);
 
     const handleMealRatingSave = useCallback(
         async (rating: number) => {
-            await handleSave({ ...meal, rating });
+            await onSave({ ...meal, rating });
         },
-        [handleSave, meal],
+        [onSave, meal],
     );
 
     const handleMealRatingDelete = useCallback(async () => {
-        await handleSave({ ...meal, rating: null });
-    }, [handleSave, meal]);
+        await onSave({ ...meal, rating: null });
+    }, [onSave, meal]);
 
     const handleEditClick = useCallback(() => {
         modals.openModal({
@@ -82,13 +78,13 @@ export const CellOverlay = ({
             centered: true,
             children: (
                 <MealModal
-                    handleSave={handleMealSave}
                     initialMeal={meal?.meal ?? ''}
-                    deleteMeal={handleDelete}
+                    onDelete={onDelete}
+                    onSave={handleMealSave}
                 />
             ),
         });
-    }, [handleDelete, handleMealSave, meal?.meal, modals, t]);
+    }, [onDelete, handleMealSave, meal?.meal, modals, t]);
 
     const handleNoteClick = useCallback(() => {
         if (!isMealSaved) {
@@ -101,8 +97,8 @@ export const CellOverlay = ({
             children: (
                 <MealNoteModal
                     meal={meal}
-                    handleSave={handleMealNoteSave}
-                    handleDelete={handleMealNoteDelete}
+                    onDelete={handleMealNoteDelete}
+                    onSave={handleMealNoteSave}
                 />
             ),
         });
@@ -126,8 +122,8 @@ export const CellOverlay = ({
             children: (
                 <MealRatingModal
                     meal={meal}
-                    handleSave={handleMealRatingSave}
-                    handleDelete={handleMealRatingDelete}
+                    onDelete={handleMealRatingDelete}
+                    onSave={handleMealRatingSave}
                 />
             ),
         });
@@ -146,9 +142,9 @@ export const CellOverlay = ({
         <Overlay style={{ background: 'rgba(255, 255, 255, 0.5)' }}>
             <Center style={{ height: '100%' }}>
                 <SimpleGrid
+                    cols={shouldShowColumnLayout ? 2 : 1}
                     spacing={4}
                     verticalSpacing={4}
-                    cols={shouldShowColumnLayout ? 2 : 1}
                 >
                     <Tooltip
                         withArrow
@@ -157,8 +153,8 @@ export const CellOverlay = ({
                     >
                         <ActionIcon
                             {...commonButtonProps}
-                            title={t('edit')}
                             onClick={handleEditClick}
+                            title={t('edit')}
                         >
                             <EditPencil />
                         </ActionIcon>
@@ -172,8 +168,8 @@ export const CellOverlay = ({
                             >
                                 <ActionIcon
                                     {...commonButtonProps}
-                                    title={t('edit')}
                                     onClick={handleNoteClick}
+                                    title={t('edit')}
                                 >
                                     <Notes />
                                 </ActionIcon>
@@ -185,8 +181,8 @@ export const CellOverlay = ({
                             >
                                 <ActionIcon
                                     {...commonButtonProps}
-                                    title={t('modals.meal_rate.title')}
                                     onClick={handleRateClick}
+                                    title={t('modals.meal_rate.title')}
                                 >
                                     <ThreeStars />
                                 </ActionIcon>
@@ -194,7 +190,7 @@ export const CellOverlay = ({
                         </>
                     )}
                     {mealHasContent && (
-                        <CopyButton value={meal.meal} tooltipPosition="right" />
+                        <CopyButton tooltipPosition="right" value={meal.meal} />
                     )}
                 </SimpleGrid>
             </Center>

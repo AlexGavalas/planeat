@@ -47,17 +47,17 @@ export const Content = () => {
                             <h3>{row.label}</h3>
                             <Cell
                                 key={label}
+                                isRow
                                 id={`${row.key}_${label}`}
-                                timestamp={timestamp}
+                                isEdited={
+                                    !!unsavedChanges[`${row.key}_${label}`]
+                                }
                                 meal={
                                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                                     unsavedChanges[`${row.key}_${label}`] ||
                                     mealsMap[`${row.key}_${label}`]
                                 }
-                                isEdited={
-                                    !!unsavedChanges[`${row.key}_${label}`]
-                                }
-                                isRow
+                                timestamp={timestamp}
                             />
                         </div>
                     );
@@ -70,16 +70,16 @@ export const Content = () => {
                             <Cell
                                 key={label}
                                 id={`${row.key}_${label}`}
-                                timestamp={timestamp}
+                                isEdited={
+                                    !!unsavedChanges[`${row.key}_${label}`]
+                                }
+                                isRow={false}
                                 meal={
                                     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                                     unsavedChanges[`${row.key}_${label}`] ||
                                     mealsMap[`${row.key}_${label}`]
                                 }
-                                isEdited={
-                                    !!unsavedChanges[`${row.key}_${label}`]
-                                }
-                                isRow={false}
+                                timestamp={timestamp}
                             />
                         ))}
                     </div>
