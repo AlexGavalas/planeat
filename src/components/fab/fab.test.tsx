@@ -6,7 +6,7 @@ import { renderWithUser } from '~test/utils';
 
 import { Fab } from './fab';
 
-jest.mock('next/router', () =>
+jest.mock<NextRouter>('next/router', () =>
     jest.requireActual<NextRouter>('next-router-mock'),
 );
 

@@ -11,6 +11,8 @@ describe('<CopyButton />', () => {
 
     describe('when the user hovers the button', () => {
         it('shows the tooltip', async () => {
+            expect.hasAssertions();
+
             const { user, baseElement } = renderWithUser(
                 <CopyButton value="test" />,
             );
@@ -29,6 +31,8 @@ describe('<CopyButton />', () => {
         });
 
         it('copies the value to the clipboard', async () => {
+            expect.hasAssertions();
+
             const writeText = jest.spyOn(navigator.clipboard, 'writeText');
 
             const { user } = renderWithUser(<CopyButton value="test" />);
