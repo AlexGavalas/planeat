@@ -147,8 +147,7 @@
                 "eventHandlerPropPrefix": "on"
             }
         ],
-        // TODO: Reduce this to a more reasonable 5 or 6
-        "react/jsx-max-depth": ["warn", { "max": 8 }],
+        "react/jsx-max-depth": ["warn", { "max": 6 }],
         "react/jsx-no-useless-fragment": "error",
         "react/jsx-sort-props": [
             "warn",

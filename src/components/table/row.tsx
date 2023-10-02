@@ -1,22 +1,14 @@
-import {
-    ActionIcon,
-    Button,
-    Group,
-    Popover,
-    Stack,
-    TableTd,
-    TableTr,
-    Text,
-} from '@mantine/core';
+import { ActionIcon, Group, Popover, TableTd, TableTr } from '@mantine/core';
 import { EditPencil, Trash } from 'iconoir-react';
 import get from 'lodash/fp/get';
-import { useTranslation } from 'next-i18next';
 import {
     type MouseEventHandler,
     type ReactNode,
     useCallback,
     useState,
 } from 'react';
+
+import { ConfirmationPopover } from './confirm-popover';
 
 export type Item = Record<string, ReactNode> & {
     id: string | number;
@@ -42,7 +34,6 @@ export const Row = <ItemType extends Item>({
     onDelete,
     onEdit,
 }: RowProps<ItemType>) => {
-    const { t } = useTranslation();
     const [hasOpenConfirmation, setHasOpenConfirmation] = useState(false);
     const [isDeleteInProgress, setIsDeleteInProgress] = useState(false);
 
@@ -102,26 +93,11 @@ export const Row = <ItemType extends Item>({
                             </ActionIcon>
                         </Popover.Target>
                         <Popover.Dropdown>
-                            <Stack align="center" gap="md">
-                                <Text>{t('confirmation.generic')}</Text>
-                                <Group gap="md">
-                                    <Button
-                                        color="red"
-                                        onClick={toggleConfirmation}
-                                        size="xs"
-                                        variant="outline"
-                                    >
-                                        {t('confirmation.no')}
-                                    </Button>
-                                    <Button
-                                        loading={isDeleteInProgress}
-                                        onClick={handleDelete}
-                                        size="xs"
-                                    >
-                                        {t('confirmation.yes')}
-                                    </Button>
-                                </Group>
-                            </Stack>
+                            <ConfirmationPopover
+                                isDeleteInProgress={isDeleteInProgress}
+                                onDelete={handleDelete}
+                                onToggleConfirmation={toggleConfirmation}
+                            />
                         </Popover.Dropdown>
                     </Popover>
                 </Group>
