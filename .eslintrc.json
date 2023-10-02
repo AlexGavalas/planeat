@@ -67,6 +67,20 @@
                 "jest/require-to-throw-message": "error",
                 "jest/require-top-level-describe": "error"
             }
+        },
+        {
+            "files": ["*.test.tsx"],
+            "extends": ["plugin:testing-library/react"],
+            "rules": {
+                "testing-library/prefer-explicit-assert": [
+                    "error",
+                    {
+                        "assertion": "toBeInTheDocument",
+                        "includeFindQueries": true
+                    }
+                ],
+                "testing-library/prefer-user-event": "error"
+            }
         }
     ],
     "rules": {

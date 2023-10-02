@@ -71,7 +71,7 @@ describe('<UserAvatar />', () => {
         it('render the avatar', () => {
             const { container } = renderWithUser(<UserAvatar />);
 
-            expect(screen.queryByRole('img')).toBeInTheDocument();
+            expect(screen.getByRole('img')).toBeInTheDocument();
             expect(container).toMatchSnapshot();
         });
     });
