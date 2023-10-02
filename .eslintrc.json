@@ -1,9 +1,10 @@
 {
+    "root": true,
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "project": "./tsconfig.json"
     },
-    "plugins": ["@typescript-eslint/eslint-plugin"],
+    "plugins": ["@typescript-eslint"],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
@@ -147,7 +148,7 @@
             }
         ],
         // TODO: Reduce this to a more reasonable 5 or 6
-        "react/jsx-max-depth": ["warn", { "max": 10 }],
+        "react/jsx-max-depth": ["warn", { "max": 8 }],
         "react/jsx-no-useless-fragment": "error",
         "react/jsx-sort-props": [
             "warn",
