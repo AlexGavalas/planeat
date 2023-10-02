@@ -1,4 +1,4 @@
-import { Button, Group, Stack, Text } from '@mantine/core';
+import { Stack, Text } from '@mantine/core';
 import { useTranslation } from 'next-i18next';
 import { useQuery, useQueryClient } from 'react-query';
 
@@ -6,6 +6,8 @@ import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Connection } from '~types/connection';
 import { showErrorNotification } from '~util/notification';
+
+import { ConnectionItem } from './connection';
 
 export const ManageConnections = () => {
     const { t } = useTranslation();
@@ -65,25 +67,11 @@ export const ManageConnections = () => {
             )}
             {connections.map((connection) => {
                 return (
-                    <Group key={connection.id} justify="space-between">
-                        {/* eslint-disable @typescript-eslint/no-unsafe-member-access */}
-                        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                        {/* @ts-expect-error */}
-                        <Text>{connection.users.full_name}</Text>
-                        <Group gap="xs">
-                            <Button
-                                // eslint-disable-next-line @typescript-eslint/no-misused-promises, react/jsx-handler-names -- async event handler
-                                onClick={async () => {
-                                    await removeConnection(connection);
-                                }}
-                                size="compact-md"
-                            >
-                                {t(
-                                    'connections.manage_connections.remove_connection',
-                                )}
-                            </Button>
-                        </Group>
-                    </Group>
+                    <ConnectionItem
+                        key={connection.id}
+                        connection={connection}
+                        removeConnection={removeConnection}
+                    />
                 );
             })}
         </Stack>

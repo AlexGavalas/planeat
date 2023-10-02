@@ -1,4 +1,4 @@
-import { Button, Group, Stack, Text } from '@mantine/core';
+import { Stack, Text } from '@mantine/core';
 import { useTranslation } from 'next-i18next';
 import { useQuery, useQueryClient } from 'react-query';
 
@@ -9,6 +9,8 @@ import {
     showErrorNotification,
     showSuccessNotification,
 } from '~util/notification';
+
+import { ConnectionRequest } from './connection-request';
 
 export const ManageConnectionRequests = () => {
     const { t } = useTranslation();
@@ -134,44 +136,16 @@ export const ManageConnectionRequests = () => {
             ) : (
                 connectionRequests.map((connectionRequest) => {
                     return (
-                        <Group
+                        <ConnectionRequest
                             key={connectionRequest.id}
-                            justify="space-between"
-                        >
-                            {/* eslint-disable @typescript-eslint/no-unsafe-member-access */}
-                            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                            {/* @ts-expect-error */}
-                            <Text>{connectionRequest.users.full_name}</Text>
-                            <Group gap="xs">
-                                <Button
-                                    // eslint-disable-next-line @typescript-eslint/no-misused-promises, react/jsx-handler-names -- async event handler
-                                    onClick={async () => {
-                                        await handleAcceptConnectionRequest(
-                                            connectionRequest,
-                                        );
-                                    }}
-                                    size="sm"
-                                >
-                                    {t(
-                                        'connections.manage_connection_requests.accept',
-                                    )}
-                                </Button>
-                                <Button
-                                    // eslint-disable-next-line @typescript-eslint/no-misused-promises, react/jsx-handler-names -- async event handler
-                                    onClick={async () => {
-                                        await handleDeclineConnectionRequest(
-                                            connectionRequest.id,
-                                        );
-                                    }}
-                                    size="sm"
-                                    variant="outline"
-                                >
-                                    {t(
-                                        'connections.manage_connection_requests.decline',
-                                    )}
-                                </Button>
-                            </Group>
-                        </Group>
+                            connectionRequest={connectionRequest}
+                            onAcceptConnectionRequest={
+                                handleAcceptConnectionRequest
+                            }
+                            onDeclineConnectionRequest={
+                                handleDeclineConnectionRequest
+                            }
+                        />
                     );
                 })
             )}
