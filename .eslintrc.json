@@ -5,9 +5,7 @@
     },
     "plugins": ["@typescript-eslint/eslint-plugin"],
     "extends": [
-        "next",
         "eslint:recommended",
-        "plugin:react/jsx-runtime",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/strict-type-checked",
@@ -19,7 +17,16 @@
         "node": true,
         "browser": true
     },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "overrides": [
+        {
+            "files": ["src/pages/**/*"],
+            "extends": ["next"]
+        },
         {
             "files": ["src/pages/**/*", "*.config.ts"],
             "rules": {
@@ -28,6 +35,7 @@
         },
         {
             "files": ["*.tsx"],
+            "extends": ["plugin:react/jsx-runtime"],
             "rules": {
                 "@typescript-eslint/explicit-function-return-type": "off"
             }
