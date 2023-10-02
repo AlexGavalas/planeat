@@ -26,7 +26,7 @@ export const CurrentFat = () => {
                 userId: profile.id,
             });
 
-            return result.data?.[0].fat_percentage;
+            return result.data?.[0]?.fat_percentage;
         },
         {
             enabled: Boolean(profile),

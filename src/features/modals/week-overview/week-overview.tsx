@@ -32,6 +32,10 @@ export const WeekOverview = () => {
             {sortedKeys.map((key) => {
                 const dayMeals = mealsMap[key];
 
+                if (!dayMeals?.length || !dayMeals[0]?.day) {
+                    return null;
+                }
+
                 const timeslot = format(
                     parseISO(dayMeals[0].day),
                     'EEE dd/MM/yyyy',

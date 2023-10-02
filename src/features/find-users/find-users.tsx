@@ -60,7 +60,7 @@ export const FindUsers = () => {
         },
     );
 
-    const selectedUserId = selectedUser?.[0].id;
+    const selectedUserId = selectedUser?.[0]?.id;
 
     const {
         data: hasAlreadySentRequest,
@@ -107,7 +107,7 @@ export const FindUsers = () => {
 
         const response = await fetch('/api/v1/notification', {
             body: JSON.stringify({
-                targetUserId: selectedUser[0].id,
+                targetUserId: selectedUser[0]?.id,
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ export const FindUsers = () => {
                 (hasAlreadySentRequest ? (
                     <Text c="green.8" fw={600}>
                         {t('connections.request.already_sent', {
-                            fullName: selectedUser[0].full_name,
+                            fullName: selectedUser[0]?.full_name,
                         })}
                     </Text>
                 ) : (
@@ -165,7 +165,7 @@ export const FindUsers = () => {
                         <div>
                             <Text span>{t('connections.request.add')} </Text>
                             <Text span fw={600}>
-                                {selectedUser[0].full_name}
+                                {selectedUser[0]?.full_name}
                             </Text>
                             <Text span>
                                 {' '}

@@ -38,7 +38,6 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
                 {translatedRows.map((row) => {
                     const key = `${row.key}_${format(now, 'EEE dd/MM/yyyy')}`;
 
-                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                     const meal = dailyMeals[key]?.meal || 'N/A';
 
                     const Icon = MEAL_ICON[row.key];

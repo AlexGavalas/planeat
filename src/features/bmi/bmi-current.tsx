@@ -27,7 +27,7 @@ export const CurrentBMI = () => {
                 userId: profile.id,
             });
 
-            return result.data?.[0].weight;
+            return result.data?.[0]?.weight;
         },
         {
             enabled: Boolean(profile),

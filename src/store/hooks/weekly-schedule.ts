@@ -28,7 +28,7 @@ const cloneState = (
             section_key: newKey,
         };
 
-        delete acc[newKey].id;
+        delete acc[newKey]?.id;
 
         return acc;
     }, {});

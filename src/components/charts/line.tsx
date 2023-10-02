@@ -51,14 +51,18 @@ export const LineChart = <DataItem extends { x: string; y: number | null }>({
     target,
     unit,
 }: LineChartProps<DataItem>) => {
-    const max = useMemo(() => maxBy(data[0].data, 'y')?.y ?? 0, [data]);
-    const min = useMemo(() => minBy(data[0].data, 'y')?.y ?? 0, [data]);
+    const max = useMemo(() => maxBy(data[0]?.data, 'y')?.y ?? 0, [data]);
+    const min = useMemo(() => minBy(data[0]?.data, 'y')?.y ?? 0, [data]);
 
     return (
         <ResponsiveLine
             useMesh
             axisBottom={{
                 renderTick: (tick) => {
+                    if (!data[0]?.data?.length) {
+                        return <g />;
+                    }
+
                     const isFirst = tick.tickIndex === 0;
                     const isLast = tick.tickIndex === data[0].data.length - 1;
 
@@ -124,6 +128,10 @@ export const LineChart = <DataItem extends { x: string; y: number | null }>({
                 },
             }}
             tooltip={({ point }) => {
+                if (!data[0]?.data.length) {
+                    return <div />;
+                }
+
                 const isFirst = point.index === 0;
                 const isLast = point.index === data[0].data.length - 1;
                 const isTop = max - +point.data.y < 3;

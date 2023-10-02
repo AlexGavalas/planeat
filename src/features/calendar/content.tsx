@@ -40,6 +40,10 @@ export const Content = () => {
                     row.key === 'snack2';
 
                 if (isRow) {
+                    if (!daysOfWeek[0]) {
+                        return null;
+                    }
+
                     const { label, timestamp } = daysOfWeek[0];
 
                     return (
@@ -53,8 +57,7 @@ export const Content = () => {
                                     !!unsavedChanges[`${row.key}_${label}`]
                                 }
                                 meal={
-                                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                                    unsavedChanges[`${row.key}_${label}`] ||
+                                    unsavedChanges[`${row.key}_${label}`] ??
                                     mealsMap[`${row.key}_${label}`]
                                 }
                                 timestamp={timestamp}
@@ -75,8 +78,7 @@ export const Content = () => {
                                 }
                                 isRow={false}
                                 meal={
-                                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                                    unsavedChanges[`${row.key}_${label}`] ||
+                                    unsavedChanges[`${row.key}_${label}`] ??
                                     mealsMap[`${row.key}_${label}`]
                                 }
                                 timestamp={timestamp}
