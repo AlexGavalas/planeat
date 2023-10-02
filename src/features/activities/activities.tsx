@@ -1,6 +1,5 @@
 import { ActionIcon, Box, Center, Group, Stack, Title } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import { showNotification } from '@mantine/notifications';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
@@ -12,6 +11,7 @@ import { INITIAL_PAGE, PAGE_SIZE, Table } from '~components/table';
 import { ActivityModal } from '~features/modals/activity';
 import { useProfile } from '~hooks/use-profile';
 import { type Activity } from '~types/activity';
+import { showErrorNotification } from '~util/notification';
 
 export const Activities = () => {
     const { t } = useTranslation();
@@ -25,7 +25,7 @@ export const Activities = () => {
         async () => {
             const response = await fetch('/api/v1/activity?count=true');
 
-            const { count } = await response.json();
+            const { count } = (await response.json()) as { count?: number };
 
             return count;
         },
@@ -44,7 +44,7 @@ export const Activities = () => {
                 `/api/v1/activity?end=${end}&start=${start}`,
             );
 
-            const { data } = await response.json();
+            const { data } = (await response.json()) as { data?: Activity[] };
 
             return data ?? [];
         },
@@ -54,7 +54,7 @@ export const Activities = () => {
     );
 
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
-    const loading = (!activities.length && !isCountFetched) || isFetching;
+    const isLoading = (!activities.length && !isCountFetched) || isFetching;
 
     const onNewActivitySave = useCallback(async () => {
         setPage(INITIAL_PAGE);
@@ -66,20 +66,20 @@ export const Activities = () => {
     const headers = useMemo(
         () => [
             {
-                label: t('date'),
-                width: '25%',
-                key: 'date',
                 formatValue: (item: Activity) =>
                     format(parseISO(item.date), 'dd/MM/yy'),
+                key: 'date',
+                label: t('date'),
+                width: '25%',
             },
             {
-                label: t('activity.label'),
                 key: 'activity',
+                label: t('activity.label'),
                 width: '40%',
             },
             {
-                label: t('actions'),
                 key: 'actions',
+                label: t('actions'),
                 width: '35%',
             },
         ],
@@ -91,13 +91,10 @@ export const Activities = () => {
             method: 'DELETE',
         });
 
-        const { error } = await response.json();
-
-        if (error) {
-            showNotification({
-                title: t('error'),
+        if (!response.ok) {
+            showErrorNotification({
                 message: `${t('errors.activity_delete')}. ${t('try_again')}`,
-                color: 'red',
+                title: t('error'),
             });
         } else {
             await queryClient.invalidateQueries(['activities-count']);
@@ -105,25 +102,25 @@ export const Activities = () => {
         }
     };
 
-    const onEdit = async (item: Activity) => {
+    const onEdit = (item: Activity) => {
         const onSave = async () => {
             await queryClient.invalidateQueries(['activities', page]);
         };
 
         modals.openModal({
-            title: t('edit_activity'),
             centered: true,
-            size: 'sm',
             children: (
                 <ActivityModal
-                    onSave={onSave}
                     initialData={{
-                        id: item.id,
-                        date: parseISO(item.date),
                         activity: item.activity,
+                        date: parseISO(item.date),
+                        id: item.id,
                     }}
+                    onSave={onSave}
                 />
             ),
+            size: 'sm',
+            title: t('edit_activity'),
         });
     };
 
@@ -131,30 +128,30 @@ export const Activities = () => {
         setPage(page);
     }, []);
 
+    const handleAddActivity = useCallback(() => {
+        modals.openModal({
+            centered: true,
+            children: <ActivityModal onSave={onNewActivitySave} />,
+            size: 'sm',
+            title: t('add_activity'),
+        });
+    }, [modals, onNewActivitySave, t]);
+
     return (
         <Stack gap="md">
             <Group justify="space-between">
                 <Title order={3}>{t('activities')}</Title>
                 <ActionIcon
-                    variant="light"
-                    title={t('add_activity')}
+                    onClick={handleAddActivity}
                     size="lg"
-                    onClick={() => {
-                        modals.openModal({
-                            title: t('add_activity'),
-                            centered: true,
-                            size: 'sm',
-                            children: (
-                                <ActivityModal onSave={onNewActivitySave} />
-                            ),
-                        });
-                    }}
+                    title={t('add_activity')}
+                    variant="light"
                 >
                     <Plus />
                 </ActionIcon>
             </Group>
             <Box style={{ minHeight: 100 }}>
-                <LoadingOverlay visible={loading} />
+                <LoadingOverlay visible={isLoading} />
                 {activities.length > 0 ? (
                     <Table
                         data={activities}
@@ -162,11 +159,11 @@ export const Activities = () => {
                         onDelete={onDelete}
                         onEdit={onEdit}
                         onPageChange={onPageChange}
-                        totalPages={totalPages}
                         page={page}
+                        totalPages={totalPages}
                     />
                 ) : (
-                    !loading && (
+                    !isLoading && (
                         <Center style={{ height: 100 }}>
                             <Title order={4}>{t('no_activities_yet')}</Title>
                         </Center>

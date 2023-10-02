@@ -26,7 +26,7 @@ export const CurrentFat = () => {
                 userId: profile.id,
             });
 
-            return result.data?.[0].fat_percentage;
+            return result.data?.[0]?.fat_percentage;
         },
         {
             enabled: Boolean(profile),
@@ -41,9 +41,9 @@ export const CurrentFat = () => {
     return (
         <ProgressIndicator
             label={t('fat_label')}
-            value={fatPercent}
             percent={fatPercent && (fatPercent * 100) / MAX_FAT_PERCENT}
             sections={translatedSections}
+            value={fatPercent}
         />
     );
 };

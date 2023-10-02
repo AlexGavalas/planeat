@@ -27,7 +27,7 @@ export const CurrentBMI = () => {
                 userId: profile.id,
             });
 
-            return result.data?.[0].weight;
+            return result.data?.[0]?.weight;
         },
         {
             enabled: Boolean(profile),
@@ -40,16 +40,16 @@ export const CurrentBMI = () => {
     }));
 
     const userBMI = +calculateBMI({
+        height: profile?.height ?? 0,
         weight,
-        height: profile?.height || 0,
     }).toFixed(1);
 
     return (
         <ProgressIndicator
             label={t('bmi_label')}
-            value={userBMI}
             percent={(userBMI * 100) / MAX_BMI}
             sections={translatedSections}
+            value={userBMI}
         />
     );
 };

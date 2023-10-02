@@ -1,4 +1,3 @@
-import { showNotification } from '@mantine/notifications';
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
 import { useTranslation } from 'next-i18next';
@@ -7,22 +6,59 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 import { getDaysOfWeek } from '~util/date';
+import {
+    showErrorNotification,
+    showSuccessNotification,
+} from '~util/notification';
 
 import { useCurrentWeek } from './current-week';
 import { useUnsavedChanges } from './unsaved-changes';
 
-export const useMeals = () => {
+type DeleteEntryCell = (params: { meal: Meal | EditedMeal }) => void;
+
+type DeleteEntryRow = (id: string) => void;
+
+type SaveEntryCell = (params: {
+    meal?: Meal | EditedMeal;
+    sectionKey: string;
+    timestamp: Date;
+    userId: number;
+    value: string;
+    note: EditedMeal['note'];
+    rating: EditedMeal['rating'];
+}) => void;
+
+type SaveEntryRow = (params: {
+    sectionKey: string;
+    userId: number;
+    value: string;
+    note: EditedMeal['note'];
+    rating: EditedMeal['rating'];
+}) => void;
+
+type UseMeals = () => {
+    meals: Meal[];
+    isLoading: boolean;
+    savePlan: () => Promise<void>;
+    revert: () => void;
+    deleteEntryCell: DeleteEntryCell;
+    deleteEntryRow: DeleteEntryRow;
+    saveEntryCell: SaveEntryCell;
+    saveEntryRow: SaveEntryRow;
+};
+
+export const useMeals: UseMeals = () => {
     const { t } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const queryClient = useQueryClient();
 
     const { unsavedChanges, removeChanges, addChange } = useUnsavedChanges();
 
-    const [submitting, setSubmitting] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const currentWeekKey = format(currentWeek, 'yyyy-MM-dd');
 
-    const { data: meals = [], isFetching: fetchingMeals } = useQuery(
+    const { data: meals = [], isFetching: isFetchingMeals } = useQuery(
         ['meals', currentWeekKey],
         async () => {
             const endDate = format(
@@ -39,13 +75,13 @@ export const useMeals = () => {
                 `/api/v1/meal?startDate=${startDate}&endDate=${endDate}`,
             );
 
-            const { data } = await response.json();
+            const result = (await response.json()) as { data?: Meal[] };
 
-            return (data || []) as Meal[];
+            return result.data ?? [];
         },
         {
             onSettled: () => {
-                setSubmitting(false);
+                setIsSubmitting(false);
             },
         },
     );
@@ -59,8 +95,8 @@ export const useMeals = () => {
         [meals],
     );
 
-    const savePlan = async () => {
-        setSubmitting(true);
+    const savePlan = async (): Promise<void> => {
+        setIsSubmitting(true);
 
         // The edited meals will have the id from the db
         const [changedMeals, newMeals] = partition(
@@ -73,44 +109,41 @@ export const useMeals = () => {
         const deletedIds = deletedMeals.map(({ id }) => id);
 
         const response = await fetch('/api/v1/meal', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify({
                 deletedIds,
                 editedMeals,
                 newMeals,
             }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'PATCH',
         });
 
-        const { error } = await response.json();
+        if (!response.ok) {
+            setIsSubmitting(false);
 
-        if (error) {
-            setSubmitting(false);
-
-            showNotification({
-                title: t('error'),
+            showErrorNotification({
                 message: `${t('errors.meal_save')}. ${t('try_again')}`,
-                color: 'red',
+                title: t('error'),
             });
         } else {
             await queryClient.invalidateQueries(['meals', currentWeekKey]);
 
             removeChanges();
 
-            showNotification({
-                title: t('notification.success.title'),
+            showSuccessNotification({
                 message: t('notification.success.message'),
+                title: t('notification.success.title'),
             });
         }
     };
 
-    const revert = () => {
+    const revert = (): void => {
         removeChanges();
     };
 
-    const deleteEntryCell = async ({ meal }: { meal: Meal | EditedMeal }) => {
+    const deleteEntryCell: DeleteEntryCell = ({ meal }) => {
         const deletedMeal = {
             ...meal,
             meal: '',
@@ -119,7 +152,7 @@ export const useMeals = () => {
         addChange(deletedMeal);
     };
 
-    const deleteEntryRow = async (id: string) => {
+    const deleteEntryRow: DeleteEntryRow = (id) => {
         const [row] = id.split('_');
         const daysOfWeek = getDaysOfWeek(currentWeek);
 
@@ -136,7 +169,7 @@ export const useMeals = () => {
         }
     };
 
-    const saveEntryCell = ({
+    const saveEntryCell: SaveEntryCell = ({
         meal,
         sectionKey,
         timestamp,
@@ -144,42 +177,28 @@ export const useMeals = () => {
         value,
         note,
         rating,
-    }: {
-        meal?: Meal | EditedMeal;
-        sectionKey: string;
-        timestamp: Date;
-        userId: number;
-        value: string;
-        note: EditedMeal['note'];
-        rating: EditedMeal['rating'];
     }) => {
         const day = format(timestamp, 'yyyy-MM-dd HH:mm');
 
         const editedMeal = {
             ...meal,
-            meal: value,
-            section_key: sectionKey,
-            user_id: userId,
             day,
+            meal: value,
             note,
             rating,
+            section_key: sectionKey,
+            user_id: userId,
         };
 
         addChange(editedMeal);
     };
 
-    const saveEntryRow = ({
+    const saveEntryRow: SaveEntryRow = ({
         sectionKey,
         userId,
         value,
         note,
         rating,
-    }: {
-        sectionKey: string;
-        userId: number;
-        value: string;
-        note: EditedMeal['note'];
-        rating: EditedMeal['rating'];
     }) => {
         const [row] = sectionKey.split('_');
         const daysOfWeek = getDaysOfWeek(currentWeek);
@@ -190,25 +209,25 @@ export const useMeals = () => {
             const meal = mealsMap[key];
 
             saveEntryCell({
+                meal,
+                note,
+                rating,
                 sectionKey: key,
                 timestamp,
                 userId,
                 value,
-                meal,
-                note,
-                rating,
             });
         }
     };
 
     return {
-        meals,
-        loading: fetchingMeals || submitting,
-        savePlan,
-        revert,
         deleteEntryCell,
         deleteEntryRow,
+        isLoading: isFetchingMeals || isSubmitting,
+        meals,
+        revert,
         saveEntryCell,
         saveEntryRow,
+        savePlan,
     };
 };

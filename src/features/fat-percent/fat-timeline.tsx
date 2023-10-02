@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 import { useQuery } from 'react-query';
 
 import { fetchFatMeasurements } from '~api/measurement';
-import LineChart from '~components/charts/line';
+import { LineChart } from '~components/charts/line';
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Database } from '~types/supabase';
@@ -48,7 +48,7 @@ export const FatTimeline = () => {
             >
                 <LoadingOverlay visible={isFetching} />
                 {data && (
-                    <LineChart unit="%" data={[{ id: 'fat-percent', data }]} />
+                    <LineChart data={[{ data, id: 'fat-percent' }]} unit="%" />
                 )}
                 {!isFetching && !data && (
                     <Center style={{ height: '100%' }}>

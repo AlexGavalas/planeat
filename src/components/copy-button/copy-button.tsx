@@ -25,14 +25,18 @@ export const CopyButton = ({
     const { t } = useTranslation();
 
     return (
-        <MantineCopyButton value={value} timeout={2000}>
-            {({ copied, copy }) => (
+        <MantineCopyButton timeout={2000} value={value}>
+            {({ copied, copy: handleCopy }) => (
                 <Tooltip
-                    label={copied ? t('util.copied') : t('util.copy')}
                     withArrow
+                    label={copied ? t('util.copied') : t('util.copy')}
                     position={tooltipPosition}
                 >
-                    <ActionIcon variant={variant} onClick={copy} size={size}>
+                    <ActionIcon
+                        onClick={handleCopy}
+                        size={size}
+                        variant={variant}
+                    >
                         {copied ? <Check /> : <Copy />}
                     </ActionIcon>
                 </Tooltip>

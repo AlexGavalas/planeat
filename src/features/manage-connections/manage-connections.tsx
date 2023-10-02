@@ -1,11 +1,13 @@
-import { Button, Group, Stack, Text } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
+import { Stack, Text } from '@mantine/core';
 import { useTranslation } from 'next-i18next';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
 import { type Connection } from '~types/connection';
+import { showErrorNotification } from '~util/notification';
+
+import { ConnectionItem } from './connection';
 
 export const ManageConnections = () => {
     const { t } = useTranslation();
@@ -18,9 +20,11 @@ export const ManageConnections = () => {
             async () => {
                 const response = await fetch('/api/v1/connection');
 
-                const { data } = await response.json();
+                const { data } = (await response.json()) as {
+                    data?: Connection[];
+                };
 
-                return (data ?? []) as Connection[];
+                return data ?? [];
             },
             {
                 enabled: Boolean(profile),
@@ -29,28 +33,25 @@ export const ManageConnections = () => {
 
     const removeConnection = async (connection: Connection) => {
         const response = await fetch('/api/v1/connection', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify({
                 connectionId: connection.id,
                 connectionUserId: connection.connection_user_id,
             }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'DELETE',
         });
 
-        const { error } = await response.json();
-
-        if (error) {
-            showNotification({
-                color: 'red',
-                title: t('error'),
+        if (!response.ok) {
+            showErrorNotification({
                 message: t(
                     'connections.manage_connections.remove_connection_error',
                 ),
+                title: t('error'),
             });
         } else {
-            queryClient.invalidateQueries(['connections']);
+            await queryClient.invalidateQueries(['connections']);
         }
     };
 
@@ -66,21 +67,11 @@ export const ManageConnections = () => {
             )}
             {connections.map((connection) => {
                 return (
-                    <Group key={connection.id} justify="space-between">
-                        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                        {/* @ts-ignore */}
-                        <Text>{connection.users.full_name}</Text>
-                        <Group gap="xs">
-                            <Button
-                                size="compact-md"
-                                onClick={() => removeConnection(connection)}
-                            >
-                                {t(
-                                    'connections.manage_connections.remove_connection',
-                                )}
-                            </Button>
-                        </Group>
-                    </Group>
+                    <ConnectionItem
+                        key={connection.id}
+                        connection={connection}
+                        removeConnection={removeConnection}
+                    />
                 );
             })}
         </Stack>

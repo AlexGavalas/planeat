@@ -1,0 +1,143 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Table /> when passed data renders a table 1`] = `
+<div>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <div
+    class="m-6d731127 mantine-Stack-root"
+    style="--stack-gap: var(--mantine-spacing-md);"
+  >
+    <table
+      class="table m-b23fa0ef mantine-Table-table"
+      style="--table-vertical-spacing: calc(0.4375rem * var(--mantine-scale));"
+    >
+      <thead
+        class="mantine-Table-thead"
+      >
+        <tr
+          class="m-4e7aa4fd mantine-Table-tr"
+          data-with-row-border="true"
+        >
+          <th
+            class="m-4e7aa4f3 mantine-Table-th"
+            style="text-align: left; width: 100%;"
+          >
+            test label
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="m-b2404537 mantine-Table-tbody"
+      >
+        <tr
+          class="m-4e7aa4fd mantine-Table-tr"
+          data-with-row-border="true"
+          style="height: 3rem; width: 100%;"
+        >
+          <td
+            class="m-4e7aa4ef mantine-Table-td"
+            style="width: 100%;"
+          >
+            test value 1
+          </td>
+          <td
+            class="m-4e7aa4ef mantine-Table-td"
+            style="width: 35%;"
+          >
+            <div
+              class="m-4081bf90 mantine-Group-root"
+              style="--group-gap: var(--mantine-spacing-md); --group-justify: center;"
+            >
+              <button
+                class="mantine-focus-auto mantine-active m-8d3f4000 mantine-ActionIcon-root m-87cf2631 mantine-UnstyledButton-root"
+                data-variant="subtle"
+                style="--ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                type="button"
+              >
+                <svg
+                  color="currentColor"
+                  fill="none"
+                  height="1.5em"
+                  stroke-width="1.5"
+                  viewBox="0 0 24 24"
+                  width="1.5em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.02 5.828L15.85 3l4.949 4.95-2.829 2.828m-4.95-4.95l-9.606 9.607a1 1 0 00-.293.707v4.536h4.536a1 1 0 00.707-.293l9.606-9.607m-4.95-4.95l4.95 4.95"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <button
+                aria-controls="delete-confirmation-dropdown"
+                aria-expanded="false"
+                aria-haspopup="dialog"
+                class="mantine-focus-auto mantine-active m-8d3f4000 mantine-ActionIcon-root m-87cf2631 mantine-UnstyledButton-root"
+                data-variant="subtle"
+                id="delete-confirmation-target"
+                style="--ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                type="button"
+              >
+                <svg
+                  color="currentColor"
+                  fill="none"
+                  height="1.5em"
+                  stroke-width="1.5"
+                  viewBox="0 0 24 24"
+                  width="1.5em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M20 9l-1.995 11.346A2 2 0 0116.035 22h-8.07a2 2 0 01-1.97-1.654L4 9M21 6h-5.625M3 6h5.625m0 0V4a2 2 0 012-2h2.75a2 2 0 012 2v2m-6.75 0h6.75"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`<Table /> when passed no data renders a table 1`] = `
+<div>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <div
+    class="m-6d731127 mantine-Stack-root"
+    style="--stack-gap: var(--mantine-spacing-md);"
+  >
+    <table
+      class="table m-b23fa0ef mantine-Table-table"
+      style="--table-vertical-spacing: calc(0.4375rem * var(--mantine-scale));"
+    >
+      <thead
+        class="mantine-Table-thead"
+      >
+        <tr
+          class="m-4e7aa4fd mantine-Table-tr"
+          data-with-row-border="true"
+        />
+      </thead>
+      <tbody
+        class="m-b2404537 mantine-Table-tbody"
+      />
+    </table>
+  </div>
+</div>
+`;

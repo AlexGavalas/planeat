@@ -52,14 +52,12 @@ export const Header = () => {
                 userId: profile.id,
             });
 
-            return result.data || [];
+            return result;
         },
     );
 
     const activitiesMap = activities.reduce<ActivitysMap>((acc, activity) => {
-        const dateKey = activity.date;
-
-        acc[dateKey] = activity;
+        acc[activity.date] = activity;
 
         return acc;
     }, {});
@@ -71,15 +69,15 @@ export const Header = () => {
                 <Flex
                     key={label}
                     align="center"
+                    gap="xs"
                     justify="center"
                     pb="sm"
-                    gap="xs"
                     style={{ position: 'relative' }}
                 >
                     <Title
                         c={isToday(timestamp) ? 'green.8' : undefined}
-                        ta="center"
                         order={4}
+                        ta="center"
                     >
                         {label}
                     </Title>

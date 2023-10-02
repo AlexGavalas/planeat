@@ -19,12 +19,12 @@ export const AdvancedSettings = () => {
                 {t('account_settings.sections.advanced.title')}
             </Title>
             <Switch
-                label={t(
-                    'account_settings.sections.advanced.profile.toggle_discoverable_label',
-                )}
                 checked={profile?.is_discoverable}
                 description={t(
                     'account_settings.sections.advanced.profile.toggle_discoverable_description',
+                )}
+                label={t(
+                    'account_settings.sections.advanced.profile.toggle_discoverable_label',
                 )}
                 onChange={handleIsDiscoverableChange}
             />

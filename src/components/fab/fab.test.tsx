@@ -1,16 +1,20 @@
 import { ModalsProvider } from '@mantine/modals';
+import { type NextRouter } from 'next/router';
+import { type PropsWithChildren } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { renderWithUser } from '~test/utils';
 
 import { Fab } from './fab';
 
-jest.mock('next/router', () => jest.requireActual('next-router-mock'));
+jest.mock<NextRouter>('next/router', () =>
+    jest.requireActual<NextRouter>('next-router-mock'),
+);
 
 describe('<Fab />', () => {
     it('renders initially closed', () => {
         const { container } = renderWithUser(<Fab />, {
-            Wrapper: ({ children }) => (
+            Wrapper: ({ children }: PropsWithChildren) => (
                 <QueryClientProvider client={new QueryClient()}>
                     <ModalsProvider>{children}</ModalsProvider>
                 </QueryClientProvider>

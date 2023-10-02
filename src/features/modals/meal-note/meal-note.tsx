@@ -1,73 +1,90 @@
 import { Button, Group, Stack, Textarea } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
-import { type FormEventHandler, useState } from 'react';
+import {
+    type FormEventHandler,
+    type MouseEventHandler,
+    useCallback,
+    useState,
+} from 'react';
 
 import { type Meal } from '~types/meal';
 
-interface MealNoteModalProps {
+type MealNoteModalProps = {
     meal: Meal;
-    handleSave: (meal: string) => Promise<void>;
-    handleDelete: () => Promise<void>;
-}
+    onSave: (meal: string) => Promise<void>;
+    onDelete: () => Promise<void>;
+};
 
 const NOTE_FIELD_NAME = 'note';
 
 export const MealNoteModal = ({
     meal,
-    handleSave,
-    handleDelete,
+    onSave,
+    onDelete,
 }: MealNoteModalProps) => {
     const { t } = useTranslation();
     const modals = useModals();
     const [error, setError] = useState('');
 
-    const closeModal = () => modals.closeAll();
+    const closeModal = useCallback(() => {
+        modals.closeAll();
+    }, [modals]);
 
-    const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-        e.preventDefault();
+    const resetError = useCallback(() => {
+        setError('');
+    }, []);
 
-        const note = new FormData(e.currentTarget)
-            .get(NOTE_FIELD_NAME)
-            ?.toString();
+    const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
+        async (e) => {
+            e.preventDefault();
 
-        if (!note) {
-            return setError(t('errors.note_empty'));
-        }
+            const note = new FormData(e.currentTarget)
+                .get(NOTE_FIELD_NAME)
+                ?.toString();
 
-        await handleSave(note);
+            if (!note) {
+                setError(t('errors.note_empty'));
+                return;
+            }
+
+            await onSave(note);
+            closeModal();
+        },
+        [closeModal, onSave, t],
+    );
+
+    const handleDelete = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
+        await onDelete();
         closeModal();
-    };
-
-    const onDelete = async () => {
-        await handleDelete();
-        closeModal();
-    };
+    }, [closeModal, onDelete]);
 
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit}>
             <Stack gap="sm">
                 <Textarea
-                    data-autofocus
-                    name={NOTE_FIELD_NAME}
-                    placeholder={t('modals.meal_note.placeholder')}
-                    label={t('modals.meal_note.label')}
-                    defaultValue={meal.note ?? ''}
                     autosize
-                    minRows={5}
-                    maxRows={20}
+                    data-autofocus
+                    defaultValue={meal.note ?? ''}
                     error={error}
-                    onFocus={() => setError('')}
+                    label={t('modals.meal_note.label')}
+                    maxRows={20}
+                    minRows={5}
+                    name={NOTE_FIELD_NAME}
+                    onFocus={resetError}
+                    placeholder={t('modals.meal_note.placeholder')}
                 />
-                <Group justify="space-between" gap="sm">
-                    <Button variant="light" color="red" onClick={closeModal}>
+                <Group gap="sm" justify="space-between">
+                    <Button color="red" onClick={closeModal} variant="light">
                         {t('cancel')}
                     </Button>
                     <Group>
                         <Button
                             color="red"
                             hidden={!meal.note}
-                            onClick={onDelete}
+                            onClick={handleDelete}
                         >
                             {t('delete')}
                         </Button>

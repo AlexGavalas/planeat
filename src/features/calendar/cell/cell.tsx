@@ -19,38 +19,38 @@ export type CellProps = {
 
 export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
     const { profile } = useProfile();
-    const { hovered, ref } = useHover();
+    const { hovered: isHovered, ref } = useHover();
 
     const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =
         useMeals();
 
-    const handleSave = async (newMeal: Partial<Meal>) => {
+    const handleSave = (newMeal: Partial<Meal>) => {
         if (!profile || !newMeal.meal) {
             return;
         }
 
         if (isRow) {
             saveEntryRow({
+                note: newMeal.note,
+                rating: newMeal.rating,
                 sectionKey: id,
                 userId: profile.id,
                 value: newMeal.meal,
-                note: newMeal.note,
-                rating: newMeal.rating,
             });
         } else {
             saveEntryCell({
                 meal,
+                note: newMeal.note,
+                rating: newMeal.rating,
                 sectionKey: id,
                 timestamp,
                 userId: profile.id,
                 value: newMeal.meal,
-                note: newMeal.note,
-                rating: newMeal.rating,
             });
         }
     };
 
-    const handleDelete = async () => {
+    const handleDelete = () => {
         if (!meal) {
             return;
         }
@@ -72,11 +72,11 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                 ...(isRow && { gridColumn: 'span 7' }),
             }}
         >
-            {hovered && (
+            {isHovered && (
                 <CellOverlay
-                    handleDelete={handleDelete}
-                    handleSave={handleSave}
                     meal={meal}
+                    onDelete={handleDelete}
+                    onSave={handleSave}
                 />
             )}
             {hasNote && (
@@ -92,11 +92,11 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
             >
                 <Center
                     style={{
-                        ...(hovered && { opacity: 0.15 }),
+                        ...(isHovered && { opacity: 0.15 }),
                     }}
                 >
                     <Text p={5} ta="center">
-                        {meal?.meal || 'N/A '}
+                        {meal?.meal || 'N/A'}
                     </Text>
                 </Center>
             </Box>

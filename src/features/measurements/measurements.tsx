@@ -1,6 +1,5 @@
 import { ActionIcon, Box, Center, Group, Stack, Title } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import { showNotification } from '@mantine/notifications';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
@@ -12,6 +11,7 @@ import { INITIAL_PAGE, PAGE_SIZE, Table } from '~components/table';
 import { MeasurementModal } from '~features/modals/measurement';
 import { useProfile } from '~hooks/use-profile';
 import { type Measurement } from '~types/measurement';
+import { showErrorNotification } from '~util/notification';
 
 export const Measurements = () => {
     const { t } = useTranslation();
@@ -25,7 +25,7 @@ export const Measurements = () => {
         async () => {
             const response = await fetch('/api/v1/measurement?count=true');
 
-            const { count } = await response.json();
+            const { count } = (await response.json()) as { count?: number };
 
             return count;
         },
@@ -44,38 +44,37 @@ export const Measurements = () => {
                 `/api/v1/measurement?end=${end}&start=${start}`,
             );
 
-            const { data } = await response.json();
+            const { data } = (await response.json()) as {
+                data?: Measurement[];
+            };
 
             return data ?? [];
         },
         {
-            keepPreviousData: true,
             enabled: isFetched,
+            keepPreviousData: true,
         },
     );
 
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
-    const loading = (!measurements.length && !isFetched) || isFetching;
+    const isLoading = (!measurements.length && !isFetched) || isFetching;
 
-    const onNewWeightSave = useCallback(async () => {
+    const handleNewWeightSave = useCallback(async () => {
         setPage(INITIAL_PAGE);
 
         await queryClient.invalidateQueries(['measurements-count']);
         await queryClient.invalidateQueries(['measurements']);
     }, [queryClient]);
 
-    const onDelete = async (item: Measurement) => {
+    const handleDelete = async (item: Measurement) => {
         const response = await fetch(`/api/v1/measurement?id=${item.id}`, {
             method: 'DELETE',
         });
 
-        const { error } = await response.json();
-
-        if (error) {
-            showNotification({
-                title: t('error'),
+        if (!response.ok) {
+            showErrorNotification({
                 message: `${t('errors.measurement_delete')}. ${t('try_again')}`,
-                color: 'red',
+                title: t('error'),
             });
         } else {
             await queryClient.invalidateQueries(['measurements-count']);
@@ -83,22 +82,19 @@ export const Measurements = () => {
         }
     };
 
-    const onEdit = useCallback(
-        async (item: Measurement) => {
-            const onSave = async () => {
+    const handleEdit = useCallback(
+        (item: Measurement) => {
+            const handleSave = async () => {
                 await queryClient.invalidateQueries(['measurements', page]);
             };
 
             modals.openModal({
-                title: t('edit_measurement'),
                 centered: true,
-                size: 'sm',
                 children: (
                     <MeasurementModal
-                        onSave={onSave}
                         initialData={{
-                            id: item.id,
                             date: parseISO(item.date),
+                            id: item.id,
                             ...(item.fat_percentage && {
                                 fat_percentage: item.fat_percentage,
                             }),
@@ -106,51 +102,54 @@ export const Measurements = () => {
                                 weight: item.weight,
                             }),
                         }}
+                        onSave={handleSave}
                     />
                 ),
+                size: 'sm',
+                title: t('edit_measurement'),
             });
         },
         [modals, page, queryClient, t],
     );
 
-    const onPageChange = useCallback((page: number) => {
+    const handlePageChange = useCallback((page: number) => {
         setPage(page);
     }, []);
 
     const handleAddMeasurement = useCallback(() => {
         modals.openModal({
-            title: t('new_measurement'),
             centered: true,
+            children: <MeasurementModal onSave={handleNewWeightSave} />,
             size: 'sm',
-            children: <MeasurementModal onSave={onNewWeightSave} />,
+            title: t('new_measurement'),
         });
-    }, [modals, onNewWeightSave, t]);
+    }, [modals, handleNewWeightSave, t]);
 
     const headers = useMemo(
         () => [
             {
-                label: t('date'),
-                width: '25%',
-                key: 'date',
                 formatValue: (item: Measurement) =>
                     format(parseISO(item.date), 'dd/MM/yy'),
+                key: 'date',
+                label: t('date'),
+                width: '25%',
             },
             {
+                key: 'weight',
                 label: t('weight'),
                 width: '20%',
-                key: 'weight',
             },
             {
-                label: t('fat_label'),
-                width: '20%',
-                key: 'fat',
                 formatValue: (item: Measurement) =>
                     item.fat_percentage ? `${item.fat_percentage}%` : '-',
+                key: 'fat',
+                label: t('fat_label'),
+                width: '20%',
             },
             {
+                key: 'actions',
                 label: t('actions'),
                 width: '35%',
-                key: 'actions',
             },
         ],
         [t],
@@ -161,28 +160,28 @@ export const Measurements = () => {
             <Group justify="space-between">
                 <Title order={3}>{t('measurements')}</Title>
                 <ActionIcon
-                    variant="light"
-                    title={t('add_measurement')}
-                    size="lg"
                     onClick={handleAddMeasurement}
+                    size="lg"
+                    title={t('add_measurement')}
+                    variant="light"
                 >
                     <Plus />
                 </ActionIcon>
             </Group>
             <Box style={{ minHeight: 100 }}>
-                <LoadingOverlay visible={loading} />
+                <LoadingOverlay visible={isLoading} />
                 {measurements.length > 0 ? (
                     <Table
                         data={measurements}
                         headers={headers}
-                        onDelete={onDelete}
-                        onEdit={onEdit}
-                        onPageChange={onPageChange}
-                        totalPages={totalPages}
+                        onDelete={handleDelete}
+                        onEdit={handleEdit}
+                        onPageChange={handlePageChange}
                         page={page}
+                        totalPages={totalPages}
                     />
                 ) : (
-                    !loading && (
+                    !isLoading && (
                         <Center style={{ height: 100 }}>
                             <Title order={4}>{t('no_measurements_yet')}</Title>
                         </Center>

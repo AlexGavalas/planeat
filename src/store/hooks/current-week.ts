@@ -4,7 +4,13 @@ import { useCallback } from 'react';
 
 import { currentWeekAtom } from '~store/atoms';
 
-export const useCurrentWeek = () => {
+type UseCurrentWeek = () => {
+    currentWeek: Date;
+    nextWeek: () => void;
+    previousWeek: () => void;
+};
+
+export const useCurrentWeek: UseCurrentWeek = () => {
     const [currentWeek, setCurrentWeek] = useAtom(currentWeekAtom);
 
     const nextWeek = useCallback(() => {

@@ -1,104 +1,103 @@
-import {
-    ActionIcon,
-    Button,
-    Group,
-    Popover,
-    Stack,
-    TableTd,
-    TableTr,
-    Text,
-} from '@mantine/core';
+import { ActionIcon, Group, Popover, TableTd, TableTr } from '@mantine/core';
 import { EditPencil, Trash } from 'iconoir-react';
-import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import get from 'lodash/fp/get';
+import {
+    type MouseEventHandler,
+    type ReactNode,
+    useCallback,
+    useState,
+} from 'react';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Item = any;
+import { ConfirmationPopover } from './confirm-popover';
 
-export type Header = {
+export type Item = Record<string, ReactNode> & {
+    id: string | number;
+};
+
+export type Header<ItemType> = {
     width: string;
     label: string;
     key: string;
-    formatValue?: (item: Item) => string;
+    formatValue?: (item: ItemType) => string;
 };
 
-interface RowProps {
-    item: Item;
-    headers: Header[];
-    onDelete: (item: Item) => Promise<void>;
-    onEdit: (item: Item) => Promise<void>;
-}
+type RowProps<ItemType> = {
+    item: ItemType;
+    headers: Header<ItemType>[];
+    onDelete: (item: ItemType) => Promise<void> | void;
+    onEdit: (item: ItemType) => Promise<void> | void;
+};
 
-export const Row = ({ item, headers, onDelete, onEdit }: RowProps) => {
-    const { t } = useTranslation();
-    const [openConfirmation, setOpenConfirmation] = useState(false);
-    const [deleteInProgress, setDeleteInProgress] = useState(false);
+export const Row = <ItemType extends Item>({
+    item,
+    headers,
+    onDelete,
+    onEdit,
+}: RowProps<ItemType>) => {
+    const [hasOpenConfirmation, setHasOpenConfirmation] = useState(false);
+    const [isDeleteInProgress, setIsDeleteInProgress] = useState(false);
 
-    const handleDelete = async () => {
-        setDeleteInProgress(true);
+    const handleDelete = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
+        setIsDeleteInProgress(true);
 
         await onDelete(item);
 
-        setDeleteInProgress(false);
-        setOpenConfirmation(false);
-    };
+        setIsDeleteInProgress(false);
+        setHasOpenConfirmation(false);
+    }, [item, onDelete]);
+
+    const handleEdit = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
+        await onEdit(item);
+    }, [item, onEdit]);
+
+    const toggleConfirmation = useCallback(() => {
+        setHasOpenConfirmation(true);
+    }, []);
 
     return (
-        <TableTr style={{ width: '100%', height: '3rem' }}>
+        <TableTr style={{ height: '3rem', width: '100%' }}>
             {headers
                 .filter((header) => header.key !== 'actions')
                 .map(({ key, width, formatValue }) => (
-                    <TableTd style={{ width }} key={key}>
-                        {formatValue?.(item) ?? item[key]}
+                    <TableTd key={key} style={{ width }}>
+                        {formatValue?.(item) ?? get(key, item)}
                     </TableTd>
                 ))}
             <TableTd style={{ width: '35%' }}>
                 <Group gap="md" justify="center">
-                    <ActionIcon onClick={() => onEdit(item)} variant="subtle">
+                    <ActionIcon onClick={handleEdit} variant="subtle">
                         <EditPencil />
                     </ActionIcon>
                     <Popover
-                        shadow="md"
+                        closeOnClickOutside
+                        closeOnEscape
+                        trapFocus
                         withArrow
                         withinPortal
-                        trapFocus
-                        closeOnEscape
-                        closeOnClickOutside
-                        opened={openConfirmation}
-                        onChange={setOpenConfirmation}
+                        id="delete-confirmation"
+                        onChange={setHasOpenConfirmation}
+                        opened={hasOpenConfirmation}
+                        shadow="md"
                     >
                         <Popover.Target>
                             <ActionIcon
                                 color="red"
-                                onClick={() => setOpenConfirmation(true)}
+                                onClick={toggleConfirmation}
                                 variant="subtle"
                             >
                                 <Trash />
                             </ActionIcon>
                         </Popover.Target>
                         <Popover.Dropdown>
-                            <Stack gap="md" align="center">
-                                <Text>{t('confirmation.generic')}</Text>
-                                <Group gap="md">
-                                    <Button
-                                        color="red"
-                                        size="xs"
-                                        variant="outline"
-                                        onClick={() => {
-                                            setOpenConfirmation(false);
-                                        }}
-                                    >
-                                        {t('confirmation.no')}
-                                    </Button>
-                                    <Button
-                                        size="xs"
-                                        onClick={handleDelete}
-                                        loading={deleteInProgress}
-                                    >
-                                        {t('confirmation.yes')}
-                                    </Button>
-                                </Group>
-                            </Stack>
+                            <ConfirmationPopover
+                                isDeleteInProgress={isDeleteInProgress}
+                                onDelete={handleDelete}
+                                onToggleConfirmation={toggleConfirmation}
+                            />
                         </Popover.Dropdown>
                     </Popover>
                 </Group>

@@ -1,6 +1,7 @@
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import type { NextApiHandler } from 'next';
 import invariant from 'tiny-invariant';
+import { ZodError } from 'zod';
 
 import { getServerSession } from '~api/session';
 import {
@@ -10,70 +11,89 @@ import {
     findUsersByName,
     updateProfile,
 } from '~api/user';
+import { patchRequestSchema } from '~schemas/user';
+import { assertSession, assertUserEmail } from '~util/session';
 
 const handler: NextApiHandler = async (req, res) => {
-    const supabase = createPagesServerClient({ req, res });
+    try {
+        const session = await getServerSession({ req, res });
 
-    const session = await getServerSession({ req, res });
+        assertSession(session);
+        assertUserEmail(session.user?.email);
 
-    if (!session || !session.user?.email) {
-        return res.status(401).json({
-            error: 'The user does not have an active session or is not authenticated',
-        });
-    }
+        const supabase = createPagesServerClient({ req, res });
 
-    const user = await fetchUser({ supabase, email: session.user.email });
+        const user = await fetchUser({ email: session.user.email, supabase });
 
-    invariant(user, 'User must exist');
+        invariant(user, 'User must exist');
 
-    if (req.method === 'GET') {
-        if (req.query.type === 'search') {
-            const { data } = await findUsersByName({
+        if (req.method === 'GET') {
+            if (req.query.type === 'search') {
+                const { data } = await findUsersByName({
+                    fullName: String(req.query.fullName),
+                    supabase,
+                    userId: user.id,
+                });
+
+                res.json({
+                    data: data?.map(({ full_name }) => full_name),
+                });
+            } else if (req.query.type === 'profile') {
+                const { data } = await fetchUserByFullname({
+                    fullName: String(req.query.fullName),
+                    supabase,
+                });
+
+                res.json({ data });
+            } else {
+                res.json({ data: user });
+            }
+        } else if (req.method === 'PATCH') {
+            const {
+                height,
+                isDiscoverable,
+                language,
+                targetWeight,
+                hasCompletedOnboarding,
+            } = patchRequestSchema.parse(req.body);
+
+            const { error } = await updateProfile({
+                hasCompletedOnboarding,
+                height,
+                isDiscoverable,
+                language,
+                supabase,
+                targetWeight,
+                userId: user.id,
+            });
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            res.status(200).json({ message: 'OK' });
+        } else if (req.method === 'DELETE') {
+            const { error } = await deleteProfile({
                 supabase,
                 userId: user.id,
-                fullName: String(req.query.fullName),
             });
 
-            res.json({ data });
-        } else if (req.query.type === 'profile') {
-            const { data } = await fetchUserByFullname({
-                fullName: String(req.query.fullName),
-                supabase,
-            });
+            if (error) {
+                throw new Error(error.message);
+            }
 
-            res.json({ data });
+            res.status(200).json({ message: 'OK' });
         } else {
-            res.json({ data: user });
+            res.status(405).json({ message: 'Method Not Allowed' });
         }
-    } else if (req.method === 'PATCH') {
-        const {
-            height,
-            isDiscoverable,
-            language,
-            targetWeight,
-            hasCompletedOnboarding,
-        } = req.body;
+    } catch (e) {
+        console.error(e);
 
-        const { data, error } = await updateProfile({
-            supabase,
-            userId: user.id,
-            height,
-            isDiscoverable,
-            language,
-            targetWeight,
-            hasCompletedOnboarding,
-        });
-
-        res.json({ data, error });
-    } else if (req.method === 'DELETE') {
-        const { data, error } = await deleteProfile({
-            supabase,
-            userId: user.id,
-        });
-
-        res.json({ data, error });
-    } else {
-        res.status(405).json({ message: 'Method Not Allowed' });
+        if (e instanceof ZodError) {
+            res.status(400).json({ message: 'Bad Request' });
+        } else {
+            res.status(500).json({ message: 'Internal Server Error' });
+        }
     }
 };
 

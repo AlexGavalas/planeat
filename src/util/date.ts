@@ -3,22 +3,22 @@ import el from 'date-fns/locale/el';
 import enGB from 'date-fns/locale/en-GB';
 
 const localeMap = {
-    gr: el,
     en: enGB,
+    gr: el,
 };
 
 export const getDaysOfWeek = (
     date: Date,
     formatString = 'EEE dd/MM/yyyy',
     locale: keyof typeof localeMap = 'en',
-) => {
+): { timestamp: Date; label: string }[] => {
     return eachDayOfInterval({
-        start: startOfWeek(date, { weekStartsOn: 1 }),
         end: endOfWeek(date, { weekStartsOn: 1 }),
+        start: startOfWeek(date, { weekStartsOn: 1 }),
     }).map((day) => ({
-        timestamp: day,
         label: format(day, formatString, {
             locale: localeMap[locale],
         }),
+        timestamp: day,
     }));
 };

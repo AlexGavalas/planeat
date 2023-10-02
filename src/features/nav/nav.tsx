@@ -19,7 +19,7 @@ export const Nav = () => {
                 const isCurrent = pathname === href;
 
                 return (
-                    <Link href={href} key={href}>
+                    <Link key={href} href={href}>
                         <Anchor component="span">
                             <Text td={isCurrent ? 'underline' : undefined}>
                                 {t(label)}

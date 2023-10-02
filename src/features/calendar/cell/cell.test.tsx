@@ -3,16 +3,21 @@ import { type Meal } from '~types/meal';
 
 import { Cell, type CellProps } from './cell';
 
-jest.mock('~hooks/use-profile', () => ({
+jest.mock<typeof import('~hooks/use-profile')>('~hooks/use-profile', () => ({
     useProfile: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock('~store/hooks', () => ({
+jest.mock<typeof import('~store/hooks')>('~store/hooks', () => ({
+    ...jest.requireActual<typeof import('~store/hooks')>('~store/hooks'),
     useMeals: jest.fn().mockReturnValue({
         deleteEntryCell: jest.fn(),
         deleteEntryRow: jest.fn(),
+        isLoading: false,
+        meals: [],
+        revert: jest.fn(),
         saveEntryCell: jest.fn(),
         saveEntryRow: jest.fn(),
+        savePlan: jest.fn(),
     }),
 }));
 
@@ -32,13 +37,13 @@ describe('<Cell />', () => {
 
     describe('when the user has a meal', () => {
         const meal: Meal = {
+            day: '2021-01-01',
             id: 'meal-id',
             meal: 'test meal',
-            day: '2021-01-01',
+            note: null,
+            rating: null,
             section_key: 'section-key',
             user_id: 1,
-            rating: null,
-            note: null,
         };
 
         const propsWithMeal: CellProps = {

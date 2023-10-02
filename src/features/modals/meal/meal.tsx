@@ -1,65 +1,85 @@
 import { Button, Group, Stack, Textarea } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
-import { type FormEventHandler, useState } from 'react';
+import {
+    type FormEventHandler,
+    type MouseEventHandler,
+    useCallback,
+    useState,
+} from 'react';
 
-interface MealModalProps {
-    deleteMeal: () => Promise<void>;
-    handleSave: (meal: string) => Promise<void>;
+type MealModalProps = {
+    onDelete: () => Promise<void> | void;
+    onSave: (meal: string) => Promise<void> | void;
     initialMeal: string;
-}
+};
 
 export const MealModal = ({
-    handleSave,
+    onSave,
+    onDelete,
     initialMeal,
-    deleteMeal,
 }: MealModalProps) => {
     const { t } = useTranslation();
     const modals = useModals();
     const [error, setError] = useState('');
 
-    const closeModal = () => modals.closeAll();
+    const closeModal = useCallback(() => {
+        modals.closeAll();
+    }, [modals]);
 
-    const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-        e.preventDefault();
+    const resetError = useCallback(() => {
+        setError('');
+    }, []);
 
-        const meal = new FormData(e.currentTarget).get('meal')?.toString();
+    const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
+        async (e) => {
+            e.preventDefault();
 
-        if (!meal) return setError(t('errors.meal_empty'));
+            const meal = new FormData(e.currentTarget).get('meal')?.toString();
 
-        handleSave(meal);
+            if (!meal) {
+                setError(t('errors.meal_empty'));
+                return;
+            }
+
+            await onSave(meal);
+
+            closeModal();
+        },
+        [closeModal, onSave, t],
+    );
+
+    const handleDelete = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
+        await onDelete();
         closeModal();
-    };
-
-    const onDelete = () => {
-        deleteMeal();
-        closeModal();
-    };
+    }, [closeModal, onDelete]);
 
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit}>
             <Stack gap="sm">
                 <Textarea
-                    data-autofocus
-                    name="meal"
-                    placeholder={t('meal_placeholder')}
-                    label={t('meal_label')}
-                    defaultValue={initialMeal}
                     autosize
-                    minRows={5}
-                    maxRows={20}
+                    data-autofocus
+                    defaultValue={initialMeal}
                     error={error}
-                    onFocus={() => setError('')}
+                    label={t('meal_label')}
+                    maxRows={20}
+                    minRows={5}
+                    name="meal"
+                    onFocus={resetError}
+                    placeholder={t('meal_placeholder')}
                 />
-                <Group justify="space-between" gap="sm">
-                    <Button variant="light" color="red" onClick={closeModal}>
+                <Group gap="sm" justify="space-between">
+                    <Button color="red" onClick={closeModal} variant="light">
                         {t('cancel')}
                     </Button>
                     <Group>
                         <Button
                             color="red"
                             hidden={!initialMeal}
-                            onClick={onDelete}
+                            onClick={handleDelete}
                         >
                             {t('delete')}
                         </Button>

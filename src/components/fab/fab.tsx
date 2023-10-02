@@ -18,8 +18,8 @@ import styles from './fab.module.css';
 
 const buttonProps = {
     className: styles.button,
-    size: 'sm',
     radius: 'xl',
+    size: 'sm',
     variant: 'filled',
 } satisfies ButtonProps;
 
@@ -27,10 +27,10 @@ export const Fab = () => {
     const { t } = useTranslation();
     const modals = useModals();
     const queryClient = useQueryClient();
-    const [showMenu, setShowMenu] = useState(false);
+    const [shouldShowMenu, setShouldShowMenu] = useState(false);
 
-    const toggleMenu = useCallback(() => {
-        setShowMenu((prev) => !prev);
+    const handleToggleMenu = useCallback(() => {
+        setShouldShowMenu((prev) => !prev);
     }, []);
 
     const handleMeasurementSave = useCallback(async () => {
@@ -47,28 +47,28 @@ export const Fab = () => {
     }, [queryClient]);
 
     const handleAddMeasurement = useCallback(() => {
-        toggleMenu();
+        handleToggleMenu();
 
         modals.openModal({
-            title: t('add_measurement'),
-            size: 'md',
             children: <MeasurementModal onSave={handleMeasurementSave} />,
+            size: 'md',
+            title: t('add_measurement'),
         });
-    }, [handleMeasurementSave, modals, t, toggleMenu]);
+    }, [handleMeasurementSave, modals, t, handleToggleMenu]);
 
     const handleAddActivity = useCallback(() => {
-        toggleMenu();
+        handleToggleMenu();
 
         modals.openModal({
-            title: t('add_activity'),
-            size: 'md',
             children: <ActivityModal onSave={handleActivitySave} />,
+            size: 'md',
+            title: t('add_activity'),
         });
-    }, [handleActivitySave, modals, t, toggleMenu]);
+    }, [handleActivitySave, modals, t, handleToggleMenu]);
 
     return (
         <Box className={styles.container}>
-            {showMenu && (
+            {shouldShowMenu && (
                 <Stack gap="sm" mb={10}>
                     <Button
                         {...buttonProps}
@@ -88,10 +88,10 @@ export const Fab = () => {
             )}
             <ActionIcon
                 color="brand"
-                size="xl"
+                onClick={handleToggleMenu}
                 radius="xl"
+                size="xl"
                 variant="filled"
-                onClick={toggleMenu}
             >
                 <Plus />
             </ActionIcon>

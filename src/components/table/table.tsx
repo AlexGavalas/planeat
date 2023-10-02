@@ -16,17 +16,17 @@ import styles from './table.module.css';
 export const INITIAL_PAGE = 1;
 export const PAGE_SIZE = 5;
 
-type PageProps = {
-    data: Item[];
-    headers: Header[];
+export type TableProps<ItemType> = {
+    data: ItemType[];
+    headers: Header<ItemType>[];
     totalPages: number;
     page: number;
-    onDelete: (item: Item) => Promise<void>;
-    onEdit: (item: Item) => Promise<void>;
-    onPageChange: (page: number) => void;
+    onDelete: (item: ItemType) => Promise<void> | void;
+    onEdit: (item: ItemType) => Promise<void> | void;
+    onPageChange?: (page: number) => void;
 };
 
-export const Table = ({
+export const Table = <ItemType extends Item>({
     data,
     headers,
     totalPages,
@@ -34,14 +34,14 @@ export const Table = ({
     onDelete,
     onEdit,
     page: initialPage,
-}: PageProps) => {
+}: TableProps<ItemType>) => {
     const [page, setPage] = useState(initialPage);
 
     const shouldShowPagination = totalPages > 1;
 
     const handlePageChange = (page: number) => {
         setPage(page);
-        onPageChange(page);
+        onPageChange?.(page);
     };
 
     return (
@@ -53,9 +53,9 @@ export const Table = ({
                             <TableTh
                                 key={label}
                                 style={{
-                                    width,
                                     textAlign:
                                         key === 'actions' ? 'center' : 'left',
+                                    width,
                                 }}
                             >
                                 {label}
@@ -67,8 +67,8 @@ export const Table = ({
                     {data.map((item) => (
                         <Row
                             key={item.id}
-                            item={item}
                             headers={headers}
+                            item={item}
                             onDelete={onDelete}
                             onEdit={onEdit}
                         />
@@ -78,10 +78,10 @@ export const Table = ({
             {shouldShowPagination && (
                 <Group justify="end">
                     <Pagination
+                        withEdges
+                        onChange={handlePageChange}
                         total={totalPages}
                         value={page}
-                        onChange={handlePageChange}
-                        withEdges
                     />
                 </Group>
             )}

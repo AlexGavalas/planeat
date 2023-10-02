@@ -26,14 +26,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 export default function LandingPage() {
     const appName = (
-        <Text fw={700} span>
+        <Text span fw={700}>
             Planeat
         </Text>
     );
 
     return (
         <Center>
-            <Stack gap="xl" className="content">
+            <Stack className="content" gap="xl">
                 <Blobs />
                 <Title order={1}>Welcome to Planeat!</Title>
                 <Title order={2}>

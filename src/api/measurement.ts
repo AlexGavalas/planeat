@@ -1,18 +1,22 @@
-import { type SupabaseClient } from '@supabase/supabase-js';
+import {
+    type PostgrestError,
+    type SupabaseClient,
+} from '@supabase/supabase-js';
 
+import { type Measurement } from '~types/measurement';
 import { type Database } from '~types/supabase';
 
 const MAX_MEASUREMENTS = 12;
 
-type FetchLatestFatMeasurementProps = {
+type FetchLatestFatMeasurement = (params: {
     supabase: SupabaseClient<Database>;
     userId: number;
-};
+}) => Promise<{ data: { fat_percentage: number | null }[] | null }>;
 
-export const fetchLatestFatMeasurement = async ({
+export const fetchLatestFatMeasurement: FetchLatestFatMeasurement = async ({
     supabase,
     userId,
-}: FetchLatestFatMeasurementProps) => {
+}) => {
     const result = await supabase
         .from('measurements')
         .select('fat_percentage')
@@ -24,35 +28,33 @@ export const fetchLatestFatMeasurement = async ({
     return result;
 };
 
-type FetchLatestWeightMeasurementProps = {
+type FetchLatestWeightMeasurement = (params: {
     supabase: SupabaseClient<Database>;
     userId: number;
-};
+}) => Promise<{ data: { weight: number | null }[] | null }>;
 
-export const fetchLatestWeightMeasurement = async ({
-    supabase,
-    userId,
-}: FetchLatestWeightMeasurementProps) => {
-    const result = await supabase
-        .from('measurements')
-        .select('weight')
-        .eq('user_id', userId)
-        .not('weight', 'is', null)
-        .order('date', { ascending: false })
-        .limit(1);
+export const fetchLatestWeightMeasurement: FetchLatestWeightMeasurement =
+    async ({ supabase, userId }) => {
+        const result = await supabase
+            .from('measurements')
+            .select('weight')
+            .eq('user_id', userId)
+            .not('weight', 'is', null)
+            .order('date', { ascending: false })
+            .limit(1);
 
-    return result;
-};
+        return result;
+    };
 
-type FetchMeasurementsProps = {
+type FetchMeasurements = (params: {
     supabase: SupabaseClient<Database>;
     userId: number;
-};
+}) => Promise<{ data: { date: string; weight: number }[] | null }>;
 
-export const fetchMeasurements = async ({
+export const fetchMeasurements: FetchMeasurements = async ({
     supabase,
     userId,
-}: FetchMeasurementsProps) => {
+}) => {
     const { count, error } = await supabase
         .from('measurements')
         .select('date, weight', { count: 'exact' })
@@ -61,7 +63,7 @@ export const fetchMeasurements = async ({
 
     if (count === null) {
         throw new Error(
-            error?.message || 'Could not count weight measurements',
+            error?.message ?? 'Could not count weight measurements',
         );
     }
 
@@ -76,15 +78,22 @@ export const fetchMeasurements = async ({
     return result;
 };
 
-type FetchFatMeasurementsProps = {
+type FetchFatMeasurements = (params: {
     supabase: SupabaseClient<Database>;
     userId: number;
-};
+}) => Promise<{
+    data:
+        | {
+              date: string;
+              fat_percentage: number | null;
+          }[]
+        | null;
+}>;
 
-export const fetchFatMeasurements = async ({
+export const fetchFatMeasurements: FetchFatMeasurements = async ({
     supabase,
     userId,
-}: FetchFatMeasurementsProps) => {
+}) => {
     const { count, error } = await supabase
         .from('measurements')
         .select('date, fat_percentage', { count: 'exact' })
@@ -92,7 +101,7 @@ export const fetchFatMeasurements = async ({
         .not('fat_percentage', 'is', null);
 
     if (count === null) {
-        throw new Error(error?.message || 'Could not count fat measurements');
+        throw new Error(error?.message ?? 'Could not count fat measurements');
     }
 
     const result = await supabase
@@ -106,15 +115,15 @@ export const fetchFatMeasurements = async ({
     return result;
 };
 
-type FetchMeasurementsCount = {
+type FetchMeasurementsCount = (params: {
     supabase: SupabaseClient<Database>;
     userId: number;
-};
+}) => Promise<number | null>;
 
-export const fetchMeasurementsCount = async ({
+export const fetchMeasurementsCount: FetchMeasurementsCount = async ({
     supabase,
     userId,
-}: FetchMeasurementsCount) => {
+}) => {
     const { count } = await supabase
         .from('measurements')
         .select('id', { count: 'exact' })
@@ -123,19 +132,19 @@ export const fetchMeasurementsCount = async ({
     return count;
 };
 
-type FetchMeasurementsPaginated = {
+type FetchMeasurementsPaginated = (params: {
     supabase: SupabaseClient<Database>;
     start: number;
     end: number;
     userId: number;
-};
+}) => Promise<Measurement[] | null>;
 
-export const fetchMeasurementsPaginated = async ({
+export const fetchMeasurementsPaginated: FetchMeasurementsPaginated = async ({
     supabase,
     start,
     end,
     userId,
-}: FetchMeasurementsPaginated) => {
+}) => {
     const { data } = await supabase
         .from('measurements')
         .select('*')
@@ -146,53 +155,57 @@ export const fetchMeasurementsPaginated = async ({
     return data;
 };
 
-type DeleteMeasurement = {
+type DeleteMeasurement = (params: {
     supabase: SupabaseClient<Database>;
     measurementId: string;
     userId: number;
-};
+}) => Promise<{ error: PostgrestError | null }>;
 
-export const deleteMeasurement = async ({
+export const deleteMeasurement: DeleteMeasurement = async ({
     supabase,
     measurementId,
     userId,
-}: DeleteMeasurement) => {
+}) => {
     const { error } = await supabase
         .from('measurements')
         .delete()
         .eq('id', measurementId)
         .eq('user_id', userId);
 
-    return { error };
+    return {
+        error,
+    };
 };
 
-type UpdateMeasurement = {
+type UpdateMeasurement = (params: {
     supabase: SupabaseClient<Database>;
     date: string;
     fatPercent: number;
     weight: number;
     userId: number;
     measurementId?: string;
-};
+}) => Promise<{ error: PostgrestError | null }>;
 
-export const updateMeasurement = async ({
+export const updateMeasurement: UpdateMeasurement = async ({
     date,
     fatPercent,
     supabase,
     measurementId,
     weight,
     userId,
-}: UpdateMeasurement) => {
+}) => {
     const { error } = await supabase
         .from('measurements')
         .upsert({
+            date,
+            fat_percentage: fatPercent,
             id: measurementId,
             user_id: userId,
-            date,
             weight,
-            fat_percentage: fatPercent,
         })
         .eq('user_id', userId);
 
-    return { error };
+    return {
+        error,
+    };
 };

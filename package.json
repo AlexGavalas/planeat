@@ -17,7 +17,7 @@
         "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --watch",
         "test:watch": "jest --watch",
         "sync:types:local": "supabase gen types typescript --local > ./src/types/supabase.ts && prettier --write ./src/types/supabase.ts",
-        "lint": "eslint --ignore-path .gitignore .",
+        "lint": "eslint --cache --ignore-path .gitignore .",
         "prettier": "prettier .",
         "check:format": "pnpm prettier --list-different",
         "check:types": "tsc --noEmit",
@@ -56,7 +56,8 @@
         "react-i18next": "13.2.2",
         "react-joyride": "2.5.5",
         "react-query": "3.39.3",
-        "tiny-invariant": "1.3.1"
+        "tiny-invariant": "1.3.1",
+        "zod": "3.22.2"
     },
     "devDependencies": {
         "@commitlint/cli": "17.7.1",
@@ -77,6 +78,8 @@
         "eslint": "8.49.0",
         "eslint-config-next": "13.5.2",
         "eslint-config-prettier": "9.0.0",
+        "eslint-plugin-jest": "27.4.2",
+        "eslint-plugin-testing-library": "6.0.2",
         "husky": "8.0.3",
         "identity-obj-proxy": "3.0.0",
         "jest": "29.7.0",

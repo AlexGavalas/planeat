@@ -14,18 +14,18 @@ export const DeleteAccount = () => {
         };
 
         const modalId = modals.openModal({
-            title: t('account_settings.sections.delete_account.title'),
             centered: true,
-            children: <DeleteAccountModal closeModal={closeModal} />,
+            children: <DeleteAccountModal onCancel={closeModal} />,
+            title: t('account_settings.sections.delete_account.title'),
         });
     };
 
     return (
-        <Stack gap="md" align="start">
+        <Stack align="start" gap="md">
             <Title order={3}>
                 {t('account_settings.sections.delete_account.title')}
             </Title>
-            <Button onClick={openDeleteAccountModal} color="red">
+            <Button color="red" onClick={openDeleteAccountModal}>
                 {t('account_settings.sections.delete_account.button.label')}
             </Button>
         </Stack>

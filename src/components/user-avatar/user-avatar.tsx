@@ -6,13 +6,13 @@ import { useProfile } from '~hooks/use-profile';
 export const UserAvatar = () => {
     const { user } = useProfile();
 
-    if (!user || !user.image || !user.name) {
+    if (!user?.image || !user.name) {
         return null;
     }
 
     return (
         <Avatar radius="xl" size="sm">
-            <Image src={user.image} alt={user.name} width={32} height={32} />
+            <Image alt={user.name} height={32} src={user.image} width={32} />
         </Avatar>
     );
 };

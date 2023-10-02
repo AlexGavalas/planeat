@@ -28,65 +28,41 @@ const targetLayer = (targetWeight: number) =>
                 <rect
                     // Required assertion
                     // Issue: https://github.com/plouc/nivo/issues/1947
-                    y={(props.yScale as NumFn)(targetWeight) - lineHeight / 2}
-                    width={props.innerWidth}
-                    height={lineHeight}
                     fill="red"
+                    height={lineHeight}
+                    width={props.innerWidth}
+                    y={(props.yScale as NumFn)(targetWeight) - lineHeight / 2}
                 />
             </g>
         );
     };
 
-interface LineChartProps<DataItem> {
+type LineChartProps<DataItem> = {
     target?: number;
     unit: string;
     data: {
         id: string;
         data: DataItem[];
     }[];
-}
+};
 
-const LineChart = <DataItem extends { x: string; y: number | null }>({
+export const LineChart = <DataItem extends { x: string; y: number | null }>({
     data,
     target,
     unit,
 }: LineChartProps<DataItem>) => {
-    const max = useMemo(() => maxBy(data[0].data, 'y')?.y || 0, [data]);
-    const min = useMemo(() => minBy(data[0].data, 'y')?.y || 0, [data]);
+    const max = useMemo(() => maxBy(data[0]?.data, 'y')?.y ?? 0, [data]);
+    const min = useMemo(() => minBy(data[0]?.data, 'y')?.y ?? 0, [data]);
 
     return (
         <ResponsiveLine
-            data={data}
-            colors={BRAND_COLORS}
-            lineWidth={2}
-            margin={{
-                top: 10,
-                bottom: 25,
-                right: 0,
-                left: 40,
-            }}
-            xFormat={(value) => {
-                const date = parse(value.toString(), 'yyyy-MM-dd', new Date());
-
-                return format(date, 'dd/MM/yy');
-            }}
-            yScale={{
-                type: 'linear',
-                min: Math.min(min, target || Infinity) - 2,
-                max: Math.max(max, target || -Infinity) + 2,
-            }}
-            curve="natural"
-            theme={{
-                axis: {
-                    ticks: {
-                        text: {
-                            fontSize: 12,
-                        },
-                    },
-                },
-            }}
+            useMesh
             axisBottom={{
                 renderTick: (tick) => {
+                    if (!data[0]?.data?.length) {
+                        return <g />;
+                    }
+
                     const isFirst = tick.tickIndex === 0;
                     const isLast = tick.tickIndex === data[0].data.length - 1;
 
@@ -100,7 +76,10 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
                         textAnchor = 'middle';
                     }
 
-                    const date = parse(tick.value, 'yyyy-MM-dd', new Date());
+                    const value =
+                        typeof tick.value === 'string' ? tick.value : '-';
+
+                    const date = parse(value, 'yyyy-MM-dd', new Date());
 
                     const formattedDate = format(date, 'dd/MM/yy');
 
@@ -108,29 +87,51 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
                         <g>
                             <text
                                 dominantBaseline="text-before-edge"
+                                style={{
+                                    fill: 'rgb(51, 51, 51)',
+                                    fontSize: 12,
+                                    textAnchor,
+                                }}
                                 textAnchor={textAnchor}
                                 transform={`translate(${tick.x}, ${tick.y})`}
                                 y={tick.textY}
-                                style={{
-                                    textAnchor,
-                                    fontSize: 12,
-                                    fill: 'rgb(51, 51, 51)',
-                                }}
                             >
                                 {formattedDate}
                             </text>
                         </g>
                     );
                 },
-                tickSize: 0,
                 tickPadding: 10,
+                tickSize: 0,
             }}
             axisLeft={{
                 tickSize: 10,
             }}
+            colors={BRAND_COLORS}
+            curve="natural"
+            data={data}
+            lineWidth={2}
+            margin={{
+                bottom: 25,
+                left: 40,
+                right: 0,
+                top: 10,
+            }}
             pointSize={0}
-            useMesh
+            theme={{
+                axis: {
+                    ticks: {
+                        text: {
+                            fontSize: 12,
+                        },
+                    },
+                },
+            }}
             tooltip={({ point }) => {
+                if (!data[0]?.data.length) {
+                    return <div />;
+                }
+
                 const isFirst = point.index === 0;
                 const isLast = point.index === data[0].data.length - 1;
                 const isTop = max - +point.data.y < 3;
@@ -144,8 +145,8 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
 
                 return (
                     <Card
-                        shadow="md"
                         withBorder
+                        shadow="md"
                         style={{
                             transform: transformString,
                         }}
@@ -153,6 +154,16 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
                         {point.data.xFormatted}: {point.data.yFormatted} {unit}
                     </Card>
                 );
+            }}
+            xFormat={(value) => {
+                const date = parse(value.toString(), 'yyyy-MM-dd', new Date());
+
+                return format(date, 'dd/MM/yy');
+            }}
+            yScale={{
+                max: Math.max(max, target ?? -Infinity) + 2,
+                min: Math.min(min, target ?? Infinity) - 2,
+                type: 'linear',
             }}
             {...(target && {
                 layers: [
@@ -170,5 +181,3 @@ const LineChart = <DataItem extends { x: string; y: number | null }>({
         />
     );
 };
-
-export default LineChart;

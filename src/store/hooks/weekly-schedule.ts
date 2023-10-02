@@ -1,12 +1,14 @@
 import { add, format, parse, parseISO } from 'date-fns';
 import { useCallback } from 'react';
 
-import { type Meal, type MealsMap } from '~types/meal';
+import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 
 import { useCurrentWeek } from './current-week';
 import { useUnsavedChanges } from './unsaved-changes';
 
-const cloneState = (meals: Meal[]) => {
+const cloneState = (
+    meals: (EditedMeal | Meal)[],
+): Record<string, EditedMeal> => {
     return meals.reduce((acc: MealsMap, meal) => {
         const newKey = meal.section_key.replace(/(\d+\/\d+\/\d+)$/, (match) => {
             const prevDate = parse(match, 'dd/MM/yyyy', new Date());
@@ -26,18 +28,22 @@ const cloneState = (meals: Meal[]) => {
             section_key: newKey,
         };
 
-        delete acc[newKey].id;
+        delete acc[newKey]?.id;
 
         return acc;
     }, {});
 };
 
-export const useWeeklyScheduleOps = () => {
+type CopyToNextWeek = (meals: (EditedMeal | Meal)[]) => void;
+
+export const useWeeklyScheduleOps = (): {
+    copyToNextWeek: CopyToNextWeek;
+} => {
     const { nextWeek } = useCurrentWeek();
     const { addChange } = useUnsavedChanges();
 
-    const copyToNextWeek = useCallback(
-        (meals: Meal[]) => {
+    const copyToNextWeek = useCallback<CopyToNextWeek>(
+        (meals) => {
             nextWeek();
 
             Object.values(cloneState(meals)).forEach(addChange);

@@ -8,12 +8,12 @@ import { type MealsMap } from '~types/meal';
 const now = new Date();
 const startOfDayTimestamp = startOfDay(now);
 
-const MEAL_TIMES = {
+const MEAL_TIMES: Record<RowKey, Date> = {
+    dinner: set(startOfDayTimestamp, { hours: 20, minutes: 0, seconds: 0 }),
+    lunch: set(startOfDayTimestamp, { hours: 13, minutes: 0, seconds: 0 }),
     morning: set(startOfDayTimestamp, { hours: 9, minutes: 0, seconds: 0 }),
     snack1: set(startOfDayTimestamp, { hours: 11, minutes: 0, seconds: 0 }),
-    lunch: set(startOfDayTimestamp, { hours: 13, minutes: 0, seconds: 0 }),
     snack2: set(startOfDayTimestamp, { hours: 17, minutes: 0, seconds: 0 }),
-    dinner: set(startOfDayTimestamp, { hours: 20, minutes: 0, seconds: 0 }),
 };
 
 export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
@@ -45,12 +45,12 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
                     return (
                         <Timeline.Item
                             key={key}
-                            title={<Text fw="bold">{row.label}</Text>}
                             bullet={<Icon />}
+                            title={<Text fw="bold">{row.label}</Text>}
                         >
                             <Spoiler
-                                maxHeight={100}
                                 hideLabel={t('hide')}
+                                maxHeight={100}
                                 showLabel={t('show_more')}
                             >
                                 <Text>{meal}</Text>

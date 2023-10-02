@@ -40,6 +40,10 @@ export const Content = () => {
                     row.key === 'snack2';
 
                 if (isRow) {
+                    if (!daysOfWeek[0]) {
+                        return null;
+                    }
+
                     const { label, timestamp } = daysOfWeek[0];
 
                     return (
@@ -47,16 +51,16 @@ export const Content = () => {
                             <h3>{row.label}</h3>
                             <Cell
                                 key={label}
+                                isRow
                                 id={`${row.key}_${label}`}
-                                timestamp={timestamp}
-                                meal={
-                                    unsavedChanges[`${row.key}_${label}`] ||
-                                    mealsMap[`${row.key}_${label}`]
-                                }
                                 isEdited={
                                     !!unsavedChanges[`${row.key}_${label}`]
                                 }
-                                isRow
+                                meal={
+                                    unsavedChanges[`${row.key}_${label}`] ??
+                                    mealsMap[`${row.key}_${label}`]
+                                }
+                                timestamp={timestamp}
                             />
                         </div>
                     );
@@ -69,15 +73,15 @@ export const Content = () => {
                             <Cell
                                 key={label}
                                 id={`${row.key}_${label}`}
-                                timestamp={timestamp}
-                                meal={
-                                    unsavedChanges[`${row.key}_${label}`] ||
-                                    mealsMap[`${row.key}_${label}`]
-                                }
                                 isEdited={
                                     !!unsavedChanges[`${row.key}_${label}`]
                                 }
                                 isRow={false}
+                                meal={
+                                    unsavedChanges[`${row.key}_${label}`] ??
+                                    mealsMap[`${row.key}_${label}`]
+                                }
+                                timestamp={timestamp}
                             />
                         ))}
                     </div>

@@ -1,28 +1,15 @@
-import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
-import { ModalsProvider } from '@mantine/modals';
-import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
-import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
-import { SessionContextProvider } from '@supabase/auth-helpers-react';
-import { SessionProvider, type SessionProviderProps } from 'next-auth/react';
+import { type SessionProviderProps } from 'next-auth/react';
 import { appWithTranslation } from 'next-i18next';
 import { type AppProps } from 'next/app';
 import Head from 'next/head';
-import { useState } from 'react';
-import {
-    type DehydratedState,
-    Hydrate,
-    QueryClient,
-    QueryClientProvider,
-} from 'react-query';
+import { type DehydratedState } from 'react-query';
 
-import { BRAND_COLORS } from '~constants/colors';
 import { Header } from '~features/header';
 import { Onboarding } from '~features/onboarding';
-import { UserContext } from '~store/user-context';
-import { type Database } from '~types/supabase';
+import { Providers } from '~features/providers';
 
 import '../styles/globals.css';
 
@@ -33,53 +20,21 @@ const App = ({
     session: SessionProviderProps['session'];
     dehydratedState: DehydratedState;
 }>) => {
-    const [supabaseClient] = useState(() =>
-        createPagesBrowserClient<Database>(),
-    );
-
-    const [queryClient] = useState(() => {
-        return new QueryClient({
-            defaultOptions: {
-                queries: {
-                    refetchOnWindowFocus: false,
-                    refetchOnMount: false,
-                },
-            },
-        });
-    });
-
     return (
         <>
             <Head>
                 <title>Planeat</title>
             </Head>
-            <MantineProvider
-                theme={{
-                    primaryColor: 'brand',
-                    colors: {
-                        brand: BRAND_COLORS,
-                    },
-                }}
+            <Providers
+                dehydratedState={pageProps.dehydratedState}
+                session={pageProps.session}
             >
-                <SessionContextProvider supabaseClient={supabaseClient}>
-                    <SessionProvider session={pageProps.session}>
-                        <QueryClientProvider client={queryClient}>
-                            <Hydrate state={pageProps.dehydratedState}>
-                                <ModalsProvider>
-                                    <UserContext>
-                                        <Onboarding />
-                                        <Header />
-                                        <div className="container">
-                                            <Component {...pageProps} />
-                                        </div>
-                                    </UserContext>
-                                    <Notifications />
-                                </ModalsProvider>
-                            </Hydrate>
-                        </QueryClientProvider>
-                    </SessionProvider>
-                </SessionContextProvider>
-            </MantineProvider>
+                <Onboarding />
+                <Header />
+                <div className="container">
+                    <Component {...pageProps} />
+                </div>
+            </Providers>
         </>
     );
 };

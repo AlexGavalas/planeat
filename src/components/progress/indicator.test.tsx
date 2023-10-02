@@ -8,15 +8,15 @@ describe('<ProgressIndicator />', () => {
             <ProgressIndicator
                 label="Test"
                 percent={50}
-                value={50}
                 sections={[
                     {
+                        bg: 'blue',
                         key: 'test',
                         label: 'Test',
                         percent: 50,
-                        bg: 'blue',
                     },
                 ]}
+                value={50}
             />,
         );
 

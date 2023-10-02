@@ -17,11 +17,11 @@ import { MealNoteModal } from '~features/modals/meal-note';
 import { MealRatingModal } from '~features/modals/meal-rating';
 import { type EditedMeal, type Meal } from '~types/meal';
 
-interface CellOverlayProps {
-    handleDelete: () => Promise<void>;
-    handleSave: (value: Partial<Meal>) => Promise<void>;
+type CellOverlayProps = {
+    onDelete: () => Promise<void> | void;
+    onSave: (value: Partial<Meal>) => Promise<void> | void;
     meal?: Meal | EditedMeal;
-}
+};
 
 const isSavedMeal = (meal?: Meal | EditedMeal): meal is Meal => {
     return meal?.id !== undefined;
@@ -32,63 +32,60 @@ const isFilledMeal = (meal?: Meal | EditedMeal): meal is Meal => {
 };
 
 const commonButtonProps = {
-    variant: 'light',
     size: 'lg',
+    variant: 'light',
 } satisfies ActionIconProps;
 
-export const CellOverlay = ({
-    handleDelete,
-    handleSave,
-    meal,
-}: CellOverlayProps) => {
+export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
     const { t } = useTranslation();
     const modals = useModals();
 
     const isMealSaved = isSavedMeal(meal);
-    const mealHasContent = isFilledMeal(meal);
+    const isMealFilled = isFilledMeal(meal);
 
     const handleMealSave = useCallback(
         async (value: string) => {
-            handleSave({ ...meal, meal: value });
+            await onSave({ ...meal, meal: value });
         },
-        [handleSave, meal],
+        [onSave, meal],
     );
 
     const handleMealNoteSave = useCallback(
         async (note: string) => {
-            handleSave({ ...meal, note });
+            await onSave({ ...meal, note });
         },
-        [handleSave, meal],
+        [onSave, meal],
     );
 
     const handleMealNoteDelete = useCallback(async () => {
-        handleSave({ ...meal, note: null });
-    }, [handleSave, meal]);
+        await onSave({ ...meal, note: null });
+    }, [onSave, meal]);
 
     const handleMealRatingSave = useCallback(
         async (rating: number) => {
-            handleSave({ ...meal, rating });
+            await onSave({ ...meal, rating });
         },
-        [handleSave, meal],
+        [onSave, meal],
     );
 
     const handleMealRatingDelete = useCallback(async () => {
-        handleSave({ ...meal, rating: null });
-    }, [handleSave, meal]);
+        await onSave({ ...meal, rating: null });
+    }, [onSave, meal]);
 
     const handleEditClick = useCallback(() => {
         modals.openModal({
-            title: t('edit_meal'),
             centered: true,
+
             children: (
                 <MealModal
-                    handleSave={handleMealSave}
-                    initialMeal={meal?.meal || ''}
-                    deleteMeal={handleDelete}
+                    initialMeal={meal?.meal ?? ''}
+                    onDelete={onDelete}
+                    onSave={handleMealSave}
                 />
             ),
+            title: t('edit_meal'),
         });
-    }, [handleDelete, handleMealSave, meal?.meal, modals, t]);
+    }, [onDelete, handleMealSave, meal?.meal, modals, t]);
 
     const handleNoteClick = useCallback(() => {
         if (!isMealSaved) {
@@ -96,15 +93,15 @@ export const CellOverlay = ({
         }
 
         modals.openModal({
-            title: t('notes'),
             centered: true,
             children: (
                 <MealNoteModal
                     meal={meal}
-                    handleSave={handleMealNoteSave}
-                    handleDelete={handleMealNoteDelete}
+                    onDelete={handleMealNoteDelete}
+                    onSave={handleMealNoteSave}
                 />
             ),
+            title: t('notes'),
         });
     }, [
         handleMealNoteDelete,
@@ -121,15 +118,15 @@ export const CellOverlay = ({
         }
 
         modals.openModal({
-            title: t('modals.meal_rate.title'),
             centered: true,
             children: (
                 <MealRatingModal
                     meal={meal}
-                    handleSave={handleMealRatingSave}
-                    handleDelete={handleMealRatingDelete}
+                    onDelete={handleMealRatingDelete}
+                    onSave={handleMealRatingSave}
                 />
             ),
+            title: t('modals.meal_rate.title'),
         });
     }, [
         handleMealRatingDelete,
@@ -140,15 +137,15 @@ export const CellOverlay = ({
         t,
     ]);
 
-    const shouldShowColumnLayout = isMealSaved || mealHasContent;
+    const shouldShowColumnLayout = isMealSaved || isMealFilled;
 
     return (
         <Overlay style={{ background: 'rgba(255, 255, 255, 0.5)' }}>
             <Center style={{ height: '100%' }}>
                 <SimpleGrid
+                    cols={shouldShowColumnLayout ? 2 : 1}
                     spacing={4}
                     verticalSpacing={4}
-                    cols={shouldShowColumnLayout ? 2 : 1}
                 >
                     <Tooltip
                         withArrow
@@ -157,8 +154,8 @@ export const CellOverlay = ({
                     >
                         <ActionIcon
                             {...commonButtonProps}
-                            title={t('edit')}
                             onClick={handleEditClick}
+                            title={t('edit')}
                         >
                             <EditPencil />
                         </ActionIcon>
@@ -172,8 +169,8 @@ export const CellOverlay = ({
                             >
                                 <ActionIcon
                                     {...commonButtonProps}
-                                    title={t('edit')}
                                     onClick={handleNoteClick}
+                                    title={t('edit')}
                                 >
                                     <Notes />
                                 </ActionIcon>
@@ -185,16 +182,16 @@ export const CellOverlay = ({
                             >
                                 <ActionIcon
                                     {...commonButtonProps}
-                                    title={t('modals.meal_rate.title')}
                                     onClick={handleRateClick}
+                                    title={t('modals.meal_rate.title')}
                                 >
                                     <ThreeStars />
                                 </ActionIcon>
                             </Tooltip>
                         </>
                     )}
-                    {mealHasContent && (
-                        <CopyButton value={meal.meal} tooltipPosition="right" />
+                    {isMealFilled && (
+                        <CopyButton tooltipPosition="right" value={meal.meal} />
                     )}
                 </SimpleGrid>
             </Center>

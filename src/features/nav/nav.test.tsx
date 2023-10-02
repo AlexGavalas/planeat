@@ -1,8 +1,12 @@
+import { type NextRouter } from 'next/router';
+
 import { renderWithUser } from '~test/utils';
 
 import { Nav } from './nav';
 
-jest.mock('next/router', () => jest.requireActual('next-router-mock'));
+jest.mock<NextRouter>('next/router', () =>
+    jest.requireActual<NextRouter>('next-router-mock'),
+);
 
 describe('<Nav />', () => {
     it('renders', () => {

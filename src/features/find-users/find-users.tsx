@@ -8,14 +8,17 @@ import {
     Text,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
 import { AddUser, Cancel, ProfileCircle } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { type MouseEventHandler, useCallback, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { useProfile } from '~hooks/use-profile';
 import { type User } from '~types/user';
+import {
+    showErrorNotification,
+    showSuccessNotification,
+} from '~util/notification';
 
 export const FindUsers = () => {
     const { t } = useTranslation();
@@ -32,9 +35,9 @@ export const FindUsers = () => {
                 `/api/v1/user?type=search&fullName=${debouncedSearchQuery}`,
             );
 
-            const { data } = await response.json();
+            const { data } = (await response.json()) as { data?: string[] };
 
-            return (data as User[])?.map(({ full_name }) => full_name) ?? [];
+            return data ?? [];
         },
         {
             enabled: Boolean(debouncedSearchQuery),
@@ -48,16 +51,16 @@ export const FindUsers = () => {
                 `/api/v1/user?type=profile&fullName=${selectedUserFullname}`,
             );
 
-            const { data } = await response.json();
+            const { data } = (await response.json()) as { data?: User[] };
 
-            return data as User[];
+            return data;
         },
         {
             enabled: Boolean(selectedUserFullname),
         },
     );
 
-    const selectedUserId = selectedUser?.[0].id;
+    const selectedUserId = selectedUser?.[0]?.id;
 
     const {
         data: hasAlreadySentRequest,
@@ -73,51 +76,54 @@ export const FindUsers = () => {
                 `/api/v1/notification?requestUserId=${profile.id}&targetUserId=${selectedUserId}`,
             );
 
-            const { data } = await response.json();
+            const { data: hasAlreadySentRequest } = (await response.json()) as {
+                data?: boolean;
+            };
 
-            return data;
+            return hasAlreadySentRequest;
         },
         {
             enabled: Boolean(selectedUserId),
         },
     );
 
-    const handleUserSelect: AutocompleteProps['onOptionSubmit'] = (value) => {
+    const handleUserSelect = useCallback<
+        NonNullable<AutocompleteProps['onOptionSubmit']>
+    >((value) => {
         setSelectedUserFullname(value);
-    };
+    }, []);
 
-    const clearInput = () => {
+    const handleClearInput = useCallback(() => {
         setSearchQuery('');
         setSelectedUserFullname('');
-    };
+    }, []);
 
-    const handleConnectionRequest = async () => {
+    const handleConnectionRequest = useCallback<
+        MouseEventHandler<HTMLButtonElement>
+    >(async () => {
         if (!profile || !selectedUser) {
             return;
         }
 
         const response = await fetch('/api/v1/notification', {
-            method: 'POST',
+            body: JSON.stringify({
+                targetUserId: selectedUser[0]?.id,
+            }),
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                targetUserId: selectedUser[0].id,
-            }),
+            method: 'POST',
         });
 
-        const { error } = await response.json();
-
-        if (error) {
-            showNotification({
-                title: t('error'),
+        if (!response.ok) {
+            showErrorNotification({
                 message: t('connections.request.error'),
-                color: 'red',
+                title: t('error'),
             });
         } else {
-            showNotification({
-                title: t('success'),
+            showSuccessNotification({
                 message: t('connections.request.success'),
+                title: t('success'),
             });
 
             await queryClient.invalidateQueries([
@@ -125,7 +131,7 @@ export const FindUsers = () => {
                 selectedUserId,
             ]);
         }
-    };
+    }, [profile, selectedUser, selectedUserId, t, queryClient]);
 
     const shouldShowConnectionInfo =
         selectedUser && !isFetchingHasAlreadySentRequest;
@@ -135,31 +141,31 @@ export const FindUsers = () => {
             <Autocomplete
                 data={users}
                 disabled={isFetchingSelectedUser}
+                label={t('connections.search.label')}
                 leftSection={<ProfileCircle />}
+                onChange={setSearchQuery}
+                onOptionSubmit={handleUserSelect}
+                placeholder={t('connections.search.placeholder')}
                 rightSection={
-                    <ActionIcon onClick={clearInput} variant="subtle">
+                    <ActionIcon onClick={handleClearInput} variant="subtle">
                         <Cancel />
                     </ActionIcon>
                 }
-                label={t('connections.search.label')}
-                placeholder={t('connections.search.placeholder')}
-                onChange={setSearchQuery}
-                onOptionSubmit={handleUserSelect}
                 value={searchQuery}
             />
             {shouldShowConnectionInfo &&
                 (hasAlreadySentRequest ? (
-                    <Text fw={600} c="green.8">
+                    <Text c="green.8" fw={600}>
                         {t('connections.request.already_sent', {
-                            fullName: selectedUser[0].full_name,
+                            fullName: selectedUser[0]?.full_name,
                         })}
                     </Text>
                 ) : (
                     <Group justify="space-between">
                         <div>
                             <Text span>{t('connections.request.add')} </Text>
-                            <Text fw={600} span>
-                                {selectedUser[0].full_name}
+                            <Text span fw={600}>
+                                {selectedUser[0]?.full_name}
                             </Text>
                             <Text span>
                                 {' '}

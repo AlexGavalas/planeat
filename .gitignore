@@ -11,6 +11,9 @@ tsconfig.tsbuildinfo
 # misc
 .DS_Store
 
+# eslint
+.eslintcache
+
 # local env files
 .env
 .env.*

@@ -5,12 +5,12 @@ import { type Section } from '~types/types';
 
 import styles from './indicator.module.css';
 
-interface ProgressIndicatorProps {
+type ProgressIndicatorProps = {
     label: string;
     value: number | null;
     percent: number | null;
     sections: (Section & { label: string })[];
-}
+};
 
 export const ProgressIndicator = ({
     label,
@@ -41,8 +41,8 @@ export const ProgressIndicator = ({
                 {sections.map((section) => (
                     <Progress.Section
                         key={section.key}
-                        value={section.percent}
                         color={section.bg}
+                        value={section.percent}
                     >
                         <Progress.Label>{section.label}</Progress.Label>
                     </Progress.Section>

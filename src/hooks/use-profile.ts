@@ -1,23 +1,33 @@
-import { showNotification } from '@mantine/notifications';
+import { type Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { type User } from '~types/user';
+import { showSuccessNotification } from '~util/notification';
 
 import { useUser } from './use-user';
 
-interface MutationProps {
+type MutationProps = {
     isDiscoverable?: boolean;
     height?: number;
     targetWeight?: number;
     language?: string;
     hasCompletedOnboarding?: boolean;
     silent?: boolean;
-}
+};
 
-export const useProfile = () => {
+type UseProfile = () => {
+    profile?: User;
+    isFetching: boolean;
+    updateProfile: (params: MutationProps) => void;
+    user: Session['user'];
+    deleteProfile: () => void;
+    isDeleting: boolean;
+};
+
+export const useProfile: UseProfile = () => {
     const router = useRouter();
     const queryClient = useQueryClient();
     const { t } = useTranslation();
@@ -28,9 +38,9 @@ export const useProfile = () => {
         async () => {
             const response = await fetch('/api/v1/user');
 
-            const { data } = await response.json();
+            const { data } = (await response.json()) as { data?: User };
 
-            return data as User;
+            return data;
         },
         {
             enabled: Boolean(user?.email),
@@ -44,43 +54,39 @@ export const useProfile = () => {
             targetWeight,
             language,
             hasCompletedOnboarding,
-            silent = false,
         }: MutationProps) => {
             const response = await fetch('/api/v1/user', {
-                method: 'PATCH',
+                body: JSON.stringify({
+                    hasCompletedOnboarding,
+                    height,
+                    isDiscoverable,
+                    language,
+                    targetWeight,
+                }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    isDiscoverable,
-                    height,
-                    targetWeight,
-                    language,
-                    hasCompletedOnboarding,
-                }),
+                method: 'PATCH',
             });
 
-            const { data, error } = await response.json();
-
-            if (error) {
-                throw error;
+            if (!response.ok) {
+                // TODO: Handle error
             }
-
-            return { ...data, silent };
         },
         {
-            onSuccess: (_, { language, silent }) => {
+            onSuccess: async (_, { language, silent }) => {
                 if (!silent) {
-                    showNotification({
-                        title: t('notification.success.title', {
+                    showSuccessNotification({
+                        message: t('notification.success.message', {
                             lng: language,
                         }),
-                        message: t('notification.success.message', {
+                        title: t('notification.success.title', {
                             lng: language,
                         }),
                     });
                 }
-                queryClient.invalidateQueries(['user']);
+
+                await queryClient.invalidateQueries(['user']);
             },
         },
     );
@@ -91,36 +97,32 @@ export const useProfile = () => {
                 method: 'DELETE',
             });
 
-            const { data, error } = await response.json();
-
-            if (error) {
-                throw error;
+            if (!response.ok) {
+                // TODO: Handle error
             }
-
-            return data;
         },
         {
             onSuccess: async () => {
-                showNotification({
-                    title: t('notification.success.title'),
+                showSuccessNotification({
                     message: t('notification.success.message'),
+                    title: t('notification.success.title'),
                 });
 
                 queryClient.clear();
 
                 await signOut();
 
-                router.push('/');
+                await router.push('/');
             },
         },
     );
 
     return {
-        profile,
-        isFetching,
-        updateProfile,
-        user,
         deleteProfile,
         isDeleting: isLoading,
+        isFetching,
+        profile,
+        updateProfile,
+        user,
     };
 };
