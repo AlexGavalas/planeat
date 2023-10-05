@@ -1,6 +1,6 @@
 import { type Section } from '~types/types';
 
-export const SECTIONS: Section[] = [
+export const SECTIONS = [
     {
         bg: '#339af0',
         key: 'fat1',
@@ -26,6 +26,6 @@ export const SECTIONS: Section[] = [
         key: 'fat5',
         percent: 45,
     },
-];
+] as const satisfies readonly Section[];
 
 export const MAX_FAT_PERCENT = 40;
