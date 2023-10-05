@@ -90,6 +90,12 @@
                 ],
                 "testing-library/prefer-user-event": "error"
             }
+        },
+        {
+            "files": ["*.d.ts"],
+            "rules": {
+                "@typescript-eslint/consistent-type-definitions": "off"
+            }
         }
     ],
     "rules": {
@@ -106,6 +112,14 @@
             "error",
             {
                 "selector": "typeParameter",
+                "format": ["PascalCase"],
+                "custom": {
+                    "regex": "^[A-Z]\\w{1,}",
+                    "match": true
+                }
+            },
+            {
+                "selector": "typeLike",
                 "format": ["PascalCase"],
                 "custom": {
                     "regex": "^[A-Z]\\w{1,}",
