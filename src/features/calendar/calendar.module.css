@@ -4,3 +4,15 @@
     display: grid;
     gap: var(--grid-gap);
 }
+
+@media print {
+    @page {
+        size: landscape;
+    }
+
+    .print {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
