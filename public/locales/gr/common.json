@@ -4,10 +4,12 @@
         "google": "Είσοδος με Google"
     },
     "search": "Αναζήτηση",
+    "search_placeholder": "Γράψτε εδώ",
     "edit": "Επεξεργασία",
     "cancel": "Ακύρωση",
     "save": "Αποθήκευση",
     "delete": "Διαγραφή",
+    "preview": "Προεπισκόπηση",
     "no_data": "Δεν βρέθηκαν αποτελέσματα",
     "weight_measurements": "Μετρήσεις βάρους",
     "fat_measurements": "Μετρήσεις λίπους",
@@ -125,6 +127,7 @@
         }
     },
     "notes": "Σημειώσεις γεύματος",
+    "create_meal": "Δημιουργία γεύματος",
     "modals": {
         "meal_note": {
             "placeholder": "Γράψτε εδώ",
@@ -135,6 +138,9 @@
         },
         "week_overview": {
             "title": "Επισκόπηση Εβδομάδας"
+        },
+        "meal_pool": {
+            "title": "Δημιουργία γεύματος"
         }
     },
     "connections": {

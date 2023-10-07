@@ -4,10 +4,12 @@
         "google": "Login with Google"
     },
     "search": "Search",
+    "search_placeholder": "Write here",
     "edit": "Edit",
     "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete",
+    "preview": "Preview",
     "no_data": "No data",
     "weight_measurements": "Weight measurements",
     "fat_measurements": "Fat measurements",
@@ -125,6 +127,7 @@
         }
     },
     "notes": "Write something for the meal",
+    "create_meal": "Create a meal",
     "modals": {
         "meal_note": {
             "placeholder": "Write here",
@@ -135,6 +138,9 @@
         },
         "week_overview": {
             "title": "Week Overview"
+        },
+        "meal_pool": {
+            "title": "Create a meal"
         }
     },
     "connections": {
