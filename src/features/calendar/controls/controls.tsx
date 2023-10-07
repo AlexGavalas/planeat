@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import { type MouseEventHandler, useCallback } from 'react';
 
+import { MealPool } from '~features/modals/meal-pool';
 import { WeekOverview } from '~features/modals/week-overview';
 import {
     useCurrentWeek,
@@ -57,6 +58,14 @@ export const Controls = () => {
         await savePlan();
     }, [savePlan]);
 
+    const handleMealCreation = useCallback(() => {
+        modals.openModal({
+            children: <MealPool />,
+            size: 'lg',
+            title: t('modals.meal_pool.title'),
+        });
+    }, []);
+
     return (
         <Group justify="space-between">
             <Group gap="sm">
@@ -79,6 +88,7 @@ export const Controls = () => {
                 >
                     {t('see_overview')}
                 </Button>
+                <Button onClick={handleMealCreation}>{t('create_meal')}</Button>
             </Group>
             <Group gap="sm">
                 <Button onClick={handleCopyToNextWeek} rightSection={<Copy />}>

@@ -105,6 +105,31 @@ export interface Database {
                     },
                 ];
             };
+            meals_pool: {
+                Row: {
+                    content: string;
+                    id: number;
+                    user_id: number;
+                };
+                Insert: {
+                    content: string;
+                    id?: number;
+                    user_id: number;
+                };
+                Update: {
+                    content?: string;
+                    id?: number;
+                    user_id?: number;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'meals_pool_user_id_fkey';
+                        columns: ['user_id'];
+                        referencedRelation: 'users';
+                        referencedColumns: ['id'];
+                    },
+                ];
+            };
             measurements: {
                 Row: {
                     date: string;
