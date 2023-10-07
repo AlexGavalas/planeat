@@ -20,7 +20,11 @@ import {
     useWeeklyScheduleOps,
 } from '~store/hooks';
 
-export const Controls = () => {
+type ControlsProps = {
+    onPrint: MouseEventHandler<HTMLButtonElement>;
+};
+
+export const Controls = ({ onPrint }: ControlsProps) => {
     const { t } = useTranslation();
     const modals = useModals();
     const { nextWeek, previousWeek } = useCurrentWeek();
@@ -89,6 +93,7 @@ export const Controls = () => {
                     {t('see_overview')}
                 </Button>
                 <Button onClick={handleMealCreation}>{t('create_meal')}</Button>
+                <Button onClick={onPrint}>{t('print')}</Button>
             </Group>
             <Group gap="sm">
                 <Button onClick={handleCopyToNextWeek} rightSection={<Copy />}>

@@ -9,6 +9,7 @@ exports[`<Nav /> renders 1`] = `
   </style>
   <div
     class="m-4081bf90 mantine-Group-root"
+    style="--group-gap: var(--mantine-spacing-md); --group-align: center; --group-justify: flex-start; --group-wrap: wrap;"
   >
     <a
       href="/home"
