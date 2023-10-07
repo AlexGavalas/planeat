@@ -80,21 +80,21 @@ exports[`<CopyButton /> when the user hovers the button shows the tooltip 1`] = 
       </svg>
     </button>
   </div>
-  <div>
-    <div>
+  <div
+    data-portal="true"
+  >
+    <div
+      class="m-1b3c8819 mantine-Tooltip-tooltip"
+      id=":r5:"
+      role="tooltip"
+      style="transition-property: opacity; transition-duration: 100ms; transition-timing-function: ease; opacity: 1; z-index: 300; top: -7px; left: 8px;"
+      tabindex="-1"
+    >
+      Copy
       <div
-        class="m-1b3c8819 mantine-Tooltip-tooltip"
-        id=":r5:"
-        role="tooltip"
-        style="transition-property: opacity; transition-duration: 100ms; transition-timing-function: ease; opacity: 1; z-index: 300; top: -7px; left: 8px;"
-        tabindex="-1"
-      >
-        Copy
-        <div
-          class="m-f898399f mantine-Tooltip-arrow"
-          style="transform: rotate(45deg); position: absolute; border-bottom-right-radius: 0; border-top-color: transparent; border-left-color: transparent; left: -1px;"
-        />
-      </div>
+        class="m-f898399f mantine-Tooltip-arrow"
+        style="transform: rotate(45deg); position: absolute; border-bottom-right-radius: 0; border-top-color: transparent; border-left-color: transparent; left: -1px;"
+      />
     </div>
   </div>
 </body>

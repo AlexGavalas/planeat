@@ -9,7 +9,7 @@ exports[`<Table /> when passed data renders a table 1`] = `
   </style>
   <div
     class="m-6d731127 mantine-Stack-root"
-    style="--stack-gap: var(--mantine-spacing-md);"
+    style="--stack-gap: var(--mantine-spacing-md); --stack-align: stretch; --stack-justify: flex-start;"
   >
     <table
       class="table m-b23fa0ef mantine-Table-table"
@@ -50,7 +50,7 @@ exports[`<Table /> when passed data renders a table 1`] = `
           >
             <div
               class="m-4081bf90 mantine-Group-root"
-              style="--group-gap: var(--mantine-spacing-md); --group-justify: center;"
+              style="--group-gap: var(--mantine-spacing-md); --group-align: center; --group-justify: center; --group-wrap: wrap;"
             >
               <button
                 class="mantine-focus-auto mantine-active m-8d3f4000 mantine-ActionIcon-root m-87cf2631 mantine-UnstyledButton-root"
@@ -120,7 +120,7 @@ exports[`<Table /> when passed no data renders a table 1`] = `
   </style>
   <div
     class="m-6d731127 mantine-Stack-root"
-    style="--stack-gap: var(--mantine-spacing-md);"
+    style="--stack-gap: var(--mantine-spacing-md); --stack-align: stretch; --stack-justify: flex-start;"
   >
     <table
       class="table m-b23fa0ef mantine-Table-table"
