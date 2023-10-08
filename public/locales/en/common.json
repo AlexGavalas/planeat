@@ -98,7 +98,8 @@
         "note_empty": "You forgot to input the note",
         "activity_save": "We could not save your activity",
         "activity_delete": "We could not delete this activity",
-        "activity_empty": "You forgot to input the activity"
+        "activity_empty": "You forgot to input the activity",
+        "preview_empty": "Content is empty"
     },
     "hide": "Hide",
     "show_more": "Show more",

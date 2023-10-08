@@ -17,12 +17,9 @@ import {
     useCallback,
     useState,
 } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
 
-import {
-    showErrorNotification,
-    showSuccessNotification,
-} from '~util/notification';
+import { useCreateMealPool } from './hooks/use-create-meal-pool';
+import { useGetMealPool } from './hooks/use-get-meal-pool';
 
 type OnEdit = (params: string) => void;
 
@@ -53,54 +50,26 @@ MealResult.displayName = 'MealResult';
 export const MealPool = () => {
     const { t } = useTranslation();
     const { closeAll } = useModals();
-    const queryClient = useQueryClient();
     const [preview, setPreview] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
 
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 350);
 
-    const { data: results = [] } = useQuery(
-        ['pool-meal', debouncedSearchQuery],
-        async () => {
-            const response = await fetch(
-                `/api/v1/pool/meal?q=${debouncedSearchQuery}`,
-            );
+    const { data: results = [] } = useGetMealPool({
+        searchQuery: debouncedSearchQuery,
+    });
 
-            const { data } = (await response.json()) as { data?: string[] };
-
-            return data ?? [];
-        },
-        {
-            enabled: Boolean(debouncedSearchQuery),
-        },
-    );
+    const {
+        mutate,
+        isLoading,
+        error,
+        reset: resetCreationState,
+    } = useCreateMealPool();
 
     const handleCreate = useCallback<
         MouseEventHandler<HTMLButtonElement>
-    >(async () => {
-        const response = await fetch('/api/v1/pool/meal', {
-            body: JSON.stringify({ content: preview }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: 'POST',
-        });
-
-        if (response.ok) {
-            closeAll();
-
-            await queryClient.invalidateQueries(['pool-meal']);
-
-            showSuccessNotification({
-                message: t('notification.success.message'),
-                title: t('notification.success.title'),
-            });
-        } else {
-            showErrorNotification({
-                message: t('notification.error.message'),
-                title: t('notification.error.title'),
-            });
-        }
+    >(() => {
+        mutate({ content: preview });
     }, [preview]);
 
     const handleEdit = useCallback<OnEdit>((previewText) => {
@@ -140,16 +109,20 @@ export const MealPool = () => {
                 <Textarea
                     autosize
                     withAsterisk
+                    error={error instanceof Error && error.message}
                     minRows={3}
                     onChange={handlePreviewChange}
+                    onFocus={resetCreationState}
                     value={preview}
                 />
             </Stack>
             <Group gap="md" justify="end">
-                <Button color="red" onClick={closeAll}>
+                <Button color="red" disabled={isLoading} onClick={closeAll}>
                     {t('cancel')}
                 </Button>
-                <Button onClick={handleCreate}>{t('save')}</Button>
+                <Button loading={isLoading} onClick={handleCreate}>
+                    {t('save')}
+                </Button>
             </Group>
         </Stack>
     );
