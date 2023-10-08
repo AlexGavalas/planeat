@@ -35,7 +35,7 @@ export const DeleteAccountModal = ({ onCancel }: { onCancel: () => void }) => {
             <Text fw="bold">
                 {t('account_settings.sections.delete_account.modal.banner')}
             </Text>
-            <Group>
+            <Group gap="md">
                 <Button color="red" onClick={onCancel} variant="outline">
                     {t('account_settings.sections.delete_account.modal.cancel')}
                 </Button>

@@ -76,11 +76,11 @@ export const MealNoteModal = ({
                     onFocus={resetError}
                     placeholder={t('modals.meal_note.placeholder')}
                 />
-                <Group gap="sm" justify="space-between">
+                <Group justify="space-between">
                     <Button color="red" onClick={closeModal} variant="light">
                         {t('generic.actions.cancel')}
                     </Button>
-                    <Group>
+                    <Group gap="md">
                         <Button
                             color="red"
                             hidden={!meal.note}

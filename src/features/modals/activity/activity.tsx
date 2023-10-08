@@ -113,7 +113,7 @@ export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
                 placeholder={t('activity.placeholder')}
             />
             <Space h={20} />
-            <Group justify="space-between">
+            <Group gap="md" justify="space-between">
                 <Button color="red" onClick={closeModal} variant="light">
                     {t('generic.actions.cancel')}
                 </Button>
