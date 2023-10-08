@@ -1,4 +1,4 @@
-import { List, Stack, Text } from '@mantine/core';
+import { Alert, List, Stack, Text } from '@mantine/core';
 import { format, parse, parseISO } from 'date-fns';
 import groupBy from 'lodash/fp/groupBy';
 import { useTranslation } from 'next-i18next';
@@ -28,7 +28,7 @@ export const WeekOverview = () => {
     });
 
     return (
-        <Stack gap="md">
+        <Stack gap="lg">
             {sortedKeys.map((key) => {
                 const dayMeals = mealsMap[key];
 
@@ -83,17 +83,17 @@ export const WeekOverview = () => {
                                         <List.Item
                                             key={meal.id}
                                             icon={<Icon />}
+                                            style={{
+                                                // TODO: Fix this currently Mantine aligns at the center, check after update if it's fixed
+                                                '--_item-wrapper-align':
+                                                    'flex-start',
+                                            }}
                                         >
                                             {meal.meal}
                                             {meal.note && (
-                                                <div>
-                                                    <Text span fw={500}>
-                                                        {t('note')}:{' '}
-                                                    </Text>
-                                                    <Text span>
-                                                        {meal.note}
-                                                    </Text>
-                                                </div>
+                                                <Alert p="xs" title={t('note')}>
+                                                    <Text>{meal.note}</Text>
+                                                </Alert>
                                             )}
                                             {meal.rating && (
                                                 <div>
