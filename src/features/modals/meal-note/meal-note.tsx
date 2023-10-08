@@ -81,13 +81,11 @@ export const MealNoteModal = ({
                         {t('generic.actions.cancel')}
                     </Button>
                     <Group gap="md">
-                        <Button
-                            color="red"
-                            hidden={!meal.note}
-                            onClick={handleDelete}
-                        >
-                            {t('generic.actions.delete')}
-                        </Button>
+                        {meal.note && (
+                            <Button color="red" onClick={handleDelete}>
+                                {t('generic.actions.delete')}
+                            </Button>
+                        )}
                         <Button type="submit">
                             {t('generic.actions.save')}
                         </Button>

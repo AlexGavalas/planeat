@@ -76,13 +76,11 @@ export const MealModal = ({
                         {t('generic.actions.cancel')}
                     </Button>
                     <Group gap="md">
-                        <Button
-                            color="red"
-                            hidden={!initialMeal}
-                            onClick={handleDelete}
-                        >
-                            {t('generic.actions.delete')}
-                        </Button>
+                        {initialMeal && (
+                            <Button color="red" onClick={handleDelete}>
+                                {t('generic.actions.delete')}
+                            </Button>
+                        )}
                         <Button type="submit">
                             {t('generic.actions.save')}
                         </Button>
