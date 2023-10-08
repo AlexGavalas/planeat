@@ -1,5 +1,5 @@
 import { Button, Group, Stack, Textarea } from '@mantine/core';
-import { useModals } from '@mantine/modals';
+import { type ContextModalProps } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
 import {
     type FormEventHandler,
@@ -19,17 +19,16 @@ type MealNoteModalProps = {
 const NOTE_FIELD_NAME = 'note';
 
 export const MealNoteModal = ({
-    meal,
-    onSave,
-    onDelete,
-}: MealNoteModalProps) => {
+    context,
+    id,
+    innerProps: { meal, onSave, onDelete },
+}: ContextModalProps<MealNoteModalProps>) => {
     const { t } = useTranslation();
-    const modals = useModals();
     const [error, setError] = useState('');
 
     const closeModal = useCallback(() => {
-        modals.closeAll();
-    }, [modals]);
+        context.closeContextModal(id);
+    }, [context, id]);
 
     const resetError = useCallback(() => {
         setError('');

@@ -5,14 +5,12 @@ import {
     type ButtonProps,
     Stack,
 } from '@mantine/core';
-import { useModals } from '@mantine/modals';
 import { EditPencil, Plus, Running } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { ActivityModal } from '~features/modals/activity';
-import { MeasurementModal } from '~features/modals/measurement';
+import { useOpenContextModal } from '~util/modal';
 
 import styles from './fab.module.css';
 
@@ -25,9 +23,10 @@ const buttonProps = {
 
 export const Fab = () => {
     const { t } = useTranslation();
-    const modals = useModals();
     const queryClient = useQueryClient();
     const [shouldShowMenu, setShouldShowMenu] = useState(false);
+    const openNewActivityModal = useOpenContextModal('activity');
+    const openMeasurementModal = useOpenContextModal('measurement');
 
     const handleToggleMenu = useCallback(() => {
         setShouldShowMenu((prev) => !prev);
@@ -49,22 +48,26 @@ export const Fab = () => {
     const handleAddMeasurement = useCallback(() => {
         handleToggleMenu();
 
-        modals.openModal({
-            children: <MeasurementModal onSave={handleMeasurementSave} />,
+        openMeasurementModal({
+            innerProps: {
+                onSave: handleMeasurementSave,
+            },
             size: 'md',
             title: t('add_measurement'),
         });
-    }, [handleMeasurementSave, modals, t, handleToggleMenu]);
+    }, [openMeasurementModal, handleMeasurementSave, t, handleToggleMenu]);
 
     const handleAddActivity = useCallback(() => {
         handleToggleMenu();
 
-        modals.openModal({
-            children: <ActivityModal onSave={handleActivitySave} />,
+        openNewActivityModal({
+            innerProps: {
+                onSave: handleActivitySave,
+            },
             size: 'md',
             title: t('add_activity'),
         });
-    }, [handleActivitySave, modals, t, handleToggleMenu]);
+    }, [openNewActivityModal, handleActivitySave, t, handleToggleMenu]);
 
     return (
         <Box className={styles.container}>

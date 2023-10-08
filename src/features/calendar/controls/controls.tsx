@@ -1,5 +1,4 @@
 import { Button, type ButtonProps, Group } from '@mantine/core';
-import { useModals } from '@mantine/modals';
 import {
     Cancel,
     Copy,
@@ -13,14 +12,13 @@ import {
 import { useTranslation } from 'next-i18next';
 import { type MouseEventHandler, useCallback } from 'react';
 
-import { MealPool } from '~features/modals/meal-pool';
-import { WeekOverview } from '~features/modals/week-overview';
 import {
     useCurrentWeek,
     useMeals,
     useUnsavedChanges,
     useWeeklyScheduleOps,
 } from '~store/hooks';
+import { useOpenContextModal } from '~util/modal';
 
 type ControlsProps = {
     onPrint: MouseEventHandler<HTMLButtonElement>;
@@ -32,31 +30,21 @@ const defaultButtonProps = {
 
 export const Controls = ({ onPrint }: ControlsProps) => {
     const { t } = useTranslation();
-    const modals = useModals();
-    const { nextWeek, previousWeek } = useCurrentWeek();
+    const { nextWeek: handleNextWeek, previousWeek: handlePreviousWeek } =
+        useCurrentWeek();
     const { hasUnsavedChanges } = useUnsavedChanges();
     const { copyToNextWeek } = useWeeklyScheduleOps();
-    const { meals, revert, savePlan } = useMeals();
+    const { meals, revert: handleRevert, savePlan } = useMeals();
+    const openMealPoolModal = useOpenContextModal('meal-pool');
+    const openWeekOverviewModal = useOpenContextModal('week-overview');
 
     const toggleWeekOverview = useCallback(() => {
-        modals.openModal({
-            children: <WeekOverview />,
+        openWeekOverviewModal({
+            innerProps: {},
             size: 'lg',
             title: t('modals.week_overview.title'),
         });
-    }, [modals, t]);
-
-    const handlePreviousWeek = useCallback(() => {
-        previousWeek();
-    }, [previousWeek]);
-
-    const handleNextWeek = useCallback(() => {
-        nextWeek();
-    }, [nextWeek]);
-
-    const handleRevert = useCallback(() => {
-        revert();
-    }, [revert]);
+    }, [openWeekOverviewModal, t]);
 
     const handleCopyToNextWeek = useCallback(() => {
         copyToNextWeek(meals);
@@ -69,12 +57,12 @@ export const Controls = ({ onPrint }: ControlsProps) => {
     }, [savePlan]);
 
     const handleMealCreation = useCallback(() => {
-        modals.openModal({
-            children: <MealPool />,
+        openMealPoolModal({
+            innerProps: {},
             size: 'lg',
             title: t('modals.meal_pool.title'),
         });
-    }, []);
+    }, [openMealPoolModal]);
 
     return (
         <Group justify="space-between">

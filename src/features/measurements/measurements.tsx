@@ -1,5 +1,4 @@
 import { ActionIcon, Box, Center, Group, Stack, Title } from '@mantine/core';
-import { useModals } from '@mantine/modals';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
@@ -8,17 +7,17 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { INITIAL_PAGE, PAGE_SIZE, Table } from '~components/table';
-import { MeasurementModal } from '~features/modals/measurement';
 import { useProfile } from '~hooks/use-profile';
 import { type Measurement } from '~types/measurement';
+import { useOpenContextModal } from '~util/modal';
 import { showErrorNotification } from '~util/notification';
 
 export const Measurements = () => {
     const { t } = useTranslation();
-    const modals = useModals();
     const { profile } = useProfile();
     const queryClient = useQueryClient();
     const [page, setPage] = useState(INITIAL_PAGE);
+    const openMeasurementModal = useOpenContextModal('measurement');
 
     const { data: count = 0, isFetched } = useQuery(
         ['measurements-count'],
@@ -88,28 +87,26 @@ export const Measurements = () => {
                 await queryClient.invalidateQueries(['measurements', page]);
             };
 
-            modals.openModal({
+            openMeasurementModal({
                 centered: true,
-                children: (
-                    <MeasurementModal
-                        initialData={{
-                            date: parseISO(item.date),
-                            id: item.id,
-                            ...(item.fat_percentage && {
-                                fat_percentage: item.fat_percentage,
-                            }),
-                            ...(item.weight && {
-                                weight: item.weight,
-                            }),
-                        }}
-                        onSave={handleSave}
-                    />
-                ),
+                innerProps: {
+                    initialData: {
+                        date: parseISO(item.date),
+                        id: item.id,
+                        ...(item.fat_percentage && {
+                            fat_percentage: item.fat_percentage,
+                        }),
+                        ...(item.weight && {
+                            weight: item.weight,
+                        }),
+                    },
+                    onSave: handleSave,
+                },
                 size: 'sm',
                 title: t('edit_measurement'),
             });
         },
-        [modals, page, queryClient, t],
+        [openMeasurementModal, page, queryClient, t],
     );
 
     const handlePageChange = useCallback((page: number) => {
@@ -117,13 +114,15 @@ export const Measurements = () => {
     }, []);
 
     const handleAddMeasurement = useCallback(() => {
-        modals.openModal({
+        openMeasurementModal({
             centered: true,
-            children: <MeasurementModal onSave={handleNewWeightSave} />,
+            innerProps: {
+                onSave: handleNewWeightSave,
+            },
             size: 'sm',
             title: t('new_measurement'),
         });
-    }, [modals, handleNewWeightSave, t]);
+    }, [openMeasurementModal, handleNewWeightSave, t]);
 
     const headers = useMemo(
         () => [

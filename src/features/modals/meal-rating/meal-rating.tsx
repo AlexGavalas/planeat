@@ -1,5 +1,5 @@
 import { Button, Center, Group, Rating, Stack } from '@mantine/core';
-import { useModals } from '@mantine/modals';
+import { type ContextModalProps } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
 import {
     type FormEventHandler,
@@ -17,17 +17,16 @@ type MealRatingModalProps = {
 };
 
 export const MealRatingModal = ({
-    meal,
-    onDelete,
-    onSave,
-}: MealRatingModalProps) => {
+    context,
+    id,
+    innerProps: { meal, onDelete, onSave },
+}: ContextModalProps<MealRatingModalProps>) => {
     const { t } = useTranslation();
-    const modals = useModals();
     const [rating, setRating] = useState<number>();
 
     const closeModal = useCallback(() => {
-        modals.closeAll();
-    }, [modals]);
+        context.closeContextModal(id);
+    }, [context]);
 
     const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
         async (e) => {

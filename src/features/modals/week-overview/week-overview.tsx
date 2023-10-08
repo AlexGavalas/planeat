@@ -14,7 +14,7 @@ const groupByDay = groupBy<Meal>((item) =>
     format(parseISO(item.day), 'EEE dd/MM/yyyy'),
 );
 
-export const WeekOverview = () => {
+export const WeekOverviewModal = () => {
     const { t } = useTranslation();
     const { meals } = useMeals();
 

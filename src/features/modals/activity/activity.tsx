@@ -1,6 +1,6 @@
 import { Button, Center, Group, Space, Text, Textarea } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import { useModals } from '@mantine/modals';
+import { type ContextModalProps } from '@mantine/modals';
 import { format } from 'date-fns';
 import 'dayjs/locale/el';
 import { useTranslation } from 'next-i18next';
@@ -26,9 +26,12 @@ type ActivityModalProps = {
     };
 };
 
-export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
+export const ActivityModal = ({
+    context,
+    id,
+    innerProps: { onSave, initialData },
+}: ContextModalProps<ActivityModalProps>) => {
     const { t, i18n } = useTranslation();
-    const modals = useModals();
     const [date, setDate] = useState<Date | null>(
         initialData?.date ?? new Date(),
     );
@@ -36,8 +39,8 @@ export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
     const [error, setError] = useState('');
 
     const closeModal = useCallback(() => {
-        modals.closeAll();
-    }, [modals]);
+        context.closeContextModal(id);
+    }, [context, id]);
 
     const resetError = useCallback(() => {
         setError('');

@@ -8,7 +8,7 @@ import {
     Textarea,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useModals } from '@mantine/modals';
+import { type ContextModalProps } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
 import {
     type ChangeEventHandler,
@@ -47,9 +47,8 @@ const MealResult = memo(({ mealText, onEdit }: MealResultProps) => {
 
 MealResult.displayName = 'MealResult';
 
-export const MealPool = () => {
+export const MealPoolModal = ({ context, id }: ContextModalProps) => {
     const { t } = useTranslation();
-    const { closeAll } = useModals();
     const [preview, setPreview] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -59,12 +58,18 @@ export const MealPool = () => {
         searchQuery: debouncedSearchQuery,
     });
 
+    const closeModal = useCallback(() => {
+        context.closeContextModal(id);
+    }, [context, id]);
+
     const {
         mutate,
         isLoading,
         error,
         reset: resetCreationState,
-    } = useCreateMealPool();
+    } = useCreateMealPool({
+        onSuccess: closeModal,
+    });
 
     const handleCreate = useCallback<
         MouseEventHandler<HTMLButtonElement>
@@ -117,7 +122,7 @@ export const MealPool = () => {
                 />
             </Stack>
             <Group gap="md" justify="end">
-                <Button color="red" disabled={isLoading} onClick={closeAll}>
+                <Button color="red" disabled={isLoading} onClick={closeModal}>
                     {t('generic.actions.cancel')}
                 </Button>
                 <Button loading={isLoading} onClick={handleCreate}>

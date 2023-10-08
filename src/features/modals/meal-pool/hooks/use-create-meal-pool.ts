@@ -1,4 +1,3 @@
-import { useModals } from '@mantine/modals';
 import { useTranslation } from 'next-i18next';
 import {
     type UseMutationResult,
@@ -15,14 +14,13 @@ type CreateMealPoolProps = {
     content: string;
 };
 
-export const useCreateMealPool = (): UseMutationResult<
-    unknown,
-    unknown,
-    CreateMealPoolProps
-> => {
+type UserCreateMealPool = (params: {
+    onSuccess: () => void;
+}) => UseMutationResult<unknown, unknown, CreateMealPoolProps>;
+
+export const useCreateMealPool: UserCreateMealPool = ({ onSuccess }) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
-    const { closeAll } = useModals();
 
     return useMutation(async ({ content }) => {
         if (!content) {
@@ -38,7 +36,7 @@ export const useCreateMealPool = (): UseMutationResult<
         });
 
         if (response.ok) {
-            closeAll();
+            onSuccess();
 
             await queryClient.invalidateQueries(['pool-meal']);
 

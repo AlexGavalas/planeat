@@ -1,1 +1,1 @@
-export { MealPool } from './meal-pool';
+export { MealPoolModal } from './meal-pool';

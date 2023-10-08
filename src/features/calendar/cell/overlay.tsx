@@ -6,16 +6,13 @@ import {
     SimpleGrid,
     Tooltip,
 } from '@mantine/core';
-import { useModals } from '@mantine/modals';
 import { EditPencil, Notes, ThreeStars } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useCallback } from 'react';
 
 import { CopyButton } from '~components/copy-button';
-import { MealModal } from '~features/modals/meal';
-import { MealNoteModal } from '~features/modals/meal-note';
-import { MealRatingModal } from '~features/modals/meal-rating';
 import { type EditedMeal, type Meal } from '~types/meal';
+import { useOpenContextModal } from '~util/modal';
 
 type CellOverlayProps = {
     onDelete: () => Promise<void> | void;
@@ -38,7 +35,9 @@ const commonButtonProps = {
 
 export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
     const { t } = useTranslation();
-    const modals = useModals();
+    const openEditMealModal = useOpenContextModal('meal');
+    const openMealNoteModal = useOpenContextModal('meal-note');
+    const openMealRatingModal = useOpenContextModal('meal-rating');
 
     const isMealSaved = isSavedMeal(meal);
     const isMealFilled = isFilledMeal(meal);
@@ -73,34 +72,29 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
     }, [onSave, meal]);
 
     const handleEditClick = useCallback(() => {
-        modals.openModal({
+        openEditMealModal({
             centered: true,
-
-            children: (
-                <MealModal
-                    initialMeal={meal?.meal ?? ''}
-                    onDelete={onDelete}
-                    onSave={handleMealSave}
-                />
-            ),
+            innerProps: {
+                initialMeal: meal?.meal ?? '',
+                onDelete,
+                onSave: handleMealSave,
+            },
             title: t('edit_meal'),
         });
-    }, [onDelete, handleMealSave, meal?.meal, modals, t]);
+    }, [openEditMealModal, onDelete, handleMealSave, meal?.meal, t]);
 
     const handleNoteClick = useCallback(() => {
         if (!isMealSaved) {
             return;
         }
 
-        modals.openModal({
+        openMealNoteModal({
             centered: true,
-            children: (
-                <MealNoteModal
-                    meal={meal}
-                    onDelete={handleMealNoteDelete}
-                    onSave={handleMealNoteSave}
-                />
-            ),
+            innerProps: {
+                meal,
+                onDelete: handleMealNoteDelete,
+                onSave: handleMealNoteSave,
+            },
             title: t('notes'),
         });
     }, [
@@ -108,7 +102,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
         handleMealNoteSave,
         isMealSaved,
         meal,
-        modals,
+        openMealNoteModal,
         t,
     ]);
 
@@ -117,15 +111,13 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
             return;
         }
 
-        modals.openModal({
+        openMealRatingModal({
             centered: true,
-            children: (
-                <MealRatingModal
-                    meal={meal}
-                    onDelete={handleMealRatingDelete}
-                    onSave={handleMealRatingSave}
-                />
-            ),
+            innerProps: {
+                meal,
+                onDelete: handleMealRatingDelete,
+                onSave: handleMealRatingSave,
+            },
             title: t('modals.meal_rate.title'),
         });
     }, [
@@ -133,7 +125,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
         handleMealRatingSave,
         isMealSaved,
         meal,
-        modals,
+        openMealRatingModal,
         t,
     ]);
 

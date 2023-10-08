@@ -1,1 +1,1 @@
-export { WeekOverview } from './week-overview';
+export { WeekOverviewModal } from './week-overview';

@@ -1,5 +1,4 @@
 import { ActionIcon, Box, Center, Group, Stack, Title } from '@mantine/core';
-import { useModals } from '@mantine/modals';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
@@ -8,14 +7,14 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { INITIAL_PAGE, PAGE_SIZE, Table } from '~components/table';
-import { ActivityModal } from '~features/modals/activity';
 import { useProfile } from '~hooks/use-profile';
 import { type Activity } from '~types/activity';
+import { useOpenContextModal } from '~util/modal';
 import { showErrorNotification } from '~util/notification';
 
 export const Activities = () => {
     const { t } = useTranslation();
-    const modals = useModals();
+    const openNewActivityModal = useOpenContextModal('activity');
     const { profile } = useProfile();
     const queryClient = useQueryClient();
     const [page, setPage] = useState(INITIAL_PAGE);
@@ -107,18 +106,16 @@ export const Activities = () => {
             await queryClient.invalidateQueries(['activities', page]);
         };
 
-        modals.openModal({
+        openNewActivityModal({
             centered: true,
-            children: (
-                <ActivityModal
-                    initialData={{
-                        activity: item.activity,
-                        date: parseISO(item.date),
-                        id: item.id,
-                    }}
-                    onSave={onSave}
-                />
-            ),
+            innerProps: {
+                initialData: {
+                    activity: item.activity,
+                    date: parseISO(item.date),
+                    id: item.id,
+                },
+                onSave,
+            },
             size: 'sm',
             title: t('edit_activity'),
         });
@@ -129,13 +126,15 @@ export const Activities = () => {
     }, []);
 
     const handleAddActivity = useCallback(() => {
-        modals.openModal({
+        openNewActivityModal({
             centered: true,
-            children: <ActivityModal onSave={onNewActivitySave} />,
+            innerProps: {
+                onSave: onNewActivitySave,
+            },
             size: 'sm',
             title: t('add_activity'),
         });
-    }, [modals, onNewActivitySave, t]);
+    }, [onNewActivitySave, t]);
 
     return (
         <Stack gap="md">

@@ -8,7 +8,7 @@ import {
     Text,
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import { useModals } from '@mantine/modals';
+import { type ContextModalProps } from '@mantine/modals';
 import { format } from 'date-fns';
 import 'dayjs/locale/el';
 import { useTranslation } from 'next-i18next';
@@ -31,11 +31,11 @@ type ModalContentProps = {
 };
 
 export const MeasurementModal = ({
-    onSave,
-    initialData,
-}: ModalContentProps) => {
+    context,
+    id,
+    innerProps: { onSave, initialData },
+}: ContextModalProps<ModalContentProps>) => {
     const { t, i18n } = useTranslation();
-    const modals = useModals();
     const [date, setDate] = useState<Date | null>(
         initialData?.date ?? new Date(),
     );
@@ -44,8 +44,8 @@ export const MeasurementModal = ({
     const [error, setError] = useState('');
 
     const closeModal = useCallback(() => {
-        modals.closeAll();
-    }, [modals]);
+        context.closeContextModal(id);
+    }, [context, id]);
 
     const resetError = useCallback(() => {
         setError('');
