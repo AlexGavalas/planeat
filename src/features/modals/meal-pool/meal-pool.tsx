@@ -51,7 +51,6 @@ export const MealPoolModal = ({ context, id }: ContextModalProps) => {
     const { t } = useTranslation();
     const [preview, setPreview] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
-
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 350);
 
     const { data: results = [] } = useGetMealPool({

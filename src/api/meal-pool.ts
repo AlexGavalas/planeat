@@ -17,7 +17,8 @@ export const fetchMealPool: FetchMealPool = async ({ q, supabase, userId }) => {
         .from('meals_pool')
         .select('content')
         .ilike('content', `%${q}%`)
-        .eq('user_id', userId);
+        .eq('user_id', userId)
+        .limit(10);
 
     return result.data ?? [];
 };

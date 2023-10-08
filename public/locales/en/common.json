@@ -149,6 +149,9 @@
     "notes": "Write something for the meal",
     "create_meal": "Create a meal",
     "modals": {
+        "meal_edit": {
+            "helper": "You can search for meals you have already created in the meal pool and use them as a base for your new custom meal. Or you can just create your new meal."
+        },
         "meal_note": {
             "placeholder": "Write here",
             "label": "Meal note"

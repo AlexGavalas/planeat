@@ -65,7 +65,6 @@ export const MealNoteModal = ({
             <Stack gap="sm">
                 <Textarea
                     autosize
-                    data-autofocus
                     defaultValue={meal.note ?? ''}
                     error={error}
                     label={t('modals.meal_note.label')}

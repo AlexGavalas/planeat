@@ -79,6 +79,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                 onDelete,
                 onSave: handleMealSave,
             },
+            size: 'lg',
             title: t('edit_meal'),
         });
     }, [openEditMealModal, onDelete, handleMealSave, meal?.meal, t]);
