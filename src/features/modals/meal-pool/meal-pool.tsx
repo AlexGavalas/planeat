@@ -74,7 +74,7 @@ export const MealPoolModal = ({ context, id }: ContextModalProps) => {
         MouseEventHandler<HTMLButtonElement>
     >(() => {
         mutate({ content: preview });
-    }, [preview]);
+    }, [mutate, preview]);
 
     const handleEdit = useCallback<OnEdit>((previewText) => {
         setPreview(previewText);

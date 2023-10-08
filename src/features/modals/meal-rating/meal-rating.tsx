@@ -26,7 +26,7 @@ export const MealRatingModal = ({
 
     const closeModal = useCallback(() => {
         context.closeContextModal(id);
-    }, [context]);
+    }, [context, id]);
 
     const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
         async (e) => {

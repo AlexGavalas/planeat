@@ -62,7 +62,7 @@ export const Controls = ({ onPrint }: ControlsProps) => {
             size: 'lg',
             title: t('modals.meal_pool.title'),
         });
-    }, [openMealPoolModal]);
+    }, [openMealPoolModal, t]);
 
     return (
         <Group justify="space-between">

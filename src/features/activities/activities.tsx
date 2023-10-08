@@ -134,7 +134,7 @@ export const Activities = () => {
             size: 'sm',
             title: t('add_activity'),
         });
-    }, [onNewActivitySave, t]);
+    }, [openNewActivityModal, onNewActivitySave, t]);
 
     return (
         <Stack gap="md">

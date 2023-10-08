@@ -88,7 +88,7 @@ export const MealModal = ({
 
             closeModal();
         },
-        [closeModal, onSave, t],
+        [closeModal, preview, onSave, t],
     );
 
     const handleDelete = useCallback<

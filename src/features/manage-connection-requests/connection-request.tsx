@@ -27,7 +27,7 @@ export const ConnectionRequest = ({
         MouseEventHandler<HTMLButtonElement>
     >(async () => {
         await onDeclineConnectionRequest(connectionRequest.id);
-    }, [connectionRequest.id, onAcceptConnectionRequest]);
+    }, [connectionRequest.id, onDeclineConnectionRequest]);
 
     return (
         <Group key={connectionRequest.id} justify="space-between">
