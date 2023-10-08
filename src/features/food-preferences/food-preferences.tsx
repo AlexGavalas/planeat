@@ -90,7 +90,7 @@ export const FoodPreferences = () => {
                             )}
                         />
                     </Group>
-                    <Button type="submit">{t('save')}</Button>
+                    <Button type="submit">{t('generic.actions.save')}</Button>
                 </Stack>
             </form>
         </Stack>

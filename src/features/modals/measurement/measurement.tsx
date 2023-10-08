@@ -98,7 +98,7 @@ export const MeasurementModal = ({
                     message: `${t('errors.measurement_save')}. ${t(
                         'try_again',
                     )}`,
-                    title: t('error'),
+                    title: t('notification.error.title'),
                 });
             } else {
                 await onSave?.();
@@ -140,9 +140,9 @@ export const MeasurementModal = ({
             <Space h={20} />
             <Group justify="space-between">
                 <Button color="red" onClick={closeModal} variant="light">
-                    {t('cancel')}
+                    {t('generic.actions.cancel')}
                 </Button>
-                <Button type="submit">{t('save')}</Button>
+                <Button type="submit">{t('generic.actions.save')}</Button>
             </Group>
         </form>
     );

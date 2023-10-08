@@ -76,7 +76,9 @@ export const PersonalSettings = () => {
                         onChange={handleLanguageChange}
                         placeholder={t('languages.placeholder')}
                     />
-                    <Button onClick={handleSave}>{t('save')}</Button>
+                    <Button onClick={handleSave}>
+                        {t('generic.actions.save')}
+                    </Button>
                 </Group>
             ) : (
                 <div style={{ height: 100 }}>

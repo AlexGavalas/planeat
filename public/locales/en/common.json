@@ -3,14 +3,36 @@
     "login": {
         "google": "Login with Google"
     },
-    "search": "Search",
-    "search_placeholder": "Write here",
-    "edit": "Edit",
-    "cancel": "Cancel",
-    "save": "Save",
-    "delete": "Delete",
-    "preview": "Preview",
-    "print": "Print",
+    "generic": {
+        "search": {
+            "label": "Search",
+            "placeholder": "Write here"
+        },
+        "actions": {
+            "save": "Save",
+            "cancel": "Cancel",
+            "delete": "Delete",
+            "edit": "Edit",
+            "add": "Add",
+            "close": "Close",
+            "copy": "Copy",
+            "print": "Print",
+            "preview": "Preview",
+            "accept": "Accept",
+            "decline": "Decline",
+            "open": "Open",
+            "show_less": "Hide",
+            "show_more": "Show more"
+        },
+        "misc": {
+            "next": "Next",
+            "back": "Back",
+            "skip": "Skip",
+            "done": "Done",
+            "yes": "Yes",
+            "no": "No"
+        }
+    },
     "no_data": "No data",
     "weight_measurements": "Weight measurements",
     "fat_measurements": "Fat measurements",
@@ -75,8 +97,6 @@
         "snack2": "Snack",
         "dinner": "Dinner"
     },
-    "success": "Success",
-    "error": "Error",
     "try_again": "Please try again",
     "errors": {
         "weight_update": "We could not update your weight",
@@ -101,8 +121,6 @@
         "activity_empty": "You forgot to input the activity",
         "preview_empty": "Content is empty"
     },
-    "hide": "Hide",
-    "show_more": "Show more",
     "home": "Home",
     "actions": "Actions",
     "notification": {
@@ -218,19 +236,10 @@
         "copied": "Copied"
     },
     "tooltip": {
-        "edit": "Edit",
         "edit_note": "Edit note",
         "rate": "Rate"
     },
     "onboarding": {
-        "labels": {
-            "close": "Close",
-            "next": "Next",
-            "open": "Open",
-            "skip": "Skip tour",
-            "back": "Back",
-            "last": "Done"
-        },
         "content": {
             "daily_meals": "Here you can see your meals for the day.",
             "fat_timeline": "Here you can see your fat percentage timeline, along with a small comparison.",

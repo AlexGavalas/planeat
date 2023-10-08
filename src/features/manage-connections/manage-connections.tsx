@@ -48,7 +48,7 @@ export const ManageConnections = () => {
                 message: t(
                     'connections.manage_connections.remove_connection_error',
                 ),
-                title: t('error'),
+                title: t('notification.error.title'),
             });
         } else {
             await queryClient.invalidateQueries(['connections']);

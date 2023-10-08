@@ -149,13 +149,12 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                 >
                     <Tooltip
                         withArrow
-                        label={t('tooltip.edit')}
+                        label={t('generic.actions.edit')}
                         position={shouldShowColumnLayout ? 'left' : 'top'}
                     >
                         <ActionIcon
                             {...commonButtonProps}
                             onClick={handleEditClick}
-                            title={t('edit')}
                         >
                             <EditPencil />
                         </ActionIcon>
@@ -170,7 +169,6 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                                 <ActionIcon
                                     {...commonButtonProps}
                                     onClick={handleNoteClick}
-                                    title={t('edit')}
                                 >
                                     <Notes />
                                 </ActionIcon>
@@ -183,7 +181,6 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                                 <ActionIcon
                                     {...commonButtonProps}
                                     onClick={handleRateClick}
-                                    title={t('modals.meal_rate.title')}
                                 >
                                     <ThreeStars />
                                 </ActionIcon>

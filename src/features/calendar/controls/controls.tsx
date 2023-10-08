@@ -1,10 +1,12 @@
-import { Button, Group } from '@mantine/core';
+import { Button, type ButtonProps, Group } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import {
     Cancel,
     Copy,
     FastArrowLeft,
     FastArrowRight,
+    Plus,
+    PrintingPage,
     SaveFloppyDisk,
     StatsReport,
 } from 'iconoir-react';
@@ -23,6 +25,10 @@ import {
 type ControlsProps = {
     onPrint: MouseEventHandler<HTMLButtonElement>;
 };
+
+const defaultButtonProps = {
+    size: 'xs',
+} satisfies ButtonProps;
 
 export const Controls = ({ onPrint }: ControlsProps) => {
     const { t } = useTranslation();
@@ -74,44 +80,65 @@ export const Controls = ({ onPrint }: ControlsProps) => {
         <Group justify="space-between">
             <Group gap="sm">
                 <Button
+                    {...defaultButtonProps}
                     leftSection={<FastArrowLeft />}
                     onClick={handlePreviousWeek}
                 >
                     {t('week.previous')}
                 </Button>
                 <Button
+                    {...defaultButtonProps}
                     onClick={handleNextWeek}
                     rightSection={<FastArrowRight />}
                 >
                     {t('week.next')}
                 </Button>
                 <Button
+                    {...defaultButtonProps}
                     onClick={toggleWeekOverview}
                     rightSection={<StatsReport />}
                     variant="white"
                 >
                     {t('see_overview')}
                 </Button>
-                <Button onClick={handleMealCreation}>{t('create_meal')}</Button>
-                <Button onClick={onPrint}>{t('print')}</Button>
+                <Button
+                    {...defaultButtonProps}
+                    onClick={handleMealCreation}
+                    rightSection={<Plus />}
+                >
+                    {t('create_meal')}
+                </Button>
+                <Button
+                    {...defaultButtonProps}
+                    onClick={onPrint}
+                    rightSection={<PrintingPage />}
+                >
+                    {t('generic.actions.print')}
+                </Button>
             </Group>
             <Group gap="sm">
-                <Button onClick={handleCopyToNextWeek} rightSection={<Copy />}>
+                <Button
+                    {...defaultButtonProps}
+                    onClick={handleCopyToNextWeek}
+                    rightSection={<Copy />}
+                >
                     {t('week.copy_to_next_week')}
                 </Button>
                 {hasUnsavedChanges && (
                     <>
                         <Button
+                            {...defaultButtonProps}
                             onClick={handleRevert}
                             rightSection={<Cancel />}
                         >
-                            {t('cancel')}
+                            {t('generic.actions.cancel')}
                         </Button>
                         <Button
+                            {...defaultButtonProps}
                             onClick={handleSave}
                             rightSection={<SaveFloppyDisk />}
                         >
-                            {t('save')}
+                            {t('generic.actions.save')}
                         </Button>
                     </>
                 )}

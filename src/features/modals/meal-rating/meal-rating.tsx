@@ -61,7 +61,7 @@ export const MealRatingModal = ({
                 </Center>
                 <Group gap="sm" justify="space-between">
                     <Button color="red" onClick={closeModal} variant="light">
-                        {t('cancel')}
+                        {t('generic.actions.cancel')}
                     </Button>
                     <Group>
                         <Button
@@ -69,10 +69,10 @@ export const MealRatingModal = ({
                             hidden={!meal.note}
                             onClick={handleDelete}
                         >
-                            {t('delete')}
+                            {t('generic.actions.delete')}
                         </Button>
                         <Button disabled={!rating} type="submit">
-                            {t('save')}
+                            {t('generic.actions.save')}
                         </Button>
                     </Group>
                 </Group>

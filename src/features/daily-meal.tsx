@@ -49,9 +49,9 @@ export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
                             title={<Text fw="bold">{row.label}</Text>}
                         >
                             <Spoiler
-                                hideLabel={t('hide')}
+                                hideLabel={t('generic.actions.show_less')}
                                 maxHeight={100}
-                                showLabel={t('show_more')}
+                                showLabel={t('generic.actions.show_more')}
                             >
                                 <Text>{meal}</Text>
                             </Spoiler>

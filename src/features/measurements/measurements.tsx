@@ -74,7 +74,7 @@ export const Measurements = () => {
         if (!response.ok) {
             showErrorNotification({
                 message: `${t('errors.measurement_delete')}. ${t('try_again')}`,
-                title: t('error'),
+                title: t('notification.error.title'),
             });
         } else {
             await queryClient.invalidateQueries(['measurements-count']);

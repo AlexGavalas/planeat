@@ -94,7 +94,7 @@ export const Activities = () => {
         if (!response.ok) {
             showErrorNotification({
                 message: `${t('errors.activity_delete')}. ${t('try_again')}`,
-                title: t('error'),
+                title: t('notification.error.title'),
             });
         } else {
             await queryClient.invalidateQueries(['activities-count']);

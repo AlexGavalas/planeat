@@ -118,12 +118,12 @@ export const FindUsers = () => {
         if (!response.ok) {
             showErrorNotification({
                 message: t('connections.request.error'),
-                title: t('error'),
+                title: t('notification.error.title'),
             });
         } else {
             showSuccessNotification({
                 message: t('connections.request.success'),
-                title: t('success'),
+                title: t('notification.success.title'),
             });
 
             await queryClient.invalidateQueries([

@@ -125,7 +125,7 @@ export const useMeals: UseMeals = () => {
 
             showErrorNotification({
                 message: `${t('errors.meal_save')}. ${t('try_again')}`,
-                title: t('error'),
+                title: t('notification.error.title'),
             });
         } else {
             await queryClient.invalidateQueries(['meals', currentWeekKey]);

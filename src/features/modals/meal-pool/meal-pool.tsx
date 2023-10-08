@@ -39,7 +39,7 @@ const MealResult = memo(({ mealText, onEdit }: MealResultProps) => {
         <List.Item>
             {mealText}{' '}
             <Button onClick={handleEdit} size="compact-xs">
-                {t('edit')}
+                {t('generic.actions.edit')}
             </Button>
         </List.Item>
     );
@@ -91,9 +91,9 @@ export const MealPool = () => {
     return (
         <Stack gap="md">
             <TextInput
-                label={t('search')}
+                label={t('generic.search.label')}
                 onChange={handleSearchChange}
-                placeholder={t('search_placeholder')}
+                placeholder={t('generic.search.placeholder')}
             />
             <List withPadding spacing="md">
                 {results.map((result) => (
@@ -105,7 +105,7 @@ export const MealPool = () => {
                 ))}
             </List>
             <Stack gap="md">
-                <Text>{t('preview')}</Text>
+                <Text>{t('generic.actions.preview')}</Text>
                 <Textarea
                     autosize
                     withAsterisk
@@ -118,10 +118,10 @@ export const MealPool = () => {
             </Stack>
             <Group gap="md" justify="end">
                 <Button color="red" disabled={isLoading} onClick={closeAll}>
-                    {t('cancel')}
+                    {t('generic.actions.cancel')}
                 </Button>
                 <Button loading={isLoading} onClick={handleCreate}>
-                    {t('save')}
+                    {t('generic.actions.save')}
                 </Button>
             </Group>
         </Stack>

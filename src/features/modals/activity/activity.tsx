@@ -81,7 +81,7 @@ export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
             if (!response.ok) {
                 showErrorNotification({
                     message: `${t('errors.activity_save')}. ${t('try_again')}`,
-                    title: t('error'),
+                    title: t('notification.error.title'),
                 });
             } else {
                 await onSave?.();
@@ -115,9 +115,9 @@ export const ActivityModal = ({ onSave, initialData }: ActivityModalProps) => {
             <Space h={20} />
             <Group justify="space-between">
                 <Button color="red" onClick={closeModal} variant="light">
-                    {t('cancel')}
+                    {t('generic.actions.cancel')}
                 </Button>
-                <Button type="submit">{t('save')}</Button>
+                <Button type="submit">{t('generic.actions.save')}</Button>
             </Group>
         </form>
     );

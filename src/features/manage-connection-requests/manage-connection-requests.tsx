@@ -70,14 +70,14 @@ export const ManageConnectionRequests = () => {
                 message: t(
                     'connections.manage_connection_requests.accept_error',
                 ),
-                title: t('error'),
+                title: t('notification.error.title'),
             });
         } else {
             showSuccessNotification({
                 message: t(
                     'connections.manage_connection_requests.accept_success',
                 ),
-                title: t('success'),
+                title: t('notification.success.title'),
             });
 
             const removeConnectionRes = await removeConnectionRequest(
@@ -105,14 +105,14 @@ export const ManageConnectionRequests = () => {
                 message: t(
                     'connections.manage_connection_requests.decline_error',
                 ),
-                title: t('error'),
+                title: t('notification.error.title'),
             });
         } else {
             showSuccessNotification({
                 message: t(
                     'connections.manage_connection_requests.decline_success',
                 ),
-                title: t('success'),
+                title: t('notification.success.title'),
             });
 
             await queryClient.invalidateQueries([

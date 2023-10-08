@@ -73,7 +73,7 @@ export const MealModal = ({
                 />
                 <Group gap="sm" justify="space-between">
                     <Button color="red" onClick={closeModal} variant="light">
-                        {t('cancel')}
+                        {t('generic.actions.cancel')}
                     </Button>
                     <Group>
                         <Button
@@ -81,9 +81,11 @@ export const MealModal = ({
                             hidden={!initialMeal}
                             onClick={handleDelete}
                         >
-                            {t('delete')}
+                            {t('generic.actions.delete')}
                         </Button>
-                        <Button type="submit">{t('save')}</Button>
+                        <Button type="submit">
+                            {t('generic.actions.save')}
+                        </Button>
                     </Group>
                 </Group>
             </Stack>

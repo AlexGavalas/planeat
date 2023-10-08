@@ -73,12 +73,12 @@ export const Onboarding = () => {
                     }
                 }}
                 locale={{
-                    back: t('onboarding.labels.back'),
-                    close: t('onboarding.labels.close'),
-                    last: t('onboarding.labels.last'),
-                    next: t('onboarding.labels.next'),
-                    open: t('onboarding.labels.open'),
-                    skip: t('onboarding.labels.skip'),
+                    back: t('generic.misc.back'),
+                    close: t('generic.actions.close'),
+                    last: t('generic.misc.done'),
+                    next: t('generic.misc.next'),
+                    open: t('generic.actions.open'),
+                    skip: t('generic.misc.skip'),
                 }}
                 run={shouldRun}
                 stepIndex={stepIndex}
