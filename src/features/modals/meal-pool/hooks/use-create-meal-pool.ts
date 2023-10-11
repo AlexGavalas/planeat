@@ -11,19 +11,19 @@ import {
 } from '~util/notification';
 
 type CreateMealPoolProps = {
-    content: string;
+    content: string[];
 };
 
-type UserCreateMealPool = (params: {
+type UseCreateMealPool = (params: {
     onSuccess: () => void;
 }) => UseMutationResult<unknown, unknown, CreateMealPoolProps>;
 
-export const useCreateMealPool: UserCreateMealPool = ({ onSuccess }) => {
+export const useCreateMealPool: UseCreateMealPool = ({ onSuccess }) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
 
     return useMutation(async ({ content }) => {
-        if (!content) {
+        if (!content.length) {
             throw new Error(t('errors.preview_empty'));
         }
 

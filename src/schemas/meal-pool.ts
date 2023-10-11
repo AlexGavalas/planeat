@@ -11,5 +11,5 @@ export const mealPoolSchema: MealPoolSchema = z.object({
 });
 
 export const postRequestSchema = z.object({
-    content: z.string(),
+    content: z.array(z.string()),
 });

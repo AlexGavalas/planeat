@@ -22,7 +22,8 @@
             "decline": "Decline",
             "open": "Open",
             "show_less": "Hide",
-            "show_more": "Show more"
+            "show_more": "Show more",
+            "clear": "Clear"
         },
         "misc": {
             "next": "Next",
@@ -119,7 +120,8 @@
         "activity_save": "We could not save your activity",
         "activity_delete": "We could not delete this activity",
         "activity_empty": "You forgot to input the activity",
-        "preview_empty": "Content is empty"
+        "preview_empty": "Content is empty",
+        "no_file": "No file selected"
     },
     "home": "Home",
     "actions": "Actions",
@@ -148,6 +150,7 @@
     },
     "notes": "Write something for the meal",
     "create_meal": "Create a meal",
+    "create": "Create",
     "modals": {
         "meal_edit": {
             "helper": "You can search for meals you have already created in the meal pool and use them as a base for your new custom meal. Or you can just create your new meal."
