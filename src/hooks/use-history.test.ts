@@ -17,6 +17,7 @@ describe('useHistory', () => {
         expect(result.current).toStrictEqual({
             canRedo: false,
             canUndo: false,
+            clear: expect.any(Function),
             currentState: 0,
             redo: expect.any(Function),
             set: expect.any(Function),

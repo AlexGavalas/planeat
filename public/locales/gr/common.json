@@ -24,7 +24,9 @@
             "show_less": "Δείξε λιγότερα",
             "show_more": "Δείξε περισσότερα",
             "clear": "Καθαρισμός",
-            "reset": "Επαναφορά"
+            "reset": "Επαναφορά",
+            "redo": "Επανάληψη",
+            "undo": "Αναίρεση"
         },
         "misc": {
             "next": "Επόμενο",
@@ -251,7 +253,8 @@
         "empty": "Δεν έχετε επιλέξει κάποιο αρχείο.",
         "prompt": "Ανέβασμα αρχείου",
         "file_size": "μέγεθος {{size}} {{unit}}",
-        "reset_prompt": "Μπορείτε να ανεβάσετε και άλλο άρχειο."
+        "reset_prompt": "Μπορείτε να ανεβάσετε και άλλο άρχειο.",
+        "helper": "Αν κάνετε κάποιο λάθος κατά την προσθαφαίρεση εγγραφών, μπορείτε πάντα να πάτε πίσω/μπροστά στις επεξεργασίες σας."
     },
     "file_types_info": "We currently accept only .docx files. More coming soon!",
     "import_success": "We managed to extract the following from you file. Review and create all the meals below in one action!",

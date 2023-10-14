@@ -8,7 +8,7 @@ import {
     Text,
     Textarea,
 } from '@mantine/core';
-import { InfoEmpty, Trash } from 'iconoir-react';
+import { InfoEmpty, Redo, Trash, Undo } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import {
     type FormEventHandler,
@@ -18,6 +18,8 @@ import {
     useState,
 } from 'react';
 
+import { useHistory } from '~hooks/use-history';
+
 import { FileActions } from './file-actions';
 import { useCreateMealPool } from './hooks/use-create-meal-pool';
 import { useUpload } from './hooks/use-upload';
@@ -25,8 +27,16 @@ import { useUpload } from './hooks/use-upload';
 export const FileUploadTab = () => {
     const { t } = useTranslation();
     const [file, setFile] = useState<File | null>(null);
-    const [parsedMeals, setParsedMeals] = useState<string[]>();
     const resetRef = useRef<() => void>(null);
+    const {
+        canRedo,
+        canUndo,
+        clear: clearHistory,
+        currentState,
+        redo: handleRedo,
+        set,
+        undo: handleUndo,
+    } = useHistory<string[]>();
 
     const {
         mutate,
@@ -35,7 +45,7 @@ export const FileUploadTab = () => {
         reset: resetUpload,
     } = useUpload({
         onSuccess: (data) => {
-            setParsedMeals(data.data);
+            set(data.data);
         },
     });
 
@@ -44,8 +54,9 @@ export const FileUploadTab = () => {
 
     const handleClear = useCallback(() => {
         setFile(null);
+        clearHistory();
         resetRef.current?.();
-    }, []);
+    }, [clearHistory]);
 
     const handleUpload = useCallback<
         MouseEventHandler<HTMLButtonElement>
@@ -75,13 +86,11 @@ export const FileUploadTab = () => {
         (e) => {
             const itemIndex = e.currentTarget.dataset.itemIndex;
 
-            if (itemIndex) {
-                setParsedMeals(
-                    (meals) => meals?.filter((_, idx) => idx !== +itemIndex),
-                );
+            if (itemIndex && currentState) {
+                set(currentState.filter((_, idx) => idx !== +itemIndex));
             }
         },
-        [],
+        [currentState, set],
     );
 
     return (
@@ -106,33 +115,54 @@ export const FileUploadTab = () => {
                 onUpload={handleUpload}
             />
             {isSuccess && (
-                <form onSubmit={handleSubmit}>
-                    <Stack gap="sm">
-                        <Text>{t('import_success')}</Text>
-                        {parsedMeals?.map((result, idx) => (
-                            <Group key={result + idx} gap="sm">
-                                <Textarea
-                                    autosize
-                                    defaultValue={result}
-                                    minRows={1}
-                                    name="meal"
-                                    style={{ flexGrow: 1 }}
-                                />
-                                <ActionIcon
-                                    color="red"
-                                    data-item-index={idx}
-                                    onClick={handleRemoveItem}
-                                    variant="subtle"
-                                >
-                                    <Trash />
-                                </ActionIcon>
-                            </Group>
-                        ))}
-                        <Button loading={isCreating} type="submit">
-                            {t('create')}
+                <>
+                    <Group gap="md">
+                        <Alert icon={<InfoEmpty />}>{t('upload.helper')}</Alert>
+                        <Button
+                            disabled={!canUndo}
+                            leftSection={<Undo />}
+                            onClick={handleUndo}
+                            variant="outline"
+                        >
+                            {t('generic.actions.undo')}
                         </Button>
-                    </Stack>
-                </form>
+                        <Button
+                            disabled={!canRedo}
+                            leftSection={<Redo />}
+                            onClick={handleRedo}
+                            variant="outline"
+                        >
+                            {t('generic.actions.redo')}
+                        </Button>
+                    </Group>
+                    <form onSubmit={handleSubmit}>
+                        <Stack gap="sm">
+                            <Text fw={500}>{t('import_success')}</Text>
+                            {currentState?.map((result, idx) => (
+                                <Group key={result + idx} gap="sm">
+                                    <Textarea
+                                        autosize
+                                        defaultValue={result}
+                                        minRows={1}
+                                        name="meal"
+                                        style={{ flexGrow: 1 }}
+                                    />
+                                    <ActionIcon
+                                        color="red"
+                                        data-item-index={idx}
+                                        onClick={handleRemoveItem}
+                                        variant="subtle"
+                                    >
+                                        <Trash />
+                                    </ActionIcon>
+                                </Group>
+                            ))}
+                            <Button loading={isCreating} type="submit">
+                                {t('create')}
+                            </Button>
+                        </Stack>
+                    </form>
+                </>
             )}
         </Stack>
     );
