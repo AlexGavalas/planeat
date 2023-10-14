@@ -11,19 +11,19 @@ import {
 } from '~util/notification';
 
 type CreateMealPoolProps = {
-    content: string;
+    content: string[];
 };
 
-type UserCreateMealPool = (params: {
-    onSuccess: () => void;
+type UseCreateMealPool = (params?: {
+    onSuccess?: () => void;
 }) => UseMutationResult<unknown, unknown, CreateMealPoolProps>;
 
-export const useCreateMealPool: UserCreateMealPool = ({ onSuccess }) => {
+export const useCreateMealPool: UseCreateMealPool = ({ onSuccess } = {}) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
 
     return useMutation(async ({ content }) => {
-        if (!content) {
+        if (!content.length) {
             throw new Error(t('errors.preview_empty'));
         }
 
@@ -36,7 +36,7 @@ export const useCreateMealPool: UserCreateMealPool = ({ onSuccess }) => {
         });
 
         if (response.ok) {
-            onSuccess();
+            onSuccess?.();
 
             await queryClient.invalidateQueries(['pool-meal']);
 

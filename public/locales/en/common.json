@@ -22,7 +22,11 @@
             "decline": "Decline",
             "open": "Open",
             "show_less": "Hide",
-            "show_more": "Show more"
+            "show_more": "Show more",
+            "clear": "Clear",
+            "reset": "Reset",
+            "redo": "Redo",
+            "undo": "Undo"
         },
         "misc": {
             "next": "Next",
@@ -119,7 +123,8 @@
         "activity_save": "We could not save your activity",
         "activity_delete": "We could not delete this activity",
         "activity_empty": "You forgot to input the activity",
-        "preview_empty": "Content is empty"
+        "preview_empty": "Content is empty",
+        "no_file": "No file selected"
     },
     "home": "Home",
     "actions": "Actions",
@@ -148,6 +153,7 @@
     },
     "notes": "Write something for the meal",
     "create_meal": "Create a meal",
+    "create": "Create",
     "modals": {
         "meal_edit": {
             "helper": "You can search for meals you have already created in the meal pool and use them as a base for your new custom meal. Or you can just create your new meal."
@@ -242,6 +248,16 @@
         "edit_note": "Edit note",
         "rate": "Rate"
     },
+    "upload": {
+        "label": "Select file",
+        "empty": "No file selected.",
+        "prompt": "Upload file",
+        "file_size": "size {{size}} {{unit}}",
+        "reset_prompt": "You can upload another file.",
+        "helper": "If you make a mistake removing an entry, you can always move back/forward in your edits."
+    },
+    "file_types_info": "We currently accept only .docx files. More coming soon!",
+    "import_success": "We managed to extract the following from you file. Review and create all the meals below in one action!",
     "onboarding": {
         "content": {
             "daily_meals": "Here you can see your meals for the day.",

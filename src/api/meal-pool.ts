@@ -24,7 +24,7 @@ export const fetchMealPool: FetchMealPool = async ({ q, supabase, userId }) => {
 };
 
 type CreateMealInPool = (params: {
-    content: string;
+    content: string[];
     supabase: SupabaseClient<Database>;
     userId: number;
 }) => Promise<PostgrestSingleResponse<null>>;
@@ -34,12 +34,12 @@ export const createMealInPool: CreateMealInPool = async ({
     supabase,
     userId,
 }) => {
-    const result = await supabase.from('meals_pool').insert([
-        {
-            content,
-            user_id: userId,
-        },
-    ]);
+    const newData = content.map((content) => ({
+        content,
+        user_id: userId,
+    }));
+
+    const result = await supabase.from('meals_pool').insert(newData);
 
     return result;
 };
