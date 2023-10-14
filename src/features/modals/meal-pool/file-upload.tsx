@@ -1,7 +1,6 @@
 import {
     ActionIcon,
     Alert,
-    Box,
     Button,
     FileButton,
     Group,
@@ -19,10 +18,9 @@ import {
     useState,
 } from 'react';
 
+import { FileActions } from './file-actions';
 import { useCreateMealPool } from './hooks/use-create-meal-pool';
 import { useUpload } from './hooks/use-upload';
-
-const formatSizeInMB = (size: number) => +(size / 1024 / 1024).toFixed(2);
 
 export const FileUploadTab = () => {
     const { t } = useTranslation();
@@ -30,23 +28,21 @@ export const FileUploadTab = () => {
     const [parsedMeals, setParsedMeals] = useState<string[]>();
     const resetRef = useRef<() => void>(null);
 
-    const { mutate, isLoading, isSuccess } = useUpload({
+    const {
+        mutate,
+        isLoading: isUploading,
+        isSuccess,
+        reset: resetUpload,
+    } = useUpload({
         onSuccess: (data) => {
             setParsedMeals(data.data);
         },
     });
 
-    const { mutate: createMealPool, isLoading: isCreating } = useCreateMealPool(
-        {
-            onSuccess: () => {
-                // TODO
-            },
-        },
-    );
+    const { mutate: createMealPool, isLoading: isCreating } =
+        useCreateMealPool();
 
-    const handleClear = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(() => {
+    const handleClear = useCallback(() => {
         setFile(null);
         resetRef.current?.();
     }, []);
@@ -56,6 +52,11 @@ export const FileUploadTab = () => {
     >(() => {
         mutate({ file });
     }, [file, mutate]);
+
+    const handleReset = useCallback(() => {
+        resetUpload();
+        setFile(null);
+    }, [resetUpload]);
 
     const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
         (e) => {
@@ -85,48 +86,29 @@ export const FileUploadTab = () => {
 
     return (
         <Stack gap="md">
-            <Alert icon={<InfoEmpty />}>
-                We currently accept only .docx files. More coming soon!
-            </Alert>
-            {/* eslint-disable-next-line react/jsx-handler-names */}
-            <FileButton accept=".docx" onChange={setFile} resetRef={resetRef}>
-                {(props) => <Button {...props}>Select file</Button>}
-            </FileButton>
-            {file ? (
-                <Group gap="sm">
-                    <Box>
-                        <Text span>Upload file </Text>
-                        <Text span fw={700}>
-                            {file.name}{' '}
-                        </Text>
-                        <Text span>(size {formatSizeInMB(file.size)} MB)?</Text>
-                    </Box>
-                    <Button
-                        loading={isLoading}
-                        onClick={handleUpload}
-                        size="compact-sm"
-                    >
-                        {t('confirmation.yes')}
-                    </Button>
-                    <Button
-                        color="red"
-                        onClick={handleClear}
-                        size="compact-sm"
-                        variant="subtle"
-                    >
-                        {t('generic.actions.clear')}
-                    </Button>
-                </Group>
-            ) : (
-                <Text>No file selected.</Text>
+            <Alert icon={<InfoEmpty />}>{t('file_types_info')}</Alert>
+            {!isSuccess && (
+                <FileButton
+                    accept=".docx"
+                    onChange={setFile}
+                    // eslint-disable-next-line react/jsx-handler-names
+                    resetRef={resetRef}
+                >
+                    {(props) => <Button {...props}>{t('upload.label')}</Button>}
+                </FileButton>
             )}
+            <FileActions
+                file={file}
+                isSuccess={isSuccess}
+                isUploading={isUploading}
+                onClear={handleClear}
+                onReset={handleReset}
+                onUpload={handleUpload}
+            />
             {isSuccess && (
                 <form onSubmit={handleSubmit}>
                     <Stack gap="sm">
-                        <Text>
-                            We managed to extract the following from you file.
-                            Review and create all the meals below in one action!
-                        </Text>
+                        <Text>{t('import_success')}</Text>
                         {parsedMeals?.map((result, idx) => (
                             <Group key={result + idx} gap="sm">
                                 <Textarea

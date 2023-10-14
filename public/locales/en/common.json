@@ -23,7 +23,8 @@
             "open": "Open",
             "show_less": "Hide",
             "show_more": "Show more",
-            "clear": "Clear"
+            "clear": "Clear",
+            "reset": "Reset"
         },
         "misc": {
             "next": "Next",
@@ -245,6 +246,15 @@
         "edit_note": "Edit note",
         "rate": "Rate"
     },
+    "upload": {
+        "label": "Select file",
+        "empty": "No file selected.",
+        "prompt": "Upload file",
+        "file_size": "size {{size}} {{unit}}",
+        "reset_prompt": "You can upload another file."
+    },
+    "file_types_info": "We currently accept only .docx files. More coming soon!",
+    "import_success": "We managed to extract the following from you file. Review and create all the meals below in one action!",
     "onboarding": {
         "content": {
             "daily_meals": "Here you can see your meals for the day.",

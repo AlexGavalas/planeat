@@ -14,11 +14,11 @@ type CreateMealPoolProps = {
     content: string[];
 };
 
-type UseCreateMealPool = (params: {
-    onSuccess: () => void;
+type UseCreateMealPool = (params?: {
+    onSuccess?: () => void;
 }) => UseMutationResult<unknown, unknown, CreateMealPoolProps>;
 
-export const useCreateMealPool: UseCreateMealPool = ({ onSuccess }) => {
+export const useCreateMealPool: UseCreateMealPool = ({ onSuccess } = {}) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
 
@@ -36,7 +36,7 @@ export const useCreateMealPool: UseCreateMealPool = ({ onSuccess }) => {
         });
 
         if (response.ok) {
-            onSuccess();
+            onSuccess?.();
 
             await queryClient.invalidateQueries(['pool-meal']);
 

@@ -23,7 +23,8 @@
             "open": "Άνοιγμα",
             "show_less": "Δείξε λιγότερα",
             "show_more": "Δείξε περισσότερα",
-            "clear": "Καθαρισμός"
+            "clear": "Καθαρισμός",
+            "reset": "Επαναφορά"
         },
         "misc": {
             "next": "Επόμενο",
@@ -245,6 +246,15 @@
         "edit_note": "Επεξεργασία σημείωσης",
         "rate": "Αξιολόγηση"
     },
+    "upload": {
+        "label": "Επιλογή αρχείου",
+        "empty": "Δεν έχετε επιλέξει κάποιο αρχείο.",
+        "prompt": "Ανέβασμα αρχείου",
+        "file_size": "μέγεθος {{size}} {{unit}}",
+        "reset_prompt": "Μπορείτε να ανεβάσετε και άλλο άρχειο."
+    },
+    "file_types_info": "We currently accept only .docx files. More coming soon!",
+    "import_success": "We managed to extract the following from you file. Review and create all the meals below in one action!",
     "onboarding": {
         "content": {
             "daily_meals": "Εδώ μπορείτε να δείτε τα γεύματα που έχετε προγραμματίσει για την ημέρα.",
