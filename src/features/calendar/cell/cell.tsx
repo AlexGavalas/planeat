@@ -1,6 +1,7 @@
-import { Box, Center, Text } from '@mantine/core';
+import { Badge, Box, Center, Text } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { MultiplePages } from 'iconoir-react';
+import { useTranslation } from 'next-i18next';
 
 import { useProfile } from '~hooks/use-profile';
 import { useMeals } from '~store/hooks';
@@ -18,6 +19,7 @@ export type CellProps = {
 };
 
 export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
+    const { t } = useTranslation();
     const { profile } = useProfile();
     const { hovered: isHovered, ref } = useHover();
 
@@ -79,17 +81,22 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                     onSave={handleSave}
                 />
             )}
-            {hasNote && (
-                <Box className={styles.infoContainer}>
-                    <MultiplePages />
-                </Box>
-            )}
             <Box
                 className={styles.cell}
                 style={{
                     ...(isEdited && { border: '2px solid orange' }),
                 }}
             >
+                {hasNote && (
+                    <Badge
+                        fullWidth
+                        leftSection={<MultiplePages fontSize="90%" />}
+                        size="xs"
+                        variant="light"
+                    >
+                        {t('note')}
+                    </Badge>
+                )}
                 <Center
                     style={{
                         ...(isHovered && { opacity: 0.15 }),
