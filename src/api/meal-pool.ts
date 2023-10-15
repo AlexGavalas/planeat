@@ -39,7 +39,10 @@ export const createMealInPool: CreateMealInPool = async ({
         user_id: userId,
     }));
 
-    const result = await supabase.from('meals_pool').insert(newData);
+    const result = await supabase.from('meals_pool').upsert(newData, {
+        ignoreDuplicates: true,
+        onConflict: 'content, user_id',
+    });
 
     return result;
 };
