@@ -71,6 +71,7 @@ exports[`<Cell /> when the user has a meal when the meal has a note renders 1`] 
   >
     <div
       class="cell"
+      style="grid-template-rows: auto 1fr;"
     >
       <div
         class="m-347db0ec mantine-Badge-root"

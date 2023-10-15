@@ -84,6 +84,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
             <Box
                 className={styles.cell}
                 style={{
+                    ...(hasNote && { gridTemplateRows: 'auto 1fr' }),
                     ...(isEdited && { border: '2px solid orange' }),
                 }}
             >
