@@ -10,13 +10,13 @@ import { type EditedMeal, type Meal } from '~types/meal';
 import styles from './cell.module.css';
 import { CellOverlay } from './overlay';
 
-export type CellProps = {
+export type CellProps = Readonly<{
     id: string;
     meal?: Meal | EditedMeal;
     timestamp: Date;
     isEdited: boolean;
     isRow: boolean;
-};
+}>;
 
 export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
     const { t } = useTranslation();

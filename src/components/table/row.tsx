@@ -21,12 +21,12 @@ export type Header<ItemType> = {
     formatValue?: (item: ItemType) => string;
 };
 
-type RowProps<ItemType> = {
+type RowProps<ItemType> = Readonly<{
     item: ItemType;
     headers: Header<ItemType>[];
     onDelete: (item: ItemType) => Promise<void> | void;
     onEdit: (item: ItemType) => Promise<void> | void;
-};
+}>;
 
 export const Row = <ItemType extends Item>({
     item,

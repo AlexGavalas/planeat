@@ -58,14 +58,18 @@ declare module '@mantine/modals' {
     }
 }
 
+type ProvidersProps = PropsWithChildren<
+    Readonly<{
+        session: SessionProviderProps['session'];
+        dehydratedState: DehydratedState;
+    }>
+>;
+
 export const Providers = ({
     children,
     dehydratedState,
     session,
-}: PropsWithChildren<{
-    session: SessionProviderProps['session'];
-    dehydratedState: DehydratedState;
-}>) => {
+}: ProvidersProps) => {
     const supabaseClient = useMemo(
         () => createPagesBrowserClient<Database>(),
         [],

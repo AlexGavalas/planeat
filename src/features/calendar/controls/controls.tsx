@@ -20,9 +20,9 @@ import {
 } from '~store/hooks';
 import { useOpenContextModal } from '~util/modal';
 
-type ControlsProps = {
+type ControlsProps = Readonly<{
     onPrint: MouseEventHandler<HTMLButtonElement>;
-};
+}>;
 
 const defaultButtonProps = {
     size: 'xs',

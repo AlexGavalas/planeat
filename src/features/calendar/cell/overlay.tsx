@@ -14,11 +14,11 @@ import { CopyButton } from '~components/copy-button';
 import { type EditedMeal, type Meal } from '~types/meal';
 import { useOpenContextModal } from '~util/modal';
 
-type CellOverlayProps = {
+type CellOverlayProps = Readonly<{
     onDelete: () => Promise<void> | void;
     onSave: (value: Partial<Meal>) => Promise<void> | void;
     meal?: Meal | EditedMeal;
-};
+}>;
 
 const isSavedMeal = (meal?: Meal | EditedMeal): meal is Meal => {
     return meal?.id !== undefined;

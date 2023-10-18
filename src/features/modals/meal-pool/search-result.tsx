@@ -4,10 +4,10 @@ import { type MouseEventHandler, memo, useCallback } from 'react';
 
 export type OnEdit = (params: string) => void;
 
-type SearchResultProps = {
+type SearchResultProps = Readonly<{
     mealText: string;
     onEdit: OnEdit;
-};
+}>;
 
 export const SearchResult = memo(({ mealText, onEdit }: SearchResultProps) => {
     const { t } = useTranslation();

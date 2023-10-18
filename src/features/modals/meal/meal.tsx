@@ -28,10 +28,10 @@ type MealModalProps = {
 
 type OnEdit = (params: string) => void;
 
-type MealResultProps = {
+type MealResultProps = Readonly<{
     mealText: string;
     onEdit: OnEdit;
-};
+}>;
 
 const MealResult = ({ mealText, onEdit }: MealResultProps) => {
     const { t } = useTranslation();

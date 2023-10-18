@@ -37,14 +37,14 @@ const targetLayer = (targetWeight: number) =>
         );
     };
 
-type LineChartProps<DataItem> = {
+type LineChartProps<DataItem> = Readonly<{
     target?: number;
     unit: string;
     data: {
         id: string;
         data: DataItem[];
     }[];
-};
+}>;
 
 export const LineChart = <DataItem extends { x: string; y: number | null }>({
     data,

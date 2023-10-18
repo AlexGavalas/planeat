@@ -2,11 +2,11 @@ import { Button, Group, Stack, Text } from '@mantine/core';
 import { useTranslation } from 'next-i18next';
 import { type MouseEventHandler } from 'react';
 
-type ConfirmationPopoverProps = {
+type ConfirmationPopoverProps = Readonly<{
     isDeleteInProgress: boolean;
     onToggleConfirmation: () => void;
     onDelete: MouseEventHandler<HTMLButtonElement>;
-};
+}>;
 
 export const ConfirmationPopover = ({
     onDelete,

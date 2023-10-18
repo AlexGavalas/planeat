@@ -20,9 +20,9 @@ import { useCreateMealPool } from './hooks/use-create-meal-pool';
 import { useGetMealPool } from './hooks/use-get-meal-pool';
 import { type OnEdit, SearchResult } from './search-result';
 
-type ManualInputTabProps = {
+type ManualInputTabProps = Readonly<{
     onDone: () => void;
-};
+}>;
 
 export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
     const { t } = useTranslation();

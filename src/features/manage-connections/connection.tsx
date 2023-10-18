@@ -4,10 +4,10 @@ import { type MouseEventHandler, useCallback } from 'react';
 
 import { type Connection } from '~types/connection';
 
-type ConnectionItemProps = {
+type ConnectionItemProps = Readonly<{
     connection: Connection;
     removeConnection: (connection: Connection) => Promise<void>;
-};
+}>;
 
 export const ConnectionItem = ({
     connection,

@@ -42,7 +42,57 @@
                 "plugin:react-hooks/recommended"
             ],
             "rules": {
-                "@typescript-eslint/explicit-function-return-type": "off"
+                "@typescript-eslint/explicit-function-return-type": "off",
+                "react/boolean-prop-naming": [
+                    "error",
+                    {
+                        "rule": "^(is|has)[A-Z]\\w+"
+                    }
+                ],
+                "react/button-has-type": "error",
+                "react/hook-use-state": [
+                    "error",
+                    {
+                        "allowDestructuredState": true
+                    }
+                ],
+                "react/jsx-boolean-value": "error",
+                "react/jsx-curly-newline": [
+                    "error",
+                    {
+                        "multiline": "consistent",
+                        "singleline": "consistent"
+                    }
+                ],
+                "react/jsx-handler-names": [
+                    "warn",
+                    {
+                        "checkInlineFunction": true,
+                        "checkLocalVariables": true,
+                        "eventHandlerPrefix": "handle|set|reset|open|close|toggle|on",
+                        "eventHandlerPropPrefix": "on"
+                    }
+                ],
+                "react/jsx-max-depth": ["warn", { "max": 6 }],
+                "react/jsx-no-bind": [
+                    "error",
+                    {
+                        "allowArrowFunctions": true,
+                        "ignoreDOMComponents": true
+                    }
+                ],
+                "react/jsx-no-useless-fragment": "error",
+                "react/jsx-sort-props": [
+                    "warn",
+                    {
+                        "reservedFirst": true,
+                        "shorthandFirst": true,
+                        "ignoreCase": false
+                    }
+                ],
+                "react/no-unused-prop-types": "error",
+                "react/prefer-read-only-props": "error",
+                "react/void-dom-elements-no-children": ["error"]
             }
         },
         {
@@ -145,38 +195,6 @@
             }
         ],
         "import/no-default-export": "error",
-        "react/boolean-prop-naming": [
-            "error",
-            {
-                "rule": "^(is|has)[A-Z]\\w+"
-            }
-        ],
-        "react/hook-use-state": [
-            "error",
-            {
-                "allowDestructuredState": true
-            }
-        ],
-        "react/jsx-handler-names": [
-            "warn",
-            {
-                "checkInlineFunction": true,
-                "checkLocalVariables": true,
-                "eventHandlerPrefix": "handle|set|reset|open|close|toggle|on",
-                "eventHandlerPropPrefix": "on"
-            }
-        ],
-        "react/jsx-max-depth": ["warn", { "max": 6 }],
-        "react/jsx-no-useless-fragment": "error",
-        "react/jsx-sort-props": [
-            "warn",
-            {
-                "reservedFirst": true,
-                "shorthandFirst": true,
-                "ignoreCase": false
-            }
-        ],
-        "react/void-dom-elements-no-children": ["error"],
         "sort-keys": [
             "warn",
             "asc",

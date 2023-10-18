@@ -4,11 +4,11 @@ import { type MouseEventHandler, useCallback } from 'react';
 
 import { type Notification } from '~types/notification';
 
-type ConnectionRequestProps = {
+type ConnectionRequestProps = Readonly<{
     connectionRequest: Notification;
     onAcceptConnectionRequest: (params: Notification) => Promise<void>;
     onDeclineConnectionRequest: (connectionRequestId: string) => Promise<void>;
-};
+}>;
 
 export const ConnectionRequest = ({
     connectionRequest,

@@ -9,19 +9,19 @@ import {
 import { Check, Copy } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 
-type CopyButtonProps = {
-    value: string;
+type CopyButtonProps2 = Readonly<{
+    value: Readonly<string>;
     variant?: ActionIconVariant;
     size?: MantineSize;
     tooltipPosition?: TooltipProps['position'];
-};
+}>;
 
 export const CopyButton = ({
     value,
     variant = 'light',
     size = 'lg',
     tooltipPosition,
-}: CopyButtonProps) => {
+}: CopyButtonProps2) => {
     const { t } = useTranslation();
 
     return (

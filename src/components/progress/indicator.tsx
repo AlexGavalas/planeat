@@ -5,12 +5,12 @@ import { type Section } from '~types/types';
 
 import styles from './indicator.module.css';
 
-type ProgressIndicatorProps = {
+type ProgressIndicatorProps = Readonly<{
     label: string;
     value: number | null;
     percent: number | null;
     sections: (Section & { label: string })[];
-};
+}>;
 
 export const ProgressIndicator = ({
     label,

@@ -16,7 +16,7 @@ import styles from './table.module.css';
 export const INITIAL_PAGE = 1;
 export const PAGE_SIZE = 5;
 
-export type TableProps<ItemType> = {
+export type TableProps<ItemType> = Readonly<{
     data: ItemType[];
     headers: Header<ItemType>[];
     totalPages: number;
@@ -24,7 +24,7 @@ export type TableProps<ItemType> = {
     onDelete: (item: ItemType) => Promise<void> | void;
     onEdit: (item: ItemType) => Promise<void> | void;
     onPageChange?: (page: number) => void;
-};
+}>;
 
 export const Table = <ItemType extends Item>({
     data,

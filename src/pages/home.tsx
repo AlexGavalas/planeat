@@ -114,7 +114,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
 };
 
-export default function Home({ dailyMeals }: { dailyMeals: MealsMap }) {
+type HomeProps = Readonly<{
+    dailyMeals: MealsMap;
+}>;
+
+export default function Home({ dailyMeals }: HomeProps) {
     return (
         <Group align="start" wrap="nowrap">
             <Stack

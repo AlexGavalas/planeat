@@ -2,14 +2,14 @@ import { Box, Button, Group, Text } from '@mantine/core';
 import { useTranslation } from 'next-i18next';
 import { type MouseEventHandler } from 'react';
 
-type FileActionsProps = {
+type FileActionsProps = Readonly<{
     file: File | null;
     isSuccess: boolean;
     isUploading: boolean;
     onClear: MouseEventHandler<HTMLButtonElement>;
     onReset: MouseEventHandler<HTMLButtonElement>;
     onUpload: MouseEventHandler<HTMLButtonElement>;
-};
+}>;
 
 const formatSizeInMB = (size: number) => +(size / 1024 / 1024).toFixed(2);
 

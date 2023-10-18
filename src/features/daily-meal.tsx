@@ -16,7 +16,11 @@ const MEAL_TIMES: Record<RowKey, Date> = {
     snack2: set(startOfDayTimestamp, { hours: 17, minutes: 0, seconds: 0 }),
 };
 
-export const DailyMeal = ({ dailyMeals }: { dailyMeals: MealsMap }) => {
+type DailyMealProps = Readonly<{
+    dailyMeals: MealsMap;
+}>;
+
+export const DailyMeal = ({ dailyMeals }: DailyMealProps) => {
     const { t } = useTranslation();
 
     const translatedRows = ROWS.map((row) => ({
