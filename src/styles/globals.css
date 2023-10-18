@@ -9,6 +9,7 @@
 html,
 body,
 #__next {
+    background-color: white;
     height: 100%;
     font-family:
         -apple-system,
