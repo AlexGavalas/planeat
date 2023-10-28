@@ -1,11 +1,11 @@
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
+import { type DehydratedState } from '@tanstack/react-query';
 import { type SessionProviderProps } from 'next-auth/react';
 import { appWithTranslation } from 'next-i18next';
 import { type AppProps } from 'next/app';
 import Head from 'next/head';
-import { type DehydratedState } from 'react-query';
 
 import { Header } from '~features/header';
 import { Onboarding } from '~features/onboarding';

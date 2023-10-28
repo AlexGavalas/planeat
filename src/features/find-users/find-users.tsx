@@ -8,10 +8,10 @@ import {
     Text,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { AddUser, Cancel, ProfileCircle } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { type MouseEventHandler, useCallback, useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
 
 import { useProfile } from '~hooks/use-profile';
 import { type User } from '~types/user';
@@ -28,9 +28,9 @@ export const FindUsers = () => {
     const { profile } = useProfile();
     const queryClient = useQueryClient();
 
-    const { data: users = [] } = useQuery(
-        ['users', debouncedSearchQuery],
-        async () => {
+    const { data: users = [] } = useQuery({
+        enabled: Boolean(debouncedSearchQuery),
+        queryFn: async () => {
             const response = await fetch(
                 `/api/v1/user?type=search&fullName=${debouncedSearchQuery}`,
             );
@@ -39,24 +39,22 @@ export const FindUsers = () => {
 
             return data ?? [];
         },
-        {
-            enabled: Boolean(debouncedSearchQuery),
-        },
-    );
+        queryKey: ['users', debouncedSearchQuery],
+    });
 
     const { data: selectedUser, isFetching: isFetchingSelectedUser } = useQuery(
-        ['connection', selectedUserFullname],
-        async () => {
-            const response = await fetch(
-                `/api/v1/user?type=profile&fullName=${selectedUserFullname}`,
-            );
-
-            const { data } = (await response.json()) as { data?: User[] };
-
-            return data;
-        },
         {
             enabled: Boolean(selectedUserFullname),
+            queryFn: async () => {
+                const response = await fetch(
+                    `/api/v1/user?type=profile&fullName=${selectedUserFullname}`,
+                );
+
+                const { data } = (await response.json()) as { data?: User[] };
+
+                return data;
+            },
+            queryKey: ['connection', selectedUserFullname],
         },
     );
 
@@ -65,9 +63,9 @@ export const FindUsers = () => {
     const {
         data: hasAlreadySentRequest,
         isFetching: isFetchingHasAlreadySentRequest,
-    } = useQuery(
-        ['connection_request', selectedUserId],
-        async () => {
+    } = useQuery({
+        enabled: Boolean(selectedUserId),
+        queryFn: async () => {
             if (!selectedUserId || !profile) {
                 return null;
             }
@@ -82,10 +80,8 @@ export const FindUsers = () => {
 
             return hasAlreadySentRequest;
         },
-        {
-            enabled: Boolean(selectedUserId),
-        },
-    );
+        queryKey: ['connection_request', selectedUserId],
+    });
 
     const handleUserSelect = useCallback<
         NonNullable<AutocompleteProps['onOptionSubmit']>
@@ -126,10 +122,9 @@ export const FindUsers = () => {
                 title: t('notification.success.title'),
             });
 
-            await queryClient.invalidateQueries([
-                'connection_request',
-                selectedUserId,
-            ]);
+            await queryClient.invalidateQueries({
+                queryKey: ['connection_request', selectedUserId],
+            });
         }
     }, [profile, selectedUser, selectedUserId, t, queryClient]);
 

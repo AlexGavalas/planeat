@@ -1,6 +1,6 @@
 import { Stack, Text } from '@mantine/core';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
-import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
@@ -20,9 +20,9 @@ export const ManageConnectionRequests = () => {
     const {
         data: connectionRequests = [],
         isFetching: isFetchingConnectionRequests,
-    } = useQuery(
-        ['connection-requests', profile?.id],
-        async () => {
+    } = useQuery({
+        enabled: Boolean(profile),
+        queryFn: async () => {
             const response = await fetch(
                 '/api/v1/notification?type=connection_request',
             );
@@ -33,10 +33,8 @@ export const ManageConnectionRequests = () => {
 
             return data ?? [];
         },
-        {
-            enabled: Boolean(profile),
-        },
-    );
+        queryKey: ['connection-requests', profile?.id],
+    });
 
     const hasConnectionsRequests =
         !isFetchingConnectionRequests && connectionRequests.length > 0;
@@ -85,12 +83,13 @@ export const ManageConnectionRequests = () => {
             );
 
             if (!removeConnectionRes.ok) {
-                await queryClient.invalidateQueries([
-                    'connection-requests',
-                    profile?.id,
-                ]);
+                await queryClient.invalidateQueries({
+                    queryKey: ['connection-requests', profile?.id],
+                });
 
-                await queryClient.invalidateQueries(['connections']);
+                await queryClient.invalidateQueries({
+                    queryKey: ['connections'],
+                });
             }
         }
     };
@@ -115,12 +114,13 @@ export const ManageConnectionRequests = () => {
                 title: t('notification.success.title'),
             });
 
-            await queryClient.invalidateQueries([
-                'connection-requests',
-                profile?.id,
-            ]);
+            await queryClient.invalidateQueries({
+                queryKey: ['connection-requests', profile?.id],
+            });
 
-            await queryClient.invalidateQueries(['connections']);
+            await queryClient.invalidateQueries({
+                queryKey: ['connections'],
+            });
         }
     };
 

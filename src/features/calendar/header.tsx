@@ -1,9 +1,9 @@
 import { Flex, Title } from '@mantine/core';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useQuery } from '@tanstack/react-query';
 import { endOfWeek, format, isToday, startOfWeek } from 'date-fns';
 import { Running } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
-import { useQuery } from 'react-query';
 
 import { fetchActivities } from '~api/activity';
 import { useProfile } from '~hooks/use-profile';
@@ -28,9 +28,8 @@ export const Header = () => {
         i18n.language === 'en' ? 'en' : 'gr',
     );
 
-    const { data: activities = [] } = useQuery(
-        ['activities', currentWeekKey],
-        async () => {
+    const { data: activities = [] } = useQuery({
+        queryFn: async () => {
             if (!profile?.id) {
                 return;
             }
@@ -54,7 +53,8 @@ export const Header = () => {
 
             return result;
         },
-    );
+        queryKey: ['activities', currentWeekKey],
+    });
 
     const activitiesMap = activities.reduce<ActivitysMap>((acc, activity) => {
         acc[activity.date] = activity;

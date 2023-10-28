@@ -1,8 +1,12 @@
+import {
+    keepPreviousData,
+    useQuery,
+    useQueryClient,
+} from '@tanstack/react-query';
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
 
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 import { getDaysOfWeek } from '~util/date';
@@ -58,9 +62,9 @@ export const useMeals: UseMeals = () => {
 
     const currentWeekKey = format(currentWeek, 'yyyy-MM-dd');
 
-    const { data: meals = [], isFetching: isFetchingMeals } = useQuery(
-        ['meals', currentWeekKey],
-        async () => {
+    const { data: meals = [], isFetching: isFetchingMeals } = useQuery({
+        placeholderData: keepPreviousData,
+        queryFn: async () => {
             const endDate = format(
                 endOfWeek(currentWeek, { weekStartsOn: 1 }),
                 'yyyy-MM-dd',
@@ -77,14 +81,12 @@ export const useMeals: UseMeals = () => {
 
             const result = (await response.json()) as { data?: Meal[] };
 
+            setIsSubmitting(false);
+
             return result.data ?? [];
         },
-        {
-            onSettled: () => {
-                setIsSubmitting(false);
-            },
-        },
-    );
+        queryKey: ['meals', currentWeekKey],
+    });
 
     const mealsMap = useMemo(
         () =>
@@ -128,7 +130,9 @@ export const useMeals: UseMeals = () => {
                 title: t('notification.error.title'),
             });
         } else {
-            await queryClient.invalidateQueries(['meals', currentWeekKey]);
+            await queryClient.invalidateQueries({
+                queryKey: ['meals', currentWeekKey],
+            });
 
             removeChanges();
 

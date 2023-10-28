@@ -1,7 +1,7 @@
 import { Center, Title } from '@mantine/core';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
-import { useQuery } from 'react-query';
 
 import { fetchFatMeasurements } from '~api/measurement';
 import { LineChart } from '~components/charts/line';
@@ -14,9 +14,8 @@ export const FatTimeline = () => {
     const supabase = useSupabaseClient<Database>();
     const { profile } = useProfile();
 
-    const { data, isFetching } = useQuery(
-        ['fat-percent-timeline'],
-        async () => {
+    const { data, isFetching } = useQuery({
+        queryFn: async () => {
             if (!profile) {
                 throw new Error(`User not logged in`);
             }
@@ -30,10 +29,8 @@ export const FatTimeline = () => {
                 ? data.map(({ date: x, fat_percentage: y }) => ({ x, y }))
                 : null;
         },
-        {
-            enabled: Boolean(profile),
-        },
-    );
+        queryKey: ['fat-percent-timeline'],
+    });
 
     return (
         <>

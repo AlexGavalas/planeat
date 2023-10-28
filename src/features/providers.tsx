@@ -3,15 +3,15 @@ import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
+import {
+    type DehydratedState,
+    HydrationBoundary,
+    QueryClient,
+    QueryClientProvider,
+} from '@tanstack/react-query';
 import { SessionProvider, type SessionProviderProps } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { type PropsWithChildren, useMemo } from 'react';
-import {
-    type DehydratedState,
-    Hydrate,
-    QueryClient,
-    QueryClientProvider,
-} from 'react-query';
 
 import { BRAND_COLORS } from '~constants/colors';
 import { UserContext } from '~store/user-context';
@@ -100,14 +100,14 @@ export const Providers = ({
             <SessionContextProvider supabaseClient={supabaseClient}>
                 <SessionProvider session={session}>
                     <QueryClientProvider client={queryClient}>
-                        <Hydrate state={dehydratedState}>
+                        <HydrationBoundary state={dehydratedState}>
                             {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                             {/* @ts-expect-error - Modals do not get the correct type with dynamic components for some reason */}
                             <ModalsProvider modals={modals}>
                                 <UserContext>{children}</UserContext>
                                 <Notifications />
                             </ModalsProvider>
-                        </Hydrate>
+                        </HydrationBoundary>
                     </QueryClientProvider>
                 </SessionProvider>
             </SessionContextProvider>

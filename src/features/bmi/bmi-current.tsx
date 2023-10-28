@@ -1,6 +1,6 @@
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
-import { useQuery } from 'react-query';
 
 import { fetchLatestWeightMeasurement } from '~api/measurement';
 import { ProgressIndicator } from '~components/progress';
@@ -15,9 +15,9 @@ export const CurrentBMI = () => {
     const supabase = useSupabaseClient<Database>();
     const { profile } = useProfile();
 
-    const { data: weight = 0 } = useQuery(
-        ['current-weight'],
-        async () => {
+    const { data: weight = 0 } = useQuery({
+        enabled: Boolean(profile),
+        queryFn: async () => {
             if (!profile) {
                 throw new Error(`User not logged in`);
             }
@@ -29,10 +29,8 @@ export const CurrentBMI = () => {
 
             return result.data?.[0]?.weight;
         },
-        {
-            enabled: Boolean(profile),
-        },
-    );
+        queryKey: ['current-weight'],
+    });
 
     const translatedSections = SECTIONS.map((section) => ({
         ...section,

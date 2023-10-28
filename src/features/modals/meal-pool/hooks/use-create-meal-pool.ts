@@ -1,9 +1,9 @@
-import { useTranslation } from 'next-i18next';
 import {
     type UseMutationResult,
     useMutation,
     useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
+import { useTranslation } from 'next-i18next';
 
 import {
     showErrorNotification,
@@ -22,33 +22,37 @@ export const useCreateMealPool: UseCreateMealPool = ({ onSuccess } = {}) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
 
-    return useMutation(async ({ content }) => {
-        if (!content.length) {
-            throw new Error(t('errors.preview_empty'));
-        }
+    return useMutation({
+        mutationFn: async ({ content }) => {
+            if (!content.length) {
+                throw new Error(t('errors.preview_empty'));
+            }
 
-        const response = await fetch('/api/v1/pool/meal', {
-            body: JSON.stringify({ content }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: 'POST',
-        });
-
-        if (response.ok) {
-            onSuccess?.();
-
-            await queryClient.invalidateQueries(['pool-meal']);
-
-            showSuccessNotification({
-                message: t('notification.success.message'),
-                title: t('notification.success.title'),
+            const response = await fetch('/api/v1/pool/meal', {
+                body: JSON.stringify({ content }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
             });
-        } else {
-            showErrorNotification({
-                message: t('notification.error.message'),
-                title: t('notification.error.title'),
-            });
-        }
+
+            if (response.ok) {
+                onSuccess?.();
+
+                await queryClient.invalidateQueries({
+                    queryKey: ['pool-meal'],
+                });
+
+                showSuccessNotification({
+                    message: t('notification.success.message'),
+                    title: t('notification.success.title'),
+                });
+            } else {
+                showErrorNotification({
+                    message: t('notification.error.message'),
+                    title: t('notification.error.title'),
+                });
+            }
+        },
     });
 };

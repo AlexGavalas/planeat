@@ -5,10 +5,10 @@ import {
     type ButtonProps,
     Stack,
 } from '@mantine/core';
+import { useQueryClient } from '@tanstack/react-query';
 import { EditPencil, Plus, Running } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useState } from 'react';
-import { useQueryClient } from 'react-query';
 
 import { useOpenContextModal } from '~util/modal';
 
@@ -33,16 +33,27 @@ export const Fab = () => {
     }, []);
 
     const handleMeasurementSave = useCallback(async () => {
-        await queryClient.resetQueries({ queryKey: ['bmi-timeline'] });
-        await queryClient.resetQueries({ queryKey: ['measurements'] });
-        await queryClient.resetQueries({
+        await queryClient.invalidateQueries({
+            queryKey: ['bmi-timeline'],
+        });
+
+        await queryClient.invalidateQueries({
+            queryKey: ['measurements'],
+        });
+
+        await queryClient.invalidateQueries({
             queryKey: ['fat-percent-timeline'],
         });
     }, [queryClient]);
 
     const handleActivitySave = useCallback(async () => {
-        await queryClient.resetQueries({ queryKey: ['activities-count'] });
-        await queryClient.resetQueries({ queryKey: ['activities'] });
+        await queryClient.invalidateQueries({
+            queryKey: ['activities-count'],
+        });
+
+        await queryClient.invalidateQueries({
+            queryKey: ['activities'],
+        });
     }, [queryClient]);
 
     const handleAddMeasurement = useCallback(() => {

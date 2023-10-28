@@ -1,9 +1,9 @@
 import { ActionIcon, Box, Center, Group, Stack, Title } from '@mantine/core';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useMemo, useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { INITIAL_PAGE, PAGE_SIZE, Table } from '~components/table';
@@ -19,23 +19,21 @@ export const Activities = () => {
     const queryClient = useQueryClient();
     const [page, setPage] = useState(INITIAL_PAGE);
 
-    const { data: count = 0, isFetched: isCountFetched } = useQuery(
-        ['activities-count'],
-        async () => {
+    const { data: count = 0, isFetched: isCountFetched } = useQuery({
+        enabled: Boolean(profile),
+        queryFn: async () => {
             const response = await fetch('/api/v1/activity?count=true');
 
             const { count } = (await response.json()) as { count?: number };
 
             return count;
         },
-        {
-            enabled: Boolean(profile),
-        },
-    );
+        queryKey: ['activities-count'],
+    });
 
-    const { data: activities = [], isFetching } = useQuery(
-        ['activities', page],
-        async () => {
+    const { data: activities = [], isFetching } = useQuery({
+        enabled: isCountFetched,
+        queryFn: async () => {
             const start = (page - 1) * PAGE_SIZE;
             const end = page * PAGE_SIZE - 1;
 
@@ -47,10 +45,8 @@ export const Activities = () => {
 
             return data ?? [];
         },
-        {
-            enabled: isCountFetched,
-        },
-    );
+        queryKey: ['activities', page],
+    });
 
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
     const isLoading = (!activities.length && !isCountFetched) || isFetching;
@@ -58,8 +54,13 @@ export const Activities = () => {
     const onNewActivitySave = useCallback(async () => {
         setPage(INITIAL_PAGE);
 
-        await queryClient.invalidateQueries(['activities-count']);
-        await queryClient.invalidateQueries(['activities']);
+        await queryClient.invalidateQueries({
+            queryKey: ['activities-count'],
+        });
+
+        await queryClient.invalidateQueries({
+            queryKey: ['activities'],
+        });
     }, [queryClient]);
 
     const headers = useMemo(
@@ -96,14 +97,21 @@ export const Activities = () => {
                 title: t('notification.error.title'),
             });
         } else {
-            await queryClient.invalidateQueries(['activities-count']);
-            await queryClient.invalidateQueries(['activities']);
+            await queryClient.invalidateQueries({
+                queryKey: ['activities-count'],
+            });
+
+            await queryClient.invalidateQueries({
+                queryKey: ['activities'],
+            });
         }
     };
 
     const onEdit = (item: Activity) => {
         const onSave = async () => {
-            await queryClient.invalidateQueries(['activities', page]);
+            await queryClient.invalidateQueries({
+                queryKey: ['activities', page],
+            });
         };
 
         openNewActivityModal({

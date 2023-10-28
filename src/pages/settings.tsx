@@ -1,8 +1,8 @@
 import { Container, Space, Tabs } from '@mantine/core';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { type GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
-import { QueryClient, dehydrate } from 'react-query';
 import invariant from 'tiny-invariant';
 
 import { getServerSession } from '~api/session';
@@ -39,7 +39,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const profile = await fetchUser({ email: user.email, supabase });
 
-    await queryClient.prefetchQuery(['user'], () => profile);
+    await queryClient.prefetchQuery({
+        queryFn: () => profile,
+        queryKey: ['user'],
+    });
 
     return {
         props: {

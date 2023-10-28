@@ -1,7 +1,7 @@
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { type GetServerSideProps } from 'next';
-import { QueryClient, dehydrate } from 'react-query';
 import invariant from 'tiny-invariant';
 
 import { fetchActivities } from '~api/activity';
@@ -45,24 +45,29 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         'yyyy-MM-dd',
     );
 
-    await queryClient.prefetchQuery(['user'], () => profile);
+    await queryClient.prefetchQuery({
+        queryFn: () => profile,
+        queryKey: ['user'],
+    });
 
     const currentWeekKey = format(NOW, 'yyyy-MM-dd');
 
-    await queryClient.prefetchQuery(['meals', currentWeekKey], async () => {
-        const result = await fetchMeals({
-            endDate,
-            startDate,
-            supabase,
-            userId: profile.id,
-        });
+    await queryClient.prefetchQuery({
+        queryFn: async () => {
+            const result = await fetchMeals({
+                endDate,
+                startDate,
+                supabase,
+                userId: profile.id,
+            });
 
-        return result.data ?? [];
+            return result.data ?? [];
+        },
+        queryKey: ['meals', currentWeekKey],
     });
 
-    await queryClient.prefetchQuery(
-        ['activities', currentWeekKey],
-        async () => {
+    await queryClient.prefetchQuery({
+        queryFn: async () => {
             const result = await fetchActivities({
                 endDate,
                 startDate,
@@ -72,7 +77,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
             return result;
         },
-    );
+        queryKey: ['activities', currentWeekKey],
+    });
 
     return {
         props: {
