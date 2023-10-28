@@ -1,0 +1,45 @@
+name: Size limit
+on:
+    pull_request:
+        branches: [master]
+jobs:
+    size:
+        runs-on: ubuntu-latest
+        env:
+            CI_JOB_NUMBER: 1
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+            - uses: actions/setup-node@v3
+              with:
+                  node-version-file: '.nvmrc'
+            - uses: pnpm/action-setup@v2
+              name: Install pnpm
+              id: pnpm-install
+              with:
+                  version: 8.7.5
+                  run_install: false
+            - name: Get pnpm store directory
+              id: pnpm-cache
+              shell: bash
+              run: |
+                  echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+            - uses: actions/cache@v3
+              name: Setup pnpm cache
+              with:
+                  path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
+            - name: Install Dependencies
+              run: pnpm install
+            - uses: andresz1/size-limit-action@v1
+              env:
+                  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+                  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+                  GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+                  GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+                  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  skip_step: install
