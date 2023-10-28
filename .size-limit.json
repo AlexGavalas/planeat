@@ -1,33 +1,41 @@
 [
     {
+        "name": "framework",
         "path": ".next/static/chunks/framework-*.js",
         "limit": "50kb"
     },
     {
+        "name": "main",
         "path": ".next/static/chunks/main-*.js",
         "limit": "35kb"
     },
     {
+        "name": "_app",
         "path": ".next/static/chunks/pages/_app-*.js",
         "limit": "165kb"
     },
     {
+        "name": "connections",
         "path": ".next/static/chunks/pages/connections-*.js",
         "limit": "7kb"
     },
     {
+        "name": "home",
         "path": ".next/static/chunks/pages/home-*.js",
         "limit": "9kb"
     },
     {
+        "name": "index",
         "path": ".next/static/chunks/pages/index-*.js",
         "limit": "5kb"
     },
     {
+        "name": "meal-plan",
         "path": ".next/static/chunks/pages/meal-plan-*.js",
         "limit": "5kb"
     },
     {
+        "name": "settings",
         "path": ".next/static/chunks/pages/settings-*.js",
         "limit": "5kb"
     }

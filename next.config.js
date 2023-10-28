@@ -28,7 +28,6 @@ const config = {
     experimental: {
         esmExternals: false,
     },
-    swcMinify: false,
 };
 
 module.exports = withBundleAnalyzer(config);
