@@ -9,10 +9,26 @@
     },
     {
         "path": ".next/static/chunks/pages/_app-*.js",
-        "limit": "175kb"
+        "limit": "165kb"
+    },
+    {
+        "path": ".next/static/chunks/pages/connections-*.js",
+        "limit": "7kb"
+    },
+    {
+        "path": ".next/static/chunks/pages/home-*.js",
+        "limit": "9kb"
+    },
+    {
+        "path": ".next/static/chunks/pages/index-*.js",
+        "limit": "5kb"
     },
     {
         "path": ".next/static/chunks/pages/meal-plan-*.js",
-        "limit": "50kb"
+        "limit": "5kb"
+    },
+    {
+        "path": ".next/static/chunks/pages/settings-*.js",
+        "limit": "5kb"
     }
 ]
