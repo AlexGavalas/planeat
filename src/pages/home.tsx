@@ -1,9 +1,9 @@
 import { Box, Group, Space, Stack } from '@mantine/core';
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { endOfDay, format, startOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
 import { type GetServerSideProps } from 'next';
-import { QueryClient, dehydrate } from 'react-query';
 import invariant from 'tiny-invariant';
 
 import { fetchMeals } from '~api/meal';
@@ -62,46 +62,64 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const dailyMeals = fromPairs(map(data, (item) => [item.section_key, item]));
 
-    await queryClient.prefetchQuery(['user'], () => profile);
-
-    await queryClient.prefetchQuery(['current-fat-percent'], async () => {
-        const result = await fetchLatestFatMeasurement({
-            supabase,
-            userId: profile.id,
-        });
-
-        return result.data?.[0]?.fat_percentage ?? 0;
+    await queryClient.prefetchQuery({
+        queryFn: () => profile,
+        queryKey: ['user'],
     });
 
-    await queryClient.prefetchQuery(['current-weight'], async () => {
-        const result = await fetchLatestWeightMeasurement({
-            supabase,
-            userId: profile.id,
-        });
+    await queryClient.prefetchQuery({
+        queryFn: async () => {
+            const result = await fetchLatestFatMeasurement({
+                supabase,
+                userId: profile.id,
+            });
 
-        return result.data?.[0]?.weight ?? 0;
+            return result.data?.[0]?.fat_percentage ?? 0;
+        },
+        queryKey: ['current-fat-percent'],
     });
 
-    await queryClient.prefetchQuery(['bmi-timeline'], async () => {
-        const result = await fetchMeasurements({
-            supabase,
-            userId: profile.id,
-        });
+    await queryClient.prefetchQuery({
+        queryFn: async () => {
+            const result = await fetchLatestWeightMeasurement({
+                supabase,
+                userId: profile.id,
+            });
 
-        return result.data?.length
-            ? result.data.map(({ date: x, weight: y }) => ({ x, y }))
-            : null;
+            return result.data?.[0]?.weight ?? 0;
+        },
+        queryKey: ['current-weight'],
     });
 
-    await queryClient.prefetchQuery(['fat-percent-timeline'], async () => {
-        const result = await fetchFatMeasurements({
-            supabase,
-            userId: profile.id,
-        });
+    await queryClient.prefetchQuery({
+        queryFn: async () => {
+            const result = await fetchMeasurements({
+                supabase,
+                userId: profile.id,
+            });
 
-        return result.data?.length
-            ? result.data.map(({ date: x, fat_percentage: y }) => ({ x, y }))
-            : null;
+            return result.data?.length
+                ? result.data.map(({ date: x, weight: y }) => ({ x, y }))
+                : null;
+        },
+        queryKey: ['bmi-timeline'],
+    });
+
+    await queryClient.prefetchQuery({
+        queryFn: async () => {
+            const result = await fetchFatMeasurements({
+                supabase,
+                userId: profile.id,
+            });
+
+            return result.data?.length
+                ? result.data.map(({ date: x, fat_percentage: y }) => ({
+                      x,
+                      y,
+                  }))
+                : null;
+        },
+        queryKey: ['fat-percent-timeline'],
     });
 
     return {

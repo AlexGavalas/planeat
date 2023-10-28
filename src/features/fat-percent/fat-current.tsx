@@ -1,6 +1,6 @@
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
-import { useQuery } from 'react-query';
 
 import { fetchLatestFatMeasurement } from '~api/measurement';
 import { ProgressIndicator } from '~components/progress';
@@ -14,9 +14,9 @@ export const CurrentFat = () => {
     const supabase = useSupabaseClient<Database>();
     const { profile } = useProfile();
 
-    const { data: fatPercent = 0 } = useQuery(
-        ['current-fat-percent'],
-        async () => {
+    const { data: fatPercent = 0 } = useQuery({
+        enabled: Boolean(profile),
+        queryFn: async () => {
             if (!profile) {
                 throw new Error(`User not logged in`);
             }
@@ -28,10 +28,8 @@ export const CurrentFat = () => {
 
             return result.data?.[0]?.fat_percentage;
         },
-        {
-            enabled: Boolean(profile),
-        },
-    );
+        queryKey: ['current-fat-percent'],
+    });
 
     const translatedSections = SECTIONS.map((section) => ({
         ...section,

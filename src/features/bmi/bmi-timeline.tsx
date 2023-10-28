@@ -1,7 +1,7 @@
 import { Box, Center, Title } from '@mantine/core';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
-import { useQuery } from 'react-query';
 
 import { fetchMeasurements } from '~api/measurement';
 import { LineChart } from '~components/charts/line';
@@ -14,9 +14,8 @@ export const BMITimeline = () => {
     const supabase = useSupabaseClient<Database>();
     const { profile } = useProfile();
 
-    const { data, isFetching } = useQuery(
-        ['bmi-timeline'],
-        async () => {
+    const { data, isFetching } = useQuery({
+        queryFn: async () => {
             if (!profile) {
                 throw new Error(`User not logged in`);
             }
@@ -30,10 +29,8 @@ export const BMITimeline = () => {
                 ? result.data.map(({ date: x, weight: y }) => ({ x, y }))
                 : null;
         },
-        {
-            enabled: Boolean(profile),
-        },
-    );
+        queryKey: ['bmi-timeline'],
+    });
 
     return (
         <>

@@ -1,6 +1,6 @@
 import { Stack, Text } from '@mantine/core';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
-import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
@@ -15,9 +15,9 @@ export const ManageConnections = () => {
     const queryClient = useQueryClient();
 
     const { data: connections = [], isFetching: isFetchingConnections } =
-        useQuery(
-            ['connections'],
-            async () => {
+        useQuery({
+            enabled: Boolean(profile),
+            queryFn: async () => {
                 const response = await fetch('/api/v1/connection');
 
                 const { data } = (await response.json()) as {
@@ -26,10 +26,8 @@ export const ManageConnections = () => {
 
                 return data ?? [];
             },
-            {
-                enabled: Boolean(profile),
-            },
-        );
+            queryKey: ['connections'],
+        });
 
     const removeConnection = async (connection: Connection) => {
         const response = await fetch('/api/v1/connection', {
@@ -51,7 +49,9 @@ export const ManageConnections = () => {
                 title: t('notification.error.title'),
             });
         } else {
-            await queryClient.invalidateQueries(['connections']);
+            await queryClient.invalidateQueries({
+                queryKey: ['connections'],
+            });
         }
     };
 

@@ -1,9 +1,13 @@
 import { ActionIcon, Box, Center, Group, Stack, Title } from '@mantine/core';
+import {
+    keepPreviousData,
+    useQuery,
+    useQueryClient,
+} from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useMemo, useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { INITIAL_PAGE, PAGE_SIZE, Table } from '~components/table';
@@ -19,23 +23,22 @@ export const Measurements = () => {
     const [page, setPage] = useState(INITIAL_PAGE);
     const openMeasurementModal = useOpenContextModal('measurement');
 
-    const { data: count = 0, isFetched } = useQuery(
-        ['measurements-count'],
-        async () => {
+    const { data: count = 0, isFetched } = useQuery({
+        enabled: Boolean(profile),
+        queryFn: async () => {
             const response = await fetch('/api/v1/measurement?count=true');
 
             const { count } = (await response.json()) as { count?: number };
 
             return count;
         },
-        {
-            enabled: Boolean(profile),
-        },
-    );
+        queryKey: ['measurements-count'],
+    });
 
-    const { data: measurements = [], isFetching } = useQuery(
-        ['measurements', page],
-        async () => {
+    const { data: measurements = [], isFetching } = useQuery({
+        enabled: isFetched,
+        placeholderData: keepPreviousData,
+        queryFn: async () => {
             const start = (page - 1) * PAGE_SIZE;
             const end = page * PAGE_SIZE - 1;
 
@@ -49,11 +52,8 @@ export const Measurements = () => {
 
             return data ?? [];
         },
-        {
-            enabled: isFetched,
-            keepPreviousData: true,
-        },
-    );
+        queryKey: ['measurements', page],
+    });
 
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
     const isLoading = (!measurements.length && !isFetched) || isFetching;
@@ -61,8 +61,13 @@ export const Measurements = () => {
     const handleNewWeightSave = useCallback(async () => {
         setPage(INITIAL_PAGE);
 
-        await queryClient.invalidateQueries(['measurements-count']);
-        await queryClient.invalidateQueries(['measurements']);
+        await queryClient.invalidateQueries({
+            queryKey: ['measurements-count'],
+        });
+
+        await queryClient.invalidateQueries({
+            queryKey: ['measurements'],
+        });
     }, [queryClient]);
 
     const handleDelete = async (item: Measurement) => {
@@ -76,15 +81,22 @@ export const Measurements = () => {
                 title: t('notification.error.title'),
             });
         } else {
-            await queryClient.invalidateQueries(['measurements-count']);
-            await queryClient.invalidateQueries(['measurements']);
+            await queryClient.invalidateQueries({
+                queryKey: ['measurements-count'],
+            });
+
+            await queryClient.invalidateQueries({
+                queryKey: ['measurements'],
+            });
         }
     };
 
     const handleEdit = useCallback(
         (item: Measurement) => {
             const handleSave = async () => {
-                await queryClient.invalidateQueries(['measurements', page]);
+                await queryClient.invalidateQueries({
+                    queryKey: ['measurements', page],
+                });
             };
 
             openMeasurementModal({

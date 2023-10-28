@@ -1,7 +1,7 @@
 import { ModalsProvider } from '@mantine/modals';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { type NextRouter } from 'next/router';
 import { type PropsWithChildren } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { renderWithUser } from '~test/utils';
 

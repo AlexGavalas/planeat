@@ -1,0 +1,18 @@
+[
+    {
+        "path": ".next/static/chunks/framework-*.js",
+        "limit": "50kb"
+    },
+    {
+        "path": ".next/static/chunks/main-*.js",
+        "limit": "35kb"
+    },
+    {
+        "path": ".next/static/chunks/pages/_app-*.js",
+        "limit": "175kb"
+    },
+    {
+        "path": ".next/static/chunks/pages/meal-plan-*.js",
+        "limit": "50kb"
+    }
+]

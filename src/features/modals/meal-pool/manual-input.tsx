@@ -36,7 +36,7 @@ export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
 
     const {
         mutate,
-        isLoading,
+        isPending: isLoading,
         error,
         reset: resetCreationState,
     } = useCreateMealPool({

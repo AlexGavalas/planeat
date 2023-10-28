@@ -40,7 +40,7 @@ export const FileUploadTab = () => {
 
     const {
         mutate,
-        isLoading: isUploading,
+        isPending: isUploading,
         isSuccess,
         reset: resetUpload,
     } = useUpload({
@@ -49,7 +49,7 @@ export const FileUploadTab = () => {
         },
     });
 
-    const { mutate: createMealPool, isLoading: isCreating } =
+    const { mutate: createMealPool, isPending: isCreating } =
         useCreateMealPool();
 
     const handleClear = useCallback(() => {
