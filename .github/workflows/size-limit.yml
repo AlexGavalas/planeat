@@ -42,3 +42,4 @@ jobs:
                   NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
+                  skip_step: install
