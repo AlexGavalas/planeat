@@ -34,5 +34,11 @@ jobs:
             - name: Install Dependencies
               run: pnpm install
             - uses: andresz1/size-limit-action@v1
+              env:
+                  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+                  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+                  GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+                  GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
+                  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
