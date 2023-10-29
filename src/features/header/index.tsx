@@ -1,15 +1,15 @@
 import { Group, Title } from '@mantine/core';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 import { Nav } from '~features/nav';
+import { useProfile } from '~hooks/use-profile';
 
 import { UserActions } from './user-actions';
 
 export const Header = () => {
-    const router = useRouter();
+    const { profile, isFetching } = useProfile();
 
-    const hasUser = router.pathname !== '/';
+    const hasUser = !isFetching && !!profile;
 
     return (
         <Group align="center" justify="space-between" px={20} py={10}>
@@ -18,10 +18,12 @@ export const Header = () => {
                     PLANEAT
                 </Title>
             </Link>
-            <Group align="center" justify="space-between" px={20} py={10}>
-                {hasUser && <Nav />}
-                <UserActions />
-            </Group>
+            {!isFetching && (
+                <Group align="center" justify="space-between" px={20} py={10}>
+                    {hasUser && <Nav />}
+                    <UserActions hasUser={hasUser} />
+                </Group>
+            )}
         </Group>
     );
 };
