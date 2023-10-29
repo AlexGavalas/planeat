@@ -11,7 +11,8 @@ import {
 } from '@tanstack/react-query';
 import { SessionProvider, type SessionProviderProps } from 'next-auth/react';
 import dynamic from 'next/dynamic';
-import { type PropsWithChildren, useMemo } from 'react';
+import { useRouter } from 'next/router';
+import { Fragment, type PropsWithChildren, useMemo } from 'react';
 
 import { BRAND_COLORS } from '~constants/colors';
 import { UserContext } from '~store/user-context';
@@ -65,11 +66,15 @@ type ProvidersProps = PropsWithChildren<
     }>
 >;
 
+const PUBLIC_PAGES = ['/'];
+
 export const Providers = ({
     children,
     dehydratedState,
     session,
 }: ProvidersProps) => {
+    const router = useRouter();
+
     const supabaseClient = useMemo(
         () => createPagesBrowserClient<Database>(),
         [],
@@ -88,6 +93,10 @@ export const Providers = ({
         [],
     );
 
+    const isProtectedPage = !PUBLIC_PAGES.includes(router.pathname);
+
+    const Wrapper = isProtectedPage ? UserContext : Fragment;
+
     return (
         <MantineProvider
             theme={{
@@ -104,7 +113,7 @@ export const Providers = ({
                             {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                             {/* @ts-expect-error - Modals do not get the correct type with dynamic components for some reason */}
                             <ModalsProvider modals={modals}>
-                                <UserContext>{children}</UserContext>
+                                <Wrapper>{children}</Wrapper>
                                 <Notifications />
                             </ModalsProvider>
                         </HydrationBoundary>

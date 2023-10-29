@@ -29,7 +29,7 @@ const App = ({
                 dehydratedState={pageProps.dehydratedState}
                 session={pageProps.session}
             >
-                <Onboarding />
+                {pageProps.session && <Onboarding />}
                 <Header />
                 <div className="container">
                     <Component {...pageProps} />
