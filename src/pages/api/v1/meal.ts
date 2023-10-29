@@ -1,80 +1,58 @@
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
-import type { NextApiHandler } from 'next';
-import invariant from 'tiny-invariant';
-import { ZodError } from 'zod';
-
 import { createMeals, deleteMeals, fetchMeals, updateMeals } from '~api/meal';
-import { getServerSession } from '~api/session';
-import { fetchUser } from '~api/user';
 import { patchRequestSchema } from '~schemas/meal';
-import { assertSession, assertUserEmail } from '~util/session';
+import { type NextApiHandlerWithUser, withUser } from '~util/session';
 
-const handler: NextApiHandler = async (req, res) => {
-    try {
-        const session = await getServerSession({ req, res });
+const handler: NextApiHandlerWithUser = async ({
+    req,
+    res,
+    supabase,
+    user,
+}) => {
+    if (req.method === 'GET') {
+        const endDate = String(req.query.endDate);
+        const startDate = String(req.query.startDate);
 
-        assertSession(session);
-        assertUserEmail(session.user?.email);
+        const { data } = await fetchMeals({
+            endDate,
+            startDate,
+            supabase,
+            userId: user.id,
+        });
 
-        const supabase = createPagesServerClient({ req, res });
+        res.json({ data });
+    } else if (req.method === 'PATCH') {
+        const { deletedIds, editedMeals, newMeals } = patchRequestSchema.parse(
+            req.body,
+        );
 
-        const user = await fetchUser({ email: session.user.email, supabase });
+        const { error: deleteError } = await deleteMeals({
+            deletedIds,
+            supabase,
+            userId: user.id,
+        });
 
-        invariant(user, 'User must exist');
+        const { error: updateError } = await updateMeals({
+            editedMeals,
+            supabase,
+            userId: user.id,
+        });
 
-        if (req.method === 'GET') {
-            const endDate = String(req.query.endDate);
-            const startDate = String(req.query.startDate);
+        const { error: createError } = await createMeals({
+            newMeals,
+            supabase,
+            userId: user.id,
+        });
 
-            const { data } = await fetchMeals({
-                endDate,
-                startDate,
-                supabase,
-                userId: user.id,
-            });
+        const error = deleteError ?? updateError ?? createError;
 
-            res.json({ data });
-        } else if (req.method === 'PATCH') {
-            const { deletedIds, editedMeals, newMeals } =
-                patchRequestSchema.parse(req.body);
-
-            const { error: deleteError } = await deleteMeals({
-                deletedIds,
-                supabase,
-                userId: user.id,
-            });
-
-            const { error: updateError } = await updateMeals({
-                editedMeals,
-                supabase,
-                userId: user.id,
-            });
-
-            const { error: createError } = await createMeals({
-                newMeals,
-                supabase,
-                userId: user.id,
-            });
-
-            const error = deleteError ?? updateError ?? createError;
-
-            if (error) {
-                throw new Error(error.message, { cause: error });
-            }
-
-            res.status(200).json({ message: 'OK' });
-        } else {
-            res.status(405).json({ message: 'Method Not Allowed' });
+        if (error) {
+            throw new Error(error.message, { cause: error });
         }
-    } catch (e) {
-        console.error(e);
 
-        if (e instanceof ZodError) {
-            res.status(400).json({ message: 'Bad Request' });
-        } else {
-            res.status(500).json({ message: 'Internal Server Error' });
-        }
+        res.status(200).json({ message: 'OK' });
+    } else {
+        res.status(405).json({ message: 'Method Not Allowed' });
     }
 };
 
-export default handler;
+export default withUser(handler);
