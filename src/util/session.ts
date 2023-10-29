@@ -7,7 +7,6 @@ import {
     type NextApiRequest,
     type NextApiResponse,
 } from 'next';
-import { type Session } from 'next-auth';
 import invariant from 'tiny-invariant';
 import { ZodError } from 'zod';
 
@@ -18,20 +17,14 @@ import { type User } from '~types/user';
 const ERROR_MESSAGE = Object.freeze({
     NO_EMAIL: 'User must have an email',
     NO_SESSION: 'User must be have a session',
+    NO_USER: 'User must exist',
 });
 
 const AUTH_ERROR_MESSAGES = Object.freeze([
     `Invariant failed: ${ERROR_MESSAGE.NO_SESSION}`,
     `Invariant failed: ${ERROR_MESSAGE.NO_EMAIL}`,
+    `Invariant failed: ${ERROR_MESSAGE.NO_USER}`,
 ]);
-
-export function assertSession(session: unknown): asserts session is Session {
-    invariant(session, ERROR_MESSAGE.NO_SESSION);
-}
-
-export function assertUserEmail(email: unknown): asserts email is string {
-    invariant(email, ERROR_MESSAGE.NO_EMAIL);
-}
 
 export type NextApiHandlerWithUser = (params: {
     req: NextApiRequest;
@@ -46,8 +39,8 @@ export const withUser =
         try {
             const session = await getServerSession({ req, res });
 
-            assertSession(session);
-            assertUserEmail(session.user?.email);
+            invariant(session, ERROR_MESSAGE.NO_SESSION);
+            invariant(session.user?.email, ERROR_MESSAGE.NO_EMAIL);
 
             const supabase = createPagesServerClient({ req, res });
 
@@ -56,7 +49,7 @@ export const withUser =
                 supabase,
             });
 
-            invariant(user, 'User must exist');
+            invariant(user, ERROR_MESSAGE.NO_USER);
 
             await handler({ req, res, supabase, user });
         } catch (e) {
