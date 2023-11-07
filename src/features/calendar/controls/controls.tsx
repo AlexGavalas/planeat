@@ -81,14 +81,16 @@ export const Controls = ({ onPrint }: ControlsProps) => {
                 >
                     {t('week.next')}
                 </Button>
-                <Button
-                    {...defaultButtonProps}
-                    onClick={toggleWeekOverview}
-                    rightSection={<StatsReport />}
-                    variant="white"
-                >
-                    {t('see_overview')}
-                </Button>
+                {Object.keys(meals).length && (
+                    <Button
+                        {...defaultButtonProps}
+                        onClick={toggleWeekOverview}
+                        rightSection={<StatsReport />}
+                        variant="white"
+                    >
+                        {t('see_overview')}
+                    </Button>
+                )}
                 <Button
                     {...defaultButtonProps}
                     onClick={handleMealCreation}
