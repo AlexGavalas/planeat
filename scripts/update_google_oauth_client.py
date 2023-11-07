@@ -11,7 +11,7 @@ creds = json.loads(creds_json)
 sa_credentials = service_account.Credentials.from_service_account_info(creds)
 
 # Build the API client
-api_service_name = 'your_api_service_name'
+api_service_name = 'credentials.googleapis.com'
 api_version = 'v1'
 api_client = build(api_service_name, api_version, credentials=sa_credentials)
 
