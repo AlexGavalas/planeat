@@ -1,5 +1,4 @@
 import { Box, Group, Space, Stack } from '@mantine/core';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { endOfDay, format, startOfDay } from 'date-fns';
 import { fromPairs, map } from 'lodash';
@@ -21,13 +20,10 @@ import { BMITimeline, CurrentBMI } from '~features/bmi';
 import { DailyMeal } from '~features/daily-meal';
 import { CurrentFat, FatTimeline } from '~features/fat-percent';
 import { type MealsMap } from '~types/meal';
-import { type Database } from '~types/supabase';
 import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
-
-    const supabase = createPagesServerClient<Database>(context);
 
     const session = await getServerSession(context);
 
@@ -49,14 +45,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const startOfDayTimestamp = format(startOfDay(NOW), 'yyyy-MM-dd HH:mm');
     const endOfDayTimestamp = format(endOfDay(NOW), 'yyyy-MM-dd HH:mm');
 
-    const profile = await fetchUser({ email: user.email, supabase });
+    const profile = await fetchUser({ email: user.email });
 
     invariant(profile, `Profile was not found for user email ${user.email}`);
 
     const { data } = await fetchMeals({
         endDate: endOfDayTimestamp,
         startDate: startOfDayTimestamp,
-        supabase,
         userId: profile.id,
     });
 
@@ -70,11 +65,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await queryClient.prefetchQuery({
         queryFn: async () => {
             const result = await fetchLatestFatMeasurement({
-                supabase,
                 userId: profile.id,
             });
 
-            return result.data?.[0]?.fat_percentage ?? 0;
+            return result.data[0]?.fat_percentage ?? 0;
         },
         queryKey: ['current-fat-percent'],
     });
@@ -82,11 +76,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await queryClient.prefetchQuery({
         queryFn: async () => {
             const result = await fetchLatestWeightMeasurement({
-                supabase,
                 userId: profile.id,
             });
 
-            return result.data?.[0]?.weight ?? 0;
+            return result.data[0]?.weight ?? 0;
         },
         queryKey: ['current-weight'],
     });
@@ -94,11 +87,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await queryClient.prefetchQuery({
         queryFn: async () => {
             const result = await fetchMeasurements({
-                supabase,
                 userId: profile.id,
             });
 
-            return result.data?.length
+            return result.data.length
                 ? result.data.map(({ date: x, weight: y }) => ({ x, y }))
                 : null;
         },
@@ -108,11 +100,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     await queryClient.prefetchQuery({
         queryFn: async () => {
             const result = await fetchFatMeasurements({
-                supabase,
                 userId: profile.id,
             });
 
-            return result.data?.length
+            return result.data.length
                 ? result.data.map(({ date: x, fat_percentage: y }) => ({
                       x,
                       y,

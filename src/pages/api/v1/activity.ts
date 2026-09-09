@@ -1,5 +1,6 @@
 import {
     deleteActivity,
+    fetchActivities,
     fetchActivitiesCount,
     fetchActivitiesPaginated,
     updateActivity,
@@ -7,16 +8,18 @@ import {
 import { patchRequestSchema } from '~schemas/activity';
 import { type NextApiHandlerWithUser, withUser } from '~util/session';
 
-const handler: NextApiHandlerWithUser = async ({
-    req,
-    res,
-    supabase,
-    user,
-}) => {
+const handler: NextApiHandlerWithUser = async ({ req, res, user }) => {
     if (req.method === 'GET') {
-        if (req.query.count === 'true') {
+        if (req.query.startDate && req.query.endDate) {
+            const data = await fetchActivities({
+                endDate: String(req.query.endDate),
+                startDate: String(req.query.startDate),
+                userId: user.id,
+            });
+
+            res.json({ data });
+        } else if (req.query.count === 'true') {
             const count = await fetchActivitiesCount({
-                supabase,
                 userId: user.id,
             });
 
@@ -28,38 +31,27 @@ const handler: NextApiHandlerWithUser = async ({
             const data = await fetchActivitiesPaginated({
                 end,
                 start,
-                supabase,
                 userId: user.id,
             });
 
             res.json({ data });
         }
     } else if (req.method === 'DELETE') {
-        const { error } = await deleteActivity({
+        await deleteActivity({
             activityId: String(req.query.id),
-            supabase,
             userId: user.id,
         });
-
-        if (error) {
-            throw new Error(error.message);
-        }
 
         res.status(200).json({ message: 'OK' });
     } else if (req.method === 'PATCH' || req.method === 'POST') {
         const { activity, date } = patchRequestSchema.parse(req.body);
 
-        const { error } = await updateActivity({
+        await updateActivity({
             activity,
             activityId: req.query.id ? String(req.query.id) : undefined,
             date,
-            supabase,
             userId: user.id,
         });
-
-        if (error) {
-            throw new Error(error.message);
-        }
 
         res.status(200).json({ message: 'OK' });
     } else {

@@ -1,15 +1,12 @@
 import { Flex, Title } from '@mantine/core';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useQuery } from '@tanstack/react-query';
 import { endOfWeek, format, isToday, startOfWeek } from 'date-fns';
 import { Running } from 'iconoir-react';
 import { useTranslation } from 'next-i18next';
 
-import { fetchActivities } from '~api/activity';
 import { useProfile } from '~hooks/use-profile';
 import { useCurrentWeek } from '~store/hooks';
 import { type ActivitysMap } from '~types/activity';
-import { type Database } from '~types/supabase';
 import { getDaysOfWeek } from '~util/date';
 
 import styles from './header.module.css';
@@ -18,7 +15,6 @@ export const Header = () => {
     const { i18n } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const { profile } = useProfile();
-    const supabase = useSupabaseClient<Database>();
 
     const currentWeekKey = format(currentWeek, 'yyyy-MM-dd');
 
@@ -44,14 +40,13 @@ export const Header = () => {
                 'yyyy-MM-dd',
             );
 
-            const result = await fetchActivities({
-                endDate,
-                startDate,
-                supabase,
-                userId: profile.id,
-            });
-
-            return result;
+            const response = await fetch(
+                `/api/v1/activity?startDate=${startDate}&endDate=${endDate}`,
+            );
+            const { data } = (await response.json()) as {
+                data: ActivitysMap[keyof ActivitysMap][];
+            };
+            return data;
         },
         queryKey: ['activities', currentWeekKey],
     });

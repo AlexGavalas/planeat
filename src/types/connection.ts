@@ -1,8 +1,8 @@
-import { type Database } from './supabase';
+import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 
-export type Connection = Database['public']['Tables']['connections']['Row'];
+import { connections } from '~db/schema';
 
-export type EditedConnection =
-    Database['public']['Tables']['connections']['Insert'];
+export type Connection = InferSelectModel<typeof connections>;
+export type EditedConnection = InferInsertModel<typeof connections>;
 
 export type ConnectionsMap = Record<string, Connection | EditedConnection>;

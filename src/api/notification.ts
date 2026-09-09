@@ -1,90 +1,84 @@
-import {
-    type PostgrestError,
-    type SupabaseClient,
-} from '@supabase/supabase-js';
+import { and, eq } from 'drizzle-orm';
 
-import { type Notification } from '~types/notification';
-import { type Database } from '~types/supabase';
+import { getDb } from '~db';
+import { notifications, users } from '~db/schema';
 
-type FetchNotification = (params: {
-    supabase: SupabaseClient<Database>;
-    requestUserId: number;
-    targetUserId: number;
-}) => Promise<{ id: string } | null>;
-
-export const fetchNotification: FetchNotification = async ({
-    supabase,
+export const fetchNotification = async ({
     requestUserId,
     targetUserId,
-}) => {
-    const { data } = await supabase
-        .from('notifications')
-        .select('id')
-        .eq('request_user_id', requestUserId)
-        .eq('target_user_id', targetUserId)
-        .maybeSingle();
-
-    return data;
-};
-
-type CreateNotification = (params: {
-    supabase: SupabaseClient<Database>;
+}: {
     requestUserId: number;
     targetUserId: number;
-}) => Promise<{ error: PostgrestError | null }>;
+}) =>
+    (
+        await getDb()
+            .select({ id: notifications.id })
+            .from(notifications)
+            .where(
+                and(
+                    eq(notifications.request_user_id, requestUserId),
+                    eq(notifications.target_user_id, targetUserId),
+                ),
+            )
+            .limit(1)
+    )[0] ?? null;
 
-export const createConnectionRequestNotification: CreateNotification = async ({
+export const createConnectionRequestNotification = async ({
     requestUserId,
-    supabase,
     targetUserId,
+}: {
+    requestUserId: number;
+    targetUserId: number;
 }) => {
-    const { error } = await supabase.from('notifications').insert({
-        date: new Date().toISOString(),
-        notification_type: 'connection_request',
-        request_user_id: requestUserId,
-        target_user_id: targetUserId,
-    });
-
-    return {
-        error,
-    };
+    await getDb()
+        .insert(notifications)
+        .values({
+            date: new Date().toISOString().slice(0, 10),
+            notification_type: 'connection_request',
+            request_user_id: requestUserId,
+            target_user_id: targetUserId,
+        });
+    return { error: null };
 };
 
-type FetchConnectionRequestNotifications = (params: {
-    supabase: SupabaseClient<Database>;
+export const fetchConnectionRequestNotifications = async ({
+    userId,
+}: {
     userId: number;
-}) => Promise<{
-    data: (Notification & { users: unknown })[] | null;
-}>;
+}) => ({
+    data: await getDb()
+        .select({
+            id: notifications.id,
+            date: notifications.date,
+            notification_type: notifications.notification_type,
+            request_user_id: notifications.request_user_id,
+            target_user_id: notifications.target_user_id,
+            users: { full_name: users.full_name },
+        })
+        .from(notifications)
+        .innerJoin(users, eq(notifications.request_user_id, users.id))
+        .where(
+            and(
+                eq(notifications.notification_type, 'connection_request'),
+                eq(notifications.target_user_id, userId),
+            ),
+        ),
+});
 
-export const fetchConnectionRequestNotifications: FetchConnectionRequestNotifications =
-    async ({ supabase, userId }) => {
-        const { data } = await supabase
-            .from('notifications')
-            .select('*, users:request_user_id(full_name)')
-            .eq('notification_type', 'connection_request')
-            .eq('target_user_id', userId);
-
-        return {
-            data,
-        };
-    };
-
-type DeleteConnectionRequestNotification = (params: {
-    supabase: SupabaseClient<Database>;
+export const deleteConnectionRequestNotification = async ({
+    id,
+    userId,
+}: {
     id: string;
     userId: number;
-}) => Promise<{ error: PostgrestError | null }>;
-
-export const deleteConnectionRequestNotification: DeleteConnectionRequestNotification =
-    async ({ id, supabase, userId }) => {
-        const { error } = await supabase
-            .from('notifications')
-            .delete()
-            .eq('id', id)
-            .eq('target_user_id', userId);
-
-        return {
-            error,
-        };
-    };
+}) => {
+    await getDb()
+        .delete(notifications)
+        .where(
+            and(
+                eq(notifications.id, id),
+                eq(notifications.target_user_id, userId),
+            ),
+        );
+    return { error: null };
+};

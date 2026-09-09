@@ -1,0 +1,19 @@
+services:
+    postgres:
+        image: postgres:16-alpine
+        environment:
+            POSTGRES_DB: planeat
+            POSTGRES_PASSWORD: planeat
+            POSTGRES_USER: planeat
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U planeat -d planeat']
+            interval: 5s
+            timeout: 5s
+            retries: 10
+        ports:
+            - '5433:5432'
+        volumes:
+            - planeat-postgres:/var/lib/postgresql/data
+
+volumes:
+    planeat-postgres:

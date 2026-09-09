@@ -1,4 +1,3 @@
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { type GetServerSideProps } from 'next';
@@ -9,13 +8,10 @@ import { fetchMeals } from '~api/meal';
 import { getServerSession } from '~api/session';
 import { fetchUser } from '~api/user';
 import { Calendar } from '~features/calendar';
-import { type Database } from '~types/supabase';
 import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
-
-    const supabase = createPagesServerClient<Database>(context);
 
     const session = await getServerSession(context);
 
@@ -32,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     invariant(user?.email, 'User email must exist in session');
 
-    const profile = await fetchUser({ email: user.email, supabase });
+    const profile = await fetchUser({ email: user.email });
 
     invariant(profile, `Profile was not found for user email ${user.email}`);
 
@@ -57,11 +53,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             const result = await fetchMeals({
                 endDate,
                 startDate,
-                supabase,
                 userId: profile.id,
             });
 
-            return result.data ?? [];
+            return result.data;
         },
         queryKey: ['meals', currentWeekKey],
     });
@@ -71,7 +66,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             const result = await fetchActivities({
                 endDate,
                 startDate,
-                supabase,
                 userId: profile.id,
             });
 

@@ -1,118 +1,94 @@
-import {
-    type PostgrestError,
-    type SupabaseClient,
-} from '@supabase/supabase-js';
+import { and, count, desc, eq, gte, lte } from 'drizzle-orm';
 
+import { getDb } from '~db';
+import { activities } from '~db/schema';
 import { type Activity } from '~types/activity';
-import { type Database } from '~types/supabase';
 
-type FetchActivities = (params: {
-    startDate: string;
-    endDate: string;
-    supabase: SupabaseClient<Database>;
-    userId: number;
-}) => Promise<Activity[]>;
-
-export const fetchActivities: FetchActivities = async ({
-    startDate,
+export const fetchActivities = async ({
     endDate,
-    supabase,
+    startDate,
     userId,
-}) => {
-    const result = await supabase
-        .from('activities')
-        .select('*')
-        .gte('date', startDate)
-        .lte('date', endDate)
-        .eq('user_id', userId);
-
-    return result.data ?? [];
-};
-
-type FetchActivitiesCount = (params: {
-    supabase: SupabaseClient<Database>;
+}: {
+    endDate: string;
+    startDate: string;
     userId: number;
-}) => Promise<number | null>;
+}): Promise<Activity[]> =>
+    getDb()
+        .select()
+        .from(activities)
+        .where(
+            and(
+                eq(activities.user_id, userId),
+                gte(activities.date, startDate),
+                lte(activities.date, endDate),
+            ),
+        );
 
-export const fetchActivitiesCount: FetchActivitiesCount = async ({
-    supabase,
-    userId,
-}) => {
-    const { count } = await supabase
-        .from('activities')
-        .select('id', { count: 'exact' })
-        .eq('user_id', userId);
+export const fetchActivitiesCount = async ({ userId }: { userId: number }) =>
+    (
+        await getDb()
+            .select({ count: count() })
+            .from(activities)
+            .where(eq(activities.user_id, userId))
+    )[0]?.count ?? 0;
 
-    return count;
-};
-
-type FetchActivitiesPaginated = (params: {
-    supabase: SupabaseClient<Database>;
-    start: number;
-    end: number;
-    userId: number;
-}) => Promise<Activity[] | null>;
-
-export const fetchActivitiesPaginated: FetchActivitiesPaginated = async ({
-    supabase,
-    start,
+export const fetchActivitiesPaginated = async ({
     end,
+    start,
     userId,
-}) => {
-    const { data } = await supabase
-        .from('activities')
-        .select('*')
-        .eq('user_id', userId)
-        .range(start, end)
-        .order('date', { ascending: false });
+}: {
+    end: number;
+    start: number;
+    userId: number;
+}): Promise<Activity[]> =>
+    getDb()
+        .select()
+        .from(activities)
+        .where(eq(activities.user_id, userId))
+        .orderBy(desc(activities.date))
+        .limit(end - start + 1)
+        .offset(start);
 
-    return data;
-};
-
-type DeleteActivity = (params: {
-    supabase: SupabaseClient<Database>;
+export const deleteActivity = async ({
+    activityId,
+    userId,
+}: {
     activityId: string;
     userId: number;
-}) => Promise<{ error: PostgrestError | null }>;
-
-export const deleteActivity: DeleteActivity = async ({
-    supabase,
-    activityId,
-    userId,
 }) => {
-    const { error } = await supabase
-        .from('activities')
-        .delete()
-        .eq('id', activityId)
-        .eq('user_id', userId);
-
-    return { error };
+    await getDb()
+        .delete(activities)
+        .where(
+            and(eq(activities.id, activityId), eq(activities.user_id, userId)),
+        );
+    return { error: null };
 };
 
-type UpdateActivity = (params: {
-    supabase: SupabaseClient<Database>;
-    date: string;
-    activity: string;
-    userId: number;
-    activityId?: string;
-}) => Promise<{ error: PostgrestError | null }>;
-
-export const updateActivity: UpdateActivity = async ({
+export const updateActivity = async ({
     activity,
-    date,
-    supabase,
     activityId,
+    date,
     userId,
+}: {
+    activity: string;
+    activityId?: string;
+    date: string;
+    userId: number;
 }) => {
-    const { error } = await supabase
-        .from('activities')
-        .upsert({
-            activity,
-            date,
-            id: activityId,
-            user_id: userId,
-        })
-        .eq('user_id', userId);
-
-    return { error };
+    const values = { activity, date, user_id: userId };
+    const db = getDb();
+    if (activityId) {
+        await db
+            .update(activities)
+            .set(values)
+            .where(
+                and(
+                    eq(activities.id, activityId),
+                    eq(activities.user_id, userId),
+                ),
+            );
+    } else {
+        await db.insert(activities).values(values);
+    }
+    return { error: null };
 };

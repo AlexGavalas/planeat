@@ -1,11 +1,8 @@
 import { Button, Group, Stack, Textarea, Title } from '@mantine/core';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useTranslation } from 'next-i18next';
 import { type FormEventHandler, useCallback } from 'react';
 
-import { updateFoodPreferences } from '~api/user';
 import { useProfile } from '~hooks/use-profile';
-import { type Database } from '~types/supabase';
 import {
     showErrorNotification,
     showSuccessNotification,
@@ -13,7 +10,6 @@ import {
 
 export const FoodPreferences = () => {
     const { t } = useTranslation();
-    const supabase = useSupabaseClient<Database>();
     const { profile } = useProfile();
 
     const handleSavePreferences = useCallback<
@@ -31,14 +27,16 @@ export const FoodPreferences = () => {
             const positive = formData.get('positive')?.toString() ?? null;
             const negative = formData.get('negative')?.toString() ?? null;
 
-            const { error } = await updateFoodPreferences({
-                email: profile.email,
-                negative,
-                positive,
-                supabase,
+            const response = await fetch('/api/v1/user', {
+                body: JSON.stringify({
+                    foodPreferencesNegative: negative,
+                    foodPreferencesPositive: positive,
+                }),
+                headers: { 'Content-Type': 'application/json' },
+                method: 'PATCH',
             });
 
-            if (error) {
+            if (!response.ok) {
                 showErrorNotification({
                     message: t('notification.error.message'),
                     title: t('notification.error.title'),
@@ -50,7 +48,7 @@ export const FoodPreferences = () => {
                 });
             }
         },
-        [profile?.email, supabase, t],
+        [profile?.email, t],
     );
 
     return (

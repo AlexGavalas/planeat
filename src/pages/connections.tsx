@@ -1,5 +1,4 @@
 import { Container, Stack, Title } from '@mantine/core';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import type { GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import invariant from 'tiny-invariant';
@@ -10,12 +9,9 @@ import { Card } from '~components/card';
 import { FindUsers } from '~features/find-users';
 import { ManageConnectionRequests } from '~features/manage-connection-requests';
 import { ManageConnections } from '~features/manage-connections';
-import { type Database } from '~types/supabase';
 import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const supabase = createPagesServerClient<Database>(context);
-
     const session = await getServerSession(context);
 
     if (!session) {
@@ -31,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     invariant(user?.email, 'User email must exist in session');
 
-    const profile = await fetchUser({ email: user.email, supabase });
+    const profile = await fetchUser({ email: user.email });
 
     invariant(profile, `Profile was not found for user email ${user.email}`);
 

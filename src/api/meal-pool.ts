@@ -1,48 +1,38 @@
-import {
-    type PostgrestSingleResponse,
-    type SupabaseClient,
-} from '@supabase/supabase-js';
+import { and, eq, ilike } from 'drizzle-orm';
 
+import { getDb } from '~db';
+import { mealPool } from '~db/schema';
 import { type MealPool } from '~types/meal-pool';
-import { type Database } from '~types/supabase';
 
-type FetchMealPool = (params: {
+export const fetchMealPool = async ({
+    q,
+    userId,
+}: {
     q: string;
-    supabase: SupabaseClient<Database>;
     userId: number;
-}) => Promise<Pick<MealPool, 'content'>[]>;
-
-export const fetchMealPool: FetchMealPool = async ({ q, supabase, userId }) => {
-    const result = await supabase
-        .from('meals_pool')
-        .select('content')
-        .ilike('content', `%${q}%`)
-        .eq('user_id', userId)
+}): Promise<Pick<MealPool, 'content'>[]> =>
+    getDb()
+        .select({ content: mealPool.content })
+        .from(mealPool)
+        .where(
+            and(
+                eq(mealPool.user_id, userId),
+                ilike(mealPool.content, `%${q}%`),
+            ),
+        )
         .limit(10);
 
-    return result.data ?? [];
-};
-
-type CreateMealInPool = (params: {
-    content: string[];
-    supabase: SupabaseClient<Database>;
-    userId: number;
-}) => Promise<PostgrestSingleResponse<null>>;
-
-export const createMealInPool: CreateMealInPool = async ({
+export const createMealInPool = async ({
     content,
-    supabase,
     userId,
+}: {
+    content: string[];
+    userId: number;
 }) => {
-    const newData = content.map((content) => ({
-        content,
-        user_id: userId,
-    }));
-
-    const result = await supabase.from('meals_pool').upsert(newData, {
-        ignoreDuplicates: true,
-        onConflict: 'content, user_id',
-    });
-
-    return result;
+    if (content.length)
+        await getDb()
+            .insert(mealPool)
+            .values(content.map((item) => ({ content: item, user_id: userId })))
+            .onConflictDoNothing();
+    return { error: null };
 };

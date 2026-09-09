@@ -2,18 +2,12 @@ import { createMealInPool, fetchMealPool } from '~api/meal-pool';
 import { postRequestSchema } from '~schemas/meal-pool';
 import { type NextApiHandlerWithUser, withUser } from '~util/session';
 
-const handler: NextApiHandlerWithUser = async ({
-    req,
-    res,
-    supabase,
-    user,
-}) => {
+const handler: NextApiHandlerWithUser = async ({ req, res, user }) => {
     if (req.method === 'GET') {
         const { q } = req.query;
 
         const data = await fetchMealPool({
             q: String(q),
-            supabase,
             userId: user.id,
         });
 
@@ -23,15 +17,10 @@ const handler: NextApiHandlerWithUser = async ({
     } else if (req.method === 'POST') {
         const { content } = postRequestSchema.parse(req.body);
 
-        const { error } = await createMealInPool({
+        await createMealInPool({
             content,
-            supabase,
             userId: user.id,
         });
-
-        if (error) {
-            throw new Error(error.message);
-        }
 
         res.status(200).json({ message: 'OK' });
     } else {

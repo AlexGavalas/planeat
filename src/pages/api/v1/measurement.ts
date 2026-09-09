@@ -1,5 +1,9 @@
 import {
     deleteMeasurement,
+    fetchFatMeasurements,
+    fetchLatestFatMeasurement,
+    fetchLatestWeightMeasurement,
+    fetchMeasurements,
     fetchMeasurementsCount,
     fetchMeasurementsPaginated,
     updateMeasurement,
@@ -7,16 +11,26 @@ import {
 import { patchRequestSchema } from '~schemas/measurement';
 import { type NextApiHandlerWithUser, withUser } from '~util/session';
 
-const handler: NextApiHandlerWithUser = async ({
-    req,
-    res,
-    supabase,
-    user,
-}) => {
+const handler: NextApiHandlerWithUser = async ({ req, res, user }) => {
     if (req.method === 'GET') {
-        if (req.query.count === 'true') {
+        if (req.query.type === 'latest-weight') {
+            const { data } = await fetchLatestWeightMeasurement({
+                userId: user.id,
+            });
+            res.json({ data: data[0]?.weight ?? 0 });
+        } else if (req.query.type === 'latest-fat') {
+            const { data } = await fetchLatestFatMeasurement({
+                userId: user.id,
+            });
+            res.json({ data: data[0]?.fat_percentage ?? 0 });
+        } else if (req.query.type === 'weight-timeline') {
+            const { data } = await fetchMeasurements({ userId: user.id });
+            res.json({ data });
+        } else if (req.query.type === 'fat-timeline') {
+            const { data } = await fetchFatMeasurements({ userId: user.id });
+            res.json({ data });
+        } else if (req.query.count === 'true') {
             const count = await fetchMeasurementsCount({
-                supabase,
                 userId: user.id,
             });
 
@@ -28,39 +42,28 @@ const handler: NextApiHandlerWithUser = async ({
             const data = await fetchMeasurementsPaginated({
                 end,
                 start,
-                supabase,
                 userId: user.id,
             });
 
             res.json({ data });
         }
     } else if (req.method === 'DELETE') {
-        const { error } = await deleteMeasurement({
+        await deleteMeasurement({
             measurementId: String(req.query.id),
-            supabase,
             userId: user.id,
         });
-
-        if (error) {
-            throw new Error(error.message);
-        }
 
         res.status(200).json({ message: 'OK' });
     } else if (req.method === 'PATCH' || req.method === 'POST') {
         const { date, fatPercent, weight } = patchRequestSchema.parse(req.body);
 
-        const { error } = await updateMeasurement({
+        await updateMeasurement({
             date,
             fatPercent,
             measurementId: req.query.id ? String(req.query.id) : undefined,
-            supabase,
             userId: user.id,
             weight,
         });
-
-        if (error) {
-            throw new Error(error.message);
-        }
 
         res.status(200).json({ message: 'OK' });
     } else {

@@ -22,10 +22,6 @@ tsconfig.tsbuildinfo
 # vercel
 .vercel
 
-# Supabase
-**/supabase/.branches
-**/supabase/.temp
-
 # E2E tests
 /test-results/
 /playwright-report/

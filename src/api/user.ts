@@ -1,153 +1,121 @@
-import {
-    type PostgrestError,
-    type SupabaseClient,
-} from '@supabase/supabase-js';
+import { and, eq, ilike, ne } from 'drizzle-orm';
 
-import { type Database } from '~types/supabase';
+import { getDb } from '~db';
+import { users } from '~db/schema';
 import { type User } from '~types/user';
-
-type FetchUser = (params: {
-    supabase: SupabaseClient<Database>;
-    email: string;
-}) => Promise<User | null>;
-
-export const fetchUser: FetchUser = async ({ supabase, email }) => {
-    const { data: profile } = await supabase
-        .from('users')
-        .select('*')
-        .eq('email', email)
-        .single();
-
-    return profile;
-};
-
-type UpdateFoodPreferences = (params: {
-    supabase: SupabaseClient<Database>;
-    email: string;
-    positive: string | null;
-    negative: string | null;
-}) => Promise<{ profile: User | null; error: PostgrestError | null }>;
-
-export const updateFoodPreferences: UpdateFoodPreferences = async ({
-    supabase,
-    email,
-    positive,
-    negative,
-}) => {
-    const { data: profile, error } = await supabase
-        .from('users')
-        .update({
-            food_preferences_negative: negative,
-            food_preferences_positive: positive,
-        })
-        .eq('email', email)
-        .single();
-
-    return {
-        error,
-        profile,
-    };
-};
-
-type FindUsersByName = (params: {
-    supabase: SupabaseClient<Database>;
-    fullName: string;
-    userId: number;
-}) => Promise<{
-    data: Pick<User, 'full_name'>[] | null;
-}>;
 
 const MAX_QUERY_RESULTS = 5;
 
-export const findUsersByName: FindUsersByName = async ({
-    fullName,
-    supabase,
+export const fetchUser = async ({
+    email,
+}: {
+    email: string;
+}): Promise<User | null> =>
+    (
+        await getDb()
+            .select()
+            .from(users)
+            .where(eq(users.email, email))
+            .limit(1)
+    )[0] ?? null;
+
+export const updateFoodPreferences = async ({
+    negative,
+    positive,
     userId,
-}) => {
-    const { data } = await supabase
-        .from('users')
-        .select('full_name')
-        .ilike('full_name', `%${fullName}%`)
-        .eq('is_discoverable', true)
-        .neq('id', userId)
-        .limit(MAX_QUERY_RESULTS);
-
-    return {
-        data,
-    };
-};
-
-type FetchUserByFullname = (params: {
-    supabase: SupabaseClient<Database>;
-    fullName: string;
-}) => Promise<{ data: Pick<User, 'id' | 'full_name'>[] | null }>;
-
-export const fetchUserByFullname: FetchUserByFullname = async ({
-    fullName,
-    supabase,
-}) => {
-    const { data } = await supabase
-        .from('users')
-        .select('id, full_name')
-        .eq('full_name', fullName);
-
-    return {
-        data,
-    };
-};
-
-type UpdateProfile = (params: {
-    supabase: SupabaseClient<Database>;
+}: {
+    negative: string | null;
+    positive: string | null;
     userId: number;
-    isDiscoverable?: boolean;
-    height?: number | null;
-    targetWeight?: number | null;
-    language?: string;
-    hasCompletedOnboarding?: boolean | null;
-}) => Promise<{
-    error: PostgrestError | null;
-}>;
+}) => {
+    await getDb()
+        .update(users)
+        .set({
+            food_preferences_negative: negative,
+            food_preferences_positive: positive,
+        })
+        .where(eq(users.id, userId));
+    return { error: null };
+};
 
-export const updateProfile: UpdateProfile = async ({
-    supabase,
+export const findUsersByName = async ({
+    fullName,
     userId,
+}: {
+    fullName: string;
+    userId: number;
+}) => ({
+    data: await getDb()
+        .select({ full_name: users.full_name })
+        .from(users)
+        .where(
+            and(
+                ilike(users.full_name, `%${fullName}%`),
+                eq(users.is_discoverable, true),
+                ne(users.id, userId),
+            ),
+        )
+        .limit(MAX_QUERY_RESULTS),
+});
+
+export const fetchUserByFullname = async ({
+    fullName,
+}: {
+    fullName: string;
+}) => ({
+    data: await getDb()
+        .select({ id: users.id, full_name: users.full_name })
+        .from(users)
+        .where(eq(users.full_name, fullName)),
+});
+
+export const updateProfile = async ({
+    hasCompletedOnboarding,
     height,
     isDiscoverable,
     language,
     targetWeight,
-    hasCompletedOnboarding,
+    userId,
+}: {
+    hasCompletedOnboarding?: boolean | null;
+    height?: number | null;
+    isDiscoverable?: boolean;
+    language?: string;
+    targetWeight?: number | null;
+    userId: number;
 }) => {
-    const { error } = await supabase
-        .from('users')
-        .update({
-            has_completed_onboarding:
-                typeof hasCompletedOnboarding === 'boolean' &&
-                !hasCompletedOnboarding
-                    ? true
-                    : hasCompletedOnboarding,
+    await getDb()
+        .update(users)
+        .set({
+            has_completed_onboarding: hasCompletedOnboarding,
             height,
             is_discoverable: isDiscoverable,
             language,
             target_weight: targetWeight,
         })
-        .eq('id', userId);
-
-    return {
-        error,
-    };
+        .where(eq(users.id, userId));
+    return { error: null };
 };
 
-type DeleteProfile = (params: {
-    supabase: SupabaseClient<Database>;
-    userId: number;
-}) => Promise<{
-    error: PostgrestError | null;
-}>;
+export const deleteProfile = async ({ userId }: { userId: number }) => {
+    await getDb().delete(users).where(eq(users.id, userId));
+    return { error: null };
+};
 
-export const deleteProfile: DeleteProfile = async ({ supabase, userId }) => {
-    const { error } = await supabase.from('users').delete().eq('id', userId);
-
-    return {
-        error,
-    };
+export const createUser = async ({
+    email,
+    fullName,
+    language,
+}: {
+    email: string;
+    fullName: string;
+    language: string;
+}) => {
+    await getDb()
+        .insert(users)
+        .values({ email, full_name: fullName, language })
+        .onConflictDoUpdate({
+            target: users.email,
+            set: { full_name: fullName, language },
+        });
 };

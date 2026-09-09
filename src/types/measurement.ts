@@ -1,8 +1,8 @@
-import { type Database } from './supabase';
+import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 
-export type Measurement = Database['public']['Tables']['measurements']['Row'];
+import { measurements } from '~db/schema';
 
-export type EditedMeasurement =
-    Database['public']['Tables']['measurements']['Insert'];
+export type Measurement = InferSelectModel<typeof measurements>;
+export type EditedMeasurement = InferInsertModel<typeof measurements>;
 
 export type MeasurementsMap = Record<string, Measurement | EditedMeasurement>;

@@ -1,5 +1,6 @@
-import { type Database } from './supabase';
+import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 
-export type User = Database['public']['Tables']['users']['Row'];
+import { users } from '~db/schema';
 
-export type EditedUser = Database['public']['Tables']['users']['Update'];
+export type User = InferSelectModel<typeof users>;
+export type EditedUser = Partial<InferInsertModel<typeof users>>;
