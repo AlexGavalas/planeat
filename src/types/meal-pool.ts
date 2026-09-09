@@ -1,6 +1,6 @@
-import { type Database } from './supabase';
+import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 
-export type MealPool = Database['public']['Tables']['meals_pool']['Row'];
+import { mealPool } from '~db/schema';
 
-export type EditedMealPool =
-    Database['public']['Tables']['meals_pool']['Insert'];
+export type MealPool = InferSelectModel<typeof mealPool>;
+export type EditedMealPool = InferInsertModel<typeof mealPool>;

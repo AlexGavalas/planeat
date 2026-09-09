@@ -1,5 +1,4 @@
 import { Container, Space, Tabs } from '@mantine/core';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { type GetServerSideProps } from 'next';
 import { useTranslation } from 'next-i18next';
@@ -14,13 +13,10 @@ import { DeleteAccount } from '~features/delete-account';
 import { FoodPreferences } from '~features/food-preferences';
 import { Measurements } from '~features/measurements';
 import { PersonalSettings } from '~features/personal-settings';
-import { type Database } from '~types/supabase';
 import { getServerSideTranslations } from '~util/i18n';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
-
-    const supabase = createPagesServerClient<Database>(context);
 
     const session = await getServerSession(context);
 
@@ -37,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     invariant(user?.email, 'User email must exist in session');
 
-    const profile = await fetchUser({ email: user.email, supabase });
+    const profile = await fetchUser({ email: user.email });
 
     await queryClient.prefetchQuery({
         queryFn: () => profile,

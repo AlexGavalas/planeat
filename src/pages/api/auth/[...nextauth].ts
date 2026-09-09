@@ -1,7 +1,8 @@
-import { createClient } from '@supabase/supabase-js';
 import NextAuth, { type AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import invariant from 'tiny-invariant';
+
+import { createUser } from '~api/user';
 
 invariant(process.env.GOOGLE_ID, 'Missing GOOGLE_ID env var');
 invariant(process.env.GOOGLE_SECRET, 'Missing GOOGLE_SECRET env var');
@@ -19,7 +20,7 @@ const isGoogleProfile = (profile: unknown): profile is GoogleProfile => {
         return false;
     }
 
-    const keys = ['sub', 'name', 'email', 'picture', 'locale'];
+    const keys = ['sub', 'name', 'email', 'picture'];
 
     return keys.every((key) => key in profile);
 };
@@ -27,35 +28,13 @@ const isGoogleProfile = (profile: unknown): profile is GoogleProfile => {
 export const authOptions: AuthOptions = {
     events: {
         signIn: async ({ user }) => {
-            invariant(
-                process.env.NEXT_PUBLIC_SUPABASE_URL,
-                'Missing NEXT_PUBLIC_SUPABASE_URL env var',
-            );
+            if (!user.email || !user.name) return;
 
-            invariant(
-                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-                'Missing NEXT_PUBLIC_SUPABASE_ANON_KEY env var',
-            );
-
-            const supabase = createClient(
-                process.env.NEXT_PUBLIC_SUPABASE_URL,
-                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-                {
-                    auth: {
-                        persistSession: false,
-                    },
-                },
-            );
-
-            const result = await supabase.from('users').upsert({
+            await createUser({
                 email: user.email,
-                full_name: user.name,
-                language: user.locale,
+                fullName: user.name,
+                language: user.locale ?? 'en',
             });
-
-            if (result.error) {
-                console.error(result.error);
-            }
         },
     },
     providers: [

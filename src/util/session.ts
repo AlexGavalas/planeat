@@ -1,8 +1,4 @@
 import {
-    type SupabaseClient,
-    createPagesServerClient,
-} from '@supabase/auth-helpers-nextjs';
-import {
     type NextApiHandler,
     type NextApiRequest,
     type NextApiResponse,
@@ -30,7 +26,6 @@ export type NextApiHandlerWithUser = (params: {
     req: NextApiRequest;
     res: NextApiResponse;
     user: User;
-    supabase: SupabaseClient;
 }) => Promise<void>;
 
 export const withUser =
@@ -42,16 +37,13 @@ export const withUser =
             invariant(session, ERROR_MESSAGE.NO_SESSION);
             invariant(session.user?.email, ERROR_MESSAGE.NO_EMAIL);
 
-            const supabase = createPagesServerClient({ req, res });
-
             const user = await fetchUser({
                 email: session.user.email,
-                supabase,
             });
 
             invariant(user, ERROR_MESSAGE.NO_USER);
 
-            await handler({ req, res, supabase, user });
+            await handler({ req, res, user });
         } catch (e) {
             console.error(e);
 

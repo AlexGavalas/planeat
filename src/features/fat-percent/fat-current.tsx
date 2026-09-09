@@ -1,17 +1,13 @@
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
 
-import { fetchLatestFatMeasurement } from '~api/measurement';
 import { ProgressIndicator } from '~components/progress';
 import { useProfile } from '~hooks/use-profile';
-import { type Database } from '~types/supabase';
 
 import { MAX_FAT_PERCENT, SECTIONS } from './constants';
 
 export const CurrentFat = () => {
     const { t } = useTranslation();
-    const supabase = useSupabaseClient<Database>();
     const { profile } = useProfile();
 
     const { data: fatPercent = 0 } = useQuery({
@@ -21,12 +17,9 @@ export const CurrentFat = () => {
                 throw new Error(`User not logged in`);
             }
 
-            const result = await fetchLatestFatMeasurement({
-                supabase,
-                userId: profile.id,
-            });
-
-            return result.data?.[0]?.fat_percentage;
+            const response = await fetch('/api/v1/measurement?type=latest-fat');
+            const { data } = (await response.json()) as { data: number };
+            return data;
         },
         queryKey: ['current-fat-percent'],
     });

@@ -1,17 +1,13 @@
 import { Center, Title } from '@mantine/core';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
 
-import { fetchFatMeasurements } from '~api/measurement';
 import { LineChart } from '~components/charts/line';
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
-import { type Database } from '~types/supabase';
 
 export const FatTimeline = () => {
     const { t } = useTranslation();
-    const supabase = useSupabaseClient<Database>();
     const { profile } = useProfile();
 
     const { data, isFetching } = useQuery({
@@ -20,12 +16,13 @@ export const FatTimeline = () => {
                 throw new Error(`User not logged in`);
             }
 
-            const { data } = await fetchFatMeasurements({
-                supabase,
-                userId: profile.id,
-            });
-
-            return data?.length
+            const response = await fetch(
+                '/api/v1/measurement?type=fat-timeline',
+            );
+            const { data } = (await response.json()) as {
+                data: { date: string; fat_percentage: number }[];
+            };
+            return data.length
                 ? data.map(({ date: x, fat_percentage: y }) => ({ x, y }))
                 : null;
         },

@@ -1,98 +1,88 @@
-import {
-    type PostgrestError,
-    type SupabaseClient,
-} from '@supabase/supabase-js';
+import { and, eq, gte, inArray, lte } from 'drizzle-orm';
 
+import { getDb } from '~db';
+import { meals } from '~db/schema';
 import { type EditedMeal, type Meal } from '~types/meal';
-import { type Database } from '~types/supabase';
 
-type FetchMeals = (params: {
-    startDate: string;
-    endDate: string;
-    supabase: SupabaseClient<Database>;
-    userId: number;
-}) => Promise<{ data: Meal[] | null }>;
-
-export const fetchMeals: FetchMeals = async ({
-    startDate,
+export const fetchMeals = async ({
     endDate,
-    supabase,
+    startDate,
     userId,
-}) => {
-    const { data } = await supabase
-        .from('meals')
-        .select('*')
-        .gte('day', startDate)
-        .lte('day', endDate)
-        .eq('user_id', userId);
-
-    return {
-        data,
-    };
-};
-
-type DeleteMeals = (params: {
-    supabase: SupabaseClient<Database>;
+}: {
+    endDate: string;
+    startDate: string;
     userId: number;
-    deletedIds: string[];
-}) => Promise<{ error: PostgrestError | null }>;
+}): Promise<{ data: Meal[] }> => ({
+    data: await getDb()
+        .select()
+        .from(meals)
+        .where(
+            and(
+                eq(meals.user_id, userId),
+                gte(meals.day, startDate),
+                lte(meals.day, endDate),
+            ),
+        ),
+});
 
-export const deleteMeals: DeleteMeals = async ({
+export const deleteMeals = async ({
     deletedIds,
-    supabase,
     userId,
+}: {
+    deletedIds: string[];
+    userId: number;
 }) => {
-    const { error } = await supabase
-        .from('meals')
-        .delete()
-        .in('id', deletedIds)
-        .eq('user_id', userId);
-
-    return {
-        error,
-    };
+    if (deletedIds.length)
+        await getDb()
+            .delete(meals)
+            .where(
+                and(inArray(meals.id, deletedIds), eq(meals.user_id, userId)),
+            );
+    return { error: null };
 };
 
-type UpdateMeals = (params: {
-    supabase: SupabaseClient<Database>;
+export const updateMeals = async ({
+    editedMeals,
+    userId,
+}: {
     editedMeals: EditedMeal[];
     userId: number;
-}) => Promise<{ error: PostgrestError | null }>;
-
-export const updateMeals: UpdateMeals = async ({
-    editedMeals,
-    supabase,
-    userId,
 }) => {
-    const { error } = await supabase
-        .from('meals')
-        .upsert(editedMeals)
-        .eq('user_id', userId);
-
-    return {
-        error,
-    };
+    const db = getDb();
+    await db.transaction(async (tx) => {
+        for (const meal of editedMeals) {
+            if (!meal.id) throw new Error('Edited meals must have an id');
+            await tx
+                .update(meals)
+                .set({
+                    day: meal.day,
+                    meal: meal.meal,
+                    note: meal.note,
+                    rating: meal.rating,
+                    section_key: meal.section_key,
+                })
+                .where(and(eq(meals.id, meal.id), eq(meals.user_id, userId)));
+        }
+    });
+    return { error: null };
 };
 
-type CreateMeals = (params: {
-    supabase: SupabaseClient<Database>;
+export const createMeals = async ({
+    newMeals,
+    userId,
+}: {
     newMeals: EditedMeal[];
     userId: number;
-}) => Promise<{ error: PostgrestError | null }>;
-
-export const createMeals: CreateMeals = async ({
-    newMeals,
-    supabase,
-    userId,
 }) => {
-    const newMealsWithUserId = newMeals.map((meal) => ({
-        ...meal,
-        user_id: userId,
-    }));
-
-    const { error } = await supabase.from('meals').insert(newMealsWithUserId);
-
-    return {
-        error,
-    };
+    if (newMeals.length)
+        await getDb()
+            .insert(meals)
+            .values(
+                newMeals.map((meal) => ({
+                    ...meal,
+                    user_id: userId,
+                    id: undefined,
+                })),
+            );
+    return { error: null };
 };

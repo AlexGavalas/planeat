@@ -20,6 +20,8 @@
             "~api/*": ["api/*"],
             "~components/*": ["components/*"],
             "~constants/*": ["constants/*"],
+            "~db": ["db/index"],
+            "~db/*": ["db/*"],
             "~features/*": ["features/*"],
             "~hooks/*": ["hooks/*"],
             "~schemas/*": ["schemas/*"],

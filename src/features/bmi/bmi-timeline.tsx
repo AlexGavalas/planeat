@@ -1,17 +1,13 @@
 import { Box, Center, Title } from '@mantine/core';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
 
-import { fetchMeasurements } from '~api/measurement';
 import { LineChart } from '~components/charts/line';
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
-import { type Database } from '~types/supabase';
 
 export const BMITimeline = () => {
     const { t } = useTranslation();
-    const supabase = useSupabaseClient<Database>();
     const { profile } = useProfile();
 
     const { data, isFetching } = useQuery({
@@ -20,13 +16,14 @@ export const BMITimeline = () => {
                 throw new Error(`User not logged in`);
             }
 
-            const result = await fetchMeasurements({
-                supabase,
-                userId: profile.id,
-            });
-
-            return result.data?.length
-                ? result.data.map(({ date: x, weight: y }) => ({ x, y }))
+            const response = await fetch(
+                '/api/v1/measurement?type=weight-timeline',
+            );
+            const { data } = (await response.json()) as {
+                data: { date: string; weight: number }[];
+            };
+            return data.length
+                ? data.map(({ date: x, weight: y }) => ({ x, y }))
                 : null;
         },
         queryKey: ['bmi-timeline'],

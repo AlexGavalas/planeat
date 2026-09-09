@@ -13,7 +13,7 @@
         "plugin:@typescript-eslint/stylistic-type-checked",
         "prettier"
     ],
-    "ignorePatterns": ["*.config.js", "*.config.mjs", "src/types/supabase.ts"],
+    "ignorePatterns": ["*.config.js", "*.config.mjs"],
     "env": {
         "node": true,
         "browser": true

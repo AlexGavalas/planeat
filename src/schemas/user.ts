@@ -19,6 +19,8 @@ export const userSchema: UserSchema = z.object({
 });
 
 export const patchRequestSchema = z.object({
+    foodPreferencesNegative: z.string().nullable().optional(),
+    foodPreferencesPositive: z.string().nullable().optional(),
     hasCompletedOnboarding: z.boolean().nullable().optional(),
     height: z.number().nullable().optional(),
     isDiscoverable: z.boolean().optional(),

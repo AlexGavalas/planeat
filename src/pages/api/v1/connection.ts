@@ -6,15 +6,9 @@ import {
 import { deleteRequestSchema, postRequestSchema } from '~schemas/connection';
 import { type NextApiHandlerWithUser, withUser } from '~util/session';
 
-const handler: NextApiHandlerWithUser = async ({
-    req,
-    res,
-    supabase,
-    user,
-}) => {
+const handler: NextApiHandlerWithUser = async ({ req, res, user }) => {
     if (req.method === 'GET') {
         const { data } = await fetchUserConnections({
-            supabase,
             userId: user.id,
         });
 
@@ -24,30 +18,20 @@ const handler: NextApiHandlerWithUser = async ({
             req.body,
         );
 
-        const { error } = await deleteConnection({
+        await deleteConnection({
             connectionId,
             connectionUserId,
-            supabase,
             userId: user.id,
         });
-
-        if (error) {
-            throw new Error(error.message);
-        }
 
         res.status(200).json({ message: 'OK' });
     } else if (req.method === 'POST') {
         const { connectionUserId } = postRequestSchema.parse(req.body);
 
-        const { error } = await createConnection({
+        await createConnection({
             connectionUserId,
-            supabase,
             userId: user.id,
         });
-
-        if (error) {
-            throw new Error(error.message);
-        }
 
         res.status(200).json({ message: 'OK' });
     } else {

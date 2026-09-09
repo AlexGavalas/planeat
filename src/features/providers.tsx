@@ -1,8 +1,6 @@
 import { Center, Loader, MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
-import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs';
-import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import {
     type DehydratedState,
     HydrationBoundary,
@@ -16,7 +14,6 @@ import { Fragment, type PropsWithChildren, useMemo } from 'react';
 
 import { BRAND_COLORS } from '~constants/colors';
 import { UserContext } from '~store/user-context';
-import { type Database } from '~types/supabase';
 
 const CenterLoader = () => (
     <Center py="md">
@@ -75,11 +72,6 @@ export const Providers = ({
 }: ProvidersProps) => {
     const router = useRouter();
 
-    const supabaseClient = useMemo(
-        () => createPagesBrowserClient<Database>(),
-        [],
-    );
-
     const queryClient = useMemo(
         () =>
             new QueryClient({
@@ -106,20 +98,18 @@ export const Providers = ({
                 primaryColor: 'brand',
             }}
         >
-            <SessionContextProvider supabaseClient={supabaseClient}>
-                <SessionProvider session={session}>
-                    <QueryClientProvider client={queryClient}>
-                        <HydrationBoundary state={dehydratedState}>
-                            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                            {/* @ts-expect-error - Modals do not get the correct type with dynamic components for some reason */}
-                            <ModalsProvider modals={modals}>
-                                <Wrapper>{children}</Wrapper>
-                                <Notifications />
-                            </ModalsProvider>
-                        </HydrationBoundary>
-                    </QueryClientProvider>
-                </SessionProvider>
-            </SessionContextProvider>
+            <SessionProvider session={session}>
+                <QueryClientProvider client={queryClient}>
+                    <HydrationBoundary state={dehydratedState}>
+                        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                        {/* @ts-expect-error - Modals do not get the correct type with dynamic components for some reason */}
+                        <ModalsProvider modals={modals}>
+                            <Wrapper>{children}</Wrapper>
+                            <Notifications />
+                        </ModalsProvider>
+                    </HydrationBoundary>
+                </QueryClientProvider>
+            </SessionProvider>
         </MantineProvider>
     );
 };

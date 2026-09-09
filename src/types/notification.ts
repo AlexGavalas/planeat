@@ -1,9 +1,9 @@
-import { type Database } from './supabase';
+import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 
-export type Notification = Database['public']['Tables']['notifications']['Row'];
+import { notifications } from '~db/schema';
 
-export type EditedNotification =
-    Database['public']['Tables']['notifications']['Insert'];
+export type Notification = InferSelectModel<typeof notifications>;
+export type EditedNotification = InferInsertModel<typeof notifications>;
 
 export type NotificationsMap = Record<
     string,

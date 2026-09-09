@@ -1,84 +1,64 @@
-import {
-    type PostgrestError,
-    type SupabaseClient,
-} from '@supabase/supabase-js';
+import { and, eq } from 'drizzle-orm';
 
-import { type Connection } from '~types/connection';
-import { type Database } from '~types/supabase';
+import { getDb } from '~db';
+import { connections, users } from '~db/schema';
 
-type FetchUserConnections = (params: {
-    supabase: SupabaseClient<Database>;
-    userId: number;
-}) => Promise<{
-    data: Connection[] | null;
-}>;
+export const fetchUserConnections = async ({ userId }: { userId: number }) => ({
+    data: await getDb()
+        .select({
+            id: connections.id,
+            user_id: connections.user_id,
+            connection_user_id: connections.connection_user_id,
+            users: { full_name: users.full_name },
+        })
+        .from(connections)
+        .innerJoin(users, eq(connections.connection_user_id, users.id))
+        .where(eq(connections.user_id, userId)),
+});
 
-export const fetchUserConnections: FetchUserConnections = async ({
-    supabase,
-    userId,
-}) => {
-    const { data } = await supabase
-        .from('connections')
-        .select('*, users:connection_user_id(full_name)')
-        .eq('user_id', userId);
-
-    return {
-        data,
-    };
-};
-
-type DeleteConnection = (params: {
-    supabase: SupabaseClient<Database>;
-    connectionId: string;
-    userId: number;
-    connectionUserId: number;
-}) => Promise<{ error: PostgrestError | null }>;
-
-export const deleteConnection: DeleteConnection = async ({
+export const deleteConnection = async ({
     connectionId,
     connectionUserId,
-    supabase,
     userId,
+}: {
+    connectionId: string;
+    connectionUserId: number;
+    userId: number;
 }) => {
-    const { error: currentUserError } = await supabase
-        .from('connections')
-        .delete()
-        .eq('id', connectionId);
-
-    const { error: connectionUserError } = await supabase
-        .from('connections')
-        .delete()
-        .eq('connection_user_id', userId)
-        .eq('user_id', connectionUserId);
-
-    return {
-        error: currentUserError ?? connectionUserError,
-    };
+    const db = getDb();
+    await db.transaction(async (tx) => {
+        await tx
+            .delete(connections)
+            .where(
+                and(
+                    eq(connections.id, connectionId),
+                    eq(connections.user_id, userId),
+                ),
+            );
+        await tx
+            .delete(connections)
+            .where(
+                and(
+                    eq(connections.connection_user_id, userId),
+                    eq(connections.user_id, connectionUserId),
+                ),
+            );
+    });
+    return { error: null };
 };
 
-type CreateConnection = (params: {
-    supabase: SupabaseClient<Database>;
-    userId: number;
-    connectionUserId: number;
-}) => Promise<{ error: PostgrestError | null }>;
-
-export const createConnection: CreateConnection = async ({
-    supabase,
-    userId,
+export const createConnection = async ({
     connectionUserId,
+    userId,
+}: {
+    connectionUserId: number;
+    userId: number;
 }) => {
-    const { error } = await supabase.from('connections').insert([
-        {
-            connection_user_id: connectionUserId,
-            user_id: userId,
-        },
-        {
-            connection_user_id: userId,
-            user_id: connectionUserId,
-        },
-    ]);
-
-    return {
-        error,
-    };
+    await getDb()
+        .insert(connections)
+        .values([
+            { connection_user_id: connectionUserId, user_id: userId },
+            { connection_user_id: userId, user_id: connectionUserId },
+        ]);
+    return { error: null };
 };
