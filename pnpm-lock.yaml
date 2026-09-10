@@ -1,3 +1,123 @@
+---
+lockfileVersion: '9.0'
+
+importers:
+
+  .:
+    configDependencies: {}
+    packageManagerDependencies:
+      '@pnpm/exe':
+        specifier: 12.3.1
+        version: 12.3.1
+      pnpm:
+        specifier: 12.3.1
+        version: 12.3.1
+
+packages:
+
+  '@pnpm/exe.darwin-arm64@12.3.1':
+    resolution: {integrity: sha512-Yer+aZnQtgE+OOLKwbRHaAEt74WBJdH8eXpLrSWf+5vj7DkkDvhSR45HVxN3a5d430fMUyF0lmQai02T650r4g==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@pnpm/exe.darwin-x64@12.3.1':
+    resolution: {integrity: sha512-XPZYf+XpxufwZS8tpQQdftsv6eUtPDA0uU5NlfXA1uMVPvXJesw5PLGWmmJZHcI4rIscn2H6FngkIcvkuZaaKQ==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@pnpm/exe.linux-arm64-musl@12.3.1':
+    resolution: {integrity: sha512-WjKcLeuierWGSQHjb0QeDl8avQTel8rN5jDMCI55tBJTrTBXNQsdlpgzP9uCD0GSzjPH+hjWKb+GjeMNvv5Ruw==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@pnpm/exe.linux-arm64@12.3.1':
+    resolution: {integrity: sha512-X0HxHlEYubFRuMPBOy+ytKsv6c11v4em/ovVVCy5KCdJVBtVGF7vF5ywlGqw7EjpGdqM39pdLTWFwH9Q77lUzQ==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@pnpm/exe.linux-x64-musl@12.3.1':
+    resolution: {integrity: sha512-ZvzQI2+Ek0v+V6m30XV3ShIx5sm+ZIZoM669Z0F/RvMSpHgklqv3CBdEwAsQCZ7XBNZLMQIE7RPR2yIwxt3mnw==}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@pnpm/exe.linux-x64@12.3.1':
+    resolution: {integrity: sha512-ubvbQ2OSt7fR3kSnhtknx5xnm2H7uRi0kC32ADmzKJ1vZz337kmL30rTHoUzTG7ZcIyEhODg7R+zI1cW1ZdVDw==}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@pnpm/exe.win32-arm64@12.3.1':
+    resolution: {integrity: sha512-e+5CjFBGWP7U7RfFlH/EQnlFaP9Uyo/Y0BDCEbitsC4if28WBur3ajAkc25rRwiEwmmEpipTSzqNsKIs9Mq72Q==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@pnpm/exe.win32-x64@12.3.1':
+    resolution: {integrity: sha512-5pW8NQuVF3dkNdaUCm03PeoDiC5I9h4y9Fz717KLWi5jxDKmgARmD1zDdm60F5ohRZHPrRv/jAg94a/5+VXxow==}
+    cpu: [x64]
+    os: [win32]
+
+  '@pnpm/exe@12.3.1':
+    resolution: {integrity: sha512-Tqo6y+EutDHtI6dodXgaYGQJfRQbwqWmhs8QgsQACd2J+qUInOYFPoiU94RIWuxsQBqgH3OMpTEkNEoJO1uPZA==}
+    engines: {node: '>=18.*'}
+    hasBin: true
+
+  pnpm@12.3.1:
+    resolution: {integrity: sha512-PBTBVAjRSJ01D47X+TNh0mzHBwVPaEmk7qO7dAf/T+RWS0E6HEIadzoXarEWio3xx9VI8s0Nx9NE9YxOaApbGA==}
+    engines: {node: '>=18.*'}
+    hasBin: true
+
+snapshots:
+
+  '@pnpm/exe.darwin-arm64@12.3.1':
+    optional: true
+
+  '@pnpm/exe.darwin-x64@12.3.1':
+    optional: true
+
+  '@pnpm/exe.linux-arm64-musl@12.3.1':
+    optional: true
+
+  '@pnpm/exe.linux-arm64@12.3.1':
+    optional: true
+
+  '@pnpm/exe.linux-x64-musl@12.3.1':
+    optional: true
+
+  '@pnpm/exe.linux-x64@12.3.1':
+    optional: true
+
+  '@pnpm/exe.win32-arm64@12.3.1':
+    optional: true
+
+  '@pnpm/exe.win32-x64@12.3.1':
+    optional: true
+
+  '@pnpm/exe@12.3.1':
+    optionalDependencies:
+      '@pnpm/exe.darwin-arm64': 12.3.1
+      '@pnpm/exe.darwin-x64': 12.3.1
+      '@pnpm/exe.linux-arm64': 12.3.1
+      '@pnpm/exe.linux-arm64-musl': 12.3.1
+      '@pnpm/exe.linux-x64': 12.3.1
+      '@pnpm/exe.linux-x64-musl': 12.3.1
+      '@pnpm/exe.win32-arm64': 12.3.1
+      '@pnpm/exe.win32-x64': 12.3.1
+
+  pnpm@12.3.1:
+    optionalDependencies:
+      '@pnpm/exe.darwin-arm64': 12.3.1
+      '@pnpm/exe.darwin-x64': 12.3.1
+      '@pnpm/exe.linux-arm64': 12.3.1
+      '@pnpm/exe.linux-arm64-musl': 12.3.1
+      '@pnpm/exe.linux-x64': 12.3.1
+      '@pnpm/exe.linux-x64-musl': 12.3.1
+      '@pnpm/exe.win32-arm64': 12.3.1
+      '@pnpm/exe.win32-x64': 12.3.1
+
+---
 lockfileVersion: '9.0'
 
 settings:
@@ -124,8 +244,8 @@ importers:
         specifier: 14.0.0
         version: 14.0.0
       '@playwright/test':
-        specifier: 1.39.0
-        version: 1.39.0
+        specifier: 1.63.0
+        version: 1.63.0
       '@testing-library/jest-dom':
         specifier: 6.1.4
         version: 6.1.4(@jest/globals@29.7.0)(@types/jest@29.5.14)(jest@29.7.0(@types/node@18.11.18)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@types/node@18.11.18)(typescript@5.2.2)))
@@ -1379,10 +1499,9 @@ packages:
   '@panva/hkdf@1.2.1':
     resolution: {integrity: sha512-6oclG6Y3PiDFcoyk8srjLfVKyMfVCKJ27JwNPViuXziFpmdz+MZnZN/aKY0JGXgYuO/VghU0jcOAZgWXZ1Dmrw==}
 
-  '@playwright/test@1.39.0':
-    resolution: {integrity: sha512-3u1iFqgzl7zr004bGPYiN/5EZpRUSFddQBra8Rqll5N0/vfpqlP9I9EXqAoGacuAbX6c9Ulg/Cjqglp5VkK6UQ==}
-    engines: {node: '>=16'}
-    deprecated: Please update to the latest version of Playwright to test up-to-date browsers.
+  '@playwright/test@1.63.0':
+    resolution: {integrity: sha512-oxMK4vllB9RK5NQ2l1pq1IfOf2AvnEuj/vYGDj0H2nMtmtZpKtCwt/l00GEO6xjGfpBNAvjovvYdCm50dRQkpQ==}
+    engines: {node: '>=20'}
     hasBin: true
 
   '@polka/url@1.0.0-next.29':
@@ -2969,11 +3088,6 @@ packages:
   fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
 
-  fsevents@2.3.2:
-    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
-    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
-    os: [darwin]
-
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
@@ -4135,14 +4249,14 @@ packages:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
 
-  playwright-core@1.39.0:
-    resolution: {integrity: sha512-+k4pdZgs1qiM+OUkSjx96YiKsXsmb59evFoqv8SKO067qBA+Z2s/dCzJij/ZhdQcs2zlTAgRKfeiiLm8PQ2qvw==}
-    engines: {node: '>=16'}
+  playwright-core@1.63.0:
+    resolution: {integrity: sha512-rYCsBF/M5HjUch52bbtVONEFjv6Xu8sm8h72dNlR5bzIE1fvC/bxgspzkjSfU+MweEMmPM8KJebG6nnyxo5mCg==}
+    engines: {node: '>=20'}
     hasBin: true
 
-  playwright@1.39.0:
-    resolution: {integrity: sha512-naE5QT11uC/Oiq0BwZ50gDmy8c8WLPRTEWuSSFVG2egBka/1qMoSqYQcROMT9zLwJ86oPofcTH2jBY/5wWOgIw==}
-    engines: {node: '>=16'}
+  playwright@1.63.0:
+    resolution: {integrity: sha512-+7ziBLidS4NaNCdt57SUDT+wYmmd5fmiQejUic/kb+YsYSCPyOOE9sebzMjNmQrsnNpDJqd4WHvV/8lfKfUDUg==}
+    engines: {node: '>=20'}
     hasBin: true
 
   popper.js@1.16.1:
@@ -6397,9 +6511,9 @@ snapshots:
 
   '@panva/hkdf@1.2.1': {}
 
-  '@playwright/test@1.39.0':
+  '@playwright/test@1.63.0':
     dependencies:
-      playwright: 1.39.0
+      playwright: 1.63.0
 
   '@polka/url@1.0.0-next.29': {}
 
@@ -8188,9 +8302,6 @@ snapshots:
 
   fs.realpath@1.0.0: {}
 
-  fsevents@2.3.2:
-    optional: true
-
   fsevents@2.3.3:
     optional: true
 
@@ -9576,13 +9687,11 @@ snapshots:
     dependencies:
       find-up: 4.1.0
 
-  playwright-core@1.39.0: {}
+  playwright-core@1.63.0: {}
 
-  playwright@1.39.0:
+  playwright@1.63.0:
     dependencies:
-      playwright-core: 1.39.0
-    optionalDependencies:
-      fsevents: 2.3.2
+      playwright-core: 1.63.0
 
   popper.js@1.16.1: {}
 
