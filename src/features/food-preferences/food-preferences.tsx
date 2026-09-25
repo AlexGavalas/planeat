@@ -1,5 +1,5 @@
 import { Button, Group, Stack, Textarea, Title } from '@mantine/core';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import { type FormEventHandler, useCallback } from 'react';
 
 import { useProfile } from '~hooks/use-profile';

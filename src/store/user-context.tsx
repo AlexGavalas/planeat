@@ -1,4 +1,4 @@
-import { i18n } from 'next-i18next';
+import { i18n } from 'next-i18next/pages';
 import { type FC, type ReactNode, useEffect } from 'react';
 
 import { useProfile } from '~hooks/use-profile';

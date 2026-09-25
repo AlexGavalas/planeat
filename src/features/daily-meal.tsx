@@ -1,6 +1,6 @@
 import { Spoiler, Stack, Text, Timeline, Title } from '@mantine/core';
 import { format, isAfter, set, startOfDay } from 'date-fns';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 
 import { MEAL_ICON, ROWS } from '~constants/calendar';
 import { type MealsMap } from '~types/meal';

@@ -1,6 +1,6 @@
 import { Box, Center, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 
 import { LineChart } from '~components/charts/line';
 import { LoadingOverlay } from '~components/loading-overlay';

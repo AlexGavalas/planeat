@@ -8,7 +8,7 @@ import {
     Stack,
     Title,
 } from '@mantine/core';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import { useState } from 'react';
 
 import { LoadingOverlay } from '~components/loading-overlay';

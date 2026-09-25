@@ -7,7 +7,7 @@ import {
 } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
 import { EditPencil, Plus, Running } from 'iconoir-react';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import { useCallback, useState } from 'react';
 
 import { useOpenContextModal } from '~util/modal';

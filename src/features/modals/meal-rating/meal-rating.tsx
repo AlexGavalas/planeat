@@ -1,6 +1,6 @@
 import { Button, Center, Group, Rating, Stack } from '@mantine/core';
 import { type ContextModalProps } from '@mantine/modals';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import {
     type FormEventHandler,
     type MouseEventHandler,

@@ -1,5 +1,5 @@
-import { type SSRConfig } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { type SSRConfig } from 'next-i18next/pages';
+import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations';
 
 const allLocales = ['gr', 'en'];
 

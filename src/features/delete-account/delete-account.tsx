@@ -1,5 +1,5 @@
 import { Button, Stack, Title } from '@mantine/core';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import { type MouseEventHandler, useCallback } from 'react';
 
 import { useOpenContextModal } from '~util/modal';

@@ -1,8 +1,16 @@
 import { type Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
 
-export const useUser = (): Session['user'] => {
-    const { data } = useSession();
+type UseUser = {
+    isLoading: boolean;
+    user: Session['user'];
+};
 
-    return data?.user;
+export const useUser = (): UseUser => {
+    const { data, status } = useSession();
+
+    return {
+        isLoading: status === 'loading',
+        user: data?.user,
+    };
 };

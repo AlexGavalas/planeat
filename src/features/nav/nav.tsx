@@ -1,6 +1,6 @@
 import { Anchor, Group, Text } from '@mantine/core';
 import { type KeyPrefix } from 'i18next';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
