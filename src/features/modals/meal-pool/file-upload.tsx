@@ -9,7 +9,7 @@ import {
     Textarea,
 } from '@mantine/core';
 import { InfoEmpty, Redo, Trash, Undo } from 'iconoir-react';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import {
     type FormEventHandler,
     type MouseEventHandler,

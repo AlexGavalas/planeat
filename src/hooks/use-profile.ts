@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import { useRouter } from 'next/router';
 
 import { type User } from '~types/user';
@@ -31,13 +31,18 @@ export const useProfile: UseProfile = () => {
     const router = useRouter();
     const queryClient = useQueryClient();
     const { t } = useTranslation();
-    const user = useUser();
+    const { isLoading, user } = useUser();
 
     const { data: profile, isFetching } = useQuery({
+        enabled: Boolean(user),
         queryFn: async () => {
             const response = await fetch('/api/v1/user');
 
             const { data } = (await response.json()) as { data?: User };
+
+            if (!response.ok || !data) {
+                throw new Error('Could not fetch user profile');
+            }
 
             return data;
         },
@@ -115,7 +120,7 @@ export const useProfile: UseProfile = () => {
     return {
         deleteProfile,
         isDeleting: isPending,
-        isFetching,
+        isFetching: isLoading || isFetching,
         profile,
         updateProfile,
         user,

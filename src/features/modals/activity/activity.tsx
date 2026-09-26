@@ -3,7 +3,7 @@ import { DatePicker } from '@mantine/dates';
 import { type ContextModalProps } from '@mantine/modals';
 import { format } from 'date-fns';
 import 'dayjs/locale/el';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import {
     type ChangeEventHandler,
     type FormEventHandler,

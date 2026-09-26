@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import { useMemo, useState } from 'react';
 
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';

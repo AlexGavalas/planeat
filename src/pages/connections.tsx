@@ -1,6 +1,6 @@
 import { Container, Stack, Title } from '@mantine/core';
 import type { GetServerSideProps } from 'next';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import invariant from 'tiny-invariant';
 
 import { getServerSession } from '~api/session';

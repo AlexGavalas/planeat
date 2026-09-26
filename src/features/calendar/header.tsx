@@ -2,7 +2,7 @@ import { Flex, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { endOfWeek, format, isToday, startOfWeek } from 'date-fns';
 import { Running } from 'iconoir-react';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 
 import { useProfile } from '~hooks/use-profile';
 import { useCurrentWeek } from '~store/hooks';

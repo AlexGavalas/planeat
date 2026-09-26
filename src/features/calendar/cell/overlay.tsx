@@ -7,7 +7,7 @@ import {
     Tooltip,
 } from '@mantine/core';
 import { EditPencil, Notes, ThreeStars } from 'iconoir-react';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import { useCallback } from 'react';
 
 import { CopyButton } from '~components/copy-button';

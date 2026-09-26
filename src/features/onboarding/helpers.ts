@@ -1,4 +1,4 @@
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import { type Step } from 'react-joyride';
 
 const commonStepProps: Partial<Step> = {

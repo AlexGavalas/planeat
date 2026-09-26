@@ -1,7 +1,7 @@
 import { Container, Space, Tabs } from '@mantine/core';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { type GetServerSideProps } from 'next';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import invariant from 'tiny-invariant';
 
 import { getServerSession } from '~api/session';

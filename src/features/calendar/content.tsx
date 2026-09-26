@@ -1,4 +1,4 @@
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import { useMemo } from 'react';
 
 import { ROWS } from '~constants/calendar';

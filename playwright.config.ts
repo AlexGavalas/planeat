@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const envVarBaseUrl = process.env.PLAYWRIGHT_TEST_BASE_URL;
+const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 
 const baseURL =
     typeof envVarBaseUrl === 'string' ? envVarBaseUrl : 'http://localhost:3000';
@@ -9,6 +10,7 @@ export default defineConfig({
     expect: {
         toHaveScreenshot: {
             maxDiffPixelRatio: 0.1,
+            stylePath: 'e2e/styles.css',
         },
     },
     // Fail the build on CI if you accidentally left test.only in the source code.
@@ -26,13 +28,20 @@ export default defineConfig({
     testDir: './e2e',
     use: {
         baseURL,
+        extraHTTPHeaders: bypassSecret
+            ? {
+                  'x-vercel-protection-bypass': bypassSecret,
+                  'x-vercel-set-bypass-cookie': 'true',
+              }
+            : {},
         trace: 'on-first-retry',
     },
     workers: process.env.CI ? 1 : undefined,
     ...(!process.env.CI && {
         webServer: {
-            command: 'pnpm dev',
-            url: 'http://localhost:3000',
+            command: 'pnpm preview',
+            reuseExistingServer: true,
+            url: baseURL,
         },
     }),
 });

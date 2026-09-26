@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import { useCallback, useMemo, useState } from 'react';
 
 import { LoadingOverlay } from '~components/loading-overlay';

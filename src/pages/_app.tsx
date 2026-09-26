@@ -3,7 +3,7 @@ import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
 import { type DehydratedState } from '@tanstack/react-query';
 import { type SessionProviderProps } from 'next-auth/react';
-import { appWithTranslation } from 'next-i18next';
+import { appWithTranslation } from 'next-i18next/pages';
 import { type AppProps } from 'next/app';
 import Head from 'next/head';
 
@@ -11,6 +11,7 @@ import { Header } from '~features/header';
 import { Onboarding } from '~features/onboarding';
 import { Providers } from '~features/providers';
 
+import nextI18NextConfig from '../../next-i18next.config';
 import '../styles/globals.css';
 
 const App = ({
@@ -39,4 +40,4 @@ const App = ({
     );
 };
 
-export default appWithTranslation(App);
+export default appWithTranslation(App, nextI18NextConfig);

@@ -1,5 +1,5 @@
 import { Stack, Switch, type SwitchProps, Title } from '@mantine/core';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 
 import { useProfile } from '~hooks/use-profile';
 

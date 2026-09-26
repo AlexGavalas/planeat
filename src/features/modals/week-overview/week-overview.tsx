@@ -1,7 +1,7 @@
 import { Alert, List, Stack, Text } from '@mantine/core';
 import { format, parse, parseISO } from 'date-fns';
 import groupBy from 'lodash/fp/groupBy';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import { useMemo } from 'react';
 
 import { MEAL_ICON, ROWS } from '~constants/calendar';

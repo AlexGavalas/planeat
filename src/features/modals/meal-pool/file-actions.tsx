@@ -1,5 +1,5 @@
 import { Box, Button, Group, Text } from '@mantine/core';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import { type MouseEventHandler } from 'react';
 
 type FileActionsProps = Readonly<{

@@ -8,7 +8,7 @@ import {
     Textarea,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next/pages';
 import {
     type ChangeEventHandler,
     type MouseEventHandler,
