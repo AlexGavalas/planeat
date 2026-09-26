@@ -8,7 +8,7 @@ import {
     Text,
     Textarea,
 } from '@mantine/core';
-import { InfoEmpty, Redo, Trash, Undo } from 'iconoir-react';
+import { InfoCircle, Redo, Trash, Undo } from 'iconoir-react';
 import { useTranslation } from 'next-i18next/pages';
 import {
     type FormEventHandler,
@@ -95,7 +95,9 @@ export const FileUploadTab = () => {
 
     return (
         <Stack gap="md">
-            <Alert icon={<InfoEmpty />}>{t('file_types_info')}</Alert>
+            <Alert icon={<InfoCircle />} variant="outline">
+                {t('file_types_info')}
+            </Alert>
             {!isSuccess && (
                 <FileButton
                     accept=".docx"
@@ -117,7 +119,9 @@ export const FileUploadTab = () => {
             {isSuccess && (
                 <>
                     <Group gap="md">
-                        <Alert icon={<InfoEmpty />}>{t('upload.helper')}</Alert>
+                        <Alert icon={<InfoCircle />} variant="outline">
+                            {t('upload.helper')}
+                        </Alert>
                         <Button
                             disabled={!canUndo}
                             leftSection={<Undo />}
@@ -151,7 +155,7 @@ export const FileUploadTab = () => {
                                         color="red"
                                         data-item-index={idx}
                                         onClick={handleRemoveItem}
-                                        variant="subtle"
+                                        variant="outline"
                                     >
                                         <Trash />
                                     </ActionIcon>

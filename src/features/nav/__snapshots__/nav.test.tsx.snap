@@ -8,18 +8,18 @@ exports[`<Nav /> renders 1`] = `
     @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
   </style>
   <div
-    class="m-4081bf90 mantine-Group-root"
+    class="m_4081bf90 mantine-Group-root"
     style="--group-gap: var(--mantine-spacing-md); --group-align: center; --group-justify: flex-start; --group-wrap: wrap;"
   >
     <a
       href="/home"
     >
       <span
-        class="mantine-focus-auto m-849cf0da m-b6d8b162 mantine-Text-root mantine-Anchor-root"
+        class="mantine-focus-auto m_849cf0da m_b6d8b162 mantine-Text-root mantine-Anchor-root"
         data-underline="hover"
       >
         <p
-          class="mantine-focus-auto m-b6d8b162 mantine-Text-root"
+          class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
         >
           Home
         </p>
@@ -29,11 +29,11 @@ exports[`<Nav /> renders 1`] = `
       href="/meal-plan"
     >
       <span
-        class="mantine-focus-auto m-849cf0da m-b6d8b162 mantine-Text-root mantine-Anchor-root"
+        class="mantine-focus-auto m_849cf0da m_b6d8b162 mantine-Text-root mantine-Anchor-root"
         data-underline="hover"
       >
         <p
-          class="mantine-focus-auto m-b6d8b162 mantine-Text-root"
+          class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
         >
           Meal plan
         </p>
@@ -43,11 +43,11 @@ exports[`<Nav /> renders 1`] = `
       href="/connections"
     >
       <span
-        class="mantine-focus-auto m-849cf0da m-b6d8b162 mantine-Text-root mantine-Anchor-root"
+        class="mantine-focus-auto m_849cf0da m_b6d8b162 mantine-Text-root mantine-Anchor-root"
         data-underline="hover"
       >
         <p
-          class="mantine-focus-auto m-b6d8b162 mantine-Text-root"
+          class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
         >
           Connections
         </p>

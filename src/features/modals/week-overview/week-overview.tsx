@@ -91,7 +91,11 @@ export const WeekOverviewModal = () => {
                                         >
                                             {meal.meal}
                                             {meal.note && (
-                                                <Alert p="xs" title={t('note')}>
+                                                <Alert
+                                                    p="xs"
+                                                    title={t('note')}
+                                                    variant="outline"
+                                                >
                                                     <Text>{meal.note}</Text>
                                                 </Alert>
                                             )}

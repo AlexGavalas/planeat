@@ -174,7 +174,7 @@ export const Measurements = () => {
                     onClick={handleAddMeasurement}
                     size="lg"
                     title={t('add_measurement')}
-                    variant="light"
+                    variant="outline"
                 >
                     <Plus />
                 </ActionIcon>

@@ -32,8 +32,8 @@ export const ActivityModal = ({
     innerProps: { onSave, initialData },
 }: ContextModalProps<ActivityModalProps>) => {
     const { t, i18n } = useTranslation();
-    const [date, setDate] = useState<Date | null>(
-        initialData?.date ?? new Date(),
+    const [date, setDate] = useState<string | null>(
+        format(initialData?.date ?? new Date(), 'yyyy-MM-dd'),
     );
     const [activity, setActivity] = useState(initialData?.activity);
     const [error, setError] = useState('');
@@ -73,7 +73,7 @@ export const ActivityModal = ({
             const response = await fetch(url, {
                 body: JSON.stringify({
                     activity,
-                    date: format(date, 'yyyy-MM-dd'),
+                    date,
                 }),
                 headers: {
                     'Content-Type': 'application/json',

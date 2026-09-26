@@ -17,7 +17,7 @@ export const Calendar = () => {
 
     const handlePrint = useReactToPrint({
         bodyClass: `${styles.print} ${styles.container}`,
-        content: () => ref.current,
+        contentRef: ref,
     });
 
     return (

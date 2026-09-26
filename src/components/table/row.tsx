@@ -69,7 +69,7 @@ export const Row = <ItemType extends Item>({
                 ))}
             <TableTd style={{ width: '35%' }}>
                 <Group gap="md" justify="center">
-                    <ActionIcon onClick={handleEdit} variant="subtle">
+                    <ActionIcon onClick={handleEdit} variant="outline">
                         <EditPencil />
                     </ActionIcon>
                     <Popover
@@ -87,7 +87,7 @@ export const Row = <ItemType extends Item>({
                             <ActionIcon
                                 color="red"
                                 onClick={toggleConfirmation}
-                                variant="subtle"
+                                variant="outline"
                             >
                                 <Trash />
                             </ActionIcon>

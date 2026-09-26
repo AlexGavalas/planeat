@@ -61,7 +61,7 @@ export const FileActions = ({
                 color="red"
                 onClick={onClear}
                 size="compact-sm"
-                variant="subtle"
+                variant="outline"
             >
                 {t('generic.actions.clear')}
             </Button>

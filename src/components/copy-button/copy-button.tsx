@@ -18,7 +18,7 @@ type CopyButtonProps2 = Readonly<{
 
 export const CopyButton = ({
     value,
-    variant = 'light',
+    variant = 'outline',
     size = 'lg',
     tooltipPosition,
 }: CopyButtonProps2) => {

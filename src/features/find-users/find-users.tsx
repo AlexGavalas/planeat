@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { AddUser, Cancel, ProfileCircle } from 'iconoir-react';
+import { ProfileCircle, UserPlus, Xmark } from 'iconoir-react';
 import { useTranslation } from 'next-i18next/pages';
 import { type MouseEventHandler, useCallback, useState } from 'react';
 
@@ -142,8 +142,8 @@ export const FindUsers = () => {
                 onOptionSubmit={handleUserSelect}
                 placeholder={t('connections.search.placeholder')}
                 rightSection={
-                    <ActionIcon onClick={handleClearInput} variant="subtle">
-                        <Cancel />
+                    <ActionIcon onClick={handleClearInput} variant="white">
+                        <Xmark />
                     </ActionIcon>
                 }
                 value={searchQuery}
@@ -169,7 +169,7 @@ export const FindUsers = () => {
                         </div>
                         <Button
                             onClick={handleConnectionRequest}
-                            rightSection={<AddUser />}
+                            rightSection={<UserPlus />}
                             size="xs"
                         >
                             {t('connections.request.send')}

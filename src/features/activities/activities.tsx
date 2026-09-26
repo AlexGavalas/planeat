@@ -152,7 +152,7 @@ export const Activities = () => {
                     onClick={handleAddActivity}
                     size="lg"
                     title={t('add_activity')}
-                    variant="light"
+                    variant="outline"
                 >
                     <Plus />
                 </ActionIcon>
