@@ -17,7 +17,7 @@ This project uses:
 -   [Mantine](https://mantine.dev/) for UI components.
 -   [Nivo](https://nivo.rocks/) for the charts.
 -   [Neon](https://neon.com/) PostgreSQL with [Drizzle ORM](https://orm.drizzle.team/) for the database.
--   [NextAuth](https://next-auth.js.org/) with Google for authentication.
+-   [NextAuth](https://next-auth.js.org/) with Google and email/password authentication.
 -   [Jotai](https://jotai.org/) for global state.
 -   [Next-i18n](https://github.com/isaachinman/next-i18next) for translations (EN/GR at the moment).
 

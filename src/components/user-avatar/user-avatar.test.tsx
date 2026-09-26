@@ -38,14 +38,17 @@ describe('<UserAvatar />', () => {
             });
         });
 
-        it('does not render', () => {
+        it('renders the user initials', () => {
             renderWithUser(<UserAvatar />);
 
-            expect(screen.queryByRole('img')).toBeNull();
+            expect(
+                screen.getByRole('img', { name: 'Test User' }),
+            ).toBeInTheDocument();
+            expect(screen.getByText('TU')).toBeInTheDocument();
         });
     });
 
-    describe('when the user has no name', () => {
+    describe('when the user has an image but no name', () => {
         beforeAll(() => {
             jest.mocked(useProfile).mockReturnValue({
                 ...defaultProfile,
@@ -53,10 +56,29 @@ describe('<UserAvatar />', () => {
             });
         });
 
-        it('does not render', () => {
+        it('renders the image with a generic description', () => {
             renderWithUser(<UserAvatar />);
 
-            expect(screen.queryByRole('img')).toBeNull();
+            expect(
+                screen.getByRole('img', { name: 'User avatar' }),
+            ).toBeInTheDocument();
+        });
+    });
+
+    describe('when the user has neither an image nor usable initials', () => {
+        beforeAll(() => {
+            jest.mocked(useProfile).mockReturnValue({
+                ...defaultProfile,
+                user: { image: null, name: '   ' },
+            });
+        });
+
+        it('renders the generic empty avatar', () => {
+            renderWithUser(<UserAvatar />);
+
+            expect(
+                screen.getByRole('img', { name: 'User avatar' }),
+            ).toBeInTheDocument();
         });
     });
 

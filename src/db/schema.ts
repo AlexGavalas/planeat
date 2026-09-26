@@ -30,6 +30,13 @@ export const users = pgTable('users', {
     food_preferences_negative: text('food_preferences_negative'),
 });
 
+export const userCredentials = pgTable('user_credentials', {
+    password_hash: text('password_hash').notNull(),
+    user_id: bigint('user_id', { mode: 'number' })
+        .primaryKey()
+        .references(() => users.id, { onDelete: 'cascade' }),
+});
+
 export const meals = pgTable('meals', {
     id: uuid('id').defaultRandom().primaryKey(),
     meal: text('meal').notNull(),
