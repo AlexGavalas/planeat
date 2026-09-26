@@ -1,6 +1,7 @@
 allowBuilds:
-    core-js: true
-    esbuild: true
-    unrs-resolver: true
+    '@pnpm/exe': true
+    'core-js': true
+    'esbuild': true
+    'unrs-resolver': true
 overrides:
     '@typescript-eslint/parser': 8.70.1
