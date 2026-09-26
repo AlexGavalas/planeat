@@ -161,7 +161,11 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                                     minLength={8}
                                     name="password"
                                 />
-                                {error && <Alert color="red">{error}</Alert>}
+                                {error && (
+                                    <Alert color="red" variant="outline">
+                                        {error}
+                                    </Alert>
+                                )}
                                 <Button loading={isSubmitting} type="submit">
                                     {t(
                                         isRegistering
@@ -181,7 +185,7 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                                 onClick={toggleMode}
                                 size="compact-sm"
                                 type="button"
-                                variant="subtle"
+                                variant="outline"
                             >
                                 {t(
                                     isRegistering

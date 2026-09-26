@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { type NextRouter } from 'next/router';
 import { type PropsWithChildren } from 'react';
 
-import { renderWithUser } from '~test/utils';
+import { renderWithUser, screen } from '~test/utils';
 
 import { Fab } from './fab';
 
@@ -13,7 +13,7 @@ jest.mock<NextRouter>('next/router', () =>
 
 describe('<Fab />', () => {
     it('renders initially closed', () => {
-        const { container } = renderWithUser(<Fab />, {
+        renderWithUser(<Fab />, {
             Wrapper: ({ children }: PropsWithChildren) => (
                 <QueryClientProvider client={new QueryClient()}>
                     <ModalsProvider>{children}</ModalsProvider>
@@ -21,6 +21,6 @@ describe('<Fab />', () => {
             ),
         });
 
-        expect(container).toMatchSnapshot();
+        expect(screen.getByRole('button')).toMatchSnapshot();
     });
 });

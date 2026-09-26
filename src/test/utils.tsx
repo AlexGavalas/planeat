@@ -18,7 +18,7 @@ export const renderWithUser = (
         ...render(renderParams, {
             wrapper: ({ children }) => (
                 <I18nextProvider i18n={i18n}>
-                    <MantineProvider>
+                    <MantineProvider env="test" withCssVariables={false}>
                         <Wrapper>{children}</Wrapper>
                     </MantineProvider>
                 </I18nextProvider>

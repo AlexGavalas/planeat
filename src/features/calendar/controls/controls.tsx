@@ -1,13 +1,13 @@
 import { Button, type ButtonProps, Group } from '@mantine/core';
 import {
-    Cancel,
     Copy,
     FastArrowLeft,
     FastArrowRight,
+    FloppyDisk,
     Plus,
     PrintingPage,
-    SaveFloppyDisk,
     StatsReport,
+    Xmark,
 } from 'iconoir-react';
 import { useTranslation } from 'next-i18next/pages';
 import { type MouseEventHandler, useCallback } from 'react';
@@ -117,14 +117,14 @@ export const Controls = ({ onPrint }: ControlsProps) => {
                         <Button
                             {...defaultButtonProps}
                             onClick={handleRevert}
-                            rightSection={<Cancel />}
+                            rightSection={<Xmark />}
                         >
                             {t('generic.actions.cancel')}
                         </Button>
                         <Button
                             {...defaultButtonProps}
                             onClick={handleSave}
-                            rightSection={<SaveFloppyDisk />}
+                            rightSection={<FloppyDisk />}
                         >
                             {t('generic.actions.save')}
                         </Button>

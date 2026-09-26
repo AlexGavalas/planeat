@@ -30,7 +30,7 @@ const isFilledMeal = (meal?: Meal | EditedMeal): meal is Meal => {
 
 const commonButtonProps = {
     size: 'lg',
-    variant: 'light',
+    variant: 'outline',
 } satisfies ActionIconProps;
 
 export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {

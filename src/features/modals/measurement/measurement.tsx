@@ -36,8 +36,8 @@ export const MeasurementModal = ({
     innerProps: { onSave, initialData },
 }: ContextModalProps<ModalContentProps>) => {
     const { t, i18n } = useTranslation();
-    const [date, setDate] = useState<Date | null>(
-        initialData?.date ?? new Date(),
+    const [date, setDate] = useState<string | null>(
+        format(initialData?.date ?? new Date(), 'yyyy-MM-dd'),
     );
     const [weight, setWeight] = useState(initialData?.weight);
     const [fatPercent, setFatPercent] = useState(initialData?.fat_percentage);
@@ -83,7 +83,7 @@ export const MeasurementModal = ({
 
             const response = await fetch(url, {
                 body: JSON.stringify({
-                    date: format(date, 'yyyy-MM-dd'),
+                    date,
                     fatPercent,
                     weight,
                 }),

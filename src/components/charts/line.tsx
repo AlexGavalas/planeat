@@ -1,5 +1,5 @@
 import { Card } from '@mantine/core';
-import { type CustomLayerProps } from '@nivo/line';
+import { type LineCustomSvgLayerProps, type LineSeries } from '@nivo/line';
 import { format, parse } from 'date-fns';
 import { maxBy, minBy } from 'lodash';
 import dynamic from 'next/dynamic';
@@ -14,24 +14,21 @@ const ResponsiveLine = dynamic(
     },
 );
 
-type NumFn = (prop: number) => number;
 type TextAnchor = NonNullable<
     SVGAttributes<SVGTextElement>['style']
 >['textAnchor'];
 
 const targetLayer = (targetWeight: number) =>
-    function CustomLayer(props: CustomLayerProps) {
+    function CustomLayer(props: LineCustomSvgLayerProps<LineSeries>) {
         const lineHeight = 2;
 
         return (
             <g>
                 <rect
-                    // Required assertion
-                    // Issue: https://github.com/plouc/nivo/issues/1947
                     fill="red"
                     height={lineHeight}
                     width={props.innerWidth}
-                    y={(props.yScale as NumFn)(targetWeight) - lineHeight / 2}
+                    y={props.yScale(targetWeight) - lineHeight / 2}
                 />
             </g>
         );
@@ -132,9 +129,10 @@ export const LineChart = <DataItem extends { x: string; y: number | null }>({
                     return <div />;
                 }
 
-                const isFirst = point.index === 0;
-                const isLast = point.index === data[0].data.length - 1;
-                const isTop = max - +point.data.y < 3;
+                const isFirst = point.indexInSeries === 0;
+                const isLast = point.indexInSeries === data[0].data.length - 1;
+                const isTop =
+                    typeof point.data.y === 'number' && max - point.data.y < 3;
 
                 let transformString = '';
 
@@ -156,7 +154,11 @@ export const LineChart = <DataItem extends { x: string; y: number | null }>({
                 );
             }}
             xFormat={(value) => {
-                const date = parse(value.toString(), 'yyyy-MM-dd', new Date());
+                if (typeof value !== 'string') {
+                    return '-';
+                }
+
+                const date = parse(value, 'yyyy-MM-dd', new Date());
 
                 return format(date, 'dd/MM/yy');
             }}

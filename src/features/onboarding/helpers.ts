@@ -2,8 +2,8 @@ import { useTranslation } from 'next-i18next/pages';
 import { type Step } from 'react-joyride';
 
 const commonStepProps: Partial<Step> = {
-    disableBeacon: true,
     placement: 'auto',
+    skipBeacon: true,
 };
 
 export const useSteps = (): Step[] => {
