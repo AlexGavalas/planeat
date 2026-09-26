@@ -1,7 +1,25 @@
 {
     "logout": "Αποσύνδεση",
     "login": {
-        "google": "Είσοδος με Google"
+        "button": "Σύνδεση",
+        "title": "Σύνδεση στο Planeat",
+        "google": "Συνέχεια με Google",
+        "or": "ή",
+        "email": "Email",
+        "password": "Κωδικός πρόσβασης",
+        "full_name": "Ονοματεπώνυμο",
+        "email_submit": "Σύνδεση με email",
+        "create_account": "Δημιουργία λογαριασμού",
+        "no_account": "Δεν έχετε λογαριασμό;",
+        "has_account": "Έχετε ήδη λογαριασμό;",
+        "sign_up": "Εγγραφή",
+        "sign_in": "Σύνδεση",
+        "errors": {
+            "invalid_credentials": "Το email ή ο κωδικός πρόσβασης δεν είναι σωστός.",
+            "account_exists": "Υπάρχει ήδη λογαριασμός για αυτό το email.",
+            "registration_failed": "Δεν μπορέσαμε να δημιουργήσουμε τον λογαριασμό σας. Ελέγξτε τα στοιχεία σας.",
+            "generic": "Κάτι πήγε στραβά. Δοκιμάστε ξανά."
+        }
     },
     "generic": {
         "search": {

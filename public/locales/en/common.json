@@ -1,7 +1,25 @@
 {
     "logout": "Logout",
     "login": {
-        "google": "Login with Google"
+        "button": "Log in",
+        "title": "Log in to Planeat",
+        "google": "Continue with Google",
+        "or": "or",
+        "email": "Email",
+        "password": "Password",
+        "full_name": "Full name",
+        "email_submit": "Log in with email",
+        "create_account": "Create account",
+        "no_account": "Don't have an account?",
+        "has_account": "Already have an account?",
+        "sign_up": "Sign up",
+        "sign_in": "Log in",
+        "errors": {
+            "invalid_credentials": "The email or password is incorrect.",
+            "account_exists": "An account already exists for this email.",
+            "registration_failed": "We couldn't create your account. Please check your details.",
+            "generic": "Something went wrong. Please try again."
+        }
     },
     "generic": {
         "search": {
