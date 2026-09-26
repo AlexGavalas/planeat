@@ -1,42 +1,79 @@
 {
-    "compilerOptions": {
-        "target": "ES2020",
-        "lib": ["dom", "dom.iterable", "esnext"],
-        "allowJs": false,
-        "skipLibCheck": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "noUncheckedIndexedAccess": true,
-        "noEmit": true,
-        "esModuleInterop": true,
-        "module": "esnext",
-        "moduleResolution": "bundler",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "incremental": true,
-        "jsx": "react-jsx",
-        "baseUrl": "./src",
-        "paths": {
-            "~api/*": ["api/*"],
-            "~components/*": ["components/*"],
-            "~constants/*": ["constants/*"],
-            "~db": ["db/index"],
-            "~db/*": ["db/*"],
-            "~features/*": ["features/*"],
-            "~hooks/*": ["hooks/*"],
-            "~schemas/*": ["schemas/*"],
-            "~store/*": ["store/*"],
-            "~styles/*": ["styles/*"],
-            "~test/*": ["test/*"],
-            "~types/*": ["types/*"],
-            "~util/*": ["util/*"]
-        },
-        "plugins": [
-            {
-                "name": "next"
-            }
-        ]
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "jsx": "react-jsx",
+    "baseUrl": "./src",
+    "paths": {
+      "~api/*": [
+        "api/*"
+      ],
+      "~components/*": [
+        "components/*"
+      ],
+      "~constants/*": [
+        "constants/*"
+      ],
+      "~db": [
+        "db/index"
+      ],
+      "~db/*": [
+        "db/*"
+      ],
+      "~features/*": [
+        "features/*"
+      ],
+      "~hooks/*": [
+        "hooks/*"
+      ],
+      "~schemas/*": [
+        "schemas/*"
+      ],
+      "~store/*": [
+        "store/*"
+      ],
+      "~styles/*": [
+        "styles/*"
+      ],
+      "~test/*": [
+        "test/*"
+      ],
+      "~types/*": [
+        "types/*"
+      ],
+      "~util/*": [
+        "util/*"
+      ]
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-    "exclude": ["node_modules"]
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
