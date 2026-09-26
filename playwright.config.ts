@@ -9,6 +9,7 @@ export default defineConfig({
     expect: {
         toHaveScreenshot: {
             maxDiffPixelRatio: 0.1,
+            stylePath: 'e2e/styles.css',
         },
     },
     // Fail the build on CI if you accidentally left test.only in the source code.
@@ -31,8 +32,9 @@ export default defineConfig({
     workers: process.env.CI ? 1 : undefined,
     ...(!process.env.CI && {
         webServer: {
-            command: 'pnpm dev',
-            url: 'http://localhost:3000',
+            command: 'pnpm preview',
+            reuseExistingServer: true,
+            url: baseURL,
         },
     }),
 });
