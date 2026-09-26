@@ -11,6 +11,7 @@ import { Header } from '~features/header';
 import { Onboarding } from '~features/onboarding';
 import { Providers } from '~features/providers';
 
+import nextI18NextConfig from '../../next-i18next.config';
 import '../styles/globals.css';
 
 const App = ({
@@ -39,4 +40,4 @@ const App = ({
     );
 };
 
-export default appWithTranslation(App);
+export default appWithTranslation(App, nextI18NextConfig);
