@@ -82,7 +82,7 @@ export const updateFoodPreferences = async ({
     negative: string | null;
     positive: string | null;
     userId: number;
-}) => {
+}): Promise<{ error: null }> => {
     await getDb()
         .update(users)
         .set({
@@ -99,7 +99,7 @@ export const findUsersByName = async ({
 }: {
     fullName: string;
     userId: number;
-}) => ({
+}): Promise<{ data: Pick<User, 'full_name'>[] }> => ({
     data: await getDb()
         .select({ full_name: users.full_name })
         .from(users)
@@ -117,9 +117,9 @@ export const fetchUserByFullname = async ({
     fullName,
 }: {
     fullName: string;
-}) => ({
+}): Promise<{ data: Pick<User, 'full_name' | 'id'>[] }> => ({
     data: await getDb()
-        .select({ id: users.id, full_name: users.full_name })
+        .select({ full_name: users.full_name, id: users.id })
         .from(users)
         .where(eq(users.full_name, fullName)),
 });
@@ -138,7 +138,7 @@ export const updateProfile = async ({
     language?: string;
     targetWeight?: number | null;
     userId: number;
-}) => {
+}): Promise<{ error: null }> => {
     await getDb()
         .update(users)
         .set({
@@ -152,7 +152,11 @@ export const updateProfile = async ({
     return { error: null };
 };
 
-export const deleteProfile = async ({ userId }: { userId: number }) => {
+export const deleteProfile = async ({
+    userId,
+}: {
+    userId: number;
+}): Promise<{ error: null }> => {
     await getDb().delete(users).where(eq(users.id, userId));
     return { error: null };
 };
@@ -165,12 +169,12 @@ export const createUser = async ({
     email: string;
     fullName: string;
     language: string;
-}) => {
+}): Promise<void> => {
     await getDb()
         .insert(users)
         .values({ email, full_name: fullName, language })
         .onConflictDoUpdate({
-            target: users.email,
             set: { full_name: fullName, language },
+            target: users.email,
         });
 };

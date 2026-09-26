@@ -10,7 +10,7 @@ export const fetchLatestFatMeasurement = async ({
     userId,
 }: {
     userId: number;
-}) => ({
+}): Promise<{ data: Pick<Measurement, 'fat_percentage'>[] }> => ({
     data: await getDb()
         .select({ fat_percentage: measurements.fat_percentage })
         .from(measurements)
@@ -28,7 +28,7 @@ export const fetchLatestWeightMeasurement = async ({
     userId,
 }: {
     userId: number;
-}) => ({
+}): Promise<{ data: Pick<Measurement, 'weight'>[] }> => ({
     data: await getDb()
         .select({ weight: measurements.weight })
         .from(measurements)
@@ -45,7 +45,7 @@ export const fetchLatestWeightMeasurement = async ({
 const fetchLatest = async (
     userId: number,
     field: 'weight' | 'fat_percentage',
-) =>
+): Promise<Pick<Measurement, 'date' | 'fat_percentage' | 'weight'>[]> =>
     getDb()
         .select({
             date: measurements.date,
@@ -62,13 +62,21 @@ const fetchLatest = async (
         .orderBy(desc(measurements.date))
         .limit(MAX_MEASUREMENTS);
 
-export const fetchMeasurements = async ({ userId }: { userId: number }) => ({
+export const fetchMeasurements = async ({
+    userId,
+}: {
+    userId: number;
+}): Promise<{ data: Pick<Measurement, 'date' | 'weight'>[] }> => ({
     data: (await fetchLatest(userId, 'weight'))
         .reverse()
         .map(({ date, weight }) => ({ date, weight })),
 });
 
-export const fetchFatMeasurements = async ({ userId }: { userId: number }) => ({
+export const fetchFatMeasurements = async ({
+    userId,
+}: {
+    userId: number;
+}): Promise<{ data: Pick<Measurement, 'date' | 'fat_percentage'>[] }> => ({
     data: (await fetchLatest(userId, 'fat_percentage'))
         .reverse()
         .map(({ date, fat_percentage }) => ({
@@ -77,7 +85,11 @@ export const fetchFatMeasurements = async ({ userId }: { userId: number }) => ({
         })),
 });
 
-export const fetchMeasurementsCount = async ({ userId }: { userId: number }) =>
+export const fetchMeasurementsCount = async ({
+    userId,
+}: {
+    userId: number;
+}): Promise<number> =>
     (
         await getDb()
             .select({ count: count() })
@@ -108,7 +120,7 @@ export const deleteMeasurement = async ({
 }: {
     measurementId: string;
     userId: number;
-}) => {
+}): Promise<{ error: null }> => {
     await getDb()
         .delete(measurements)
         .where(
@@ -132,7 +144,7 @@ export const updateMeasurement = async ({
     measurementId?: string;
     userId: number;
     weight: number;
-}) => {
+}): Promise<{ error: null }> => {
     const values = {
         date,
         fat_percentage: fatPercent,

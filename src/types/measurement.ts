@@ -1,6 +1,6 @@
 import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 
-import { measurements } from '~db/schema';
+import type { measurements } from '~db/schema';
 
 export type Measurement = InferSelectModel<typeof measurements>;
 export type EditedMeasurement = InferInsertModel<typeof measurements>;

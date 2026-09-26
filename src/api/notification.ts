@@ -2,6 +2,7 @@ import { and, eq } from 'drizzle-orm';
 
 import { getDb } from '~db';
 import { notifications, users } from '~db/schema';
+import type { Notification } from '~types/notification';
 
 export const fetchNotification = async ({
     requestUserId,
@@ -9,7 +10,7 @@ export const fetchNotification = async ({
 }: {
     requestUserId: number;
     targetUserId: number;
-}) =>
+}): Promise<Pick<Notification, 'id'> | null> =>
     (
         await getDb()
             .select({ id: notifications.id })
@@ -29,7 +30,7 @@ export const createConnectionRequestNotification = async ({
 }: {
     requestUserId: number;
     targetUserId: number;
-}) => {
+}): Promise<{ error: null }> => {
     await getDb()
         .insert(notifications)
         .values({
@@ -45,11 +46,11 @@ export const fetchConnectionRequestNotifications = async ({
     userId,
 }: {
     userId: number;
-}) => ({
+}): Promise<{ data: Notification[] }> => ({
     data: await getDb()
         .select({
-            id: notifications.id,
             date: notifications.date,
+            id: notifications.id,
             notification_type: notifications.notification_type,
             request_user_id: notifications.request_user_id,
             target_user_id: notifications.target_user_id,
@@ -71,7 +72,7 @@ export const deleteConnectionRequestNotification = async ({
 }: {
     id: string;
     userId: number;
-}) => {
+}): Promise<{ error: null }> => {
     await getDb()
         .delete(notifications)
         .where(

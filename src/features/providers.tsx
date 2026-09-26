@@ -101,7 +101,6 @@ export const Providers = ({
             <SessionProvider session={session}>
                 <QueryClientProvider client={queryClient}>
                     <HydrationBoundary state={dehydratedState}>
-                        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                         {/* @ts-expect-error - Modals do not get the correct type with dynamic components for some reason */}
                         <ModalsProvider modals={modals}>
                             <Wrapper>{children}</Wrapper>

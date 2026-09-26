@@ -28,7 +28,7 @@ export const createMealInPool = async ({
 }: {
     content: string[];
     userId: number;
-}) => {
+}): Promise<{ error: null }> => {
     if (content.length)
         await getDb()
             .insert(mealPool)

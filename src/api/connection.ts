@@ -2,13 +2,18 @@ import { and, eq } from 'drizzle-orm';
 
 import { getDb } from '~db';
 import { connections, users } from '~db/schema';
+import type { Connection } from '~types/connection';
 
-export const fetchUserConnections = async ({ userId }: { userId: number }) => ({
+export const fetchUserConnections = async ({
+    userId,
+}: {
+    userId: number;
+}): Promise<{ data: Connection[] }> => ({
     data: await getDb()
         .select({
+            connection_user_id: connections.connection_user_id,
             id: connections.id,
             user_id: connections.user_id,
-            connection_user_id: connections.connection_user_id,
             users: { full_name: users.full_name },
         })
         .from(connections)
@@ -24,7 +29,7 @@ export const deleteConnection = async ({
     connectionId: string;
     connectionUserId: number;
     userId: number;
-}) => {
+}): Promise<{ error: null }> => {
     const db = getDb();
     await db.transaction(async (tx) => {
         await tx
@@ -53,7 +58,7 @@ export const createConnection = async ({
 }: {
     connectionUserId: number;
     userId: number;
-}) => {
+}): Promise<{ error: null }> => {
     await getDb()
         .insert(connections)
         .values([

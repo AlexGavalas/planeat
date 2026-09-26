@@ -19,7 +19,7 @@ export const useHistory = <ItemType>({
         initialState !== undefined ? 0 : -1,
     );
 
-    const [history, setHistory] = useState<ItemType[]>(
+    const [history, setHistory] = useState<ItemType[]>(() =>
         initialState !== undefined ? [initialState] : [],
     );
 
@@ -35,7 +35,7 @@ export const useHistory = <ItemType>({
             setHistory(newHistory);
             setCurrentIndex(newHistory.length - 1);
         },
-        [currentIndex, history.length],
+        [currentIndex, history],
     );
 
     const undo = useCallback(() => {

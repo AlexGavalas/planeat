@@ -31,7 +31,7 @@ export const deleteMeals = async ({
 }: {
     deletedIds: string[];
     userId: number;
-}) => {
+}): Promise<{ error: null }> => {
     if (deletedIds.length)
         await getDb()
             .delete(meals)
@@ -47,7 +47,7 @@ export const updateMeals = async ({
 }: {
     editedMeals: EditedMeal[];
     userId: number;
-}) => {
+}): Promise<{ error: null }> => {
     const db = getDb();
     await db.transaction(async (tx) => {
         for (const meal of editedMeals) {
@@ -73,15 +73,15 @@ export const createMeals = async ({
 }: {
     newMeals: EditedMeal[];
     userId: number;
-}) => {
+}): Promise<{ error: null }> => {
     if (newMeals.length)
         await getDb()
             .insert(meals)
             .values(
                 newMeals.map((meal) => ({
                     ...meal,
-                    user_id: userId,
                     id: undefined,
+                    user_id: userId,
                 })),
             );
     return { error: null };

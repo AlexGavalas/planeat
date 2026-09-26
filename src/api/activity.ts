@@ -24,7 +24,11 @@ export const fetchActivities = async ({
             ),
         );
 
-export const fetchActivitiesCount = async ({ userId }: { userId: number }) =>
+export const fetchActivitiesCount = async ({
+    userId,
+}: {
+    userId: number;
+}): Promise<number> =>
     (
         await getDb()
             .select({ count: count() })
@@ -55,7 +59,7 @@ export const deleteActivity = async ({
 }: {
     activityId: string;
     userId: number;
-}) => {
+}): Promise<{ error: null }> => {
     await getDb()
         .delete(activities)
         .where(
@@ -74,7 +78,7 @@ export const updateActivity = async ({
     activityId?: string;
     date: string;
     userId: number;
-}) => {
+}): Promise<{ error: null }> => {
     const values = { activity, date, user_id: userId };
     const db = getDb();
     if (activityId) {

@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import {
     bigint,
     boolean,

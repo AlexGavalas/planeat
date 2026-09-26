@@ -1,14 +1,13 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
+import { type PostgresJsDatabase, drizzle } from 'drizzle-orm/postgres-js';
 import postgres, { type Sql } from 'postgres';
 
 import * as schema from './schema';
 
 declare global {
-    // eslint-disable-next-line no-var
     var planeatSql: Sql | undefined;
 }
 
-export const getDb = () => {
+export const getDb = (): PostgresJsDatabase<typeof schema> => {
     const databaseUrl = process.env.DATABASE_URL;
 
     if (!databaseUrl) {
