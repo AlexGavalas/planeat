@@ -1,25 +1,41 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const envVarBaseUrl = process.env.PLAYWRIGHT_TEST_BASE_URL;
-const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+import { AUTH_STATE_PATH } from './e2e/support/auth';
+import { loadE2eEnvironment } from './e2e/support/environment';
 
-const baseURL =
-    typeof envVarBaseUrl === 'string' ? envVarBaseUrl : 'http://localhost:3000';
+const environment = loadE2eEnvironment();
+const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 
 export default defineConfig({
     expect: {
+        timeout: 30000,
         toHaveScreenshot: {
             maxDiffPixelRatio: 0.1,
             stylePath: 'e2e/styles.css',
         },
     },
-    // Fail the build on CI if you accidentally left test.only in the source code.
-    forbidOnly: !!process.env.CI,
-    fullyParallel: true,
+    forbidOnly: Boolean(process.env.CI),
+    fullyParallel: false,
+    globalSetup: './e2e/global.setup.ts',
     projects: [
         {
-            name: 'chromium',
+            name: 'auth-setup',
+            testMatch: /auth\.setup\.ts/,
             use: { ...devices['Desktop Chrome'] },
+        },
+        {
+            name: 'public',
+            testMatch: /public\/.*\.spec\.ts/,
+            use: { ...devices['Desktop Chrome'] },
+        },
+        {
+            dependencies: ['auth-setup'],
+            name: 'authenticated',
+            testMatch: /authenticated\/.*\.spec\.ts/,
+            use: {
+                ...devices['Desktop Chrome'],
+                storageState: AUTH_STATE_PATH,
+            },
         },
     ],
     reporter: 'html',
@@ -27,7 +43,7 @@ export default defineConfig({
     snapshotPathTemplate: '{testDir}/__snapshots__/{testFilePath}/{arg}{ext}',
     testDir: './e2e',
     use: {
-        baseURL,
+        baseURL: environment.baseUrl,
         extraHTTPHeaders: bypassSecret
             ? {
                   'x-vercel-protection-bypass': bypassSecret,
@@ -36,12 +52,17 @@ export default defineConfig({
             : {},
         trace: 'on-first-retry',
     },
-    workers: process.env.CI ? 1 : undefined,
-    ...(!process.env.CI && {
-        webServer: {
-            command: 'pnpm preview',
-            reuseExistingServer: true,
-            url: baseURL,
-        },
-    }),
+    workers: 1,
+    ...(environment.mode === 'local' &&
+        environment.databaseUrl && {
+            webServer: {
+                command: 'mise exec -- pnpm preview',
+                env: {
+                    ...environment.serverEnvironment,
+                    DATABASE_URL: environment.databaseUrl,
+                },
+                reuseExistingServer: false,
+                url: environment.baseUrl,
+            },
+        }),
 });

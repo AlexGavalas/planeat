@@ -19,6 +19,7 @@ tsconfig.tsbuildinfo
 .env
 .env.*
 !.env.example
+!.env.e2e.example
 
 # vercel
 .vercel
@@ -27,3 +28,4 @@ tsconfig.tsbuildinfo
 /test-results/
 /playwright-report/
 /playwright/.cache/
+/playwright/.auth/
