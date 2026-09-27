@@ -93,8 +93,8 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                     return;
                 }
 
+                await router.push('/home');
                 closeModal();
-                await router.push(result.url ?? '/home');
             } catch {
                 setError(t('login.errors.generic'));
             } finally {

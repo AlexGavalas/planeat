@@ -128,6 +128,12 @@ export default defineConfig([
         },
     },
     {
+        files: ['e2e/global.setup.ts'],
+        rules: {
+            'import/no-default-export': 'off',
+        },
+    },
+    {
         ...jest.configs['flat/recommended'],
         files: ['**/*.test.ts', '**/*.test.tsx'],
         rules: {

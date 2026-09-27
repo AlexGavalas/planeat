@@ -36,7 +36,38 @@ pnpm db:local:up
 pnpm db:migrate
 ```
 
-For Neon, set its pooled connection string as `DATABASE_URL`, then run `pnpm db:migrate`.
+For Neon, use its pooled connection string as `DATABASE_URL` for the app and
+its direct connection string as `DATABASE_URL_UNPOOLED` for migrations. The
+Drizzle configuration falls back to `DATABASE_URL` for local PostgreSQL.
+
+## End-to-end tests
+
+Playwright uses a separate PostgreSQL database and never uses `DATABASE_URL`
+from the development environment. Copy the example environment, start the
+ephemeral database, and run the suite:
+
+```sh
+cp .env.e2e.example .env.e2e
+mise exec -- pnpm db:e2e:up
+mise exec -- pnpm test:e2e
+```
+
+The test setup applies the committed Drizzle migrations, clears the e2e
+database, and seeds a credentials user before each suite. The reset is guarded
+and refuses to run unless the configured database name contains `e2e`.
+
+Stop the local e2e database with:
+
+```sh
+mise exec -- pnpm db:e2e:down
+```
+
+Vercel preview deployments use the Neon branch injected by the Neon–Vercel
+integration. Preview builds apply committed Drizzle migrations to their isolated
+branch, while production builds apply them to the production branch. After a
+preview deployment succeeds, GitHub Actions runs Playwright against the preview
+URL and registers a unique credentials user through the application; the
+workflow does not need a Neon API key or database connection string.
 
 ## Misc
 

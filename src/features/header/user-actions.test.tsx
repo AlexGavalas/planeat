@@ -1,4 +1,5 @@
 import { signIn } from 'next-auth/react';
+import mockRouter from 'next-router-mock';
 import { type NextRouter } from 'next/router';
 
 import { renderWithUser, screen } from '~test/utils';
@@ -20,11 +21,12 @@ describe('<UserActions />', () => {
     const mockSignIn = jest.mocked(signIn);
 
     beforeEach(() => {
+        mockRouter.setCurrentUrl('/');
         mockSignIn.mockResolvedValue({
             error: null,
             ok: true,
             status: 200,
-            url: '/home',
+            url: 'https://production.example.com/home',
         });
     });
 
@@ -42,7 +44,7 @@ describe('<UserActions />', () => {
     });
 
     it('submits email and password credentials', async () => {
-        expect.assertions(1);
+        expect.assertions(2);
         const { user } = renderWithUser(<UserActions hasUser={false} />);
 
         await user.click(screen.getByRole('button', { name: 'Log in' }));
@@ -58,5 +60,6 @@ describe('<UserActions />', () => {
             password: 'password123',
             redirect: false,
         });
+        expect(mockRouter.asPath).toBe('/home');
     });
 });

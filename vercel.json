@@ -1,4 +1,5 @@
 {
+    "buildCommand": "pnpm vercel-build",
     "headers": [
         {
             "source": "/(.+\\.js|.+\\.css|.+\\.woff2)",
