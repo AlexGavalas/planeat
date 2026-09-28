@@ -4,6 +4,7 @@ import {
     boolean,
     date,
     doublePrecision,
+    index,
     pgTable,
     text,
     timestamp,
@@ -38,36 +39,52 @@ export const userCredentials = pgTable('user_credentials', {
         .references(() => users.id, { onDelete: 'cascade' }),
 });
 
-export const meals = pgTable('meals', {
-    id: uuid('id').defaultRandom().primaryKey(),
-    meal: text('meal').notNull(),
-    section_key: text('section_key').notNull(),
-    day: timestamp('day', { mode: 'string', withTimezone: true }).notNull(),
-    user_id: bigint('user_id', { mode: 'number' })
-        .notNull()
-        .references(() => users.id, { onDelete: 'cascade' }),
-    note: text('note'),
-    rating: doublePrecision('rating'),
-});
+export const meals = pgTable(
+    'meals',
+    {
+        id: uuid('id').defaultRandom().primaryKey(),
+        meal: text('meal').notNull(),
+        section_key: text('section_key').notNull(),
+        day: timestamp('day', { mode: 'string', withTimezone: true }).notNull(),
+        user_id: bigint('user_id', { mode: 'number' })
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+        note: text('note'),
+        rating: doublePrecision('rating'),
+    },
+    (table) => [index('meals_user_id_day_idx').on(table.user_id, table.day)],
+);
 
-export const measurements = pgTable('measurements', {
-    id: uuid('id').defaultRandom().primaryKey(),
-    date: date('date').notNull(),
-    weight: doublePrecision('weight').notNull(),
-    fat_percentage: doublePrecision('fat_percentage'),
-    user_id: bigint('user_id', { mode: 'number' })
-        .notNull()
-        .references(() => users.id, { onDelete: 'cascade' }),
-});
+export const measurements = pgTable(
+    'measurements',
+    {
+        id: uuid('id').defaultRandom().primaryKey(),
+        date: date('date').notNull(),
+        weight: doublePrecision('weight').notNull(),
+        fat_percentage: doublePrecision('fat_percentage'),
+        user_id: bigint('user_id', { mode: 'number' })
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+    },
+    (table) => [
+        index('measurements_user_id_date_idx').on(table.user_id, table.date),
+    ],
+);
 
-export const activities = pgTable('activities', {
-    id: uuid('id').defaultRandom().primaryKey(),
-    date: date('date').notNull(),
-    activity: text('activity').notNull(),
-    user_id: bigint('user_id', { mode: 'number' })
-        .notNull()
-        .references(() => users.id, { onDelete: 'cascade' }),
-});
+export const activities = pgTable(
+    'activities',
+    {
+        id: uuid('id').defaultRandom().primaryKey(),
+        date: date('date').notNull(),
+        activity: text('activity').notNull(),
+        user_id: bigint('user_id', { mode: 'number' })
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+    },
+    (table) => [
+        index('activities_user_id_date_idx').on(table.user_id, table.date),
+    ],
+);
 
 export const mealPool = pgTable(
     'meals_pool',
@@ -88,24 +105,37 @@ export const mealPool = pgTable(
     ],
 );
 
-export const connections = pgTable('connections', {
-    id: uuid('id').defaultRandom().primaryKey(),
-    user_id: bigint('user_id', { mode: 'number' })
-        .notNull()
-        .references(() => users.id, { onDelete: 'cascade' }),
-    connection_user_id: bigint('connection_user_id', { mode: 'number' })
-        .notNull()
-        .references(() => users.id, { onDelete: 'cascade' }),
-});
+export const connections = pgTable(
+    'connections',
+    {
+        id: uuid('id').defaultRandom().primaryKey(),
+        user_id: bigint('user_id', { mode: 'number' })
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+        connection_user_id: bigint('connection_user_id', { mode: 'number' })
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+    },
+    (table) => [index('connections_user_id_idx').on(table.user_id)],
+);
 
-export const notifications = pgTable('notifications', {
-    id: uuid('id').defaultRandom().primaryKey(),
-    date: date('date').notNull(),
-    notification_type: text('notification_type').notNull(),
-    request_user_id: bigint('request_user_id', { mode: 'number' })
-        .notNull()
-        .references(() => users.id, { onDelete: 'cascade' }),
-    target_user_id: bigint('target_user_id', { mode: 'number' })
-        .notNull()
-        .references(() => users.id, { onDelete: 'cascade' }),
-});
+export const notifications = pgTable(
+    'notifications',
+    {
+        id: uuid('id').defaultRandom().primaryKey(),
+        date: date('date').notNull(),
+        notification_type: text('notification_type').notNull(),
+        request_user_id: bigint('request_user_id', { mode: 'number' })
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+        target_user_id: bigint('target_user_id', { mode: 'number' })
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+    },
+    (table) => [
+        index('notifications_target_user_id_notification_type_idx').on(
+            table.target_user_id,
+            table.notification_type,
+        ),
+    ],
+);

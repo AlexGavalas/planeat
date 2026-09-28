@@ -8,13 +8,13 @@ import {
     Textarea,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { useTranslation } from 'next-i18next/pages';
 import {
     type ChangeEventHandler,
     type MouseEventHandler,
     useCallback,
     useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useCreateMealPool } from './hooks/use-create-meal-pool';
 import { useGetMealPool } from './hooks/use-get-meal-pool';

@@ -1,6 +1,5 @@
 import { signIn } from 'next-auth/react';
 import mockRouter from 'next-router-mock';
-import { type NextRouter } from 'next/router';
 
 import { renderWithUser, screen } from '~test/utils';
 
@@ -13,9 +12,28 @@ jest.mock<typeof import('next-auth/react')>('next-auth/react', () => {
     return { ...actual, signIn: jest.fn() };
 });
 
-jest.mock<NextRouter>('next/router', () =>
-    jest.requireActual<NextRouter>('next-router-mock'),
-);
+jest.mock<typeof import('next/navigation')>('next/navigation', () => ({
+    ...jest.requireActual<typeof import('next/navigation')>('next/navigation'),
+    usePathname: () =>
+        jest.requireActual<typeof import('next-router-mock')>(
+            'next-router-mock',
+        ).default.pathname,
+    useRouter: () => ({
+        back: jest.fn(),
+        bfcacheId: 'test',
+        forward: jest.fn(),
+        prefetch: jest.fn(),
+        push: (href: string) => {
+            void jest
+                .requireActual<typeof import('next-router-mock')>(
+                    'next-router-mock',
+                )
+                .default.push(href);
+        },
+        refresh: jest.fn(),
+        replace: jest.fn(),
+    }),
+}));
 
 describe('<UserActions />', () => {
     const mockSignIn = jest.mocked(signIn);

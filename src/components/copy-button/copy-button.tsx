@@ -7,7 +7,7 @@ import {
     type TooltipProps,
 } from '@mantine/core';
 import { Check, Copy } from 'iconoir-react';
-import { useTranslation } from 'next-i18next/pages';
+import { useTranslation } from 'react-i18next';
 
 type CopyButtonProps2 = Readonly<{
     value: Readonly<string>;

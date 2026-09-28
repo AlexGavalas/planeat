@@ -1,7 +1,7 @@
 import { Button, Group, Stack, Text, TextInput } from '@mantine/core';
 import { type ContextModalProps } from '@mantine/modals';
-import { useTranslation } from 'next-i18next/pages';
 import { type ChangeEventHandler, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useProfile } from '~hooks/use-profile';
 

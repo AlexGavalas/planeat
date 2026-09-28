@@ -1,3 +1,5 @@
+'use client';
+
 import {
     ActionIcon,
     Box,
@@ -7,8 +9,8 @@ import {
 } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
 import { EditPencil, Plus, Running } from 'iconoir-react';
-import { useTranslation } from 'next-i18next/pages';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useOpenContextModal } from '~util/modal';
 
@@ -33,17 +35,13 @@ export const Fab = () => {
     }, []);
 
     const handleMeasurementSave = useCallback(async () => {
-        await queryClient.invalidateQueries({
-            queryKey: ['bmi-timeline'],
-        });
-
-        await queryClient.invalidateQueries({
-            queryKey: ['measurements'],
-        });
-
-        await queryClient.invalidateQueries({
-            queryKey: ['fat-percent-timeline'],
-        });
+        await Promise.all([
+            queryClient.invalidateQueries({
+                queryKey: ['measurement-summary'],
+            }),
+            queryClient.invalidateQueries({ queryKey: ['measurements'] }),
+            queryClient.invalidateQueries({ queryKey: ['measurements-count'] }),
+        ]);
     }, [queryClient]);
 
     const handleActivitySave = useCallback(async () => {

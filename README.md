@@ -6,9 +6,22 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-After installing the dependencies, running `pnpm install`, configure `DATABASE_URL` in `.env.local`, then run the development server with `pnpm dev` and go to [http://localhost:3000](http://localhost:3000) on your browser to see the page.
+After installing the dependencies, running `mise exec -- pnpm install`, configure `DATABASE_URL` in `.env.local`, then run the development server with `mise exec -- pnpm dev` and go to [http://localhost:3000](http://localhost:3000) on your browser to see the page.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Routes live in `src/app`. Server Components load initial data directly through the
+server-only Drizzle services in `src/api`; `src/app/api` contains Route Handlers
+for browser reads, CRUD, authentication, and DOCX uploads. Server Actions handle
+profile forms, calendar saves, and accepting connection requests.
+
+TanStack Query owns interactive browser data (search, pagination, calendar navigation,
+and measurement charts). Server pages hydrate these queries with a 60-second stale
+time. Each account gets a separate QueryClient and Jotai store, keyed by user ID in
+the root layout. Private database reads are request-scoped, not persistently cached.
+Home streams meals and measurements independently through Suspense boundaries.
+
+The profile controls language; `/en/*` and `/gr/*` remain accepted through rewrites.
+Translations use the next-i18next App Router provider. Calendar dates are initialized
+from a shared request snapshot to keep server and browser hydration consistent.
 
 ## Tech
 
@@ -32,8 +45,8 @@ Copy `.env.example` to `.env.local`. The same `DATABASE_URL` works with Neon and
 For a local database, start Docker PostgreSQL and apply the committed Drizzle migration:
 
 ```sh
-pnpm db:local:up
-pnpm db:migrate
+mise exec -- pnpm db:local:up
+mise exec -- pnpm db:migrate
 ```
 
 For Neon, use its pooled connection string as `DATABASE_URL` for the app and

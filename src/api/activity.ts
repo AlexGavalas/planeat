@@ -1,4 +1,5 @@
 import { and, count, desc, eq, gte, lte } from 'drizzle-orm';
+import 'server-only';
 
 import { getDb } from '~db';
 import { activities } from '~db/schema';

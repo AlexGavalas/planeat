@@ -1,61 +1,59 @@
-import {
-    type NextApiHandler,
-    type NextApiRequest,
-    type NextApiResponse,
-} from 'next';
-import invariant from 'tiny-invariant';
+import { revalidatePath } from 'next/cache';
+import { type NextRequest } from 'next/server';
+import 'server-only';
 import { ZodError } from 'zod';
 
-import { getServerSession } from '~api/session';
-import { fetchUser } from '~api/user';
+import { getCurrentUser } from '~api/session';
 import { type User } from '~types/user';
 
-const ERROR_MESSAGE = Object.freeze({
-    NO_EMAIL: 'User must have an email',
-    NO_SESSION: 'User must be have a session',
-    NO_USER: 'User must exist',
-});
-
-const AUTH_ERROR_MESSAGES = Object.freeze([
-    `Invariant failed: ${ERROR_MESSAGE.NO_SESSION}`,
-    `Invariant failed: ${ERROR_MESSAGE.NO_EMAIL}`,
-    `Invariant failed: ${ERROR_MESSAGE.NO_USER}`,
-]);
-
-export type NextApiHandlerWithUser = (params: {
-    req: NextApiRequest;
-    res: NextApiResponse;
+export type RouteHandlerWithUser = (params: {
+    request: NextRequest;
     user: User;
-}) => Promise<void>;
-
+}) => Promise<Response>;
 export const withUser =
-    (handler: NextApiHandlerWithUser): NextApiHandler =>
-    async (req, res) => {
+    (handler: RouteHandlerWithUser) =>
+    async (request: NextRequest): Promise<Response> => {
         try {
-            const session = await getServerSession({ req, res });
-
-            invariant(session, ERROR_MESSAGE.NO_SESSION);
-            invariant(session.user?.email, ERROR_MESSAGE.NO_EMAIL);
-
-            const user = await fetchUser({
-                email: session.user.email,
-            });
-
-            invariant(user, ERROR_MESSAGE.NO_USER);
-
-            await handler({ req, res, user });
-        } catch (e) {
-            console.error(e);
-
-            if (e instanceof ZodError) {
-                res.status(400).json({ message: 'Bad Request' });
-            } else if (
-                e instanceof Error &&
-                AUTH_ERROR_MESSAGES.includes(e.message)
+            const user = await getCurrentUser();
+            if (!user)
+                return Response.json(
+                    { message: 'Unauthorized' },
+                    { status: 401 },
+                );
+            const response = await handler({ request, user });
+            response.headers.set('Cache-Control', 'private, no-store');
+            if (
+                response.ok &&
+                !['GET', 'HEAD', 'OPTIONS'].includes(request.method)
             ) {
-                res.status(401).json({ message: 'Unauthorized' });
-            } else {
-                res.status(500).json({ message: 'Internal Server Error' });
+                const resource = request.nextUrl.pathname.split('/')[3];
+                if (resource === 'user') revalidatePath('/', 'layout');
+                else if (
+                    resource === 'connection' ||
+                    resource === 'notification'
+                )
+                    revalidatePath('/connections');
+                else if (
+                    resource === 'meal' ||
+                    resource === 'activity' ||
+                    resource === 'measurement'
+                ) {
+                    for (const path of ['/home', '/meal-plan', '/settings'])
+                        revalidatePath(path);
+                }
             }
+            return response;
+        } catch (error) {
+            if (error instanceof ZodError || error instanceof SyntaxError) {
+                return Response.json(
+                    { message: 'Bad Request' },
+                    { status: 400 },
+                );
+            }
+            console.error(error);
+            return Response.json(
+                { message: 'Internal Server Error' },
+                { status: 500 },
+            );
         }
     };

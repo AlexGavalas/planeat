@@ -1,9 +1,10 @@
-import { useTranslation } from 'next-i18next/pages';
-import { useRouter } from 'next/router';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { type EventHandler, Joyride } from 'react-joyride';
 
 import { BRAND_COLORS } from '~constants/colors';
+import { useLocalizedPath } from '~hooks/use-localized-path';
 import { useProfile } from '~hooks/use-profile';
 
 import { useSteps } from './helpers';
@@ -13,6 +14,8 @@ const outlineColor = BRAND_COLORS[7];
 export const Onboarding = () => {
     const { t } = useTranslation();
     const router = useRouter();
+    const localize = useLocalizedPath();
+    const pathname = usePathname();
     const { profile, updateProfile } = useProfile();
     const [shouldRun, setShouldRun] = useState(false);
     const [stepIndex, setStepIndex] = useState(0);
@@ -29,7 +32,7 @@ export const Onboarding = () => {
         if (isBrowser && !hasTourEnded) {
             setShouldRun(true);
         }
-    }, [isBrowser, hasTourEnded, router.pathname]);
+    }, [isBrowser, hasTourEnded, pathname]);
 
     const handleJoyrideEvent = useCallback<EventHandler>(
         ({ type, step, action }) => {
@@ -43,14 +46,14 @@ export const Onboarding = () => {
                 step.target === '#weight-container'
             ) {
                 setShouldRun(false);
-                router.push('/meal-plan').catch(console.error);
+                router.push(localize('/meal-plan'));
             } else if (
                 type === 'step:after' &&
                 action === 'next' &&
                 step.target === '#meal-plan-container'
             ) {
                 setShouldRun(false);
-                router.push('/settings').catch(console.error);
+                router.push(localize('/settings'));
             } else if (type === 'tour:end') {
                 setShouldRun(false);
                 setHasTourEnded(true);
@@ -61,7 +64,7 @@ export const Onboarding = () => {
                 });
             }
         },
-        [router, updateProfile],
+        [router, updateProfile, localize],
     );
 
     if (!isBrowser || profile?.has_completed_onboarding) {

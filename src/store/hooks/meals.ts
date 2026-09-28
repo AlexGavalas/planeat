@@ -5,8 +5,8 @@ import {
 } from '@tanstack/react-query';
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
-import { useTranslation } from 'next-i18next/pages';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 import { getDaysOfWeek } from '~util/date';
@@ -15,6 +15,7 @@ import {
     showSuccessNotification,
 } from '~util/notification';
 
+import { saveMealPlan } from '../../app/actions';
 import { useCurrentWeek } from './current-week';
 import { useUnsavedChanges } from './unsaved-changes';
 
@@ -60,7 +61,10 @@ export const useMeals: UseMeals = () => {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const currentWeekKey = format(currentWeek, 'yyyy-MM-dd');
+    const currentWeekKey = format(
+        startOfWeek(currentWeek, { weekStartsOn: 1 }),
+        'yyyy-MM-dd',
+    );
 
     const { data: meals = [], isFetching: isFetchingMeals } = useQuery({
         placeholderData: keepPreviousData,
@@ -110,17 +114,11 @@ export const useMeals: UseMeals = () => {
 
         const deletedIds = deletedMeals.map(({ id }) => id);
 
-        const response = await fetch('/api/v1/meal', {
-            body: JSON.stringify({
-                deletedIds,
-                editedMeals,
-                newMeals,
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: 'PATCH',
-        });
+        const response = await saveMealPlan({
+            deletedIds,
+            editedMeals,
+            newMeals,
+        }).catch(() => ({ ok: false }));
 
         if (!response.ok) {
             setIsSubmitting(false);
@@ -131,8 +129,9 @@ export const useMeals: UseMeals = () => {
             });
         } else {
             await queryClient.invalidateQueries({
-                queryKey: ['meals', currentWeekKey],
+                queryKey: ['meals'],
             });
+            setIsSubmitting(false);
 
             removeChanges();
 

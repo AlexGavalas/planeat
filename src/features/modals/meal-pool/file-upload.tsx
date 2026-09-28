@@ -9,7 +9,6 @@ import {
     Textarea,
 } from '@mantine/core';
 import { InfoCircle, Redo, Trash, Undo } from 'iconoir-react';
-import { useTranslation } from 'next-i18next/pages';
 import {
     type FormEventHandler,
     type MouseEventHandler,
@@ -17,6 +16,7 @@ import {
     useRef,
     useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useHistory } from '~hooks/use-history';
 

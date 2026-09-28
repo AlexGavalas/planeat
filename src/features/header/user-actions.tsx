@@ -10,16 +10,17 @@ import {
 } from '@mantine/core';
 import { Google, LogIn } from 'iconoir-react';
 import { signIn } from 'next-auth/react';
-import { useTranslation } from 'next-i18next/pages';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import {
     type FormEventHandler,
     type MouseEventHandler,
     useCallback,
     useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { UserMenu } from '~features/user-menu';
+import { useLocalizedPath } from '~hooks/use-localized-path';
 
 type UserActionsProps = Readonly<{
     hasUser: boolean;
@@ -28,6 +29,7 @@ type UserActionsProps = Readonly<{
 export const UserActions = ({ hasUser }: UserActionsProps) => {
     const { t } = useTranslation();
     const router = useRouter();
+    const localize = useLocalizedPath();
     const [isOpen, setIsOpen] = useState(false);
     const [isRegistering, setIsRegistering] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,8 +48,8 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
     const handleLoginWithGoogle = useCallback<
         MouseEventHandler<HTMLButtonElement>
     >(async () => {
-        await signIn('google', { callbackUrl: '/home' });
-    }, []);
+        await signIn('google', { callbackUrl: localize('/home') });
+    }, [localize]);
 
     const handleEmailSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
         async (event) => {
@@ -82,7 +84,7 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                 }
 
                 const result = await signIn('credentials', {
-                    callbackUrl: '/home',
+                    callbackUrl: localize('/home'),
                     email,
                     password,
                     redirect: false,
@@ -93,7 +95,8 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                     return;
                 }
 
-                await router.push('/home');
+                router.push(localize('/home'));
+                router.refresh();
                 closeModal();
             } catch {
                 setError(t('login.errors.generic'));
@@ -101,7 +104,7 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                 setIsSubmitting(false);
             }
         },
-        [closeModal, isRegistering, router, t],
+        [closeModal, isRegistering, router, t, localize],
     );
 
     const toggleMode = useCallback(() => {

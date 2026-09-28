@@ -1,6 +1,6 @@
 import { Button, Group, Text } from '@mantine/core';
-import { useTranslation } from 'next-i18next/pages';
 import { type MouseEventHandler, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { type Notification } from '~types/notification';
 

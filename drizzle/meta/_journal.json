@@ -15,6 +15,13 @@
             "when": 1790404683010,
             "tag": "0001_add_user_credentials",
             "breakpoints": true
+        },
+        {
+            "idx": 2,
+            "version": "7",
+            "when": 1790599418453,
+            "tag": "0002_app_router_query_indexes",
+            "breakpoints": true
         }
     ]
 }

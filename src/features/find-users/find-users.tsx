@@ -10,8 +10,8 @@ import {
 import { useDebouncedValue } from '@mantine/hooks';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ProfileCircle, UserPlus, Xmark } from 'iconoir-react';
-import { useTranslation } from 'next-i18next/pages';
 import { type MouseEventHandler, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useProfile } from '~hooks/use-profile';
 import { type User } from '~types/user';

@@ -1,26 +1,27 @@
+'use client';
+
 import { Spoiler, Stack, Text, Timeline, Title } from '@mantine/core';
-import { format, isAfter, set, startOfDay } from 'date-fns';
-import { useTranslation } from 'next-i18next/pages';
+import { format, isAfter, parseISO, set, startOfDay } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 import { MEAL_ICON, ROWS } from '~constants/calendar';
 import { type MealsMap } from '~types/meal';
 
-const now = new Date();
-const startOfDayTimestamp = startOfDay(now);
-
-const MEAL_TIMES: Record<RowKey, Date> = {
-    dinner: set(startOfDayTimestamp, { hours: 20, minutes: 0, seconds: 0 }),
-    lunch: set(startOfDayTimestamp, { hours: 13, minutes: 0, seconds: 0 }),
-    morning: set(startOfDayTimestamp, { hours: 9, minutes: 0, seconds: 0 }),
-    snack1: set(startOfDayTimestamp, { hours: 11, minutes: 0, seconds: 0 }),
-    snack2: set(startOfDayTimestamp, { hours: 17, minutes: 0, seconds: 0 }),
-};
-
 type DailyMealProps = Readonly<{
     dailyMeals: MealsMap;
+    date: string;
 }>;
 
-export const DailyMeal = ({ dailyMeals }: DailyMealProps) => {
+export const DailyMeal = ({ dailyMeals, date }: DailyMealProps) => {
+    const now = parseISO(date);
+    const start = startOfDay(now);
+    const mealTimes: Record<RowKey, Date> = {
+        dinner: set(start, { hours: 20 }),
+        lunch: set(start, { hours: 13 }),
+        morning: set(start, { hours: 9 }),
+        snack1: set(start, { hours: 11 }),
+        snack2: set(start, { hours: 17 }),
+    };
     const { t } = useTranslation();
 
     const translatedRows = ROWS.map((row) => ({
@@ -29,7 +30,7 @@ export const DailyMeal = ({ dailyMeals }: DailyMealProps) => {
     }));
 
     const activeIndex = ROWS.findIndex(({ key }) =>
-        isAfter(MEAL_TIMES[key], now),
+        isAfter(mealTimes[key], now),
     );
 
     return (

@@ -1,6 +1,7 @@
 import { Button, Group, Stack, Textarea, Title } from '@mantine/core';
-import { useTranslation } from 'next-i18next/pages';
+import { useQueryClient } from '@tanstack/react-query';
 import { type FormEventHandler, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useProfile } from '~hooks/use-profile';
 import {
@@ -8,9 +9,12 @@ import {
     showSuccessNotification,
 } from '~util/notification';
 
+import { saveProfile } from '../../app/actions';
+
 export const FoodPreferences = () => {
     const { t } = useTranslation();
     const { profile } = useProfile();
+    const queryClient = useQueryClient();
 
     const handleSavePreferences = useCallback<
         FormEventHandler<HTMLFormElement>
@@ -27,14 +31,10 @@ export const FoodPreferences = () => {
             const positive = formData.get('positive')?.toString() ?? null;
             const negative = formData.get('negative')?.toString() ?? null;
 
-            const response = await fetch('/api/v1/user', {
-                body: JSON.stringify({
-                    foodPreferencesNegative: negative,
-                    foodPreferencesPositive: positive,
-                }),
-                headers: { 'Content-Type': 'application/json' },
-                method: 'PATCH',
-            });
+            const response = await saveProfile({
+                foodPreferencesNegative: negative,
+                foodPreferencesPositive: positive,
+            }).catch(() => ({ ok: false }));
 
             if (!response.ok) {
                 showErrorNotification({
@@ -42,13 +42,14 @@ export const FoodPreferences = () => {
                     title: t('notification.error.title'),
                 });
             } else {
+                await queryClient.invalidateQueries({ queryKey: ['user'] });
                 showSuccessNotification({
                     message: t('notification.success.message'),
                     title: t('notification.success.title'),
                 });
             }
         },
-        [profile?.email, t],
+        [profile?.email, t, queryClient],
     );
 
     return (

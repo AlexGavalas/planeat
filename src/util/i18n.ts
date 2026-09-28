@@ -1,18 +1,12 @@
-import { type SSRConfig } from 'next-i18next/pages';
-import { serverSideTranslations } from 'next-i18next/pages/serverSideTranslations';
+import { createServerI18next } from 'next-i18next/server';
+import 'server-only';
 
-import nextI18NextConfig from '../../next-i18next.config';
+import en from '../../public/locales/en/common.json';
+import gr from '../../public/locales/gr/common.json';
 
-const allLocales = ['gr', 'en'];
-
-export const getServerSideTranslations = async ({
-    locale,
-}: {
-    locale?: string;
-}): Promise<SSRConfig> =>
-    serverSideTranslations(
-        locale ?? 'en',
-        ['common'],
-        nextI18NextConfig,
-        allLocales,
-    );
+export const { getT, getResources } = createServerI18next({
+    defaultNS: 'common',
+    fallbackLng: 'en',
+    resources: { en: { common: en }, gr: { common: gr } },
+    supportedLngs: ['en', 'gr'],
+});

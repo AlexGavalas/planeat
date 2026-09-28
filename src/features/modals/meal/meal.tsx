@@ -9,7 +9,6 @@ import {
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { type ContextModalProps } from '@mantine/modals';
-import { useTranslation } from 'next-i18next/pages';
 import {
     type ChangeEventHandler,
     type FormEventHandler,
@@ -17,6 +16,7 @@ import {
     useCallback,
     useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useGetMealPool } from '../meal-pool/hooks/use-get-meal-pool';
 

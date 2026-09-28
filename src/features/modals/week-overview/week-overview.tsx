@@ -1,8 +1,8 @@
 import { Alert, List, Stack, Text } from '@mantine/core';
 import { format, parse, parseISO } from 'date-fns';
 import groupBy from 'lodash/fp/groupBy';
-import { useTranslation } from 'next-i18next/pages';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { MEAL_ICON, ROWS } from '~constants/calendar';
 import { useMeals } from '~store/hooks';

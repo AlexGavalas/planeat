@@ -13,8 +13,7 @@ import { useState } from 'react';
 import { type Header, type Item, Row } from './row';
 import styles from './table.module.css';
 
-export const INITIAL_PAGE = 1;
-export const PAGE_SIZE = 5;
+export { INITIAL_PAGE, PAGE_SIZE } from '~constants/pagination';
 
 export type TableProps<ItemType> = Readonly<{
     data: ItemType[];

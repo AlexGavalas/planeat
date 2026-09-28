@@ -1,4 +1,5 @@
 import { and, eq } from 'drizzle-orm';
+import 'server-only';
 
 import { getDb } from '~db';
 import { notifications, users } from '~db/schema';

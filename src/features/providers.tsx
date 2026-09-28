@@ -1,19 +1,28 @@
+/* eslint-disable react/jsx-max-depth -- Providers are fine to have more nesting */
+'use client';
+
 import { Center, Loader, MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import {
     type DehydratedState,
     HydrationBoundary,
-    QueryClient,
     QueryClientProvider,
 } from '@tanstack/react-query';
+import { parseISO } from 'date-fns';
+import { type Resource } from 'i18next';
+import { Provider as JotaiProvider, createStore } from 'jotai';
 import { SessionProvider, type SessionProviderProps } from 'next-auth/react';
+import { I18nProvider } from 'next-i18next/client';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import { Fragment, type PropsWithChildren, useMemo } from 'react';
+import { type PropsWithChildren, useState } from 'react';
 
 import { BRAND_COLORS } from '~constants/colors';
+import { Header } from '~features/header';
+import { Onboarding } from '~features/onboarding';
+import { currentWeekAtom } from '~store/atoms';
 import { UserContext } from '~store/user-context';
+import { createQueryClient } from '~util/query-client';
 
 const CenterLoader = () => (
     <Center py="md">
@@ -60,55 +69,66 @@ type ProvidersProps = PropsWithChildren<
     Readonly<{
         session: SessionProviderProps['session'];
         dehydratedState: DehydratedState;
+        language: string;
+        resources: Resource;
+        initialWeek: string;
     }>
 >;
-
-const PUBLIC_PAGES = ['/'];
 
 export const Providers = ({
     children,
     dehydratedState,
     session,
+    language,
+    resources,
+    initialWeek,
 }: ProvidersProps) => {
-    const router = useRouter();
-
-    const queryClient = useMemo(
-        () =>
-            new QueryClient({
-                defaultOptions: {
-                    queries: {
-                        refetchOnMount: false,
-                        refetchOnWindowFocus: false,
-                    },
-                },
-            }),
-        [],
+    // These instances intentionally persist for the lifetime of this account.
+    // eslint-disable-next-line react/hook-use-state
+    const [queryClient] = useState(createQueryClient);
+    // eslint-disable-next-line react/hook-use-state
+    const [store] = useState(() => {
+        const value = createStore();
+        value.set(currentWeekAtom, parseISO(initialWeek));
+        return value;
+    });
+    const content = (
+        <UserContext>
+            <Header />
+            {session && <Onboarding />}
+            <div className="container">{children}</div>
+        </UserContext>
     );
-
-    const isProtectedPage = !PUBLIC_PAGES.includes(router.pathname);
-
-    const Wrapper = isProtectedPage ? UserContext : Fragment;
-
+    const modalsContent = (
+        // @ts-expect-error - dynamic modal components lose their specific props
+        <ModalsProvider modals={modals}>
+            {content}
+            <Notifications />
+        </ModalsProvider>
+    );
     return (
-        <MantineProvider
-            theme={{
-                colors: {
-                    brand: BRAND_COLORS,
-                },
-                primaryColor: 'brand',
-            }}
+        <I18nProvider
+            fallbackLng="en"
+            language={language}
+            resources={resources}
+            supportedLngs={['en', 'gr']}
         >
-            <SessionProvider session={session}>
-                <QueryClientProvider client={queryClient}>
-                    <HydrationBoundary state={dehydratedState}>
-                        {/* @ts-expect-error - Modals do not get the correct type with dynamic components for some reason */}
-                        <ModalsProvider modals={modals}>
-                            <Wrapper>{children}</Wrapper>
-                            <Notifications />
-                        </ModalsProvider>
-                    </HydrationBoundary>
-                </QueryClientProvider>
-            </SessionProvider>
-        </MantineProvider>
+            <MantineProvider
+                theme={{
+                    colors: { brand: BRAND_COLORS },
+                    primaryColor: 'brand',
+                }}
+            >
+                <SessionProvider session={session}>
+                    <QueryClientProvider client={queryClient}>
+                        <HydrationBoundary state={dehydratedState}>
+                            <JotaiProvider store={store}>
+                                {modalsContent}
+                            </JotaiProvider>
+                        </HydrationBoundary>
+                    </QueryClientProvider>
+                </SessionProvider>
+            </MantineProvider>
+        </I18nProvider>
     );
 };

@@ -3,13 +3,13 @@ import { DatePicker } from '@mantine/dates';
 import { type ContextModalProps } from '@mantine/modals';
 import { format } from 'date-fns';
 import 'dayjs/locale/el';
-import { useTranslation } from 'next-i18next/pages';
 import {
     type ChangeEventHandler,
     type FormEventHandler,
     useCallback,
     useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { showErrorNotification } from '~util/notification';
 

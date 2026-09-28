@@ -1,4 +1,5 @@
 import { and, eq, ilike } from 'drizzle-orm';
+import 'server-only';
 
 import { getDb } from '~db';
 import { mealPool } from '~db/schema';

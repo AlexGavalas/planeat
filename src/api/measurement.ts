@@ -1,8 +1,9 @@
 import { and, count, desc, eq, isNotNull } from 'drizzle-orm';
+import 'server-only';
 
 import { getDb } from '~db';
 import { measurements } from '~db/schema';
-import { type Measurement } from '~types/measurement';
+import { type Measurement, type MeasurementSummary } from '~types/measurement';
 
 const MAX_MEASUREMENTS = 12;
 
@@ -166,4 +167,25 @@ export const updateMeasurement = async ({
         await db.insert(measurements).values(values);
     }
     return { error: null };
+};
+
+export const fetchMeasurementSummary = async ({
+    userId,
+}: {
+    userId: number;
+}): Promise<MeasurementSummary> => {
+    const [weight, fat] = await Promise.all([
+        fetchMeasurements({ userId }),
+        fetchFatMeasurements({ userId }),
+    ]);
+    return {
+        currentFat: fat.data.at(-1)?.fat_percentage ?? 0,
+        currentWeight: weight.data.at(-1)?.weight ?? 0,
+        fatTimeline: fat.data.length
+            ? fat.data.map(({ date: x, fat_percentage: y }) => ({ x, y }))
+            : null,
+        weightTimeline: weight.data.length
+            ? weight.data.map(({ date: x, weight: y }) => ({ x, y }))
+            : null,
+    };
 };

@@ -1,26 +1,25 @@
-import {
-    type GetServerSidePropsContext,
-    type NextApiRequest,
-    type NextApiResponse,
-} from 'next';
-import { type Session } from 'next-auth';
-import { getServerSession as getServerSessionNextAuth } from 'next-auth/next';
+import { getServerSession as getNextAuthSession } from 'next-auth/next';
+import { redirect } from 'next/navigation';
+import { cache } from 'react';
+import 'server-only';
 
-import { authOptions } from '../pages/api/auth/[...nextauth]';
+import { type User } from '~types/user';
 
-type APIContext = {
-    req: NextApiRequest;
-    res: NextApiResponse;
+import { authOptions } from './auth-options';
+import { fetchUser } from './user';
+
+export const getServerSession = cache(() => getNextAuthSession(authOptions));
+export const getCurrentUser = cache(async () => {
+    const session = await getServerSession();
+    return session?.user?.email
+        ? fetchUser({ email: session.user.email })
+        : null;
+});
+export const requireUser = async (): Promise<User> => {
+    const user = await getCurrentUser();
+    if (!user) redirect('/');
+    return user;
 };
 
-export const getServerSession = async (
-    context: GetServerSidePropsContext | APIContext,
-): Promise<Session | null> => {
-    const session = await getServerSessionNextAuth(
-        context.req,
-        context.res,
-        authOptions,
-    );
-
-    return session;
-};
+// Share the same calendar snapshot between the root provider and page loaders.
+export const getRequestDate = cache(() => new Date());
