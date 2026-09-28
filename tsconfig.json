@@ -19,46 +19,46 @@
     "isolatedModules": true,
     "incremental": true,
     "jsx": "react-jsx",
-    "baseUrl": "./src",
+    "rootDir": ".",
     "paths": {
       "~api/*": [
-        "api/*"
+        "./src/api/*"
       ],
       "~components/*": [
-        "components/*"
+        "./src/components/*"
       ],
       "~constants/*": [
-        "constants/*"
+        "./src/constants/*"
       ],
       "~db": [
-        "db/index"
+        "./src/db/index"
       ],
       "~db/*": [
-        "db/*"
+        "./src/db/*"
       ],
       "~features/*": [
-        "features/*"
+        "./src/features/*"
       ],
       "~hooks/*": [
-        "hooks/*"
+        "./src/hooks/*"
       ],
       "~schemas/*": [
-        "schemas/*"
+        "./src/schemas/*"
       ],
       "~store/*": [
-        "store/*"
+        "./src/store/*"
       ],
       "~styles/*": [
-        "styles/*"
+        "./src/styles/*"
       ],
       "~test/*": [
-        "test/*"
+        "./src/test/*"
       ],
       "~types/*": [
-        "types/*"
+        "./src/types/*"
       ],
       "~util/*": [
-        "util/*"
+        "./src/util/*"
       ]
     },
     "plugins": [

@@ -1,7 +1,7 @@
 import type { Config } from 'jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
 
-import { compilerOptions } from './tsconfig.json';
+import tsconfig from './tsconfig.json' with { type: 'json' };
 
 const config: Config = {
     clearMocks: true,
@@ -23,10 +23,12 @@ const config: Config = {
     },
 
     moduleNameMapper: {
-        ...pathsToModuleNameMapper(compilerOptions.paths),
+        ...pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
+            prefix: '<rootDir>/',
+        }),
         '\\.css$': 'identity-obj-proxy',
     },
-    modulePaths: [compilerOptions.baseUrl],
+    modulePaths: [tsconfig.compilerOptions.rootDir],
 
     roots: ['<rootDir>'],
 

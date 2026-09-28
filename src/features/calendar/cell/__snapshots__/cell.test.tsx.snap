@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`<Cell /> renders 1`] = `
 <div>
@@ -19,7 +19,7 @@ exports[`<Cell /> renders 1`] = `
       >
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
-          style="text-align: center;"
+          style="padding: calc(0.3125rem * var(--mantine-scale)); text-align: center;"
         >
           N/A
         </p>
@@ -48,7 +48,7 @@ exports[`<Cell /> when the user has a meal renders 1`] = `
       >
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
-          style="text-align: center;"
+          style="padding: calc(0.3125rem * var(--mantine-scale)); text-align: center;"
         >
           test meal
         </p>
@@ -144,7 +144,7 @@ exports[`<Cell /> when the user has a meal when the meal has a note renders 1`] 
       >
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
-          style="text-align: center;"
+          style="padding: calc(0.3125rem * var(--mantine-scale)); text-align: center;"
         >
           test meal
         </p>
