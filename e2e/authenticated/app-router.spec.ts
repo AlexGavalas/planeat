@@ -2,34 +2,73 @@ import { expect, test } from '@playwright/test';
 
 import en from '../../public/locales/en/common.json';
 import gr from '../../public/locales/gr/common.json';
+import { E2E_USER } from '../support/auth';
 
-test('hydrates protected pages without duplicate browser data requests', async ({
-    page,
-}) => {
-    const errors: string[] = [];
-    const requests: string[] = [];
-    page.on('pageerror', (error) => errors.push(error.message));
-    page.on('request', (request) => {
-        if (request.method() === 'GET' && request.url().includes('/api/v1/'))
-            requests.push(request.url());
-    });
-    for (const path of [
-        '/home',
-        '/meal-plan',
-        '/settings',
-        '/connections',
-        '/gr/settings',
-    ]) {
+const hydrationCases = [
+    { headings: [en.day_plan, en.fat_change, en.weight_change], path: '/home' },
+    { headings: [], path: '/meal-plan' },
+    { headings: [en.measurements, en.activities], path: '/settings' },
+    {
+        headings: [
+            en.connections.manage_connection_requests.title,
+            en.connections.manage_connections.title,
+        ],
+        path: '/connections',
+    },
+    { headings: [en.measurements, en.activities], path: '/gr/settings' },
+];
+
+for (const { headings, path } of hydrationCases) {
+    test(`hydrates ${path} without duplicate browser data requests`, async ({
+        page,
+    }) => {
+        const errors: string[] = [];
+        const requests: string[] = [];
+        page.on('pageerror', (error) => errors.push(error.message));
+        page.on('request', (request) => {
+            if (
+                request.method() === 'GET' &&
+                new URL(request.url()).pathname.startsWith('/api/v1/')
+            )
+                requests.push(request.url());
+        });
+
         await page.goto(path);
+        // Wait for the route's content, including both streamed home sections.
+        for (const name of headings) {
+            await expect(
+                page.getByRole('heading', { exact: true, name }),
+            ).toBeVisible();
+        }
+        if (path === '/meal-plan') {
+            await expect(
+                page.getByRole('button', { name: en.week.previous }),
+            ).toBeEnabled();
+            await page.getByRole('button', { name: en.see_overview }).click();
+            const overview = page.getByRole('dialog', {
+                name: en.modals.week_overview.title,
+            });
+            await expect(overview).toBeVisible();
+            await page.keyboard.press('Escape');
+            await expect(overview).toBeHidden();
+        }
+
+        // Opening the account menu proves the client is interactive. Unlike
+        // networkidle, this does not depend on Vercel's preview toolbar traffic.
+        await page
+            .getByRole('button')
+            .filter({
+                has: page.getByRole('img', { name: E2E_USER.FULL_NAME }),
+            })
+            .click();
         await expect(
-            page.getByRole('link', { name: 'Meal plan' }),
+            page.getByRole('menuitem', { name: en.settings }),
         ).toBeVisible();
-        // Give React's mount effects a chance to schedule an accidental client fetch.
-        await page.waitForLoadState('networkidle');
-    }
-    expect(requests).toEqual([]);
-    expect(errors).toEqual([]);
-});
+
+        expect(requests).toEqual([]);
+        expect(errors).toEqual([]);
+    });
+}
 
 test('creates a measurement and refreshes the dashboard summary', async ({
     page,

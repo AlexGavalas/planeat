@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-max-depth -- Providers are fine to have more nesting */
 'use client';
 
 import { Center, Loader, MantineProvider } from '@mantine/core';
