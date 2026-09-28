@@ -6,6 +6,7 @@ const handler: RouteHandlerWithUser = async ({ request, user }) => {
     const query: Partial<Record<string, string>> = Object.fromEntries(
         request.nextUrl.searchParams,
     );
+
     if (request.method === 'GET') {
         const endDate = String(query.endDate);
         const startDate = String(query.startDate);
@@ -34,4 +35,5 @@ const handler: RouteHandlerWithUser = async ({ request, user }) => {
 };
 
 const route = withUser(handler);
+
 export { route as GET, route as PATCH };

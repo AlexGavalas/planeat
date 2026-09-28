@@ -15,6 +15,7 @@ type DailyMealProps = Readonly<{
 export const DailyMeal = ({ dailyMeals, date }: DailyMealProps) => {
     const now = parseISO(date);
     const start = startOfDay(now);
+
     const mealTimes: Record<RowKey, Date> = {
         dinner: set(start, { hours: 20 }),
         lunch: set(start, { hours: 13 }),
@@ -22,6 +23,7 @@ export const DailyMeal = ({ dailyMeals, date }: DailyMealProps) => {
         snack1: set(start, { hours: 11 }),
         snack2: set(start, { hours: 17 }),
     };
+
     const { t } = useTranslation();
 
     const translatedRows = ROWS.map((row) => ({

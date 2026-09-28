@@ -31,9 +31,11 @@ const globalSetup = async (): Promise<void> => {
         await migrate(db, {
             migrationsFolder: resolve(process.cwd(), 'drizzle'),
         });
+
         await sql`TRUNCATE TABLE ${sql('users')} RESTART IDENTITY CASCADE`;
 
         const passwordHash = await hashPassword(E2E_USER.PASSWORD);
+
         const [user] = await db
             .insert(users)
             .values({

@@ -64,6 +64,7 @@ export default defineConfig([
             '@typescript-eslint/prefer-promise-reject-errors': 'off',
             '@typescript-eslint/restrict-plus-operands': 'off',
             '@typescript-eslint/restrict-template-expressions': 'off',
+            curly: 'error',
             'import/no-default-export': 'error',
             'react-hooks/set-state-in-effect': 'off',
             'sort-keys': [

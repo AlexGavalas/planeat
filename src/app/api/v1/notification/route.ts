@@ -11,6 +11,7 @@ const handler: RouteHandlerWithUser = async ({ request, user }) => {
     const query: Partial<Record<string, string>> = Object.fromEntries(
         request.nextUrl.searchParams,
     );
+
     if (request.method === 'GET') {
         if (query.type === 'connection_request') {
             const { data } = await fetchConnectionRequestNotifications({
@@ -56,4 +57,5 @@ const handler: RouteHandlerWithUser = async ({ request, user }) => {
 };
 
 const route = withUser(handler);
+
 export { route as GET, route as DELETE, route as POST };

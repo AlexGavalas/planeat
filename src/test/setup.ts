@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import 'jest-axe/extend-expect';
+import type nextNavigation from 'next/navigation';
 
 Object.defineProperty(window, 'matchMedia', {
     value: jest.fn().mockImplementation((query: string) => ({
@@ -21,3 +22,7 @@ jest.mock('../app/actions', () => ({
     saveMealPlan: jest.fn(),
     saveProfile: jest.fn(),
 }));
+
+jest.mock<typeof nextNavigation>('next/navigation', () =>
+    jest.requireActual('next-router-mock/navigation'),
+);

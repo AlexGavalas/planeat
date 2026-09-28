@@ -9,8 +9,8 @@ import { useProfile } from '~hooks/use-profile';
 export const BMITimeline = () => {
     const { t } = useTranslation();
     const { profile } = useProfile();
-
     const { data: summary, isFetching } = useMeasurementSummary();
+
     const data = summary?.weightTimeline;
 
     return (

@@ -41,6 +41,7 @@ export const deleteConnection = async ({
                     eq(connections.user_id, userId),
                 ),
             );
+
         await tx
             .delete(connections)
             .where(
@@ -50,6 +51,7 @@ export const deleteConnection = async ({
                 ),
             );
     });
+
     return { error: null };
 };
 
@@ -66,6 +68,7 @@ export const createConnection = async ({
             { connection_user_id: connectionUserId, user_id: userId },
             { connection_user_id: userId, user_id: connectionUserId },
         ]);
+
     return { error: null };
 };
 
@@ -87,7 +90,11 @@ export const acceptConnectionRequest = async ({
                 ),
             )
             .returning();
-        if (!request) throw new Error('Connection request not found');
+
+        if (!request) {
+            throw new Error('Connection request not found');
+        }
+
         await tx.insert(connections).values([
             { connection_user_id: request.request_user_id, user_id: userId },
             { connection_user_id: userId, user_id: request.request_user_id },

@@ -66,6 +66,7 @@ export const deleteActivity = async ({
         .where(
             and(eq(activities.id, activityId), eq(activities.user_id, userId)),
         );
+
     return { error: null };
 };
 
@@ -81,7 +82,9 @@ export const updateActivity = async ({
     userId: number;
 }): Promise<{ error: null }> => {
     const values = { activity, date, user_id: userId };
+
     const db = getDb();
+
     if (activityId) {
         await db
             .update(activities)
@@ -95,5 +98,6 @@ export const updateActivity = async ({
     } else {
         await db.insert(activities).values(values);
     }
+
     return { error: null };
 };

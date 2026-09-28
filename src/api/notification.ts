@@ -40,6 +40,7 @@ export const createConnectionRequestNotification = async ({
             request_user_id: requestUserId,
             target_user_id: targetUserId,
         });
+
     return { error: null };
 };
 
@@ -82,5 +83,6 @@ export const deleteConnectionRequestNotification = async ({
                 eq(notifications.target_user_id, userId),
             ),
         );
+
     return { error: null };
 };

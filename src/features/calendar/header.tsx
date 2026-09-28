@@ -46,9 +46,11 @@ export const Header = () => {
             const response = await fetch(
                 `/api/v1/activity?startDate=${startDate}&endDate=${endDate}`,
             );
+
             const { data } = (await response.json()) as {
                 data: ActivitysMap[keyof ActivitysMap][];
             };
+
             return data;
         },
         queryKey: ['activities', 'week', currentWeekKey],

@@ -130,6 +130,7 @@ export const deleteMeasurement = async ({
                 eq(measurements.user_id, userId),
             ),
         );
+
     return { error: null };
 };
 
@@ -152,7 +153,9 @@ export const updateMeasurement = async ({
         user_id: userId,
         weight,
     };
+
     const db = getDb();
+
     if (measurementId) {
         await db
             .update(measurements)
@@ -166,6 +169,7 @@ export const updateMeasurement = async ({
     } else {
         await db.insert(measurements).values(values);
     }
+
     return { error: null };
 };
 
@@ -178,6 +182,7 @@ export const fetchMeasurementSummary = async ({
         fetchMeasurements({ userId }),
         fetchFatMeasurements({ userId }),
     ]);
+
     return {
         currentFat: fat.data.at(-1)?.fat_percentage ?? 0,
         currentWeight: weight.data.at(-1)?.weight ?? 0,

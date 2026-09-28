@@ -136,10 +136,15 @@ export const LineChart = <DataItem extends { x: string; y: number | null }>({
 
                 let transformString = '';
 
-                if (isFirst) transformString += 'translateX(50%)';
-                else if (isLast) transformString += 'translateX(-50%)';
+                if (isFirst) {
+                    transformString += 'translateX(50%)';
+                } else if (isLast) {
+                    transformString += 'translateX(-50%)';
+                }
 
-                if (isTop) transformString += 'translateY(75%)';
+                if (isTop) {
+                    transformString += 'translateY(75%)';
+                }
 
                 return (
                     <Card

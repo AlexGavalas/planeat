@@ -36,7 +36,9 @@ export const authOptions: AuthOptions = {
     },
     events: {
         signIn: async ({ user }) => {
-            if (!user.email || !user.name) return;
+            if (!user.email || !user.name) {
+                return;
+            }
 
             await createUser({
                 email: user.email,
@@ -50,7 +52,9 @@ export const authOptions: AuthOptions = {
             async authorize(credentials) {
                 const parsed = loginSchema.safeParse(credentials);
 
-                if (!parsed.success) return null;
+                if (!parsed.success) {
+                    return null;
+                }
 
                 const user = await fetchUserCredentials({
                     email: parsed.data.email,

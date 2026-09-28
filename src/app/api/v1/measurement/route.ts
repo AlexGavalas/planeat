@@ -85,4 +85,5 @@ const handler: RouteHandlerWithUser = async ({ request, user }) => {
 };
 
 const route = withUser(handler);
+
 export { route as GET, route as DELETE, route as PATCH, route as POST };

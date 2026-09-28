@@ -10,8 +10,8 @@ import { calculateBMI } from './helpers';
 export const CurrentBMI = () => {
     const { t } = useTranslation();
     const { profile } = useProfile();
-
     const { data: summary } = useMeasurementSummary();
+
     const weight = summary?.currentWeight ?? 0;
 
     const translatedSections = SECTIONS.map((section) => ({

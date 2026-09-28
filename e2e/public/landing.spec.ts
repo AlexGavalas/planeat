@@ -5,6 +5,7 @@ test.describe('public routes', () => {
         await page.goto('/');
 
         await expect(page).toHaveTitle('Planeat');
+
         await expect(
             page.getByRole('heading', { name: 'Welcome to Planeat!' }),
         ).toBeVisible();
@@ -12,6 +13,7 @@ test.describe('public routes', () => {
         await page.getByRole('button', { exact: true, name: 'Log in' }).click();
 
         await expect(page.getByLabel('Email')).toBeVisible();
+
         await expect(
             page.getByLabel('Password', { exact: true }),
         ).toBeVisible();
@@ -23,6 +25,7 @@ test.describe('public routes', () => {
         await page.goto('/home');
 
         await expect(page).toHaveURL('/');
+
         await expect(
             page.getByRole('heading', { name: 'Welcome to Planeat!' }),
         ).toBeVisible();

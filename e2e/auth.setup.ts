@@ -17,7 +17,9 @@ setup('authenticate the test user', async ({ page }) => {
     }
 
     await page.getByLabel('Email').fill(E2E_USER.EMAIL);
+
     await page.getByLabel('Password', { exact: true }).fill(E2E_USER.PASSWORD);
+
     await page
         .getByRole('button', {
             name: mode === 'preview' ? 'Create account' : 'Log in with email',
@@ -32,6 +34,7 @@ setup('authenticate the test user', async ({ page }) => {
         });
 
         expect(response.ok()).toBe(true);
+
         await page.reload();
     }
 

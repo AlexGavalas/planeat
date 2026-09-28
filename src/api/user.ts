@@ -91,6 +91,7 @@ export const updateFoodPreferences = async ({
             food_preferences_positive: positive,
         })
         .where(eq(users.id, userId));
+
     return { error: null };
 };
 
@@ -156,6 +157,7 @@ export const updateProfile = async ({
             target_weight: targetWeight,
         })
         .where(eq(users.id, userId));
+
     return { error: null };
 };
 
@@ -165,6 +167,7 @@ export const deleteProfile = async ({
     userId: number;
 }): Promise<{ error: null }> => {
     await getDb().delete(users).where(eq(users.id, userId));
+
     return { error: null };
 };
 

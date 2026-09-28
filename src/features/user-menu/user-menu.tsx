@@ -29,7 +29,9 @@ export const UserMenu = () => {
         MouseEventHandler<HTMLButtonElement>
     >(async () => {
         queryClient.clear();
+
         await signOut({ callbackUrl: '/' });
+
         router.push('/');
         router.refresh();
     }, [router, queryClient]);

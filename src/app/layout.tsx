@@ -22,10 +22,15 @@ export default async function RootLayout({
         getServerSession(),
         getCurrentUser(),
     ]);
+
     const language = profile?.language === 'gr' ? 'gr' : 'en';
+
     const { i18n } = await getT('common', { lng: language });
+
     const queryClient = createQueryClient();
+
     queryClient.setQueryData(['user'], profile);
+
     return (
         <html lang={language === 'gr' ? 'el' : 'en'} {...mantineHtmlProps}>
             <head>

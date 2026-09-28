@@ -46,6 +46,7 @@ export const FoodPreferences = () => {
                 });
             } else {
                 await queryClient.invalidateQueries({ queryKey: ['user'] });
+
                 showSuccessNotification({
                     message: t('notification.success.message'),
                     title: t('notification.success.title'),

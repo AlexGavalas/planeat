@@ -30,10 +30,12 @@ export const createMealInPool = async ({
     content: string[];
     userId: number;
 }): Promise<{ error: null }> => {
-    if (content.length)
+    if (content.length) {
         await getDb()
             .insert(mealPool)
             .values(content.map((item) => ({ content: item, user_id: userId })))
             .onConflictDoNothing();
+    }
+
     return { error: null };
 };

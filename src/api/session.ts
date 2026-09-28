@@ -17,7 +17,9 @@ export const getCurrentUser = cache(async () => {
 });
 export const requireUser = async (): Promise<User> => {
     const user = await getCurrentUser();
-    if (!user) redirect('/');
+    if (!user) {
+        redirect('/');
+    }
     return user;
 };
 

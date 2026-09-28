@@ -68,7 +68,9 @@ export const useProfile: UseProfile = () => {
                 language,
                 targetWeight,
             });
-            if (!response.ok) throw new Error('Could not save profile');
+            if (!response.ok) {
+                throw new Error('Could not save profile');
+            }
         },
         onError: () => {
             showErrorNotification({

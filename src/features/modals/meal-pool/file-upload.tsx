@@ -74,7 +74,7 @@ export const FileUploadTab = () => {
         (e) => {
             e.preventDefault();
 
-            const formData = Object.fromEntries(new FormData(e.currentTarget));
+            const formData = Array.from(new FormData(e.currentTarget));
 
             const content = formSchema.parse(formData);
 

@@ -6,18 +6,25 @@ export async function POST(request: Request): Promise<Response> {
     const parsed = registrationSchema.safeParse(
         await request.json().catch(() => null),
     );
-    if (!parsed.success)
+
+    if (!parsed.success) {
         return Response.json(
             { message: 'Invalid registration details' },
             { status: 400 },
         );
+    }
+
     const { email, fullName, password } = parsed.data;
-    if (await fetchUser({ email }))
+
+    if (await fetchUser({ email })) {
         return Response.json(
             { message: 'An account already exists' },
             { status: 409 },
         );
+    }
+
     const passwordHash = await hashPassword(password);
+
     try {
         await createCredentialsUser({ email, fullName, passwordHash });
     } catch (error) {
@@ -32,7 +39,9 @@ export async function POST(request: Request): Promise<Response> {
                 { status: 409 },
             );
         }
+
         throw error;
     }
+
     return Response.json({ message: 'Account created' }, { status: 201 });
 }

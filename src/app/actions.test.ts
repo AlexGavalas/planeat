@@ -50,8 +50,11 @@ describe('server actions', () => {
             acceptConnectionRequest('aa6787bf-7452-4b54-b3c5-0d5588e7a558'),
     ])('rejects unauthenticated mutations (%#)', async (action) => {
         expect.hasAssertions();
+
         jest.mocked(getCurrentUser).mockResolvedValue(null);
+
         await expect(action()).resolves.toStrictEqual({ ok: false });
+
         expect([
             jest.mocked(saveMeals).mock.calls,
             jest.mocked(updateProfile).mock.calls,
@@ -61,23 +64,28 @@ describe('server actions', () => {
 
     it('rejects malformed input before writing', async () => {
         expect.hasAssertions();
+
         await expect(
             saveMealPlan({ newMeals: 'invalid' }),
         ).resolves.toStrictEqual({ ok: false });
+
         await expect(saveProfile({ height: 'invalid' })).resolves.toStrictEqual(
             { ok: false },
         );
+
         expect(revalidatePath).not.toHaveBeenCalled();
     });
 
     it('uses the authenticated identity and invalidates affected pages', async () => {
         expect.hasAssertions();
+
         await saveMealPlan({
             deletedIds: [],
             editedMeals: [],
             newMeals: [],
             userId: 999,
         });
+
         expect(saveMeals).toHaveBeenCalledWith({
             deletedIds: [],
             editedMeals: [],
@@ -90,25 +98,31 @@ describe('server actions', () => {
 
     it('returns failure without invalidating pages if the transaction fails', async () => {
         expect.hasAssertions();
-        const log = jest
-            .spyOn(console, 'error')
-            .mockImplementation(() => undefined);
+
+        const log = jest.spyOn(console, 'error').mockImplementation(jest.fn());
+
         jest.mocked(saveMeals).mockRejectedValueOnce(
             new Error('transaction failed'),
         );
+
         await expect(
             saveMealPlan({ deletedIds: [], editedMeals: [], newMeals: [] }),
         ).resolves.toStrictEqual({ ok: false });
+
         expect(revalidatePath).not.toHaveBeenCalled();
+
         log.mockRestore();
     });
 
     it('passes the request id and authenticated recipient to acceptance', async () => {
         expect.hasAssertions();
+
         const requestId = 'aa6787bf-7452-4b54-b3c5-0d5588e7a558';
+
         await expect(acceptConnectionRequest(requestId)).resolves.toStrictEqual(
             { ok: true },
         );
+
         expect(acceptRequest).toHaveBeenCalledWith({ requestId, userId: 7 });
     });
 });

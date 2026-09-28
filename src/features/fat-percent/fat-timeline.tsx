@@ -7,8 +7,8 @@ import { useMeasurementSummary } from '~hooks/use-measurement-summary';
 
 export const FatTimeline = () => {
     const { t } = useTranslation();
-
     const { data: summary, isFetching } = useMeasurementSummary();
+
     const data = summary?.fatTimeline;
 
     return (

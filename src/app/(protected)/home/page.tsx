@@ -14,12 +14,15 @@ import Loading from '../loading';
 
 async function DailyMeals() {
     const profile = await requireUser();
+
     const now = getRequestDate();
+
     const meals = await fetchMeals({
         endDate: format(endOfDay(now), 'yyyy-MM-dd HH:mm'),
         startDate: format(startOfDay(now), 'yyyy-MM-dd HH:mm'),
         userId: profile.id,
     });
+
     return (
         <DailyMeal
             dailyMeals={Object.fromEntries(
@@ -29,21 +32,27 @@ async function DailyMeals() {
         />
     );
 }
+
 async function Measurements() {
     const profile = await requireUser();
+
     const client = createQueryClient();
+
     client.setQueryData(
         ['measurement-summary'],
         await fetchMeasurementSummary({ userId: profile.id }),
     );
+
     return (
         <HydrationBoundary state={dehydrate(client)}>
             <MeasurementDashboard />
         </HydrationBoundary>
     );
 }
+
 export default async function Page() {
     await requireUser();
+
     return (
         <Home
             dailyMeals={

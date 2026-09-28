@@ -7,8 +7,8 @@ import { MAX_FAT_PERCENT, SECTIONS } from './constants';
 
 export const CurrentFat = () => {
     const { t } = useTranslation();
-
     const { data: summary } = useMeasurementSummary();
+
     const fatPercent = summary?.currentFat ?? 0;
 
     const translatedSections = SECTIONS.map((section) => ({

@@ -35,12 +35,14 @@ export const deleteMeals = async ({
     deletedIds: string[];
     userId: number;
 }): Promise<{ error: null }> => {
-    if (deletedIds.length)
+    if (deletedIds.length) {
         await db
             .delete(meals)
             .where(
                 and(inArray(meals.id, deletedIds), eq(meals.user_id, userId)),
             );
+    }
+
     return { error: null };
 };
 
@@ -55,7 +57,10 @@ export const updateMeals = async ({
 }): Promise<{ error: null }> => {
     await db.transaction(async (tx) => {
         for (const meal of editedMeals) {
-            if (!meal.id) throw new Error('Edited meals must have an id');
+            if (!meal.id) {
+                throw new Error('Edited meals must have an id');
+            }
+
             await tx
                 .update(meals)
                 .set({
@@ -68,6 +73,7 @@ export const updateMeals = async ({
                 .where(and(eq(meals.id, meal.id), eq(meals.user_id, userId)));
         }
     });
+
     return { error: null };
 };
 
@@ -80,7 +86,7 @@ export const createMeals = async ({
     newMeals: EditedMeal[];
     userId: number;
 }): Promise<{ error: null }> => {
-    if (newMeals.length)
+    if (newMeals.length) {
         await db.insert(meals).values(
             newMeals.map((meal) => ({
                 ...meal,
@@ -88,6 +94,8 @@ export const createMeals = async ({
                 user_id: userId,
             })),
         );
+    }
+
     return { error: null };
 };
 
