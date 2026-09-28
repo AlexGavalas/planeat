@@ -1,6 +1,44 @@
 import '@testing-library/jest-dom';
 import 'jest-axe/extend-expect';
+import type * as FetchPrimitives from 'next/dist/compiled/@edge-runtime/primitives';
 import type nextNavigation from 'next/navigation';
+import {
+    ReadableStream,
+    TextDecoderStream,
+    TextEncoderStream,
+    TransformStream,
+    WritableStream,
+} from 'node:stream/web';
+import { TextDecoder, TextEncoder } from 'node:util';
+import { deserialize, serialize } from 'node:v8';
+
+const clone = <Value>(value: Value): Value => {
+    const cloned: unknown = deserialize(serialize(value));
+
+    return cloned as Value;
+};
+
+Object.defineProperties(global, {
+    ReadableStream: { value: ReadableStream },
+    TextDecoder: { value: TextDecoder },
+    TextDecoderStream: { value: TextDecoderStream },
+    TextEncoder: { value: TextEncoder },
+    TextEncoderStream: { value: TextEncoderStream },
+    TransformStream: { value: TransformStream },
+    WritableStream: { value: WritableStream },
+    structuredClone: { value: clone },
+});
+
+const fetchPrimitives = jest.requireActual<typeof FetchPrimitives>(
+    'next/dist/compiled/@edge-runtime/primitives',
+);
+
+Object.defineProperties(global, {
+    Headers: { value: fetchPrimitives.Headers },
+    Request: { value: fetchPrimitives.Request },
+    Response: { value: fetchPrimitives.Response },
+    fetch: { configurable: true, value: fetchPrimitives.fetch, writable: true },
+});
 
 Object.defineProperty(window, 'matchMedia', {
     value: jest.fn().mockImplementation((query: string) => ({

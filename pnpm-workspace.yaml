@@ -1,8 +1,11 @@
+saveExact: true
+
 allowBuilds:
     '@parcel/watcher': true
     '@pnpm/exe': true
     'core-js': true
     'esbuild': true
     'unrs-resolver': true
-minimumReleaseAge: 4320
+
+minimumReleaseAge: 4320 # 3 days
 minimumReleaseAgeStrict: true
