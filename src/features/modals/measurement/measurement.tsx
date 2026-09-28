@@ -11,7 +11,7 @@ import { DatePicker } from '@mantine/dates';
 import { type ContextModalProps } from '@mantine/modals';
 import { format } from 'date-fns';
 import 'dayjs/locale/el';
-import { type FormEventHandler, useCallback, useState } from 'react';
+import { type SubmitEventHandler, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { showErrorNotification } from '~util/notification';
@@ -63,7 +63,7 @@ export const MeasurementModal = ({
         setFatPercent(Number(value));
     }, []);
 
-    const handleSave = useCallback<FormEventHandler<HTMLFormElement>>(
+    const handleSave = useCallback<SubmitEventHandler<HTMLFormElement>>(
         async (e) => {
             e.preventDefault();
 

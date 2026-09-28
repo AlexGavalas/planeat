@@ -12,12 +12,13 @@ import { Google, LogIn } from 'iconoir-react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import {
-    type FormEventHandler,
     type MouseEventHandler,
+    type SubmitEventHandler,
     useCallback,
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 
 import { UserMenu } from '~features/user-menu';
 import { useLocalizedPath } from '~hooks/use-localized-path';
@@ -25,6 +26,15 @@ import { useLocalizedPath } from '~hooks/use-localized-path';
 type UserActionsProps = Readonly<{
     hasUser: boolean;
 }>;
+
+const loginSchema = z.object({
+    email: z.string().email(),
+    password: z.string(),
+});
+
+const registerSchema = loginSchema.extend({
+    fullName: z.string(),
+});
 
 export const UserActions = ({ hasUser }: UserActionsProps) => {
     const { t } = useTranslation();
@@ -45,28 +55,29 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
         setIsOpen(true);
     }, []);
 
-    const handleLoginWithGoogle = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(async () => {
+    const handleLoginWithGoogle = useCallback<MouseEventHandler>(async () => {
         await signIn('google', { callbackUrl: localize('/home') });
     }, [localize]);
 
-    const handleEmailSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
+    const handleEmailSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
         async (event) => {
             event.preventDefault();
             setError(null);
             setIsSubmitting(true);
 
-            const formData = new FormData(event.currentTarget);
-            const email = String(formData.get('email'));
-            const password = String(formData.get('password'));
+            const formData = Object.fromEntries(
+                new FormData(event.currentTarget),
+            );
 
             try {
                 if (isRegistering) {
+                    const { email, fullName, password } =
+                        registerSchema.parse(formData);
+
                     const response = await fetch('/api/auth/register', {
                         body: JSON.stringify({
                             email,
-                            fullName: String(formData.get('fullName')),
+                            fullName,
                             password,
                         }),
                         headers: { 'Content-Type': 'application/json' },
@@ -83,6 +94,8 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                     }
                 }
 
+                const { email, password } = loginSchema.parse(formData);
+
                 const result = await signIn('credentials', {
                     callbackUrl: localize('/home'),
                     email,
@@ -98,7 +111,8 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                 router.push(localize('/home'));
                 router.refresh();
                 closeModal();
-            } catch {
+            } catch (e) {
+                console.log(e);
                 setError(t('login.errors.generic'));
             } finally {
                 setIsSubmitting(false);

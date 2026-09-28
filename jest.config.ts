@@ -40,7 +40,6 @@ const config: Config = {
         '^.+\\.tsx?$': [
             'ts-jest',
             {
-                isolatedModules: true,
                 tsconfig: './tsconfig.test.json',
             },
         ],

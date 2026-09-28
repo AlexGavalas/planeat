@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import 'dayjs/locale/el';
 import {
     type ChangeEventHandler,
-    type FormEventHandler,
+    type SubmitEventHandler,
     useCallback,
     useState,
 } from 'react';
@@ -52,7 +52,7 @@ export const ActivityModal = ({
         setActivity(e.currentTarget.value);
     }, []);
 
-    const handleSave = useCallback<FormEventHandler<HTMLFormElement>>(
+    const handleSave = useCallback<SubmitEventHandler<HTMLFormElement>>(
         async (e) => {
             e.preventDefault();
 

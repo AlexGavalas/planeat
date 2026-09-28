@@ -10,19 +10,22 @@ import {
 } from '@mantine/core';
 import { InfoCircle, Redo, Trash, Undo } from 'iconoir-react';
 import {
-    type FormEventHandler,
     type MouseEventHandler,
+    type SubmitEventHandler,
     useCallback,
     useRef,
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 
 import { useHistory } from '~hooks/use-history';
 
 import { FileActions } from './file-actions';
 import { useCreateMealPool } from './hooks/use-create-meal-pool';
 import { useUpload } from './hooks/use-upload';
+
+const formSchema = z.array(z.string());
 
 export const FileUploadTab = () => {
     const { t } = useTranslation();
@@ -58,9 +61,7 @@ export const FileUploadTab = () => {
         resetRef.current?.();
     }, [clearHistory]);
 
-    const handleUpload = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(() => {
+    const handleUpload = useCallback<MouseEventHandler>(() => {
         mutate({ file });
     }, [file, mutate]);
 
@@ -69,13 +70,13 @@ export const FileUploadTab = () => {
         setFile(null);
     }, [resetUpload]);
 
-    const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
+    const handleSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
         (e) => {
             e.preventDefault();
 
-            const content = new FormData(e.currentTarget)
-                .getAll('meal')
-                .map((meal) => meal.toString());
+            const formData = Object.fromEntries(new FormData(e.currentTarget));
+
+            const content = formSchema.parse(formData);
 
             createMealPool({ content });
         },

@@ -66,8 +66,8 @@ export const LineChart = <DataItem extends { x: string; y: number | null }>({
                     let textAnchor: TextAnchor = isFirst
                         ? 'start'
                         : isLast
-                        ? 'end'
-                        : 'middle';
+                          ? 'end'
+                          : 'middle';
 
                     if (isFirst && isLast) {
                         textAnchor = 'middle';

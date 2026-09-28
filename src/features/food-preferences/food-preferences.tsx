@@ -1,7 +1,8 @@
 import { Button, Group, Stack, Textarea, Title } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
-import { type FormEventHandler, useCallback } from 'react';
+import { type SubmitEventHandler, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 
 import { useProfile } from '~hooks/use-profile';
 import {
@@ -11,14 +12,17 @@ import {
 
 import { saveProfile } from '../../app/actions';
 
+const formSchema = z.object({
+    negative: z.string(),
+    positive: z.string(),
+});
+
 export const FoodPreferences = () => {
     const { t } = useTranslation();
     const { profile } = useProfile();
     const queryClient = useQueryClient();
 
-    const handleSavePreferences = useCallback<
-        FormEventHandler<HTMLFormElement>
-    >(
+    const handleSavePreferences = useCallback<SubmitEventHandler>(
         async (e) => {
             e.preventDefault();
 
@@ -26,10 +30,9 @@ export const FoodPreferences = () => {
                 return null;
             }
 
-            const formData = new FormData(e.currentTarget);
+            const formData = Object.fromEntries(new FormData(e.target));
 
-            const positive = formData.get('positive')?.toString() ?? null;
-            const negative = formData.get('negative')?.toString() ?? null;
+            const { negative, positive } = formSchema.parse(formData);
 
             const response = await saveProfile({
                 foodPreferencesNegative: negative,

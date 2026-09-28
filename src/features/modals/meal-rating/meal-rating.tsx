@@ -1,8 +1,8 @@
 import { Button, Center, Group, Rating, Stack } from '@mantine/core';
 import { type ContextModalProps } from '@mantine/modals';
 import {
-    type FormEventHandler,
     type MouseEventHandler,
+    type SubmitEventHandler,
     useCallback,
     useState,
 } from 'react';
@@ -28,7 +28,7 @@ export const MealRatingModal = ({
         context.closeContextModal(id);
     }, [context, id]);
 
-    const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
+    const handleSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
         async (e) => {
             e.preventDefault();
 

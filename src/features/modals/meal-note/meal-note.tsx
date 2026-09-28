@@ -1,12 +1,13 @@
 import { Button, Group, Stack, Textarea } from '@mantine/core';
 import { type ContextModalProps } from '@mantine/modals';
 import {
-    type FormEventHandler,
     type MouseEventHandler,
+    type SubmitEventHandler,
     useCallback,
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
 
 import { type Meal } from '~types/meal';
 
@@ -17,6 +18,10 @@ type MealNoteModalProps = {
 };
 
 const NOTE_FIELD_NAME = 'note';
+
+const formSchema = z.object({
+    note: z.string(),
+});
 
 export const MealNoteModal = ({
     context,
@@ -34,13 +39,13 @@ export const MealNoteModal = ({
         setError('');
     }, []);
 
-    const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
+    const handleSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
         async (e) => {
             e.preventDefault();
 
-            const note = new FormData(e.currentTarget)
-                .get(NOTE_FIELD_NAME)
-                ?.toString();
+            const formData = Object.fromEntries(new FormData(e.currentTarget));
+
+            const { note } = formSchema.parse(formData);
 
             if (!note) {
                 setError(t('errors.note_empty'));
