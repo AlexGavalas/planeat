@@ -7,8 +7,8 @@ import {
     Tooltip,
 } from '@mantine/core';
 import { EditPencil, Notes, ThreeStars } from 'iconoir-react';
-import { useTranslation } from 'next-i18next/pages';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { CopyButton } from '~components/copy-button';
 import { type EditedMeal, type Meal } from '~types/meal';
@@ -147,6 +147,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                     >
                         <ActionIcon
                             {...commonButtonProps}
+                            aria-label={t('generic.actions.edit')}
                             onClick={handleEditClick}
                         >
                             <EditPencil />

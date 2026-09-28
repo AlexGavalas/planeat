@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'next-i18next/pages';
+import { useTranslation } from 'react-i18next';
 
 import { ProgressIndicator } from '~components/progress';
+import { useMeasurementSummary } from '~hooks/use-measurement-summary';
 import { useProfile } from '~hooks/use-profile';
 
 import { MAX_BMI, SECTIONS } from './constants';
@@ -11,21 +11,8 @@ export const CurrentBMI = () => {
     const { t } = useTranslation();
     const { profile } = useProfile();
 
-    const { data: weight = 0 } = useQuery({
-        enabled: Boolean(profile),
-        queryFn: async () => {
-            if (!profile) {
-                throw new Error(`User not logged in`);
-            }
-
-            const response = await fetch(
-                '/api/v1/measurement?type=latest-weight',
-            );
-            const { data } = (await response.json()) as { data: number };
-            return data;
-        },
-        queryKey: ['current-weight'],
-    });
+    const { data: summary } = useMeasurementSummary();
+    const weight = summary?.currentWeight ?? 0;
 
     const translatedSections = SECTIONS.map((section) => ({
         ...section,

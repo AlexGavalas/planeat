@@ -1,5 +1,5 @@
-import { useTranslation } from 'next-i18next/pages';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ROWS } from '~constants/calendar';
 import { useCurrentWeek, useMeals, useUnsavedChanges } from '~store/hooks';

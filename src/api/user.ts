@@ -1,4 +1,5 @@
 import { and, eq, ilike, ne } from 'drizzle-orm';
+import 'server-only';
 
 import { getDb } from '~db';
 import { userCredentials, users } from '~db/schema';
@@ -125,6 +126,8 @@ export const fetchUserByFullname = async ({
 });
 
 export const updateProfile = async ({
+    foodPreferencesNegative,
+    foodPreferencesPositive,
     hasCompletedOnboarding,
     height,
     isDiscoverable,
@@ -132,6 +135,8 @@ export const updateProfile = async ({
     targetWeight,
     userId,
 }: {
+    foodPreferencesNegative?: string | null;
+    foodPreferencesPositive?: string | null;
     hasCompletedOnboarding?: boolean | null;
     height?: number | null;
     isDiscoverable?: boolean;
@@ -142,6 +147,8 @@ export const updateProfile = async ({
     await getDb()
         .update(users)
         .set({
+            food_preferences_negative: foodPreferencesNegative,
+            food_preferences_positive: foodPreferencesPositive,
             has_completed_onboarding: hasCompletedOnboarding,
             height,
             is_discoverable: isDiscoverable,

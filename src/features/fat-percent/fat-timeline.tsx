@@ -1,33 +1,15 @@
 import { Center, Title } from '@mantine/core';
-import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'next-i18next/pages';
+import { useTranslation } from 'react-i18next';
 
 import { LineChart } from '~components/charts/line';
 import { LoadingOverlay } from '~components/loading-overlay';
-import { useProfile } from '~hooks/use-profile';
+import { useMeasurementSummary } from '~hooks/use-measurement-summary';
 
 export const FatTimeline = () => {
     const { t } = useTranslation();
-    const { profile } = useProfile();
 
-    const { data, isFetching } = useQuery({
-        queryFn: async () => {
-            if (!profile) {
-                throw new Error(`User not logged in`);
-            }
-
-            const response = await fetch(
-                '/api/v1/measurement?type=fat-timeline',
-            );
-            const { data } = (await response.json()) as {
-                data: { date: string; fat_percentage: number }[];
-            };
-            return data.length
-                ? data.map(({ date: x, fat_percentage: y }) => ({ x, y }))
-                : null;
-        },
-        queryKey: ['fat-percent-timeline'],
-    });
+    const { data: summary, isFetching } = useMeasurementSummary();
+    const data = summary?.fatTimeline;
 
     return (
         <>

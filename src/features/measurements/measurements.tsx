@@ -6,8 +6,8 @@ import {
 } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
-import { useTranslation } from 'next-i18next/pages';
 import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { INITIAL_PAGE, PAGE_SIZE, Table } from '~components/table';
@@ -36,7 +36,7 @@ export const Measurements = () => {
     });
 
     const { data: measurements = [], isFetching } = useQuery({
-        enabled: isFetched,
+        enabled: Boolean(profile),
         placeholderData: keepPreviousData,
         queryFn: async () => {
             const start = (page - 1) * PAGE_SIZE;
@@ -62,6 +62,9 @@ export const Measurements = () => {
         setPage(INITIAL_PAGE);
 
         await queryClient.invalidateQueries({
+            queryKey: ['measurement-summary'],
+        });
+        await queryClient.invalidateQueries({
             queryKey: ['measurements-count'],
         });
 
@@ -82,6 +85,9 @@ export const Measurements = () => {
             });
         } else {
             await queryClient.invalidateQueries({
+                queryKey: ['measurement-summary'],
+            });
+            await queryClient.invalidateQueries({
                 queryKey: ['measurements-count'],
             });
 
@@ -94,6 +100,9 @@ export const Measurements = () => {
     const handleEdit = useCallback(
         (item: Measurement) => {
             const handleSave = async () => {
+                await queryClient.invalidateQueries({
+                    queryKey: ['measurement-summary'],
+                });
                 await queryClient.invalidateQueries({
                     queryKey: ['measurements', page],
                 });

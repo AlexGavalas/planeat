@@ -14,3 +14,10 @@ Object.defineProperty(window, 'matchMedia', {
     })),
     writable: true,
 });
+
+// Next transforms these imports into RPC references in client bundles.
+jest.mock('../app/actions', () => ({
+    acceptConnectionRequest: jest.fn(),
+    saveMealPlan: jest.fn(),
+    saveProfile: jest.fn(),
+}));

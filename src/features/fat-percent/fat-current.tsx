@@ -1,28 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
-import { useTranslation } from 'next-i18next/pages';
+import { useTranslation } from 'react-i18next';
 
 import { ProgressIndicator } from '~components/progress';
-import { useProfile } from '~hooks/use-profile';
+import { useMeasurementSummary } from '~hooks/use-measurement-summary';
 
 import { MAX_FAT_PERCENT, SECTIONS } from './constants';
 
 export const CurrentFat = () => {
     const { t } = useTranslation();
-    const { profile } = useProfile();
 
-    const { data: fatPercent = 0 } = useQuery({
-        enabled: Boolean(profile),
-        queryFn: async () => {
-            if (!profile) {
-                throw new Error(`User not logged in`);
-            }
-
-            const response = await fetch('/api/v1/measurement?type=latest-fat');
-            const { data } = (await response.json()) as { data: number };
-            return data;
-        },
-        queryKey: ['current-fat-percent'],
-    });
+    const { data: summary } = useMeasurementSummary();
+    const fatPercent = summary?.currentFat ?? 0;
 
     const translatedSections = SECTIONS.map((section) => ({
         ...section,

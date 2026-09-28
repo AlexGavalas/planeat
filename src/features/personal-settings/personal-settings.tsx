@@ -8,8 +8,8 @@ import {
     Stack,
     Title,
 } from '@mantine/core';
-import { useTranslation } from 'next-i18next/pages';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';

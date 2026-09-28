@@ -122,7 +122,7 @@ export default defineConfig([
         },
     },
     {
-        files: ['src/pages/**/*', '*.config.*'],
+        files: ['src/app/**/*', '*.config.*'],
         rules: {
             'import/no-default-export': 'off',
         },

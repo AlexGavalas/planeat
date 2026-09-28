@@ -1,7 +1,7 @@
 import { Badge, Box, Center, Text } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { MultiplePages } from 'iconoir-react';
-import { useTranslation } from 'next-i18next/pages';
+import { useTranslation } from 'react-i18next';
 
 import { useProfile } from '~hooks/use-profile';
 import { useMeals } from '~store/hooks';

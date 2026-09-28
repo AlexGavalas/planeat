@@ -1,6 +1,6 @@
 import { Stack, Text } from '@mantine/core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useTranslation } from 'next-i18next/pages';
+import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
@@ -10,6 +10,7 @@ import {
     showSuccessNotification,
 } from '~util/notification';
 
+import { acceptConnectionRequest } from '../../app/actions';
 import { ConnectionRequest } from './connection-request';
 
 export const ManageConnectionRequests = () => {
@@ -53,15 +54,9 @@ export const ManageConnectionRequests = () => {
     const handleAcceptConnectionRequest = async (
         connectionRequest: Notification,
     ) => {
-        const response = await fetch('/api/v1/connection', {
-            body: JSON.stringify({
-                connectionUserId: connectionRequest.request_user_id,
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: 'POST',
-        });
+        const response = await acceptConnectionRequest(
+            connectionRequest.id,
+        ).catch(() => ({ ok: false }));
 
         if (!response.ok) {
             showErrorNotification({
@@ -78,19 +73,12 @@ export const ManageConnectionRequests = () => {
                 title: t('notification.success.title'),
             });
 
-            const removeConnectionRes = await removeConnectionRequest(
-                connectionRequest.id,
-            );
-
-            if (!removeConnectionRes.ok) {
-                await queryClient.invalidateQueries({
+            await Promise.all([
+                queryClient.invalidateQueries({
                     queryKey: ['connection-requests', profile?.id],
-                });
-
-                await queryClient.invalidateQueries({
-                    queryKey: ['connections'],
-                });
-            }
+                }),
+                queryClient.invalidateQueries({ queryKey: ['connections'] }),
+            ]);
         }
     };
 

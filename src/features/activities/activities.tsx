@@ -2,8 +2,8 @@ import { ActionIcon, Box, Center, Group, Stack, Title } from '@mantine/core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
-import { useTranslation } from 'next-i18next/pages';
 import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { INITIAL_PAGE, PAGE_SIZE, Table } from '~components/table';
@@ -32,7 +32,7 @@ export const Activities = () => {
     });
 
     const { data: activities = [], isFetching } = useQuery({
-        enabled: isCountFetched,
+        enabled: Boolean(profile),
         queryFn: async () => {
             const start = (page - 1) * PAGE_SIZE;
             const end = page * PAGE_SIZE - 1;
@@ -45,7 +45,7 @@ export const Activities = () => {
 
             return data ?? [];
         },
-        queryKey: ['activities', page],
+        queryKey: ['activities', 'page', page],
     });
 
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
@@ -110,7 +110,7 @@ export const Activities = () => {
     const onEdit = (item: Activity) => {
         const onSave = async () => {
             await queryClient.invalidateQueries({
-                queryKey: ['activities', page],
+                queryKey: ['activities', 'page', page],
             });
         };
 

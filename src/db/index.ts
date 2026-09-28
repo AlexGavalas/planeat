@@ -17,13 +17,11 @@ export const getDb = (): PostgresJsDatabase<typeof schema> => {
     const sql =
         globalThis.planeatSql ??
         postgres(databaseUrl, {
-            max: 1,
+            max: 5,
             prepare: false,
         });
 
-    if (process.env.NODE_ENV !== 'production') {
-        globalThis.planeatSql = sql;
-    }
+    globalThis.planeatSql = sql;
 
     return drizzle(sql, { schema });
 };

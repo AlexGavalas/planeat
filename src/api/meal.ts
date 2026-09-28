@@ -1,4 +1,5 @@
 import { and, eq, gte, inArray, lte } from 'drizzle-orm';
+import 'server-only';
 
 import { getDb } from '~db';
 import { meals } from '~db/schema';
@@ -28,12 +29,14 @@ export const fetchMeals = async ({
 export const deleteMeals = async ({
     deletedIds,
     userId,
+    db = getDb(),
 }: {
+    db?: ReturnType<typeof getDb>;
     deletedIds: string[];
     userId: number;
 }): Promise<{ error: null }> => {
     if (deletedIds.length)
-        await getDb()
+        await db
             .delete(meals)
             .where(
                 and(inArray(meals.id, deletedIds), eq(meals.user_id, userId)),
@@ -44,11 +47,12 @@ export const deleteMeals = async ({
 export const updateMeals = async ({
     editedMeals,
     userId,
+    db = getDb(),
 }: {
+    db?: ReturnType<typeof getDb>;
     editedMeals: EditedMeal[];
     userId: number;
 }): Promise<{ error: null }> => {
-    const db = getDb();
     await db.transaction(async (tx) => {
         for (const meal of editedMeals) {
             if (!meal.id) throw new Error('Edited meals must have an id');
@@ -70,19 +74,32 @@ export const updateMeals = async ({
 export const createMeals = async ({
     newMeals,
     userId,
+    db = getDb(),
 }: {
+    db?: ReturnType<typeof getDb>;
     newMeals: EditedMeal[];
     userId: number;
 }): Promise<{ error: null }> => {
     if (newMeals.length)
-        await getDb()
-            .insert(meals)
-            .values(
-                newMeals.map((meal) => ({
-                    ...meal,
-                    id: undefined,
-                    user_id: userId,
-                })),
-            );
+        await db.insert(meals).values(
+            newMeals.map((meal) => ({
+                ...meal,
+                id: undefined,
+                user_id: userId,
+            })),
+        );
     return { error: null };
+};
+
+export const saveMeals = async (input: {
+    deletedIds: string[];
+    editedMeals: EditedMeal[];
+    newMeals: EditedMeal[];
+    userId: number;
+}): Promise<void> => {
+    await getDb().transaction(async (db) => {
+        await deleteMeals({ ...input, db });
+        await updateMeals({ ...input, db });
+        await createMeals({ ...input, db });
+    });
 };

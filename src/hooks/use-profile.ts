@@ -1,12 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
-import { useTranslation } from 'next-i18next/pages';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 
 import { type User } from '~types/user';
-import { showSuccessNotification } from '~util/notification';
+import {
+    showErrorNotification,
+    showSuccessNotification,
+} from '~util/notification';
 
+import { saveProfile } from '../app/actions';
 import { useUser } from './use-user';
 
 type MutationProps = {
@@ -49,7 +53,7 @@ export const useProfile: UseProfile = () => {
         queryKey: ['user'],
     });
 
-    const { mutate: updateProfile, isPending } = useMutation({
+    const { mutate: updateProfile } = useMutation({
         mutationFn: async ({
             isDiscoverable,
             height,
@@ -57,23 +61,20 @@ export const useProfile: UseProfile = () => {
             language,
             hasCompletedOnboarding,
         }: MutationProps) => {
-            const response = await fetch('/api/v1/user', {
-                body: JSON.stringify({
-                    hasCompletedOnboarding,
-                    height,
-                    isDiscoverable,
-                    language,
-                    targetWeight,
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                method: 'PATCH',
+            const response = await saveProfile({
+                hasCompletedOnboarding,
+                height,
+                isDiscoverable,
+                language,
+                targetWeight,
             });
-
-            if (!response.ok) {
-                // TODO: Handle error
-            }
+            if (!response.ok) throw new Error('Could not save profile');
+        },
+        onError: () => {
+            showErrorNotification({
+                message: t('notification.error.message'),
+                title: t('notification.error.title'),
+            });
         },
         onSuccess: async (_, { language, silent }) => {
             if (!silent) {
@@ -93,15 +94,21 @@ export const useProfile: UseProfile = () => {
         },
     });
 
-    const { mutate: deleteProfile } = useMutation({
+    const { mutate: deleteProfile, isPending: isDeleting } = useMutation({
         mutationFn: async () => {
             const response = await fetch('/api/v1/user', {
                 method: 'DELETE',
             });
 
             if (!response.ok) {
-                // TODO: Handle error
+                throw new Error('Could not delete profile');
             }
+        },
+        onError: () => {
+            showErrorNotification({
+                message: t('notification.error.message'),
+                title: t('notification.error.title'),
+            });
         },
         onSuccess: async () => {
             showSuccessNotification({
@@ -113,13 +120,14 @@ export const useProfile: UseProfile = () => {
 
             await signOut();
 
-            await router.push('/');
+            router.push('/');
+            router.refresh();
         },
     });
 
     return {
         deleteProfile,
-        isDeleting: isPending,
+        isDeleting,
         isFetching: isLoading || isFetching,
         profile,
         updateProfile,

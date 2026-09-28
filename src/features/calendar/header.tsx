@@ -2,7 +2,7 @@ import { Flex, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { endOfWeek, format, isToday, startOfWeek } from 'date-fns';
 import { Running } from 'iconoir-react';
-import { useTranslation } from 'next-i18next/pages';
+import { useTranslation } from 'react-i18next';
 
 import { useProfile } from '~hooks/use-profile';
 import { useCurrentWeek } from '~store/hooks';
@@ -16,7 +16,10 @@ export const Header = () => {
     const { currentWeek } = useCurrentWeek();
     const { profile } = useProfile();
 
-    const currentWeekKey = format(currentWeek, 'yyyy-MM-dd');
+    const currentWeekKey = format(
+        startOfWeek(currentWeek, { weekStartsOn: 1 }),
+        'yyyy-MM-dd',
+    );
 
     const daysOfWeek = getDaysOfWeek(
         currentWeek,
@@ -48,7 +51,7 @@ export const Header = () => {
             };
             return data;
         },
-        queryKey: ['activities', currentWeekKey],
+        queryKey: ['activities', 'week', currentWeekKey],
     });
 
     const activitiesMap = activities.reduce<ActivitysMap>((acc, activity) => {

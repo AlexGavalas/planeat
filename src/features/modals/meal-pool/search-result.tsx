@@ -1,6 +1,6 @@
 import { Button, List } from '@mantine/core';
-import { useTranslation } from 'next-i18next/pages';
 import { type MouseEventHandler, memo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export type OnEdit = (params: string) => void;
 

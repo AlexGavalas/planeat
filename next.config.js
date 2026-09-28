@@ -4,8 +4,6 @@ const isAnalyze = process.env.ANALYZE === 'true';
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: true });
 
-const { i18n } = require('./next-i18next.config');
-
 /**
  * @type {import('next').NextConfig}
  **/
@@ -21,9 +19,8 @@ const config = {
             },
         ],
     },
-    i18n: {
-        defaultLocale: i18n.defaultLocale,
-        locales: i18n.locales,
+    async rewrites() {
+        return [{ source: '/:locale(en|gr)/:path*', destination: '/:path*' }];
     },
 };
 

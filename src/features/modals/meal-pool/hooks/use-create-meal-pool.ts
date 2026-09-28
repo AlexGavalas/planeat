@@ -3,7 +3,7 @@ import {
     useMutation,
     useQueryClient,
 } from '@tanstack/react-query';
-import { useTranslation } from 'next-i18next/pages';
+import { useTranslation } from 'react-i18next';
 
 import {
     showErrorNotification,

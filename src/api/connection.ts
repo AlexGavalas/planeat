@@ -1,7 +1,8 @@
 import { and, eq } from 'drizzle-orm';
+import 'server-only';
 
 import { getDb } from '~db';
-import { connections, users } from '~db/schema';
+import { connections, notifications, users } from '~db/schema';
 import type { Connection } from '~types/connection';
 
 export const fetchUserConnections = async ({
@@ -66,4 +67,30 @@ export const createConnection = async ({
             { connection_user_id: userId, user_id: connectionUserId },
         ]);
     return { error: null };
+};
+
+export const acceptConnectionRequest = async ({
+    requestId,
+    userId,
+}: {
+    requestId: string;
+    userId: number;
+}): Promise<void> => {
+    await getDb().transaction(async (tx) => {
+        const [request] = await tx
+            .delete(notifications)
+            .where(
+                and(
+                    eq(notifications.id, requestId),
+                    eq(notifications.target_user_id, userId),
+                    eq(notifications.notification_type, 'connection_request'),
+                ),
+            )
+            .returning();
+        if (!request) throw new Error('Connection request not found');
+        await tx.insert(connections).values([
+            { connection_user_id: request.request_user_id, user_id: userId },
+            { connection_user_id: userId, user_id: request.request_user_id },
+        ]);
+    });
 };
