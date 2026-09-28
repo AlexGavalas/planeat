@@ -86,6 +86,7 @@ export const Onboarding = () => {
                 onEvent={handleJoyrideEvent}
                 options={{
                     buttons: ['close', 'primary', 'skip'],
+                    closeButtonAction: 'skip',
                     primaryColor: BRAND_COLORS[5],
                     showProgress: true,
                     skipScroll: true,

@@ -83,11 +83,6 @@ export const WeekOverviewModal = () => {
                                         <List.Item
                                             key={meal.id}
                                             icon={<Icon />}
-                                            style={{
-                                                // TODO: Fix this currently Mantine aligns at the center, check after update if it's fixed
-                                                '--_item-wrapper-align':
-                                                    'flex-start',
-                                            }}
                                         >
                                             {meal.meal}
                                             {meal.note && (
