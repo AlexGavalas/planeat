@@ -31,7 +31,13 @@ setup('authenticate the visual test user', async ({ page }) => {
 
     if (mode === 'preview') {
         const response = await page.request.patch('/api/v1/user', {
-            data: { hasCompletedOnboarding: true },
+            data: {
+                hasCompletedOnboarding: true,
+                height: 180,
+                isDiscoverable: false,
+                language: 'en',
+                targetWeight: 75,
+            },
         });
 
         expect(response.ok()).toBe(true);

@@ -101,10 +101,9 @@ test('meal plan is touch-friendly on mobile Chrome', async ({ page }) => {
 
     const dayPicker = page.getByRole('group', { name: 'Select a day' });
     await expect(dayPicker.getByRole('button')).toHaveCount(7);
-    await dayPicker.getByRole('button', { name: 'Tue 13/01' }).click();
-    await expect(
-        dayPicker.getByRole('button', { name: 'Tue 13/01' }),
-    ).toHaveAttribute('aria-pressed', 'true');
+    const secondDay = dayPicker.getByRole('button').nth(1);
+    await secondDay.click();
+    await expect(secondDay).toHaveAttribute('aria-pressed', 'true');
 
     await page.getByRole('button', { name: 'Edit Lunch' }).click();
     const dialog = page.getByRole('dialog', { name: 'Edit meal' });
