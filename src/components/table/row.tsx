@@ -1,4 +1,14 @@
-import { ActionIcon, Group, Popover, TableTd, TableTr } from '@mantine/core';
+import {
+    ActionIcon,
+    Button,
+    Group,
+    Paper,
+    Popover,
+    Stack,
+    TableTd,
+    TableTr,
+    Text,
+} from '@mantine/core';
 import { EditPencil, Trash } from 'iconoir-react';
 import get from 'lodash/fp/get';
 import {
@@ -7,8 +17,10 @@ import {
     useCallback,
     useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ConfirmationPopover } from './confirm-popover';
+import styles from './table.module.css';
 
 export type Item = Record<string, ReactNode> & {
     id: string | number;
@@ -28,12 +40,19 @@ type RowProps<ItemType> = Readonly<{
     onEdit: (item: ItemType) => Promise<void> | void;
 }>;
 
-export const Row = <ItemType extends Item>({
+type RowActionsProps<ItemType> = Readonly<
+    RowProps<ItemType> & {
+        isMobile?: boolean;
+    }
+>;
+
+const RowActions = <ItemType extends Item>({
     item,
-    headers,
+    isMobile = false,
     onDelete,
     onEdit,
-}: RowProps<ItemType>) => {
+}: RowActionsProps<ItemType>) => {
+    const { t } = useTranslation();
     const [hasOpenConfirmation, setHasOpenConfirmation] = useState(false);
     const [isDeleteInProgress, setIsDeleteInProgress] = useState(false);
 
@@ -41,9 +60,7 @@ export const Row = <ItemType extends Item>({
         MouseEventHandler<HTMLButtonElement>
     >(async () => {
         setIsDeleteInProgress(true);
-
         await onDelete(item);
-
         setIsDeleteInProgress(false);
         setHasOpenConfirmation(false);
     }, [item, onDelete]);
@@ -54,10 +71,86 @@ export const Row = <ItemType extends Item>({
         await onEdit(item);
     }, [item, onEdit]);
 
-    const toggleConfirmation = useCallback(() => {
+    const handleOpenConfirmation = useCallback(() => {
         setHasOpenConfirmation(true);
     }, []);
+    const handleCloseConfirmation = useCallback(() => {
+        setHasOpenConfirmation(false);
+    }, []);
 
+    const editControl = isMobile ? (
+        <Button
+            fullWidth
+            leftSection={<EditPencil />}
+            onClick={handleEdit}
+            variant="outline"
+        >
+            {t('generic.actions.edit')}
+        </Button>
+    ) : (
+        <ActionIcon
+            aria-label={t('generic.actions.edit')}
+            onClick={handleEdit}
+            variant="outline"
+        >
+            <EditPencil />
+        </ActionIcon>
+    );
+
+    const deleteControl = isMobile ? (
+        <Button
+            fullWidth
+            color="red"
+            leftSection={<Trash />}
+            onClick={handleOpenConfirmation}
+            variant="outline"
+        >
+            {t('generic.actions.delete')}
+        </Button>
+    ) : (
+        <ActionIcon
+            aria-label={t('generic.actions.delete')}
+            color="red"
+            onClick={handleOpenConfirmation}
+            variant="outline"
+        >
+            <Trash />
+        </ActionIcon>
+    );
+
+    return (
+        <Group gap="md" grow={isMobile} justify="center" wrap="nowrap">
+            {editControl}
+            <Popover
+                closeOnClickOutside
+                closeOnEscape
+                trapFocus
+                withArrow
+                withinPortal
+                id="delete-confirmation"
+                onChange={setHasOpenConfirmation}
+                opened={hasOpenConfirmation}
+                shadow="md"
+            >
+                <Popover.Target>{deleteControl}</Popover.Target>
+                <Popover.Dropdown>
+                    <ConfirmationPopover
+                        isDeleteInProgress={isDeleteInProgress}
+                        onDelete={handleDelete}
+                        onToggleConfirmation={handleCloseConfirmation}
+                    />
+                </Popover.Dropdown>
+            </Popover>
+        </Group>
+    );
+};
+
+export const Row = <ItemType extends Item>({
+    item,
+    headers,
+    onDelete,
+    onEdit,
+}: RowProps<ItemType>) => {
     return (
         <TableTr style={{ height: '3rem', width: '100%' }}>
             {headers
@@ -68,40 +161,42 @@ export const Row = <ItemType extends Item>({
                     </TableTd>
                 ))}
             <TableTd style={{ width: '35%' }}>
-                <Group gap="md" justify="center">
-                    <ActionIcon onClick={handleEdit} variant="outline">
-                        <EditPencil />
-                    </ActionIcon>
-                    <Popover
-                        closeOnClickOutside
-                        closeOnEscape
-                        trapFocus
-                        withArrow
-                        withinPortal
-                        id="delete-confirmation"
-                        onChange={setHasOpenConfirmation}
-                        opened={hasOpenConfirmation}
-                        shadow="md"
-                    >
-                        <Popover.Target>
-                            <ActionIcon
-                                color="red"
-                                onClick={toggleConfirmation}
-                                variant="outline"
-                            >
-                                <Trash />
-                            </ActionIcon>
-                        </Popover.Target>
-                        <Popover.Dropdown>
-                            <ConfirmationPopover
-                                isDeleteInProgress={isDeleteInProgress}
-                                onDelete={handleDelete}
-                                onToggleConfirmation={toggleConfirmation}
-                            />
-                        </Popover.Dropdown>
-                    </Popover>
-                </Group>
+                <RowActions
+                    headers={headers}
+                    item={item}
+                    onDelete={onDelete}
+                    onEdit={onEdit}
+                />
             </TableTd>
         </TableTr>
     );
 };
+
+export const MobileRow = <ItemType extends Item>({
+    item,
+    headers,
+    onDelete,
+    onEdit,
+}: RowProps<ItemType>) => (
+    <Paper withBorder className={styles.mobileCard} p="md" role="listitem">
+        <Stack gap="md">
+            {headers
+                .filter((header) => header.key !== 'actions')
+                .map(({ formatValue, key, label }) => (
+                    <div key={key}>
+                        <Text c="dimmed" fw={700} size="xs">
+                            {label}
+                        </Text>
+                        <Text>{formatValue?.(item) ?? get(key, item)}</Text>
+                    </div>
+                ))}
+            <RowActions
+                isMobile
+                headers={headers}
+                item={item}
+                onDelete={onDelete}
+                onEdit={onEdit}
+            />
+        </Stack>
+    </Paper>
+);

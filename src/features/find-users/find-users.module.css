@@ -1,0 +1,14 @@
+.sendButton {
+    min-height: 2.75rem;
+}
+
+@media (max-width: 48em) {
+    .searchResult {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .sendButton {
+        width: 100%;
+    }
+}

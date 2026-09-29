@@ -1,0 +1,28 @@
+.mobileControls {
+    display: none;
+}
+
+@media (max-width: 48em) {
+    .desktopControls {
+        display: none;
+    }
+
+    .mobileControls {
+        display: flex;
+    }
+
+    .mobileControls button {
+        min-height: 2.75rem;
+    }
+
+    .saveBar {
+        background: rgb(255 255 255 / 92%);
+        border: 1px solid var(--mantine-color-brand-2);
+        border-radius: var(--mantine-radius-md);
+        bottom: 0.75rem;
+        box-shadow: var(--mantine-shadow-md);
+        padding: 0.5rem;
+        position: sticky;
+        z-index: 20;
+    }
+}

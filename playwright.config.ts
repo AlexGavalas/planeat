@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-import { AUTH_STATE_PATH } from './e2e/support/auth';
+import { AUTH_STATE_PATH, VISUAL_AUTH_STATE_PATH } from './e2e/support/auth';
 import { loadE2eEnvironment } from './e2e/support/environment';
 
 const environment = loadE2eEnvironment();
@@ -29,12 +29,31 @@ export default defineConfig({
             use: { ...devices['Desktop Chrome'] },
         },
         {
+            name: 'visual-auth-setup',
+            testMatch: /visual\.setup\.ts/,
+            use: { ...devices['Desktop Chrome'] },
+        },
+        {
             dependencies: ['auth-setup'],
             name: 'authenticated',
             testMatch: /authenticated\/.*\.spec\.ts/,
             use: {
                 ...devices['Desktop Chrome'],
                 storageState: AUTH_STATE_PATH,
+            },
+        },
+        {
+            name: 'mobile-public',
+            testMatch: /visual\/public\.spec\.ts/,
+            use: { ...devices['Pixel 5'] },
+        },
+        {
+            dependencies: ['visual-auth-setup'],
+            name: 'mobile-authenticated',
+            testMatch: /visual\/authenticated\.spec\.ts/,
+            use: {
+                ...devices['Pixel 5'],
+                storageState: VISUAL_AUTH_STATE_PATH,
             },
         },
     ],

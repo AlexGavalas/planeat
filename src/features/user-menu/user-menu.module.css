@@ -1,0 +1,42 @@
+.trigger {
+    align-items: center;
+    border-radius: var(--mantine-radius-xl);
+    display: flex;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0.375rem;
+}
+
+.trigger:hover {
+    background: var(--mantine-color-brand-0);
+}
+
+.chevron {
+    height: 1rem;
+    transition: transform 150ms ease;
+    width: 1rem;
+}
+
+.trigger[aria-expanded='true'] .chevron {
+    transform: rotate(180deg);
+}
+
+.mobileNavigation {
+    display: none;
+
+    * + * {
+        margin-top: 0.2rem;
+    }
+}
+
+.menuItem[aria-current='page'] {
+    background: var(--mantine-color-brand-0);
+    color: white;
+    font-weight: 600;
+}
+
+@media (max-width: 48em) {
+    .mobileNavigation {
+        display: block;
+    }
+}

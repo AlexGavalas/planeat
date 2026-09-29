@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Center, Group, Stack, Title } from '@mantine/core';
+import { Box, Button, Center, Group, Stack, Title } from '@mantine/core';
 import {
     keepPreviousData,
     useQuery,
@@ -179,14 +179,14 @@ export const Measurements = () => {
         <Stack gap="md">
             <Group justify="space-between">
                 <Title order={3}>{t('measurements')}</Title>
-                <ActionIcon
+                <Button
+                    aria-label={t('add_measurement')}
+                    leftSection={<Plus />}
                     onClick={handleAddMeasurement}
-                    size="lg"
-                    title={t('add_measurement')}
                     variant="outline"
                 >
-                    <Plus />
-                </ActionIcon>
+                    {t('generic.actions.add')}
+                </Button>
             </Group>
             <Box style={{ minHeight: 100 }}>
                 <LoadingOverlay visible={isLoading} />

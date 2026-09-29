@@ -1,3 +1,25 @@
 .table tr:nth-child(even) {
     background-color: #e5f6e5;
 }
+
+.mobileCards {
+    display: none;
+}
+
+@media (max-width: 48em) {
+    .table {
+        display: none;
+    }
+
+    .mobileCards {
+        display: flex;
+    }
+
+    .mobileCard {
+        background-color: rgb(255 255 255 / 50%);
+    }
+
+    .pagination {
+        justify-content: center;
+    }
+}

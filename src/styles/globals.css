@@ -47,7 +47,7 @@ a {
 .container {
     --dot-size: 1px;
     border-top: 5px solid var(--color-primary);
-    height: 100%;
+    min-height: calc(100dvh - 4.25rem);
     padding: 2rem;
     position: relative;
     background-color: var(--bg-light);
@@ -66,6 +66,9 @@ a {
         10px 10px;
 }
 
-.container .content {
-    width: clamp(50%, 65% + 5vw, 75%);
+@media (max-width: 48em) {
+    .container {
+        min-height: calc(100dvh - 4rem);
+        padding: 1rem;
+    }
 }

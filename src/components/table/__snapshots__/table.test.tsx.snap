@@ -50,9 +50,10 @@ exports[`<Table /> when passed data renders a table 1`] = `
           >
             <div
               class="m_4081bf90 mantine-Group-root"
-              style="--group-gap: var(--mantine-spacing-md); --group-align: center; --group-justify: center; --group-wrap: wrap;"
+              style="--group-gap: var(--mantine-spacing-md); --group-align: center; --group-justify: center; --group-wrap: nowrap;"
             >
               <button
+                aria-label="Edit"
                 class="mantine-focus-auto mantine-active m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
                 data-variant="outline"
                 style="--ai-bg: transparent; --ai-hover: var(--mantine-color-blue-outline-hover); --ai-color: var(--mantine-color-blue-outline); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-blue-outline);"
@@ -82,6 +83,7 @@ exports[`<Table /> when passed data renders a table 1`] = `
               <button
                 aria-expanded="false"
                 aria-haspopup="dialog"
+                aria-label="Delete"
                 class="mantine-focus-auto mantine-active m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
                 data-variant="outline"
                 id="delete-confirmation"
@@ -120,6 +122,131 @@ exports[`<Table /> when passed data renders a table 1`] = `
         </tr>
       </tbody>
     </table>
+    <div
+      class="mobileCards m_6d731127 mantine-Stack-root"
+      role="list"
+      style="--stack-gap: var(--mantine-spacing-sm); --stack-align: stretch; --stack-justify: flex-start;"
+    >
+      <div
+        class="mobileCard m_1b7284a3 mantine-Paper-root"
+        data-with-border="true"
+        role="listitem"
+        style="padding: var(--mantine-spacing-md);"
+      >
+        <div
+          class="m_6d731127 mantine-Stack-root"
+          style="--stack-gap: var(--mantine-spacing-md); --stack-align: stretch; --stack-justify: flex-start;"
+        >
+          <div>
+            <p
+              class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+              data-size="xs"
+              style="--text-fz: var(--mantine-font-size-xs); --text-lh: var(--mantine-line-height-xs); color: var(--mantine-color-dimmed); font-weight: 700;"
+            >
+              test label
+            </p>
+            <p
+              class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+            >
+              test value 1
+            </p>
+          </div>
+          <div
+            class="m_4081bf90 mantine-Group-root"
+            data-grow="true"
+            style="--group-child-width: calc(50% - (var(--mantine-spacing-md) - var(--mantine-spacing-md) / 2)); --group-gap: var(--mantine-spacing-md); --group-align: center; --group-justify: center; --group-wrap: nowrap;"
+          >
+            <button
+              class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+              data-block="true"
+              data-variant="outline"
+              data-with-left-section="true"
+              style="--button-bg: transparent; --button-hover: var(--mantine-color-blue-outline-hover); --button-color: var(--mantine-color-blue-outline); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-blue-outline);"
+              type="button"
+            >
+              <span
+                class="m_80f1301b mantine-Button-inner"
+              >
+                <span
+                  class="m_a74036a mantine-Button-section"
+                  data-position="left"
+                >
+                  <svg
+                    color="currentColor"
+                    fill="none"
+                    height="1.5em"
+                    stroke-width="1.5"
+                    viewBox="0 0 24 24"
+                    width="1.5em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M14.3632 5.65156L15.8431 4.17157C16.6242 3.39052 17.8905 3.39052 18.6716 4.17157L20.0858 5.58579C20.8668 6.36683 20.8668 7.63316 20.0858 8.41421L18.6058 9.8942M14.3632 5.65156L4.74749 15.2672C4.41542 15.5993 4.21079 16.0376 4.16947 16.5054L3.92738 19.2459C3.87261 19.8659 4.39148 20.3848 5.0115 20.33L7.75191 20.0879C8.21972 20.0466 8.65806 19.8419 8.99013 19.5099L18.6058 9.8942M14.3632 5.65156L18.6058 9.8942"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="m_811560b9 mantine-Button-label"
+                >
+                  Edit
+                </span>
+              </span>
+            </button>
+            <button
+              aria-expanded="false"
+              aria-haspopup="dialog"
+              class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+              data-block="true"
+              data-variant="outline"
+              data-with-left-section="true"
+              id="delete-confirmation"
+              style="--button-bg: transparent; --button-hover: var(--mantine-color-red-outline-hover); --button-color: var(--mantine-color-red-outline); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-red-outline);"
+              type="button"
+            >
+              <span
+                class="m_80f1301b mantine-Button-inner"
+              >
+                <span
+                  class="m_a74036a mantine-Button-section"
+                  data-position="left"
+                >
+                  <svg
+                    color="currentColor"
+                    fill="none"
+                    height="1.5em"
+                    stroke-width="1.5"
+                    viewBox="0 0 24 24"
+                    width="1.5em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M20 9L18.005 20.3463C17.8369 21.3026 17.0062 22 16.0353 22H7.96474C6.99379 22 6.1631 21.3026 5.99496 20.3463L4 9"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M21 6L15.375 6M3 6L8.625 6M8.625 6V4C8.625 2.89543 9.52043 2 10.625 2H13.375C14.4796 2 15.375 2.89543 15.375 4V6M8.625 6L15.375 6"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="m_811560b9 mantine-Button-label"
+                >
+                  Delete
+                </span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -151,6 +278,11 @@ exports[`<Table /> when passed no data renders a table 1`] = `
         class="m_b2404537 mantine-Table-tbody"
       />
     </table>
+    <div
+      class="mobileCards m_6d731127 mantine-Stack-root"
+      role="list"
+      style="--stack-gap: var(--mantine-spacing-sm); --stack-align: stretch; --stack-justify: flex-start;"
+    />
   </div>
 </div>
 `;

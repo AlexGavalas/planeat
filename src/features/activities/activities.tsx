@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Center, Group, Stack, Title } from '@mantine/core';
+import { Box, Button, Center, Group, Stack, Title } from '@mantine/core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
@@ -148,14 +148,14 @@ export const Activities = () => {
         <Stack gap="md">
             <Group justify="space-between">
                 <Title order={3}>{t('activities')}</Title>
-                <ActionIcon
+                <Button
+                    aria-label={t('add_activity')}
+                    leftSection={<Plus />}
                     onClick={handleAddActivity}
-                    size="lg"
-                    title={t('add_activity')}
                     variant="outline"
                 >
-                    <Plus />
-                </ActionIcon>
+                    {t('generic.actions.add')}
+                </Button>
             </Group>
             <Box style={{ minHeight: 100 }}>
                 <LoadingOverlay visible={isLoading} />

@@ -5,6 +5,24 @@
     gap: var(--grid-gap);
 }
 
+.mobileCalendar {
+    display: none;
+}
+
+@media (max-width: 48em) {
+    .container {
+        display: block;
+    }
+
+    .desktopCalendar {
+        display: none;
+    }
+
+    .mobileCalendar {
+        display: block;
+    }
+}
+
 @media print {
     @page {
         size: landscape;

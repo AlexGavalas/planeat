@@ -6,6 +6,7 @@ import {
     Group,
     Stack,
     Text,
+    Title,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -19,6 +20,8 @@ import {
     showErrorNotification,
     showSuccessNotification,
 } from '~util/notification';
+
+import styles from './find-users.module.css';
 
 export const FindUsers = () => {
     const { t } = useTranslation();
@@ -133,6 +136,7 @@ export const FindUsers = () => {
 
     return (
         <Stack gap="md">
+            <Title order={3}>{t('connections.search.title')}</Title>
             <Autocomplete
                 data={users}
                 disabled={isFetchingSelectedUser}
@@ -142,7 +146,11 @@ export const FindUsers = () => {
                 onOptionSubmit={handleUserSelect}
                 placeholder={t('connections.search.placeholder')}
                 rightSection={
-                    <ActionIcon onClick={handleClearInput} variant="white">
+                    <ActionIcon
+                        aria-label={t('generic.actions.clear')}
+                        onClick={handleClearInput}
+                        variant="white"
+                    >
                         <Xmark />
                     </ActionIcon>
                 }
@@ -156,7 +164,10 @@ export const FindUsers = () => {
                         })}
                     </Text>
                 ) : (
-                    <Group justify="space-between">
+                    <Group
+                        className={styles.searchResult}
+                        justify="space-between"
+                    >
                         <div>
                             <Text span>{t('connections.request.add')} </Text>
                             <Text span fw={600}>
@@ -168,9 +179,9 @@ export const FindUsers = () => {
                             </Text>
                         </div>
                         <Button
+                            className={styles.sendButton}
                             onClick={handleConnectionRequest}
                             rightSection={<UserPlus />}
-                            size="xs"
                         >
                             {t('connections.request.send')}
                         </Button>

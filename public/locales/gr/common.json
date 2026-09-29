@@ -1,5 +1,13 @@
 {
     "logout": "Αποσύνδεση",
+    "fab": {
+        "close_actions": "Κλείσιμο γρήγορων ενεργειών",
+        "open_actions": "Άνοιγμα γρήγορων ενεργειών"
+    },
+    "navigation": {
+        "label": "Πλοήγηση",
+        "open_menu": "Άνοιγμα μενού πλοήγησης"
+    },
     "login": {
         "button": "Σύνδεση",
         "title": "Σύνδεση στο Planeat",
@@ -78,6 +86,12 @@
     "no_activities_yet": "Δεν έχεις ακόμα καμία δραστηριότητα",
     "welcome": "Καλώς ήρθατε",
     "view_weekly_meal": "Διαιτολόγιο",
+    "meal_plan": {
+        "edit_meal_label": "Επεξεργασία: {{label}}",
+        "every_day": "Κάθε μέρα",
+        "more_actions": "Περισσότερες ενέργειες",
+        "select_day": "Επιλέξτε ημέρα"
+    },
     "settings": "Ρυθμίσεις",
     "height_input": "Το ύψος σας (σε εκ)",
     "target_weight_input": "Το βάρος-στόχος σας (σε κιλά)",
@@ -194,7 +208,8 @@
         "title": "Συνδέσεις",
         "search": {
             "label": "Αναζήτηση",
-            "placeholder": "Γράψτε εδώ"
+            "placeholder": "Γράψτε εδώ",
+            "title": "Βρείτε άτομα"
         },
         "request": {
             "add": "Προσθέστε",
