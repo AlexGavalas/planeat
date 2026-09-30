@@ -26,7 +26,7 @@ import styles from './find-users.module.css';
 export const FindUsers = () => {
     const { t } = useTranslation();
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedUserFullname, setSelectedUserFullname] = useState('');
+    const [selectedUserId, setSelectedUserId] = useState('');
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 350);
     const { profile } = useProfile();
     const queryClient = useQueryClient();
@@ -38,7 +38,9 @@ export const FindUsers = () => {
                 `/api/v1/user?type=search&fullName=${debouncedSearchQuery}`,
             );
 
-            const { data } = (await response.json()) as { data?: string[] };
+            const { data } = (await response.json()) as {
+                data?: { label: string; value: string }[];
+            };
 
             return data ?? [];
         },
@@ -47,34 +49,34 @@ export const FindUsers = () => {
 
     const { data: selectedUser, isFetching: isFetchingSelectedUser } = useQuery(
         {
-            enabled: Boolean(selectedUserFullname),
+            enabled: Boolean(selectedUserId),
             queryFn: async () => {
                 const response = await fetch(
-                    `/api/v1/user?type=profile&fullName=${selectedUserFullname}`,
+                    `/api/v1/user?type=profile&id=${selectedUserId}`,
                 );
 
                 const { data } = (await response.json()) as { data?: User[] };
 
                 return data;
             },
-            queryKey: ['connection', selectedUserFullname],
+            queryKey: ['connection', selectedUserId],
         },
     );
 
-    const selectedUserId = selectedUser?.[0]?.id;
+    const selectedUserProfileId = selectedUser?.[0]?.id;
 
     const {
         data: hasAlreadySentRequest,
         isFetching: isFetchingHasAlreadySentRequest,
     } = useQuery({
-        enabled: Boolean(selectedUserId),
+        enabled: Boolean(selectedUserProfileId),
         queryFn: async () => {
-            if (!selectedUserId || !profile) {
+            if (!selectedUserProfileId || !profile) {
                 return null;
             }
 
             const response = await fetch(
-                `/api/v1/notification?requestUserId=${profile.id}&targetUserId=${selectedUserId}`,
+                `/api/v1/notification?requestUserId=${profile.id}&targetUserId=${selectedUserProfileId}`,
             );
 
             const { data: hasAlreadySentRequest } = (await response.json()) as {
@@ -83,18 +85,18 @@ export const FindUsers = () => {
 
             return hasAlreadySentRequest;
         },
-        queryKey: ['connection_request', selectedUserId],
+        queryKey: ['connection_request', selectedUserProfileId],
     });
 
     const handleUserSelect = useCallback<
         NonNullable<AutocompleteProps['onOptionSubmit']>
     >((value) => {
-        setSelectedUserFullname(value);
+        setSelectedUserId(value);
     }, []);
 
     const handleClearInput = useCallback(() => {
         setSearchQuery('');
-        setSelectedUserFullname('');
+        setSelectedUserId('');
     }, []);
 
     const handleConnectionRequest = useCallback<
@@ -126,10 +128,10 @@ export const FindUsers = () => {
             });
 
             await queryClient.invalidateQueries({
-                queryKey: ['connection_request', selectedUserId],
+                queryKey: ['connection_request', selectedUserProfileId],
             });
         }
-    }, [profile, selectedUser, selectedUserId, t, queryClient]);
+    }, [profile, selectedUser, selectedUserProfileId, t, queryClient]);
 
     const shouldShowConnectionInfo =
         selectedUser && !isFetchingHasAlreadySentRequest;

@@ -101,9 +101,9 @@ export const findUsersByName = async ({
 }: {
     fullName: string;
     userId: number;
-}): Promise<{ data: Pick<User, 'full_name'>[] }> => ({
+}): Promise<{ data: Pick<User, 'full_name' | 'id'>[] }> => ({
     data: await getDb()
-        .select({ full_name: users.full_name })
+        .select({ full_name: users.full_name, id: users.id })
         .from(users)
         .where(
             and(
@@ -115,15 +115,16 @@ export const findUsersByName = async ({
         .limit(MAX_QUERY_RESULTS),
 });
 
-export const fetchUserByFullname = async ({
-    fullName,
+export const fetchUserById = async ({
+    id,
 }: {
-    fullName: string;
+    id: number;
 }): Promise<{ data: Pick<User, 'full_name' | 'id'>[] }> => ({
     data: await getDb()
         .select({ full_name: users.full_name, id: users.id })
         .from(users)
-        .where(eq(users.full_name, fullName)),
+        .where(eq(users.id, id))
+        .limit(1),
 });
 
 export const updateProfile = async ({

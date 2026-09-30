@@ -198,7 +198,7 @@ test('connections search result stacks on mobile Chrome', async ({ page }) => {
 
     const search = page.getByRole('combobox', { name: 'Search' });
     await search.fill('E2E');
-    await page.getByRole('option', { name: 'E2E User' }).click();
+    await page.getByRole('option', { name: 'E2E User' }).first().click();
     await expect(
         page.getByRole('button', { name: 'Send connection request' }),
     ).toBeVisible();
