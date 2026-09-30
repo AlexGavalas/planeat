@@ -4,46 +4,37 @@ import {
     fetchUserConnections,
 } from '~api/connection';
 import { deleteRequestSchema, postRequestSchema } from '~schemas/connection';
-import { type RouteHandlerWithUser, withUser } from '~util/session';
+import { withUser } from '~util/session';
 
-const handler: RouteHandlerWithUser = async ({ request, user }) => {
-    if (request.method === 'GET') {
-        const { data } = await fetchUserConnections({
-            userId: user.id,
-        });
+export const GET = withUser(async ({ user }) => {
+    const { data } = await fetchUserConnections({
+        userId: user.id,
+    });
 
-        return Response.json({ data });
-    } else if (request.method === 'DELETE') {
-        const { connectionId, connectionUserId } = deleteRequestSchema.parse(
-            await request.json(),
-        );
+    return Response.json({ data });
+});
 
-        await deleteConnection({
-            connectionId,
-            connectionUserId,
-            userId: user.id,
-        });
+export const DELETE = withUser(async ({ request, user }) => {
+    const { connectionId, connectionUserId } = deleteRequestSchema.parse(
+        await request.json(),
+    );
 
-        return Response.json({ message: 'OK' }, { status: 200 });
-    } else if (request.method === 'POST') {
-        const { connectionUserId } = postRequestSchema.parse(
-            await request.json(),
-        );
+    await deleteConnection({
+        connectionId,
+        connectionUserId,
+        userId: user.id,
+    });
 
-        await createConnection({
-            connectionUserId,
-            userId: user.id,
-        });
+    return Response.json({ message: 'OK' }, { status: 200 });
+});
 
-        return Response.json({ message: 'OK' }, { status: 200 });
-    } else {
-        return Response.json(
-            { message: 'Method Not Allowed' },
-            { status: 405 },
-        );
-    }
-};
+export const POST = withUser(async ({ request, user }) => {
+    const { connectionUserId } = postRequestSchema.parse(await request.json());
 
-const route = withUser(handler);
+    await createConnection({
+        connectionUserId,
+        userId: user.id,
+    });
 
-export { route as GET, route as DELETE, route as POST };
+    return Response.json({ message: 'OK' }, { status: 200 });
+});
