@@ -24,7 +24,7 @@ const MenuTrigger = forwardRef<
 >((props, ref) => {
     return (
         <UnstyledButton ref={ref} className={styles.trigger} {...props}>
-            <Group gap={6} wrap="nowrap">
+            <Group gap="tight" wrap="nowrap">
                 <UserAvatar />
                 <NavArrowDown aria-hidden className={styles.chevron} />
             </Group>
@@ -90,7 +90,7 @@ export const UserMenu = () => {
                     {t('settings')}
                 </Menu.Item>
                 <Menu.Divider />
-                <Menu.Item color="red" onClick={handleLogout}>
+                <Menu.Item color="danger" onClick={handleLogout}>
                     {t('logout')}
                 </Menu.Item>
             </Menu.Dropdown>

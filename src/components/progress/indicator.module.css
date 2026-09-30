@@ -31,15 +31,15 @@
 
     .legend {
         display: grid;
-        gap: 0.5rem 1rem;
+        gap: var(--mantine-spacing-compact) var(--mantine-spacing-md);
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        margin-top: 0.25rem;
+        margin-top: var(--mantine-spacing-xxs);
     }
 
     .legendItem {
         align-items: center;
         display: flex;
-        gap: 0.5rem;
+        gap: var(--mantine-spacing-compact);
         min-width: 0;
     }
 

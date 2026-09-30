@@ -37,7 +37,9 @@ export const ConnectionRequest = ({
     return (
         <Paper withBorder p="md" role="listitem">
             <Group className={styles.row} justify="space-between">
-                <Text fw={600}>{connectionRequest.users.full_name}</Text>
+                <Text fw="var(--mantine-font-weight-semibold)">
+                    {connectionRequest.users.full_name}
+                </Text>
                 <Group className={styles.actions} gap="xs" wrap="nowrap">
                     <Button onClick={handleAccept}>
                         {t('connections.manage_connection_requests.accept')}

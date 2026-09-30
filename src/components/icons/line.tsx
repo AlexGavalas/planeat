@@ -1,33 +1,37 @@
 export const Line = () => (
     <svg
         fill="none"
-        style={{ height: 50, margin: '1rem', width: 'calc(100% - 2rem)' }}
+        style={{
+            height: 50,
+            margin: 'var(--mantine-spacing-md)',
+            width: 'calc(100% - 2 * var(--mantine-spacing-md))',
+        }}
         viewBox="0 0 97 32"
         xmlns="http://www.w3.org/2000/svg"
     >
         <path
             d="M96.3004 21.6002L86.9004 12.2002L84.9004 14.2002L92.4004 21.6002L84.9004 29.1002L86.9004 31.1002L96.3004 21.6002Z"
-            fill="#9D9D9D"
+            fill="var(--app-color-decoration-muted)"
         ></path>
         <path
             d="M81.0006 21.6002L71.6006 12.2002L69.6006 14.2002L77.0006 21.6002L69.6006 29.1002L71.6006 31.1002L81.0006 21.6002Z"
-            fill="#9D9D9D"
+            fill="var(--app-color-decoration-muted)"
         ></path>
         <path
             d="M65.7008 21.6002L56.2008 12.2002L54.3008 14.2002L61.7008 21.6002L54.3008 29.1002L56.2008 31.1002L65.7008 21.6002Z"
-            fill="#9D9D9D"
+            fill="var(--app-color-decoration-muted)"
         ></path>
         <path
             d="M50.3004 21.6002L40.9004 12.2002L38.9004 14.2002L46.4004 21.6002L38.9004 29.1002L40.9004 31.1002L50.3004 21.6002Z"
-            fill="#9D9D9D"
+            fill="var(--app-color-decoration-muted)"
         ></path>
         <path
             d="M35.0006 21.6002L25.6006 12.2002L23.6006 14.2002L31.1006 21.6002L23.6006 29.1002L25.6006 31.1002L35.0006 21.6002Z"
-            fill="#9D9D9D"
+            fill="var(--app-color-decoration-muted)"
         ></path>
         <path
             d="M19.7008 21.6002L10.3008 12.2002L8.30078 14.2002L15.8008 21.6002L8.30078 29.1002L10.3008 31.1002L19.7008 21.6002Z"
-            fill="#9D9D9D"
+            fill="var(--app-color-decoration-muted)"
         ></path>
         <path
             d="M87.9 9.90002L78.5 0.5L76.5 2.5L84 9.90002L76.5 17.4L78.5 19.3L87.9 9.90002Z"
@@ -89,7 +93,11 @@ export const Line = () => (
 export const Blobs = () => (
     <svg
         fill="none"
-        style={{ height: 50, margin: '1rem', width: 'calc(100% - 2rem)' }}
+        style={{
+            height: 50,
+            margin: 'var(--mantine-spacing-md)',
+            width: 'calc(100% - 2 * var(--mantine-spacing-md))',
+        }}
         viewBox="0 0 112 38"
         xmlns="http://www.w3.org/2000/svg"
     >

@@ -2,9 +2,9 @@
     align-items: center;
     border-radius: var(--mantine-radius-xl);
     display: flex;
-    min-height: 2.75rem;
-    min-width: 2.75rem;
-    padding: 0.375rem;
+    min-height: var(--app-size-action);
+    min-width: var(--app-size-action);
+    padding: var(--mantine-spacing-tight);
 }
 
 .trigger:hover {
@@ -13,7 +13,7 @@
 
 .chevron {
     height: 1rem;
-    transition: transform 150ms ease;
+    transition: transform var(--app-motion-fast) ease;
     width: 1rem;
 }
 
@@ -25,14 +25,14 @@
     display: none;
 
     * + * {
-        margin-top: 0.2rem;
+        margin-top: var(--mantine-spacing-xxs);
     }
 }
 
 .menuItem[aria-current='page'] {
     background: var(--mantine-color-brand-0);
-    color: white;
-    font-weight: 600;
+    color: var(--mantine-color-brand-9);
+    font-weight: var(--mantine-font-weight-semibold);
 }
 
 @media (max-width: 48em) {

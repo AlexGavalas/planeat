@@ -23,7 +23,7 @@ export const DeleteAccount = () => {
             <Title order={3}>
                 {t('account_settings.sections.delete_account.title')}
             </Title>
-            <Button color="red" onClick={handleOpenDeleteAccountModal}>
+            <Button color="danger" onClick={handleOpenDeleteAccountModal}>
                 {t('account_settings.sections.delete_account.button.label')}
             </Button>
         </Stack>

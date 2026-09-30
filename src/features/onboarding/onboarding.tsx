@@ -3,9 +3,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type EventHandler, Joyride } from 'react-joyride';
 
-import { BRAND_COLORS } from '~constants/colors';
 import { useLocalizedPath } from '~hooks/use-localized-path';
 import { useProfile } from '~hooks/use-profile';
+import { BRAND_COLORS } from '~theme';
 
 import { useSteps } from './helpers';
 

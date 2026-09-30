@@ -37,15 +37,15 @@ export const DeleteAccountModal = ({ context, id }: ContextModalProps) => {
                 onChange={handleEmailChange}
                 value={userEmail}
             />
-            <Text fw="bold">
+            <Text fw="var(--mantine-font-weight-bold)">
                 {t('account_settings.sections.delete_account.modal.banner')}
             </Text>
             <Group gap="md">
-                <Button color="red" onClick={closeModal} variant="outline">
+                <Button color="danger" onClick={closeModal} variant="outline">
                     {t('account_settings.sections.delete_account.modal.cancel')}
                 </Button>
                 <Button
-                    color="red"
+                    color="danger"
                     disabled={!canDelete}
                     loading={isDeleting}
                     onClick={handleProfileDelete}

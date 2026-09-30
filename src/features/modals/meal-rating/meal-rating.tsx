@@ -59,12 +59,12 @@ export const MealRatingModal = ({
                     />
                 </Center>
                 <Group justify="space-between">
-                    <Button color="red" onClick={closeModal} variant="light">
+                    <Button color="danger" onClick={closeModal} variant="light">
                         {t('generic.actions.cancel')}
                     </Button>
                     <Group gap="md">
                         {meal.rating && (
-                            <Button color="red" onClick={handleDelete}>
+                            <Button color="danger" onClick={handleDelete}>
                                 {t('generic.actions.delete')}
                             </Button>
                         )}

@@ -1,5 +1,5 @@
 .table tr:nth-child(even) {
-    background-color: #e5f6e5;
+    background-color: var(--app-color-surface-stripe);
 }
 
 .mobileCards {
@@ -16,7 +16,7 @@
     }
 
     .mobileCard {
-        background-color: rgb(255 255 255 / 50%);
+        background-color: var(--app-color-surface-mobile-card);
     }
 
     .pagination {

@@ -5,7 +5,7 @@ import { maxBy, minBy } from 'lodash';
 import dynamic from 'next/dynamic';
 import { type SVGAttributes, useMemo } from 'react';
 
-import { BRAND_COLORS } from '~constants/colors';
+import { BRAND_COLORS } from '~theme';
 
 const ResponsiveLine = dynamic(
     () => import('@nivo/line').then((mod) => ({ default: mod.ResponsiveLine })),
@@ -25,7 +25,7 @@ const targetLayer = (targetWeight: number) =>
         return (
             <g>
                 <rect
-                    fill="red"
+                    fill="var(--app-color-chart-target)"
                     height={lineHeight}
                     width={props.innerWidth}
                     y={props.yScale(targetWeight) - lineHeight / 2}
@@ -85,7 +85,7 @@ export const LineChart = <DataItem extends { x: string; y: number | null }>({
                             <text
                                 dominantBaseline="text-before-edge"
                                 style={{
-                                    fill: 'rgb(51, 51, 51)',
+                                    fill: 'var(--app-color-chart-text)',
                                     fontSize: 12,
                                     textAnchor,
                                 }}

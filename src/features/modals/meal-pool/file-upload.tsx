@@ -142,7 +142,9 @@ export const FileUploadTab = () => {
                     </Group>
                     <form onSubmit={handleSubmit}>
                         <Stack gap="sm">
-                            <Text fw={500}>{t('import_success')}</Text>
+                            <Text fw="var(--mantine-font-weight-medium)">
+                                {t('import_success')}
+                            </Text>
                             {currentState?.map((result, idx) => (
                                 <Group key={result + idx} gap="sm">
                                     <Textarea
@@ -153,7 +155,7 @@ export const FileUploadTab = () => {
                                         style={{ flexGrow: 1 }}
                                     />
                                     <ActionIcon
-                                        color="red"
+                                        color="danger"
                                         data-item-index={idx}
                                         onClick={handleRemoveItem}
                                         variant="outline"

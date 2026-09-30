@@ -51,6 +51,12 @@
       "~styles/*": [
         "./src/styles/*"
       ],
+      "~theme": [
+        "./src/theme/index"
+      ],
+      "~theme/*": [
+        "./src/theme/*"
+      ],
       "~test/*": [
         "./src/test/*"
       ],

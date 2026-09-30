@@ -1,5 +1,5 @@
 .removeButton {
-    min-height: 2.75rem;
+    min-height: var(--app-size-action);
 }
 
 @media (max-width: 48em) {

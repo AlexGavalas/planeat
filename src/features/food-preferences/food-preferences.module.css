@@ -1,6 +1,6 @@
 @media (max-width: 48em) {
     .saveButton {
-        min-height: 2.75rem;
+        min-height: var(--app-size-action);
         width: 100%;
     }
 }

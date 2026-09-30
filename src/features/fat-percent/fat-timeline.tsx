@@ -13,7 +13,7 @@ export const FatTimeline = () => {
 
     return (
         <>
-            <Title order={4} pt={20}>
+            <Title order={4} pt="lg">
                 {t('fat_change')}
             </Title>
             <div

@@ -11,12 +11,12 @@
 
 .tab {
     flex: 0 0 auto;
-    min-height: 2.75rem;
+    min-height: var(--app-size-action);
     white-space: nowrap;
 }
 
 @media (max-width: 48em) {
     .container {
-        padding-inline: 0.75rem;
+        padding-inline: var(--mantine-spacing-sm);
     }
 }

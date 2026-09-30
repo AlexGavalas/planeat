@@ -26,7 +26,9 @@ export const ConnectionItem = ({
     return (
         <Paper withBorder p="md" role="listitem">
             <Group className={styles.row} justify="space-between">
-                <Text fw={600}>{connection.users.full_name}</Text>
+                <Text fw="var(--mantine-font-weight-semibold)">
+                    {connection.users.full_name}
+                </Text>
                 <Button
                     className={styles.removeButton}
                     onClick={handleRemoveConnection}

@@ -12,17 +12,17 @@
     }
 
     .mobileControls button {
-        min-height: 2.75rem;
+        min-height: var(--app-size-action);
     }
 
     .saveBar {
-        background: rgb(255 255 255 / 92%);
+        background: var(--app-color-surface-sticky);
         border: 1px solid var(--mantine-color-brand-2);
         border-radius: var(--mantine-radius-md);
-        bottom: 0.75rem;
+        bottom: var(--mantine-spacing-sm);
         box-shadow: var(--mantine-shadow-md);
-        padding: 0.5rem;
+        padding: var(--mantine-spacing-compact);
         position: sticky;
-        z-index: 20;
+        z-index: var(--app-layer-sticky);
     }
 }

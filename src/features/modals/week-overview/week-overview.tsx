@@ -43,7 +43,11 @@ export const WeekOverviewModal = () => {
 
                 return (
                     <Stack key={key} gap="xs">
-                        <Text c="green.9" fw={500} fz="lg">
+                        <Text
+                            c="success.9"
+                            fw="var(--mantine-font-weight-medium)"
+                            fz="lg"
+                        >
                             {timeslot}
                         </Text>
                         <List spacing="xs">
@@ -96,7 +100,10 @@ export const WeekOverviewModal = () => {
                                             )}
                                             {meal.rating && (
                                                 <div>
-                                                    <Text span fw={500}>
+                                                    <Text
+                                                        span
+                                                        fw="var(--mantine-font-weight-medium)"
+                                                    >
                                                         {t('rating')}:{' '}
                                                     </Text>
                                                     <Text span>

@@ -100,7 +100,7 @@ const RowActions = <ItemType extends Item>({
     const deleteControl = isMobile ? (
         <Button
             fullWidth
-            color="red"
+            color="danger"
             leftSection={<Trash />}
             onClick={handleOpenConfirmation}
             variant="outline"
@@ -110,7 +110,7 @@ const RowActions = <ItemType extends Item>({
     ) : (
         <ActionIcon
             aria-label={t('generic.actions.delete')}
-            color="red"
+            color="danger"
             onClick={handleOpenConfirmation}
             variant="outline"
         >
@@ -184,7 +184,11 @@ export const MobileRow = <ItemType extends Item>({
                 .filter((header) => header.key !== 'actions')
                 .map(({ formatValue, key, label }) => (
                     <div key={key}>
-                        <Text c="dimmed" fw={700} size="xs">
+                        <Text
+                            c="dimmed"
+                            fw="var(--mantine-font-weight-bold)"
+                            size="xs"
+                        >
                             {label}
                         </Text>
                         <Text>{formatValue?.(item) ?? get(key, item)}</Text>

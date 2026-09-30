@@ -179,7 +179,7 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                                     name="password"
                                 />
                                 {error && (
-                                    <Alert color="red" variant="outline">
+                                    <Alert color="danger" variant="outline">
                                         {error}
                                     </Alert>
                                 )}

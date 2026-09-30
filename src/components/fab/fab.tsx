@@ -81,7 +81,7 @@ export const Fab = () => {
     return (
         <Box className={styles.container}>
             {shouldShowMenu && (
-                <Stack align="end" gap="sm" mb={10}>
+                <Stack align="end" gap="sm" mb="xs">
                     <Button
                         {...buttonProps}
                         leftSection={<EditPencil />}

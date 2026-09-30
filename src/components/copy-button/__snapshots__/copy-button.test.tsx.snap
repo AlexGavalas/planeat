@@ -11,7 +11,7 @@ exports[`<CopyButton /> renders the button 1`] = `
     class="mantine-focus-auto mantine-active m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
     data-size="lg"
     data-variant="outline"
-    style="--ai-size: var(--ai-size-lg); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-outline-hover); --ai-color: var(--mantine-color-blue-outline); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-blue-outline);"
+    style="--ai-size: var(--ai-size-lg); --ai-bg: transparent; --ai-hover: var(--mantine-color-brand-outline-hover); --ai-color: var(--mantine-color-brand-outline); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-brand-outline);"
     type="button"
   >
     <span
@@ -72,7 +72,7 @@ exports[`<CopyButton /> when the user hovers the button shows the tooltip 1`] = 
       class="mantine-focus-auto mantine-active m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
       data-size="lg"
       data-variant="outline"
-      style="--ai-size: var(--ai-size-lg); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-outline-hover); --ai-color: var(--mantine-color-blue-outline); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-blue-outline);"
+      style="--ai-size: var(--ai-size-lg); --ai-bg: transparent; --ai-hover: var(--mantine-color-brand-outline-hover); --ai-color: var(--mantine-color-brand-outline); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid var(--mantine-color-brand-outline);"
       type="button"
     >
       <span

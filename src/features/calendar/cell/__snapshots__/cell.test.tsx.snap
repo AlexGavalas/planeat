@@ -19,7 +19,7 @@ exports[`<Cell /> renders 1`] = `
       >
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
-          style="padding: calc(0.3125rem * var(--mantine-scale)); text-align: center;"
+          style="padding: var(--app-space-calendar-cell); text-align: center;"
         >
           N/A
         </p>
@@ -48,7 +48,7 @@ exports[`<Cell /> when the user has a meal renders 1`] = `
       >
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
-          style="padding: calc(0.3125rem * var(--mantine-scale)); text-align: center;"
+          style="padding: var(--app-space-calendar-cell); text-align: center;"
         >
           test meal
         </p>
@@ -79,7 +79,7 @@ exports[`<Cell /> when the user has a meal when the meal has a note renders 1`] 
         data-size="xs"
         data-variant="light"
         data-with-left-section="true"
-        style="--badge-height: var(--badge-height-xs); --badge-padding-x: var(--badge-padding-x-xs); --badge-fz: var(--badge-fz-xs); --badge-bg: var(--mantine-color-blue-light); --badge-color: var(--mantine-color-blue-light-color); --badge-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+        style="--badge-height: var(--badge-height-xs); --badge-padding-x: var(--badge-padding-x-xs); --badge-fz: var(--badge-fz-xs); --badge-bg: var(--mantine-color-brand-light); --badge-color: var(--mantine-color-brand-light-color); --badge-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
       >
         <span
           class="m_91fdda9b mantine-Badge-section"
@@ -144,7 +144,7 @@ exports[`<Cell /> when the user has a meal when the meal has a note renders 1`] 
       >
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
-          style="padding: calc(0.3125rem * var(--mantine-scale)); text-align: center;"
+          style="padding: var(--app-space-calendar-cell); text-align: center;"
         >
           test meal
         </p>

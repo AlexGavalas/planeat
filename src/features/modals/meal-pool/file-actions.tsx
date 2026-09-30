@@ -42,7 +42,7 @@ export const FileActions = ({
         <Group gap="sm">
             <Box>
                 <Text span>{t('upload.prompt')} </Text>
-                <Text span fw={700}>
+                <Text span fw="var(--mantine-font-weight-bold)">
                     {file.name}{' '}
                 </Text>
                 <Text span>
@@ -58,7 +58,7 @@ export const FileActions = ({
                 {t('confirmation.yes')}
             </Button>
             <Button
-                color="red"
+                color="danger"
                 onClick={onClear}
                 size="compact-sm"
                 variant="outline"

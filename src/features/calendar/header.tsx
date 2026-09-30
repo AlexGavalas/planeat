@@ -75,7 +75,7 @@ export const Header = () => {
                     style={{ position: 'relative' }}
                 >
                     <Title
-                        c={isToday(timestamp) ? 'green.8' : undefined}
+                        c={isToday(timestamp) ? 'success.8' : undefined}
                         order={4}
                         ta="center"
                     >
