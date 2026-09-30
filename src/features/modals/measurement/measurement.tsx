@@ -118,7 +118,7 @@ export const MeasurementModal = ({
                     value={date}
                 />
             </Center>
-            <Space h={20} />
+            <Space h="lg" />
             <NumberInput
                 decimalScale={2}
                 error={error}
@@ -128,7 +128,7 @@ export const MeasurementModal = ({
                 onFocus={resetError}
                 value={weight}
             />
-            <Space h={20} />
+            <Space h="lg" />
             <NumberInput
                 decimalScale={2}
                 label={t('fat_label')}
@@ -137,9 +137,9 @@ export const MeasurementModal = ({
                 onChange={handleFatPercentChange}
                 value={fatPercent}
             />
-            <Space h={20} />
+            <Space h="lg" />
             <Group justify="space-between">
-                <Button color="red" onClick={closeModal} variant="light">
+                <Button color="danger" onClick={closeModal} variant="light">
                     {t('generic.actions.cancel')}
                 </Button>
                 <Button type="submit">{t('generic.actions.save')}</Button>

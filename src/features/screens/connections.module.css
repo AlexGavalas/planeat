@@ -5,6 +5,6 @@
 
 @media (max-width: 48em) {
     .container {
-        padding-inline: 0.75rem;
+        padding-inline: var(--mantine-spacing-sm);
     }
 }

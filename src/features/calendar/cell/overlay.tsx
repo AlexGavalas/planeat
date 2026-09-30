@@ -133,12 +133,12 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
     const shouldShowColumnLayout = isMealSaved || isMealFilled;
 
     return (
-        <Overlay style={{ background: 'rgba(255, 255, 255, 0.5)' }}>
+        <Overlay style={{ background: 'var(--app-color-surface-overlay)' }}>
             <Center style={{ height: '100%' }}>
                 <SimpleGrid
                     cols={shouldShowColumnLayout ? 2 : 1}
-                    spacing={4}
-                    verticalSpacing={4}
+                    spacing="xxs"
+                    verticalSpacing="xxs"
                 >
                     <Tooltip
                         withArrow

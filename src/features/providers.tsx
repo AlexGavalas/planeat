@@ -17,11 +17,11 @@ import { I18nProvider } from 'next-i18next/client';
 import dynamic from 'next/dynamic';
 import { type PropsWithChildren, useState } from 'react';
 
-import { BRAND_COLORS } from '~constants/colors';
 import { Header } from '~features/header';
 import { Onboarding } from '~features/onboarding';
 import { currentWeekAtom } from '~store/atoms';
 import { UserContext } from '~store/user-context';
+import { APP_THEME, appCssVariablesResolver } from '~theme';
 import { createQueryClient } from '~util/query-client';
 
 const CenterLoader = () => (
@@ -114,10 +114,8 @@ export const Providers = ({
             supportedLngs={['en', 'gr']}
         >
             <MantineProvider
-                theme={{
-                    colors: { brand: BRAND_COLORS },
-                    primaryColor: 'brand',
-                }}
+                cssVariablesResolver={appCssVariablesResolver}
+                theme={APP_THEME}
             >
                 <SessionProvider session={session}>
                     <QueryClientProvider client={queryClient}>

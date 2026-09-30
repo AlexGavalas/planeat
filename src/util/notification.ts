@@ -16,6 +16,6 @@ export const showErrorNotification = (
 ): void => {
     showNotification({
         ...props,
-        color: 'red',
+        color: 'danger',
     });
 };

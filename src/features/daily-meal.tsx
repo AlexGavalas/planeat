@@ -53,7 +53,11 @@ export const DailyMeal = ({ dailyMeals, date }: DailyMealProps) => {
                         <Timeline.Item
                             key={key}
                             bullet={<Icon />}
-                            title={<Text fw="bold">{row.label}</Text>}
+                            title={
+                                <Text fw="var(--mantine-font-weight-bold)">
+                                    {row.label}
+                                </Text>
+                            }
                         >
                             <Spoiler
                                 hideLabel={t('generic.actions.show_less')}

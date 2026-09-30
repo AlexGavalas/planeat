@@ -15,7 +15,7 @@ export const BMITimeline = () => {
 
     return (
         <>
-            <Title order={4} pt={20}>
+            <Title order={4} pt="lg">
                 {t('weight_change')}
             </Title>
             <Box

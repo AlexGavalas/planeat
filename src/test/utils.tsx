@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { I18nextProvider } from 'react-i18next';
 
 import { i18n } from '~test/i18n';
+import { APP_THEME } from '~theme';
 
 type RenderParameters = Parameters<typeof render>;
 
@@ -18,7 +19,11 @@ export const renderWithUser = (
         ...render(renderParams, {
             wrapper: ({ children }) => (
                 <I18nextProvider i18n={i18n}>
-                    <MantineProvider env="test" withCssVariables={false}>
+                    <MantineProvider
+                        env="test"
+                        theme={APP_THEME}
+                        withCssVariables={false}
+                    >
                         <Wrapper>{children}</Wrapper>
                     </MantineProvider>
                 </I18nextProvider>

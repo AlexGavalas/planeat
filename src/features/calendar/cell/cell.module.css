@@ -1,9 +1,9 @@
 .cell {
     height: 100%;
     display: grid;
-    gap: 5px;
-    border: 1px solid black;
-    border-radius: 3px;
-    padding: 5px;
+    gap: var(--app-space-calendar-cell);
+    border: 1px solid var(--app-color-border-default);
+    border-radius: var(--mantine-radius-sm);
+    padding: var(--app-space-calendar-cell);
     white-space: pre-wrap;
 }

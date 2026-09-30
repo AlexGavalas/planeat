@@ -94,7 +94,7 @@ export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
                 />
             </Stack>
             <Group gap="md" justify="end">
-                <Button color="red" disabled={isLoading} onClick={onDone}>
+                <Button color="danger" disabled={isLoading} onClick={onDone}>
                     {t('generic.actions.cancel')}
                 </Button>
                 <Button loading={isLoading} onClick={handleCreate}>

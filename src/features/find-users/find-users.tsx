@@ -160,7 +160,10 @@ export const FindUsers = () => {
             />
             {shouldShowConnectionInfo &&
                 (hasAlreadySentRequest ? (
-                    <Text c="green.8" fw={600}>
+                    <Text
+                        c="success.8"
+                        fw="var(--mantine-font-weight-semibold)"
+                    >
                         {t('connections.request.already_sent', {
                             fullName: selectedUser[0]?.full_name,
                         })}
@@ -172,7 +175,7 @@ export const FindUsers = () => {
                     >
                         <div>
                             <Text span>{t('connections.request.add')} </Text>
-                            <Text span fw={600}>
+                            <Text span fw="var(--mantine-font-weight-semibold)">
                                 {selectedUser[0]?.full_name}
                             </Text>
                             <Text span>

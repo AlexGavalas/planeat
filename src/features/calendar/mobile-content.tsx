@@ -57,7 +57,7 @@ const MobileDayButton = ({
             className={styles.dayButton}
             onClick={handleClick}
         >
-            <Text fw={700} size="sm">
+            <Text fw="var(--mantine-font-weight-bold)" size="sm">
                 {label}
             </Text>
             <Text size="sm">{format(date, 'dd/MM')}</Text>
@@ -191,8 +191,10 @@ const MobileMeal = ({
                             <Icon />
                         </Box>
                     )}
-                    <Stack gap={2}>
-                        <Text fw={700}>{label}</Text>
+                    <Stack gap="micro">
+                        <Text fw="var(--mantine-font-weight-bold)">
+                            {label}
+                        </Text>
                         <Text c={meal?.meal ? undefined : 'dimmed'}>
                             {meal?.meal || 'N/A'}
                         </Text>

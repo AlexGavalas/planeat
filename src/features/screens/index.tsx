@@ -8,7 +8,7 @@ import styles from './landing.module.css';
 
 export function LandingPage() {
     const appName = (
-        <Text span fw={700}>
+        <Text span fw="var(--mantine-font-weight-bold)">
             Planeat
         </Text>
     );

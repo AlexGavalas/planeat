@@ -1,6 +1,6 @@
 .header {
-    min-height: 4.25rem;
-    padding: 0.625rem 1.25rem;
+    min-height: var(--app-size-header);
+    padding: var(--mantine-spacing-xs) var(--mantine-spacing-lg);
 }
 
 .brand {
@@ -17,8 +17,8 @@
 
 @media (max-width: 48em) {
     .header {
-        min-height: 4rem;
-        padding: 0.625rem 1rem;
+        min-height: var(--app-size-header-mobile);
+        padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
     }
 
     .logo {

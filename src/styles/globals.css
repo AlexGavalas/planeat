@@ -9,20 +9,9 @@
 html,
 body,
 #__next {
-    background-color: white;
+    background-color: var(--app-color-surface-default);
     height: 100%;
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        Segoe UI,
-        Roboto,
-        Oxygen,
-        Ubuntu,
-        Cantarell,
-        Fira Sans,
-        Droid Sans,
-        Helvetica Neue,
-        sans-serif;
+    font-family: var(--mantine-font-family);
 }
 
 a {
@@ -35,31 +24,27 @@ a {
     grid-template-rows: auto 1fr;
 }
 
-:root {
-    --color-primary: #a7d3a5;
-    --bg-light: #ecf5ec;
-}
-
 ::selection {
-    background-color: var(--color-primary);
+    background-color: var(--app-color-decoration-grid);
 }
 
 .container {
     --dot-size: 1px;
-    border-top: 5px solid var(--color-primary);
-    min-height: calc(100dvh - 4.25rem);
-    padding: 2rem;
+    border-top: var(--app-size-page-border) solid
+        var(--app-color-decoration-grid);
+    min-height: calc(100dvh - var(--app-size-header));
+    padding: var(--app-space-page);
     position: relative;
-    background-color: var(--bg-light);
+    background-color: var(--app-color-surface-page);
     background-size: 20px 20px;
     background-image:
         radial-gradient(
-            var(--color-primary) var(--dot-size),
+            var(--app-color-decoration-grid) var(--dot-size),
             transparent var(--dot-size)
         ),
         radial-gradient(
-            var(--color-primary) var(--dot-size),
-            var(--bg-light) var(--dot-size)
+            var(--app-color-decoration-grid) var(--dot-size),
+            var(--app-color-surface-page) var(--dot-size)
         );
     background-position:
         0 0,
@@ -68,7 +53,7 @@ a {
 
 @media (max-width: 48em) {
     .container {
-        min-height: calc(100dvh - 4rem);
-        padding: 1rem;
+        min-height: calc(100dvh - var(--app-size-header-mobile));
+        padding: var(--app-space-page-mobile);
     }
 }

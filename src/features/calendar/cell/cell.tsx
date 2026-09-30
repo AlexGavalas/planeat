@@ -85,7 +85,9 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                 className={styles.cell}
                 style={{
                     ...(hasNote && { gridTemplateRows: 'auto 1fr' }),
-                    ...(isEdited && { border: '2px solid orange' }),
+                    ...(isEdited && {
+                        border: '2px solid var(--app-color-state-modified)',
+                    }),
                 }}
             >
                 {hasNote && (
@@ -103,7 +105,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                         ...(isHovered && { opacity: 0.15 }),
                     }}
                 >
-                    <Text p={5} ta="center">
+                    <Text p="var(--app-space-calendar-cell)" ta="center">
                         {meal?.meal || 'N/A'}
                     </Text>
                 </Center>

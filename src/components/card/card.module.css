@@ -1,6 +1,6 @@
 .glass {
     position: relative;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(var(--app-blur-glass));
     background-color: transparent;
 }
 
@@ -8,8 +8,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    z-index: -1;
-    background-color: white;
-    opacity: 0.25;
-    backdrop-filter: blur(5px);
+    z-index: var(--app-layer-behind);
+    background-color: var(--app-color-surface-glass);
+    backdrop-filter: blur(var(--app-blur-glass-strong));
 }

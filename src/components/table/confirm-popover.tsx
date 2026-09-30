@@ -20,7 +20,7 @@ export const ConfirmationPopover = ({
             <Text>{t('confirmation.generic')}</Text>
             <Group gap="md">
                 <Button
-                    color="red"
+                    color="danger"
                     onClick={onToggleConfirmation}
                     size="xs"
                     variant="outline"

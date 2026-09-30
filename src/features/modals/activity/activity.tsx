@@ -104,7 +104,7 @@ export const ActivityModal = ({
                     value={date}
                 />
             </Center>
-            <Space h={20} />
+            <Space h="lg" />
             <Textarea
                 autosize
                 defaultValue={activity}
@@ -115,9 +115,9 @@ export const ActivityModal = ({
                 onFocus={resetError}
                 placeholder={t('activity.placeholder')}
             />
-            <Space h={20} />
+            <Space h="lg" />
             <Group gap="md" justify="space-between">
-                <Button color="red" onClick={closeModal} variant="light">
+                <Button color="danger" onClick={closeModal} variant="light">
                     {t('generic.actions.cancel')}
                 </Button>
                 <Button type="submit">{t('generic.actions.save')}</Button>
