@@ -1,0 +1,28 @@
+.header {
+    min-height: 4.25rem;
+    padding: 0.625rem 1.25rem;
+}
+
+.brand {
+    flex-shrink: 0;
+}
+
+.logo {
+    cursor: pointer;
+}
+
+.actions {
+    min-width: 0;
+}
+
+@media (max-width: 48em) {
+    .header {
+        min-height: 4rem;
+        padding: 0.625rem 1rem;
+    }
+
+    .logo {
+        font-size: 1.75rem;
+        line-height: 1;
+    }
+}

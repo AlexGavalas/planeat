@@ -1,4 +1,4 @@
-import { Button, Group, Stack, Textarea, Title } from '@mantine/core';
+import { Button, SimpleGrid, Stack, Textarea, Title } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
 import { type SubmitEventHandler, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ import {
 } from '~util/notification';
 
 import { saveProfile } from '../../app/actions';
+import styles from './food-preferences.module.css';
 
 const formSchema = z.object({
     negative: z.string(),
@@ -63,7 +64,11 @@ export const FoodPreferences = () => {
             </Title>
             <form onSubmit={handleSavePreferences} style={{ width: '100%' }}>
                 <Stack align="start" gap="md" style={{ width: '100%' }}>
-                    <Group grow gap="md" style={{ width: '100%' }}>
+                    <SimpleGrid
+                        cols={{ base: 1, sm: 2 }}
+                        spacing="md"
+                        style={{ width: '100%' }}
+                    >
                         <Textarea
                             autosize
                             defaultValue={
@@ -92,8 +97,10 @@ export const FoodPreferences = () => {
                                 'account_settings.sections.food_preferences.negative.placeholder',
                             )}
                         />
-                    </Group>
-                    <Button type="submit">{t('generic.actions.save')}</Button>
+                    </SimpleGrid>
+                    <Button className={styles.saveButton} type="submit">
+                        {t('generic.actions.save')}
+                    </Button>
                 </Stack>
             </form>
         </Stack>

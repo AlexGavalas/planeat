@@ -122,8 +122,8 @@ export const ManageConnectionRequests = () => {
             {isFetchingConnectionRequests ? (
                 <LoadingOverlay visible />
             ) : (
-                connectionRequests.map((connectionRequest) => {
-                    return (
+                <Stack gap="sm" role="list">
+                    {connectionRequests.map((connectionRequest) => (
                         <ConnectionRequest
                             key={connectionRequest.id}
                             connectionRequest={connectionRequest}
@@ -134,8 +134,8 @@ export const ManageConnectionRequests = () => {
                                 handleDeclineConnectionRequest
                             }
                         />
-                    );
-                })
+                    ))}
+                </Stack>
             )}
         </Stack>
     );

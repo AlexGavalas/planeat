@@ -1,0 +1,18 @@
+.actions button {
+    min-height: 2.75rem;
+}
+
+@media (max-width: 48em) {
+    .row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .actions {
+        width: 100%;
+    }
+
+    .actions button {
+        flex: 1;
+    }
+}

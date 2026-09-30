@@ -1,7 +1,7 @@
 export const Line = () => (
     <svg
         fill="none"
-        style={{ height: 50, margin: '1rem', width: '100%' }}
+        style={{ height: 50, margin: '1rem', width: 'calc(100% - 2rem)' }}
         viewBox="0 0 97 32"
         xmlns="http://www.w3.org/2000/svg"
     >
@@ -89,7 +89,7 @@ export const Line = () => (
 export const Blobs = () => (
     <svg
         fill="none"
-        style={{ height: 50, margin: '1rem', width: '100%' }}
+        style={{ height: 50, margin: '1rem', width: 'calc(100% - 2rem)' }}
         viewBox="0 0 112 38"
         xmlns="http://www.w3.org/2000/svg"
     >

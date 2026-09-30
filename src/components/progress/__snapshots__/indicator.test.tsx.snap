@@ -19,51 +19,75 @@ exports[`<ProgressIndicator /> renders the sections 1`] = `
       Test
     </h3>
     <div
-      class="indicator"
-      style="left: calc(50% - 50px);"
-    >
-      <p
-        class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
-      >
-        50
-        %
-      </p>
-      <svg
-        color="currentColor"
-        fill="none"
-        height="1.5em"
-        stroke-width="1.5"
-        viewBox="0 0 24 24"
-        width="1.5em"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M6 9L12 15L18 9"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    </div>
-    <div
-      class="m_db6d6462 mantine-Progress-root"
-      data-size="xl"
-      style="--progress-size: var(--progress-size-xl); height: 2rem;"
+      class="scale"
     >
       <div
-        aria-valuemax="100"
-        aria-valuemin="0"
-        aria-valuenow="50"
-        aria-valuetext="50%"
-        class="m_2242eb65 mantine-Progress-section"
-        role="progressbar"
-        style="--progress-section-size: 50%; --progress-section-color: var(--mantine-color-blue-filled);"
+        class="indicator"
+        style="--indicator-position: 50%;"
+      >
+        <p
+          class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+        >
+          50
+          %
+        </p>
+        <svg
+          color="currentColor"
+          fill="none"
+          height="1.5em"
+          stroke-width="1.5"
+          viewBox="0 0 24 24"
+          width="1.5em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 9L12 15L18 9"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+      <div
+        class="progress m_db6d6462 mantine-Progress-root"
+        data-size="xl"
+        style="--progress-size: var(--progress-size-xl);"
       >
         <div
-          class="m_91e40b74 mantine-Progress-label"
+          aria-valuemax="100"
+          aria-valuemin="0"
+          aria-valuenow="50"
+          aria-valuetext="50%"
+          class="m_2242eb65 mantine-Progress-section"
+          role="progressbar"
+          style="--progress-section-size: 50%; --progress-section-color: var(--mantine-color-blue-filled);"
+        >
+          <div
+            class="m_91e40b74 mantine-Progress-label progressLabel"
+          >
+            Test
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="legend"
+    >
+      <div
+        class="legendItem"
+      >
+        <span
+          aria-hidden="true"
+          class="swatch"
+          style="background-color: blue;"
+        />
+        <p
+          class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+          data-size="sm"
+          style="--text-fz: var(--mantine-font-size-sm); --text-lh: var(--mantine-line-height-sm);"
         >
           Test
-        </div>
+        </p>
       </div>
     </div>
   </div>

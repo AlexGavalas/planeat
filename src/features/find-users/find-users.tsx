@@ -6,6 +6,7 @@ import {
     Group,
     Stack,
     Text,
+    Title,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -20,10 +21,12 @@ import {
     showSuccessNotification,
 } from '~util/notification';
 
+import styles from './find-users.module.css';
+
 export const FindUsers = () => {
     const { t } = useTranslation();
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedUserFullname, setSelectedUserFullname] = useState('');
+    const [selectedUserId, setSelectedUserId] = useState('');
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 350);
     const { profile } = useProfile();
     const queryClient = useQueryClient();
@@ -35,7 +38,9 @@ export const FindUsers = () => {
                 `/api/v1/user?type=search&fullName=${debouncedSearchQuery}`,
             );
 
-            const { data } = (await response.json()) as { data?: string[] };
+            const { data } = (await response.json()) as {
+                data?: { label: string; value: string }[];
+            };
 
             return data ?? [];
         },
@@ -44,34 +49,34 @@ export const FindUsers = () => {
 
     const { data: selectedUser, isFetching: isFetchingSelectedUser } = useQuery(
         {
-            enabled: Boolean(selectedUserFullname),
+            enabled: Boolean(selectedUserId),
             queryFn: async () => {
                 const response = await fetch(
-                    `/api/v1/user?type=profile&fullName=${selectedUserFullname}`,
+                    `/api/v1/user?type=profile&id=${selectedUserId}`,
                 );
 
                 const { data } = (await response.json()) as { data?: User[] };
 
                 return data;
             },
-            queryKey: ['connection', selectedUserFullname],
+            queryKey: ['connection', selectedUserId],
         },
     );
 
-    const selectedUserId = selectedUser?.[0]?.id;
+    const selectedUserProfileId = selectedUser?.[0]?.id;
 
     const {
         data: hasAlreadySentRequest,
         isFetching: isFetchingHasAlreadySentRequest,
     } = useQuery({
-        enabled: Boolean(selectedUserId),
+        enabled: Boolean(selectedUserProfileId),
         queryFn: async () => {
-            if (!selectedUserId || !profile) {
+            if (!selectedUserProfileId || !profile) {
                 return null;
             }
 
             const response = await fetch(
-                `/api/v1/notification?requestUserId=${profile.id}&targetUserId=${selectedUserId}`,
+                `/api/v1/notification?requestUserId=${profile.id}&targetUserId=${selectedUserProfileId}`,
             );
 
             const { data: hasAlreadySentRequest } = (await response.json()) as {
@@ -80,18 +85,18 @@ export const FindUsers = () => {
 
             return hasAlreadySentRequest;
         },
-        queryKey: ['connection_request', selectedUserId],
+        queryKey: ['connection_request', selectedUserProfileId],
     });
 
     const handleUserSelect = useCallback<
         NonNullable<AutocompleteProps['onOptionSubmit']>
     >((value) => {
-        setSelectedUserFullname(value);
+        setSelectedUserId(value);
     }, []);
 
     const handleClearInput = useCallback(() => {
         setSearchQuery('');
-        setSelectedUserFullname('');
+        setSelectedUserId('');
     }, []);
 
     const handleConnectionRequest = useCallback<
@@ -123,16 +128,17 @@ export const FindUsers = () => {
             });
 
             await queryClient.invalidateQueries({
-                queryKey: ['connection_request', selectedUserId],
+                queryKey: ['connection_request', selectedUserProfileId],
             });
         }
-    }, [profile, selectedUser, selectedUserId, t, queryClient]);
+    }, [profile, selectedUser, selectedUserProfileId, t, queryClient]);
 
     const shouldShowConnectionInfo =
         selectedUser && !isFetchingHasAlreadySentRequest;
 
     return (
         <Stack gap="md">
+            <Title order={3}>{t('connections.search.title')}</Title>
             <Autocomplete
                 data={users}
                 disabled={isFetchingSelectedUser}
@@ -142,7 +148,11 @@ export const FindUsers = () => {
                 onOptionSubmit={handleUserSelect}
                 placeholder={t('connections.search.placeholder')}
                 rightSection={
-                    <ActionIcon onClick={handleClearInput} variant="white">
+                    <ActionIcon
+                        aria-label={t('generic.actions.clear')}
+                        onClick={handleClearInput}
+                        variant="white"
+                    >
                         <Xmark />
                     </ActionIcon>
                 }
@@ -156,7 +166,10 @@ export const FindUsers = () => {
                         })}
                     </Text>
                 ) : (
-                    <Group justify="space-between">
+                    <Group
+                        className={styles.searchResult}
+                        justify="space-between"
+                    >
                         <div>
                             <Text span>{t('connections.request.add')} </Text>
                             <Text span fw={600}>
@@ -168,9 +181,9 @@ export const FindUsers = () => {
                             </Text>
                         </div>
                         <Button
+                            className={styles.sendButton}
                             onClick={handleConnectionRequest}
                             rightSection={<UserPlus />}
-                            size="xs"
                         >
                             {t('connections.request.send')}
                         </Button>

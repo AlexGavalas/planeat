@@ -1,8 +1,10 @@
-import { Box, Group, Stack } from '@mantine/core';
+import { Box, Stack } from '@mantine/core';
 import { type ReactNode } from 'react';
 
 import { Card } from '~components/card';
 import { Fab } from '~components/fab';
+
+import styles from './home.module.css';
 
 type HomeProps = Readonly<{
     dailyMeals: ReactNode;
@@ -11,25 +13,12 @@ type HomeProps = Readonly<{
 
 export function Home({ dailyMeals, measurements }: HomeProps) {
     return (
-        <Group align="start" wrap="nowrap">
-            <Stack
-                id="daily-meals-container"
-                style={{
-                    maxWidth: '20%',
-                    width: '20%',
-                }}
-            >
+        <div className={styles.layout}>
+            <Stack className={styles.dailyMeals} id="daily-meals-container">
                 <Card>{dailyMeals}</Card>
             </Stack>
-            <Box
-                style={{
-                    maxWidth: '80%',
-                    width: '80%',
-                }}
-            >
-                {measurements}
-            </Box>
+            <Box className={styles.measurements}>{measurements}</Box>
             <Fab />
-        </Group>
+        </div>
     );
 }

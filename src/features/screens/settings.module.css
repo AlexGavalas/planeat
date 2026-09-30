@@ -1,0 +1,22 @@
+.container {
+    width: 100%;
+    max-width: 64rem;
+}
+
+.tabList {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.tab {
+    flex: 0 0 auto;
+    min-height: 2.75rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 48em) {
+    .container {
+        padding-inline: 0.75rem;
+    }
+}

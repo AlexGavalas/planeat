@@ -24,4 +24,10 @@ export const requireUser = async (): Promise<User> => {
 };
 
 // Share the same calendar snapshot between the root provider and page loaders.
-export const getRequestDate = cache(() => new Date());
+// The override keeps browser screenshots deterministic without affecting normal
+// environments, where E2E_REQUEST_DATE is unset.
+export const getRequestDate = cache(() =>
+    process.env.E2E_REQUEST_DATE
+        ? new Date(process.env.E2E_REQUEST_DATE)
+        : new Date(),
+);

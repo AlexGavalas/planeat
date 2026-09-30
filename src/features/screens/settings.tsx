@@ -11,18 +11,22 @@ import { FoodPreferences } from '~features/food-preferences';
 import { Measurements } from '~features/measurements';
 import { PersonalSettings } from '~features/personal-settings';
 
+import styles from './settings.module.css';
+
 export function Settings() {
     const { t } = useTranslation();
 
     return (
-        <Container>
+        <Container className={styles.container}>
             <Tabs defaultValue="measurements" id="settings">
-                <Tabs.List>
-                    <Tabs.Tab value="measurements">
+                <Tabs.List className={styles.tabList}>
+                    <Tabs.Tab className={styles.tab} value="measurements">
                         {t('measurements')}
                     </Tabs.Tab>
-                    <Tabs.Tab value="personal">{t('personal_info')}</Tabs.Tab>
-                    <Tabs.Tab value="advanced">
+                    <Tabs.Tab className={styles.tab} value="personal">
+                        {t('personal_info')}
+                    </Tabs.Tab>
+                    <Tabs.Tab className={styles.tab} value="advanced">
                         {t('advanced_settings')}
                     </Tabs.Tab>
                 </Tabs.List>

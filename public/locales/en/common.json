@@ -1,5 +1,13 @@
 {
     "logout": "Logout",
+    "fab": {
+        "close_actions": "Close quick actions",
+        "open_actions": "Open quick actions"
+    },
+    "navigation": {
+        "label": "Navigation",
+        "open_menu": "Open navigation menu"
+    },
     "login": {
         "button": "Log in",
         "title": "Log in to Planeat",
@@ -78,6 +86,12 @@
     "no_activities_yet": "You don't have any activities yet",
     "welcome": "Welcome",
     "view_weekly_meal": "Meal plan",
+    "meal_plan": {
+        "edit_meal_label": "Edit {{label}}",
+        "every_day": "Every day",
+        "more_actions": "More actions",
+        "select_day": "Select a day"
+    },
     "settings": "Settings",
     "height_input": "Your height (in cm)",
     "target_weight_input": "Your target weight (in kg)",
@@ -194,7 +208,8 @@
         "title": "Connections",
         "search": {
             "label": "Search",
-            "placeholder": "Write here"
+            "placeholder": "Write here",
+            "title": "Find people"
         },
         "request": {
             "add": "Add",

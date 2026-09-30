@@ -117,6 +117,10 @@ test('creates a measurement and refreshes the dashboard summary', async ({
 test('saves calendar drafts through a server action and copies the week', async ({
     page,
 }) => {
+    const mealText = page.locator('p:visible').filter({
+        hasText: /^App Router migration meal$/,
+    });
+
     await page.goto('/meal-plan');
 
     await page.getByText('N/A', { exact: true }).first().hover();
@@ -133,18 +137,14 @@ test('saves calendar drafts through a server action and copies the week', async 
 
     await expect(dialog).toBeHidden();
 
-    await expect(
-        page.getByText('App Router migration meal', { exact: true }),
-    ).toBeVisible();
+    await expect(mealText).toBeVisible();
 
     // Draft state survives App Router navigation through the shared provider.
     await page.getByRole('link', { exact: true, name: 'Home' }).click();
 
     await page.getByRole('link', { exact: true, name: 'Meal plan' }).click();
 
-    await expect(
-        page.getByText('App Router migration meal', { exact: true }),
-    ).toBeVisible();
+    await expect(mealText).toBeVisible();
 
     await page.getByRole('button', { exact: true, name: 'Save' }).click();
 
@@ -154,9 +154,7 @@ test('saves calendar drafts through a server action and copies the week', async 
 
     await page.reload();
 
-    await expect(
-        page.getByText('App Router migration meal', { exact: true }),
-    ).toBeVisible();
+    await expect(mealText).toBeVisible();
 
     await page.getByRole('button', { name: 'Copy to next week' }).click();
 
@@ -168,15 +166,11 @@ test('saves calendar drafts through a server action and copies the week', async 
 
     await page.getByRole('button', { name: 'Previous week' }).click();
 
-    await expect(
-        page.getByText('App Router migration meal', { exact: true }),
-    ).toBeVisible();
+    await expect(mealText).toBeVisible();
 
     await page.getByRole('button', { exact: true, name: 'Next week' }).click();
 
-    await expect(
-        page.getByText('App Router migration meal', { exact: true }),
-    ).toBeVisible();
+    await expect(mealText).toBeVisible();
 });
 
 test('persists profile language through a server action and reload', async ({

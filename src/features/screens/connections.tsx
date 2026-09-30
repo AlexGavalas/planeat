@@ -8,13 +8,15 @@ import { FindUsers } from '~features/find-users';
 import { ManageConnectionRequests } from '~features/manage-connection-requests';
 import { ManageConnections } from '~features/manage-connections';
 
+import styles from './connections.module.css';
+
 export function Connections() {
     const { t } = useTranslation();
 
     return (
-        <Container>
+        <Container className={styles.container}>
             <Stack gap="md">
-                <Title order={3}>{t('connections.title')}</Title>
+                <Title order={2}>{t('connections.title')}</Title>
                 <Card>
                     <FindUsers />
                 </Card>

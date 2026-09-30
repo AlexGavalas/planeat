@@ -4,6 +4,8 @@ import { Center, List, Stack, Text, Title } from '@mantine/core';
 
 import { Blobs, Line } from '~components/icons/line';
 
+import styles from './landing.module.css';
+
 export function LandingPage() {
     const appName = (
         <Text span fw={700}>
@@ -13,7 +15,7 @@ export function LandingPage() {
 
     return (
         <Center>
-            <Stack className="content" gap="xl">
+            <Stack className={styles.content} gap="xl">
                 <Blobs />
                 <Title order={1}>Welcome to Planeat!</Title>
                 <Title order={2}>

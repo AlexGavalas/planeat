@@ -66,10 +66,16 @@ export const loadE2eEnvironment = (): E2eEnvironment => {
 
     const nextAuthUrl = getEnvironmentValue('NEXTAUTH_URL', baseUrl);
 
+    const requestDate = getEnvironmentValue(
+        'E2E_REQUEST_DATE',
+        '2026-01-12T12:00:00.000Z',
+    );
+
     assertE2eDatabaseUrl(databaseUrl);
 
     const serverEnvironment = {
         E2E_DATABASE_URL: databaseUrl,
+        E2E_REQUEST_DATE: requestDate,
         GOOGLE_ID: googleId,
         GOOGLE_SECRET: googleSecret,
         NEXTAUTH_SECRET: nextAuthSecret,

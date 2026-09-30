@@ -1,6 +1,6 @@
 import {
     deleteProfile,
-    fetchUserByFullname,
+    fetchUserById,
     findUsersByName,
     updateProfile,
 } from '~api/user';
@@ -20,11 +20,14 @@ const handler: RouteHandlerWithUser = async ({ request, user }) => {
             });
 
             return Response.json({
-                data: data.map(({ full_name }) => full_name),
+                data: data.map(({ full_name, id }) => ({
+                    label: full_name,
+                    value: String(id),
+                })),
             });
         } else if (query.type === 'profile') {
-            const { data } = await fetchUserByFullname({
-                fullName: String(query.fullName),
+            const { data } = await fetchUserById({
+                id: Number(query.id),
             });
 
             return Response.json({ data });

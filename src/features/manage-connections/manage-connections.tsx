@@ -65,15 +65,15 @@ export const ManageConnections = () => {
                     {t('connections.manage_connections.no_connections')}
                 </Text>
             )}
-            {connections.map((connection) => {
-                return (
+            <Stack gap="sm" role="list">
+                {connections.map((connection) => (
                     <ConnectionItem
                         key={connection.id}
                         connection={connection}
                         removeConnection={removeConnection}
                     />
-                );
-            })}
+                ))}
+            </Stack>
         </Stack>
     );
 };

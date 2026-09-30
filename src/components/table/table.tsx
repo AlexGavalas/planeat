@@ -10,7 +10,7 @@ import {
 } from '@mantine/core';
 import { useState } from 'react';
 
-import { type Header, type Item, Row } from './row';
+import { type Header, type Item, MobileRow, Row } from './row';
 import styles from './table.module.css';
 
 export { INITIAL_PAGE, PAGE_SIZE } from '~constants/pagination';
@@ -74,8 +74,19 @@ export const Table = <ItemType extends Item>({
                     ))}
                 </TableTbody>
             </MantineTable>
+            <Stack className={styles.mobileCards} gap="sm" role="list">
+                {data.map((item) => (
+                    <MobileRow
+                        key={item.id}
+                        headers={headers}
+                        item={item}
+                        onDelete={onDelete}
+                        onEdit={onEdit}
+                    />
+                ))}
+            </Stack>
             {shouldShowPagination && (
-                <Group justify="end">
+                <Group className={styles.pagination} justify="end">
                     <Pagination
                         withEdges
                         onChange={handlePageChange}

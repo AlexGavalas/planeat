@@ -1,10 +1,10 @@
 import {
     Button,
-    Group,
     NumberInput,
     type NumberInputProps,
     Select,
     type SelectProps,
+    SimpleGrid,
     Stack,
     Title,
 } from '@mantine/core';
@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
+
+import styles from './personal-settings.module.css';
 
 export const PersonalSettings = () => {
     const { t } = useTranslation();
@@ -58,7 +60,7 @@ export const PersonalSettings = () => {
                 {t('account_settings.sections.general.title')}
             </Title>
             {profile ? (
-                <Group grow align="end">
+                <SimpleGrid cols={{ base: 1, md: 4 }} spacing="md">
                     <NumberInput
                         defaultValue={profile.height ?? undefined}
                         label={t('height_input')}
@@ -76,10 +78,10 @@ export const PersonalSettings = () => {
                         onChange={handleLanguageChange}
                         placeholder={t('languages.placeholder')}
                     />
-                    <Button onClick={handleSave}>
+                    <Button className={styles.saveButton} onClick={handleSave}>
                         {t('generic.actions.save')}
                     </Button>
-                </Group>
+                </SimpleGrid>
             ) : (
                 <div style={{ height: 100 }}>
                     <LoadingOverlay visible />

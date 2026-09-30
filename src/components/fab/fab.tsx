@@ -81,7 +81,7 @@ export const Fab = () => {
     return (
         <Box className={styles.container}>
             {shouldShowMenu && (
-                <Stack gap="sm" mb={10}>
+                <Stack align="end" gap="sm" mb={10}>
                     <Button
                         {...buttonProps}
                         leftSection={<EditPencil />}
@@ -99,6 +99,10 @@ export const Fab = () => {
                 </Stack>
             )}
             <ActionIcon
+                aria-expanded={shouldShowMenu}
+                aria-label={t(
+                    shouldShowMenu ? 'fab.close_actions' : 'fab.open_actions',
+                )}
                 color="brand"
                 onClick={handleToggleMenu}
                 radius="xl"

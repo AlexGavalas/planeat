@@ -11,7 +11,7 @@ type LinkItem = {
     label: KeyPrefix<'common'>;
 };
 
-const LINKS = [
+export const NAV_LINKS = [
     { href: '/home', label: 'home' },
     { href: '/meal-plan', label: 'view_weekly_meal' },
     { href: '/connections', label: 'connections.title' },
@@ -24,7 +24,7 @@ export const Nav = () => {
 
     return (
         <Group>
-            {LINKS.map(({ href, label }) => {
+            {NAV_LINKS.map(({ href, label }) => {
                 const isCurrent = pathname === localize(href);
 
                 return (

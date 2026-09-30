@@ -1,0 +1,9 @@
+.content {
+    width: min(100%, 60rem);
+}
+
+@media (max-width: 48em) {
+    .content {
+        gap: var(--mantine-spacing-lg);
+    }
+}
