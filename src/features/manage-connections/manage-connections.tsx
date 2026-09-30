@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
-import { type Connection } from '~types/connection';
+import { type Connection, type ConnectionWithUser } from '~types/connection';
 import { showErrorNotification } from '~util/notification';
 
 import { ConnectionItem } from './connection';
@@ -21,7 +21,7 @@ export const ManageConnections = () => {
                 const response = await fetch('/api/v1/connection');
 
                 const { data } = (await response.json()) as {
-                    data?: Connection[];
+                    data?: ConnectionWithUser[];
                 };
 
                 return data ?? [];

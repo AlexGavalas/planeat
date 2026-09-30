@@ -3,13 +3,13 @@ import 'server-only';
 
 import { getDb } from '~db';
 import { connections, notifications, users } from '~db/schema';
-import type { Connection } from '~types/connection';
+import type { ConnectionWithUser } from '~types/connection';
 
 export const fetchUserConnections = async ({
     userId,
 }: {
     userId: number;
-}): Promise<{ data: Connection[] }> => ({
+}): Promise<{ data: ConnectionWithUser[] }> => ({
     data: await getDb()
         .select({
             connection_user_id: connections.connection_user_id,

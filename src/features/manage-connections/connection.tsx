@@ -2,12 +2,12 @@ import { Button, Group, Paper, Text } from '@mantine/core';
 import { type MouseEventHandler, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { type Connection } from '~types/connection';
+import { type Connection, type ConnectionWithUser } from '~types/connection';
 
 import styles from './connection.module.css';
 
 type ConnectionItemProps = Readonly<{
-    connection: Connection;
+    connection: ConnectionWithUser;
     removeConnection: (connection: Connection) => Promise<void>;
 }>;
 
@@ -26,9 +26,6 @@ export const ConnectionItem = ({
     return (
         <Paper withBorder p="md" role="listitem">
             <Group className={styles.row} justify="space-between">
-                {/* eslint-disable @typescript-eslint/no-unsafe-member-access */}
-                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                {/* @ts-expect-error */}
                 <Text fw={600}>{connection.users.full_name}</Text>
                 <Button
                     className={styles.removeButton}

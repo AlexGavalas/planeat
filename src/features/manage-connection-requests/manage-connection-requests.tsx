@@ -4,7 +4,10 @@ import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
 import { useProfile } from '~hooks/use-profile';
-import { type Notification } from '~types/notification';
+import {
+    type Notification,
+    type NotificationWithUser,
+} from '~types/notification';
 import {
     showErrorNotification,
     showSuccessNotification,
@@ -29,7 +32,7 @@ export const ManageConnectionRequests = () => {
             );
 
             const { data } = (await response.json()) as {
-                data?: Notification[];
+                data?: NotificationWithUser[];
             };
 
             return data ?? [];

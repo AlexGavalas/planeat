@@ -3,7 +3,7 @@ import 'server-only';
 
 import { getDb } from '~db';
 import { notifications, users } from '~db/schema';
-import type { Notification } from '~types/notification';
+import type { Notification, NotificationWithUser } from '~types/notification';
 
 export const fetchNotification = async ({
     requestUserId,
@@ -48,7 +48,7 @@ export const fetchConnectionRequestNotifications = async ({
     userId,
 }: {
     userId: number;
-}): Promise<{ data: Notification[] }> => ({
+}): Promise<{ data: NotificationWithUser[] }> => ({
     data: await getDb()
         .select({
             date: notifications.date,
