@@ -5,57 +5,53 @@ import {
     fetchNotification,
 } from '~api/notification';
 import { postRequestSchema } from '~schemas/notification';
-import { type RouteHandlerWithUser, withUser } from '~util/session';
+import { withUser } from '~util/session';
 
-const handler: RouteHandlerWithUser = async ({ request, user }) => {
+export const GET = withUser(async ({ request, user }) => {
     const query: Partial<Record<string, string>> = Object.fromEntries(
         request.nextUrl.searchParams,
     );
 
-    if (request.method === 'GET') {
-        if (query.type === 'connection_request') {
-            const { data } = await fetchConnectionRequestNotifications({
-                userId: user.id,
-            });
-
-            return Response.json({ data });
-        } else {
-            const requestUserId = Number(query.requestUserId);
-            const targetUserId = Number(query.targetUserId);
-
-            const data = await fetchNotification({
-                requestUserId,
-                targetUserId,
-            });
-
-            return Response.json({ data: Boolean(data) });
-        }
-    } else if (request.method === 'DELETE') {
-        const id = String(query.id);
-
-        await deleteConnectionRequestNotification({
-            id,
+    if (query.type === 'connection_request') {
+        const { data } = await fetchConnectionRequestNotifications({
             userId: user.id,
         });
 
-        return Response.json({ message: 'OK' }, { status: 200 });
-    } else if (request.method === 'POST') {
-        const { targetUserId } = postRequestSchema.parse(await request.json());
-
-        await createConnectionRequestNotification({
-            requestUserId: user.id,
-            targetUserId,
-        });
-
-        return Response.json({ message: 'OK' }, { status: 200 });
-    } else {
-        return Response.json(
-            { message: 'Method Not Allowed' },
-            { status: 405 },
-        );
+        return Response.json({ data });
     }
-};
 
-const route = withUser(handler);
+    const requestUserId = Number(query.requestUserId);
+    const targetUserId = Number(query.targetUserId);
 
-export { route as GET, route as DELETE, route as POST };
+    const data = await fetchNotification({
+        requestUserId,
+        targetUserId,
+    });
+
+    return Response.json({ data: Boolean(data) });
+});
+
+export const DELETE = withUser(async ({ request, user }) => {
+    const query: Partial<Record<string, string>> = Object.fromEntries(
+        request.nextUrl.searchParams,
+    );
+    const id = String(query.id);
+
+    await deleteConnectionRequestNotification({
+        id,
+        userId: user.id,
+    });
+
+    return Response.json({ message: 'OK' }, { status: 200 });
+});
+
+export const POST = withUser(async ({ request, user }) => {
+    const { targetUserId } = postRequestSchema.parse(await request.json());
+
+    await createConnectionRequestNotification({
+        requestUserId: user.id,
+        targetUserId,
+    });
+
+    return Response.json({ message: 'OK' }, { status: 200 });
+});
