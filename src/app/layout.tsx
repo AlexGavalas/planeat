@@ -4,7 +4,7 @@ import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
 import { dehydrate } from '@tanstack/react-query';
 import { format, startOfWeek } from 'date-fns';
-import { type Metadata } from 'next';
+import { type Metadata, type Viewport } from 'next';
 import { type ReactNode } from 'react';
 
 import { getCurrentUser, getRequestDate, getServerSession } from '~api/session';
@@ -14,7 +14,21 @@ import { createQueryClient } from '~util/query-client';
 
 import '../styles/globals.css';
 
-export const metadata: Metadata = { title: 'Planeat' };
+export const metadata: Metadata = {
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: 'default',
+        title: 'Planeat',
+    },
+    applicationName: 'Planeat',
+    description: 'Plan meals, track health, and eat better together.',
+    title: 'Planeat',
+};
+
+export const viewport: Viewport = {
+    colorScheme: 'light',
+    themeColor: '#047d55',
+};
 export default async function RootLayout({
     children,
 }: Readonly<{ children: ReactNode }>) {
