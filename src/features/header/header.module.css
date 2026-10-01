@@ -17,8 +17,13 @@
 
 @media (max-width: 48em) {
     .header {
-        min-height: var(--app-size-header-mobile);
-        padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+        min-height: calc(
+            var(--app-size-header-mobile) + env(safe-area-inset-top)
+        );
+        padding: calc(var(--mantine-spacing-xs) + env(safe-area-inset-top))
+            max(var(--mantine-spacing-md), env(safe-area-inset-right))
+            var(--mantine-spacing-xs)
+            max(var(--mantine-spacing-md), env(safe-area-inset-left));
     }
 
     .logo {

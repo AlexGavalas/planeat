@@ -19,4 +19,14 @@ test('landing page is readable on mobile Chrome', async ({ page }) => {
     await expect(page).toHaveScreenshot('landing-mobile.png', {
         fullPage: true,
     });
+
+    await page.getByRole('button', { exact: true, name: 'Log in' }).click();
+
+    const inputFontSize = await page
+        .getByLabel('Email')
+        .evaluate((input) =>
+            Number.parseFloat(getComputedStyle(input).fontSize),
+        );
+
+    expect(inputFontSize).toBeGreaterThanOrEqual(16);
 });

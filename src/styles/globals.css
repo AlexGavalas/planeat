@@ -53,7 +53,21 @@ a {
 
 @media (max-width: 48em) {
     .container {
-        min-height: calc(100dvh - var(--app-size-header-mobile));
-        padding: var(--app-space-page-mobile);
+        min-height: calc(
+            100dvh - var(--app-size-header-mobile) - env(safe-area-inset-top)
+        );
+        padding: var(--app-space-page-mobile)
+            max(var(--app-space-page-mobile), env(safe-area-inset-right))
+            max(var(--app-space-page-mobile), env(safe-area-inset-bottom))
+            max(var(--app-space-page-mobile), env(safe-area-inset-left));
+    }
+
+    input:not([type='checkbox']):not([type='radio']):not([type='range']):not(
+            [type='color']
+        ),
+    select,
+    textarea {
+        /* iOS zooms focused form controls whose rendered text is below 16px. */
+        font-size: max(1rem, 16px) !important;
     }
 }
