@@ -15,6 +15,7 @@ import {
     type MouseEventHandler,
     type SubmitEventHandler,
     useCallback,
+    useEffect,
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +23,8 @@ import { z } from 'zod';
 
 import { UserMenu } from '~features/user-menu';
 import { useLocalizedPath } from '~hooks/use-localized-path';
+
+import { AUTH_DIALOG_EVENT, type AuthDialogMode } from './auth-dialog-event';
 
 type UserActionsProps = Readonly<{
     hasUser: boolean;
@@ -53,6 +56,22 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
 
     const openModal = useCallback(() => {
         setIsOpen(true);
+    }, []);
+
+    useEffect(() => {
+        const handleOpen = (event: Event) => {
+            const mode = (event as CustomEvent<AuthDialogMode>).detail;
+
+            setIsRegistering(mode === 'register');
+            setError(null);
+            setIsOpen(true);
+        };
+
+        window.addEventListener(AUTH_DIALOG_EVENT, handleOpen);
+
+        return () => {
+            window.removeEventListener(AUTH_DIALOG_EVENT, handleOpen);
+        };
     }, []);
 
     const handleLoginWithGoogle = useCallback<MouseEventHandler>(async () => {
@@ -136,7 +155,9 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                     centered
                     onClose={closeModal}
                     opened={isOpen}
-                    title={t('login.title')}
+                    title={t(
+                        isRegistering ? 'login.register_title' : 'login.title',
+                    )}
                 >
                     <Stack gap="md">
                         <Button
