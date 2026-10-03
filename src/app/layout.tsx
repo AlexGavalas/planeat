@@ -1,6 +1,8 @@
+// sort-imports-ignore -- Mantine extension styles must load after core styles.
 import '@fontsource-variable/noto-sans';
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import '@mantine/core/styles.css';
+import '@mantine/charts/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
 import { dehydrate } from '@tanstack/react-query';
@@ -48,7 +50,11 @@ export default async function RootLayout({
     queryClient.setQueryData(['user'], profile);
 
     return (
-        <html lang={language === 'gr' ? 'el' : 'en'} {...mantineHtmlProps}>
+        <html
+            data-scroll-behavior="smooth"
+            lang={language === 'gr' ? 'el' : 'en'}
+            {...mantineHtmlProps}
+        >
             <head>
                 <ColorSchemeScript />
             </head>

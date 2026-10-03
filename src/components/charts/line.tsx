@@ -1,38 +1,20 @@
+import { LineChart as MantineLineChart } from '@mantine/charts';
 import { Card } from '@mantine/core';
-import { type LineCustomSvgLayerProps, type LineSeries } from '@nivo/line';
-import { format, parse } from 'date-fns';
-import { maxBy, minBy } from 'lodash';
-import dynamic from 'next/dynamic';
-import { type SVGAttributes, useMemo } from 'react';
+import { format, isValid, parse } from 'date-fns';
+import { type TooltipContentProps, type XAxisTickContentProps } from 'recharts';
 
 import { BRAND_COLORS } from '~theme';
 
-const ResponsiveLine = dynamic(
-    () => import('@nivo/line').then((mod) => ({ default: mod.ResponsiveLine })),
-    {
-        ssr: false,
-    },
-);
+type ChartDataItem = {
+    x: string;
+    y: number | null;
+};
 
-type TextAnchor = NonNullable<
-    SVGAttributes<SVGTextElement>['style']
->['textAnchor'];
-
-const targetLayer = (targetWeight: number) =>
-    function CustomLayer(props: LineCustomSvgLayerProps<LineSeries>) {
-        const lineHeight = 2;
-
-        return (
-            <g>
-                <rect
-                    fill="var(--app-color-chart-target)"
-                    height={lineHeight}
-                    width={props.innerWidth}
-                    y={props.yScale(targetWeight) - lineHeight / 2}
-                />
-            </g>
-        );
-    };
+type ChartPoint = {
+    date: string;
+    index: number;
+    value: number | null;
+};
 
 type LineChartProps<DataItem> = Readonly<{
     target?: number;
@@ -43,148 +25,211 @@ type LineChartProps<DataItem> = Readonly<{
     }[];
 }>;
 
-export const LineChart = <DataItem extends { x: string; y: number | null }>({
+const formatDate = (value: unknown) => {
+    if (typeof value !== 'string' && typeof value !== 'number') {
+        return '-';
+    }
+
+    const date = parse(String(value), 'yyyy-MM-dd', new Date());
+
+    return isValid(date) ? format(date, 'dd/MM/yy') : '-';
+};
+
+const getTicks = (min: number, max: number, count = 10) => {
+    const roughStep = Math.abs(max - min) / count;
+
+    if (!roughStep) {
+        return [min];
+    }
+
+    const power = Math.floor(Math.log10(roughStep));
+    const powerOfTen = 10 ** power;
+    const error = roughStep / powerOfTen;
+    const factor =
+        error >= Math.sqrt(50)
+            ? 10
+            : error >= Math.sqrt(10)
+              ? 5
+              : error >= Math.sqrt(2)
+                ? 2
+                : 1;
+    const step = factor * powerOfTen;
+    const first = Math.ceil(min / step) * step;
+    const last = Math.floor(max / step) * step;
+    const length = Math.round((last - first) / step) + 1;
+
+    return Array.from({ length }, (_, index) =>
+        Number((first + index * step).toPrecision(12)),
+    );
+};
+
+const DateTick = ({
+    index,
+    payload,
+    visibleTicksCount,
+    x,
+    y,
+}: XAxisTickContentProps) => {
+    const isFirst = index === 0;
+    const isLast = index === visibleTicksCount - 1;
+    const textAnchor =
+        isFirst && isLast
+            ? 'middle'
+            : isFirst
+              ? 'start'
+              : isLast
+                ? 'end'
+                : 'middle';
+
+    return (
+        <text
+            dominantBaseline="text-before-edge"
+            fill="var(--app-color-chart-text)"
+            fontSize={12}
+            textAnchor={textAnchor}
+            x={x}
+            y={Number(y) + 10}
+        >
+            {formatDate(payload.value)}
+        </text>
+    );
+};
+
+type ChartTooltipProps = TooltipContentProps<number, string> &
+    Readonly<{
+        dataLength: number;
+        max: number;
+        unit: string;
+    }>;
+
+const ChartTooltip = ({
+    active,
+    dataLength,
+    label,
+    max,
+    payload,
+    unit,
+}: ChartTooltipProps) => {
+    const item = payload[0];
+
+    if (!active || !item || typeof item.value !== 'number') {
+        return null;
+    }
+
+    const point = item.payload as ChartPoint | undefined;
+    const index = point?.index;
+    const transforms = [];
+
+    if (index === 0) {
+        transforms.push('translateX(50%)');
+    } else if (index === dataLength - 1) {
+        transforms.push('translateX(-50%)');
+    }
+
+    if (max - item.value < 3) {
+        transforms.push('translateY(75%)');
+    }
+
+    return (
+        <Card
+            withBorder
+            shadow="md"
+            style={{ transform: transforms.join(' ') || undefined }}
+        >
+            {formatDate(label ?? '-')}: {item.value} {unit}
+        </Card>
+    );
+};
+
+const getTargetValue = (target?: number): number | undefined => {
+    if (target && target > 0) {
+        return target;
+    }
+};
+
+export const LineChart = <DataItem extends ChartDataItem>({
     data,
     target,
     unit,
 }: LineChartProps<DataItem>) => {
-    const max = useMemo(() => maxBy(data[0]?.data, 'y')?.y ?? 0, [data]);
-    const min = useMemo(() => minBy(data[0]?.data, 'y')?.y ?? 0, [data]);
+    const sourceData = data[0]?.data ?? [];
+    const targetValue = getTargetValue(target);
+    const values = sourceData.flatMap(({ y }) =>
+        typeof y === 'number' && Number.isFinite(y) ? [y] : [],
+    );
+    const domainValues =
+        targetValue === undefined ? values : [...values, targetValue];
+    const max = domainValues.length ? Math.max(...domainValues) : 0;
+    const min = domainValues.length ? Math.min(...domainValues) : 0;
+    const yDomain = [min - 2, max + 2] as const;
+    const chartData: ChartPoint[] = sourceData.map(({ x, y }, index) => ({
+        date: x,
+        index,
+        value: y,
+    }));
 
     return (
-        <ResponsiveLine
-            useMesh
-            axisBottom={{
-                renderTick: (tick) => {
-                    if (!data[0]?.data?.length) {
-                        return <g />;
-                    }
-
-                    const isFirst = tick.tickIndex === 0;
-                    const isLast = tick.tickIndex === data[0].data.length - 1;
-
-                    let textAnchor: TextAnchor = isFirst
-                        ? 'start'
-                        : isLast
-                          ? 'end'
-                          : 'middle';
-
-                    if (isFirst && isLast) {
-                        textAnchor = 'middle';
-                    }
-
-                    const value =
-                        typeof tick.value === 'string' ? tick.value : '-';
-
-                    const date = parse(value, 'yyyy-MM-dd', new Date());
-
-                    const formattedDate = format(date, 'dd/MM/yy');
-
-                    return (
-                        <g>
-                            <text
-                                dominantBaseline="text-before-edge"
-                                style={{
-                                    fill: 'var(--app-color-chart-text)',
-                                    fontSize: 12,
-                                    textAnchor,
-                                }}
-                                textAnchor={textAnchor}
-                                transform={`translate(${tick.x}, ${tick.y})`}
-                                y={tick.textY}
-                            >
-                                {formattedDate}
-                            </text>
-                        </g>
-                    );
-                },
-                tickPadding: 10,
-                tickSize: 0,
-            }}
-            axisLeft={{
-                tickSize: 10,
-            }}
-            colors={BRAND_COLORS}
-            curve="natural"
-            data={data}
-            lineWidth={2}
-            margin={{
-                bottom: 25,
-                left: 40,
-                right: 0,
-                top: 10,
-            }}
-            pointSize={0}
-            theme={{
-                axis: {
-                    ticks: {
-                        text: {
-                            fontSize: 12,
-                        },
-                    },
+        <MantineLineChart
+            connectNulls={false}
+            curveType="natural"
+            data={chartData}
+            dataKey="date"
+            gridAxis="xy"
+            h="100%"
+            lineChartProps={{
+                margin: {
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    top: 10,
                 },
             }}
-            tooltip={({ point }) => {
-                if (!data[0]?.data.length) {
-                    return <div />;
-                }
-
-                const isFirst = point.indexInSeries === 0;
-                const isLast = point.indexInSeries === data[0].data.length - 1;
-                const isTop =
-                    typeof point.data.y === 'number' && max - point.data.y < 3;
-
-                let transformString = '';
-
-                if (isFirst) {
-                    transformString += 'translateX(50%)';
-                } else if (isLast) {
-                    transformString += 'translateX(-50%)';
-                }
-
-                if (isTop) {
-                    transformString += 'translateY(75%)';
-                }
-
-                return (
-                    <Card
-                        withBorder
-                        shadow="md"
-                        style={{
-                            transform: transformString,
-                        }}
-                    >
-                        {point.data.xFormatted}: {point.data.yFormatted} {unit}
-                    </Card>
-                );
+            referenceLines={
+                targetValue === undefined
+                    ? undefined
+                    : [
+                          {
+                              color: 'var(--app-color-chart-target)',
+                              strokeWidth: 2,
+                              y: targetValue,
+                          },
+                      ]
+            }
+            series={[{ color: BRAND_COLORS[6], name: 'value' }]}
+            strokeDasharray={0}
+            strokeWidth={2}
+            tickLine="y"
+            tooltipProps={{
+                content: (props) => (
+                    <ChartTooltip
+                        {...props}
+                        dataLength={chartData.length}
+                        max={max}
+                        unit={unit}
+                    />
+                ),
+                position: {},
             }}
-            xFormat={(value) => {
-                if (typeof value !== 'string') {
-                    return '-';
-                }
-
-                const date = parse(value, 'yyyy-MM-dd', new Date());
-
-                return format(date, 'dd/MM/yy');
-            }}
-            yScale={{
-                max: Math.max(max, target ?? -Infinity) + 2,
-                min: Math.min(min, target ?? Infinity) - 2,
-                type: 'linear',
-            }}
-            {...(target && {
-                layers: [
-                    'grid',
-                    'markers',
-                    'axes',
-                    'areas',
-                    'lines',
-                    targetLayer(target),
-                    'points',
-                    'crosshair',
-                    'mesh',
-                ],
+            vars={() => ({
+                root: {
+                    '--chart-text-color': 'var(--app-color-chart-text)',
+                },
             })}
+            withDots={false}
+            xAxisProps={{
+                height: 25,
+                interval: 0,
+                tick: DateTick,
+                tickLine: false,
+            }}
+            yAxisProps={{
+                domain: yDomain,
+                interval: 0,
+                tickLine: true,
+                tickSize: 10,
+                ticks: getTicks(...yDomain),
+                width: 40,
+            }}
         />
     );
 };
