@@ -5,19 +5,7 @@ import {
     createTheme,
 } from '@mantine/core';
 
-const FONT_FAMILY = [
-    '-apple-system',
-    'BlinkMacSystemFont',
-    'Segoe UI',
-    'Roboto',
-    'Oxygen',
-    'Ubuntu',
-    'Cantarell',
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    'sans-serif',
-].join(', ');
+const FONT_FAMILY = "'Noto Sans Variable', sans-serif";
 
 export const BRAND_COLORS = [
     '#e6f7f1',
