@@ -38,7 +38,7 @@ describe('useWeeklyScheduleOps', () => {
         );
         expect(store.get(unsavedChangesAtom)).toStrictEqual({
             'Breakfast_Mon 08/01/2024': {
-                day: '2024-01-08 08:00',
+                day: '2024-01-08',
                 meal: 'Greek yogurt and fruit',
                 note: 'Add honey',
                 rating: 4,

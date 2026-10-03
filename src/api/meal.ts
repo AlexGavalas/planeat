@@ -26,6 +26,18 @@ export const fetchMeals = async ({
         ),
 });
 
+export const fetchMealsForDay = async ({
+    day,
+    userId,
+}: {
+    day: string;
+    userId: number;
+}): Promise<Meal[]> =>
+    getDb()
+        .select()
+        .from(meals)
+        .where(and(eq(meals.user_id, userId), eq(meals.day, day)));
+
 export const deleteMeals = async ({
     deletedIds,
     userId,

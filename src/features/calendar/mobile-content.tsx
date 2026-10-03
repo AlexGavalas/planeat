@@ -9,7 +9,7 @@ import {
     Title,
     UnstyledButton,
 } from '@mantine/core';
-import { format } from 'date-fns';
+import { format, getDay, parseISO } from 'date-fns';
 import { Copy, EditPencil, MoreHoriz, Notes, ThreeStars } from 'iconoir-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -262,12 +262,16 @@ const MobileMeal = ({
     );
 };
 
-export const MobileContent = () => {
+export const MobileContent = ({
+    initialDate,
+}: Readonly<{ initialDate: string }>) => {
     const { i18n, t } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const { meals } = useMeals();
     const { unsavedChanges } = useUnsavedChanges();
-    const [selectedDay, setSelectedDay] = useState(0);
+    const [selectedDay, setSelectedDay] = useState(
+        () => (getDay(parseISO(initialDate)) + 6) % 7,
+    );
     const daysOfWeek = getDaysOfWeek(currentWeek);
     const localizedDays = getDaysOfWeek(
         currentWeek,

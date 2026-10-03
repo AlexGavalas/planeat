@@ -160,6 +160,22 @@
     },
     "home": "Home",
     "actions": "Actions",
+    "meal_reminders": {
+        "categories_title": "Notification categories",
+        "description": "Receive tomorrow's meal plan at your chosen local time.",
+        "device_disabled": "Notifications disabled on this device.",
+        "device_enabled": "Notifications enabled on this device.",
+        "error": "Could not update meal reminders. Check this device's notification permission and try again.",
+        "label": "Tomorrow's meals",
+        "push_description": "Allow this browser to receive the notification categories enabled below.",
+        "push_label": "Push notifications on this device",
+        "saved": "Meal reminder settings saved.",
+        "time": "Reminder time",
+        "timezone": "Timezone: {{timezone}}",
+        "title": "Notifications",
+        "unsupported": "Push notifications are not supported on this device. On iPhone or iPad, install Planeat on the Home Screen first.",
+        "use_current_timezone": "Use current timezone ({{timezone}})"
+    },
     "notification": {
         "success": {
             "title": "Success",
@@ -241,6 +257,7 @@
             "advanced": {
                 "title": "Advanced settings",
                 "profile": {
+                    "title": "Profile visibility",
                     "toggle_discoverable_label": "Is my profile visible to other users?",
                     "toggle_discoverable_description": "Other users can discover your profile and send you a request to connect."
                 }

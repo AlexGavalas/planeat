@@ -12,7 +12,9 @@ import { Controls } from './controls';
 import { Header } from './header';
 import { MobileContent } from './mobile-content';
 
-export const Calendar = () => {
+export const Calendar = ({
+    initialDate,
+}: Readonly<{ initialDate: string }>) => {
     const ref = useRef<HTMLDivElement>(null);
     const { isLoading } = useMeals();
 
@@ -33,7 +35,7 @@ export const Calendar = () => {
                 </Card>
             </div>
             <div className={styles.mobileCalendar}>
-                <MobileContent />
+                <MobileContent initialDate={initialDate} />
             </div>
         </section>
     );

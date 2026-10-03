@@ -1,7 +1,17 @@
 'use client';
 
-import { Calendar } from '~features/calendar';
+import { parseISO } from 'date-fns';
+import { useEffect } from 'react';
 
-export function MealPlan() {
-    return <Calendar />;
+import { Calendar } from '~features/calendar';
+import { useCurrentWeek } from '~store/hooks';
+
+export function MealPlan({ initialDate }: Readonly<{ initialDate: string }>) {
+    const { goToDate } = useCurrentWeek();
+
+    useEffect(() => {
+        goToDate(parseISO(initialDate));
+    }, [goToDate, initialDate]);
+
+    return <Calendar initialDate={initialDate} />;
 }

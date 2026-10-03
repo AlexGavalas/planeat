@@ -22,6 +22,13 @@
             "when": 1790599418453,
             "tag": "0002_app_router_query_indexes",
             "breakpoints": true
+        },
+        {
+            "idx": 3,
+            "version": "7",
+            "when": 1790875511026,
+            "tag": "0003_ancient_kate_bishop",
+            "breakpoints": true
         }
     ]
 }
