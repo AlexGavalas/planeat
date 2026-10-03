@@ -5,16 +5,17 @@ import { loadE2eEnvironment } from './e2e/support/environment';
 
 const environment = loadE2eEnvironment();
 const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+const isCi = Boolean(process.env.CI);
 
 export default defineConfig({
     expect: {
         timeout: 30000,
         toHaveScreenshot: {
-            maxDiffPixelRatio: 0.1,
+            maxDiffPixelRatio: isCi ? 0.1 : 0,
             stylePath: 'e2e/styles.css',
         },
     },
-    forbidOnly: Boolean(process.env.CI),
+    forbidOnly: isCi,
     fullyParallel: false,
     globalSetup: './e2e/global.setup.ts',
     projects: [
@@ -58,7 +59,7 @@ export default defineConfig({
         },
     ],
     reporter: 'html',
-    retries: process.env.CI ? 2 : 0,
+    retries: isCi ? 2 : 0,
     snapshotPathTemplate: '{testDir}/__snapshots__/{testFilePath}/{arg}{ext}',
     testDir: './e2e',
     use: {

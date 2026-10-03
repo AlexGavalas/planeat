@@ -11,6 +11,7 @@
     "login": {
         "button": "Log in",
         "title": "Log in to Planeat",
+        "register_title": "Create your Planeat account",
         "google": "Continue with Google",
         "or": "or",
         "email": "Email",

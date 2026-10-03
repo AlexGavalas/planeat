@@ -12,7 +12,9 @@ test('landing page is readable on mobile Chrome', async ({ page }) => {
     await page.goto('/');
 
     await expect(
-        page.getByRole('heading', { name: 'Welcome to Planeat!' }),
+        page.getByRole('heading', {
+            name: 'Plan your meals. See your progress.',
+        }),
     ).toBeVisible();
     await expectNoHorizontalOverflow(page);
 

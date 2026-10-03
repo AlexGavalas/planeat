@@ -1,3 +1,4 @@
+import '@fontsource-variable/noto-sans';
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';

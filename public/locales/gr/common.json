@@ -11,6 +11,7 @@
     "login": {
         "button": "Σύνδεση",
         "title": "Σύνδεση στο Planeat",
+        "register_title": "Δημιουργήστε λογαριασμό Planeat",
         "google": "Συνέχεια με Google",
         "or": "ή",
         "email": "Email",

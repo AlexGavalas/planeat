@@ -5,3 +5,8 @@
     caret-color: transparent !important;
     transition-duration: 0s !important;
 }
+
+/* Vercel injects this closed-shadow-root toolbar into preview deployments. */
+vercel-live-feedback {
+    display: none !important;
+}
