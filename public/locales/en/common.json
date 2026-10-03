@@ -160,6 +160,19 @@
     },
     "home": "Home",
     "actions": "Actions",
+    "meal_reminders": {
+        "description": "Receive tomorrow's meal plan at your chosen local time.",
+        "device_enabled": "Notifications enabled on this device.",
+        "enable_device": "Enable notifications on this device",
+        "error": "Could not update meal reminders. Check this device's notification permission and try again.",
+        "label": "Daily meal-plan reminder",
+        "saved": "Meal reminder settings saved.",
+        "time": "Reminder time",
+        "timezone": "Timezone: {{timezone}}",
+        "title": "Meal reminders",
+        "unsupported": "Push notifications are not supported on this device. On iPhone or iPad, install Planeat on the Home Screen first.",
+        "use_current_timezone": "Use current timezone ({{timezone}})"
+    },
     "notification": {
         "success": {
             "title": "Success",

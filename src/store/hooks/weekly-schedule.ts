@@ -17,10 +17,7 @@ const cloneState = (
             return format(nextDate, 'dd/MM/yyyy');
         });
 
-        const day = format(
-            add(parseISO(meal.day), { weeks: 1 }),
-            'yyyy-MM-dd HH:mm',
-        );
+        const day = format(add(parseISO(meal.day), { weeks: 1 }), 'yyyy-MM-dd');
 
         acc[newKey] = {
             ...meal,

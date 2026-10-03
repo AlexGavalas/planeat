@@ -181,7 +181,7 @@ export const useMeals: UseMeals = () => {
         note,
         rating,
     }) => {
-        const day = format(timestamp, 'yyyy-MM-dd HH:mm');
+        const day = format(timestamp, 'yyyy-MM-dd');
 
         const editedMeal = {
             ...meal,

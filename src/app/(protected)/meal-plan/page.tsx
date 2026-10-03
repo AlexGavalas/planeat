@@ -1,5 +1,12 @@
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
-import { endOfWeek, format, startOfWeek } from 'date-fns';
+import {
+    endOfWeek,
+    format,
+    isMatch,
+    isValid,
+    parseISO,
+    startOfWeek,
+} from 'date-fns';
 
 import { fetchActivities } from '~api/activity';
 import { fetchMeals } from '~api/meal';
@@ -7,10 +14,18 @@ import { getRequestDate, requireUser } from '~api/session';
 import { MealPlan } from '~features/screens/meal-plan';
 import { createQueryClient } from '~util/query-client';
 
-export default async function Page() {
+export default async function Page({
+    searchParams,
+}: Readonly<{
+    searchParams: Promise<{ date?: string }>;
+}>) {
     const profile = await requireUser();
+    const { date } = await searchParams;
+    const parsedDate =
+        date && isMatch(date, 'yyyy-MM-dd') ? parseISO(date) : null;
 
-    const now = getRequestDate();
+    const requestedDate = parsedDate && isValid(parsedDate) ? parsedDate : null;
+    const now = requestedDate ?? getRequestDate();
 
     const startDate = format(
         startOfWeek(now, { weekStartsOn: 1 }),
@@ -31,7 +46,7 @@ export default async function Page() {
 
     return (
         <HydrationBoundary state={dehydrate(client)}>
-            <MealPlan />
+            <MealPlan initialDate={format(now, 'yyyy-MM-dd')} />
         </HydrationBoundary>
     );
 }

@@ -6,12 +6,20 @@ import { currentWeekAtom } from '~store/atoms';
 
 type UseCurrentWeek = () => {
     currentWeek: Date;
+    goToDate: (date: Date) => void;
     nextWeek: () => void;
     previousWeek: () => void;
 };
 
 export const useCurrentWeek: UseCurrentWeek = () => {
     const [currentWeek, setCurrentWeek] = useAtom(currentWeekAtom);
+
+    const goToDate = useCallback(
+        (date: Date) => {
+            setCurrentWeek(date);
+        },
+        [setCurrentWeek],
+    );
 
     const nextWeek = useCallback(() => {
         setCurrentWeek((prevWeek) => addWeeks(prevWeek, 1));
@@ -23,6 +31,7 @@ export const useCurrentWeek: UseCurrentWeek = () => {
 
     return {
         currentWeek,
+        goToDate,
         nextWeek,
         previousWeek,
     };

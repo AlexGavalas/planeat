@@ -1,6 +1,7 @@
-import { Stack, Switch, type SwitchProps, Title } from '@mantine/core';
+import { Divider, Stack, Switch, type SwitchProps, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
+import { MealReminders } from '~features/meal-reminders';
 import { useProfile } from '~hooks/use-profile';
 
 export const AdvancedSettings = () => {
@@ -28,6 +29,9 @@ export const AdvancedSettings = () => {
                 )}
                 onChange={handleIsDiscoverableChange}
             />
+            <Divider />
+            <Title order={4}>{t('meal_reminders.title')}</Title>
+            <MealReminders />
         </Stack>
     );
 };
