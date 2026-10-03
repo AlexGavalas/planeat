@@ -29,6 +29,7 @@ export const useSteps = (): Step[] => {
             content: t('onboarding.content.meal_plan'),
             target: '#meal-plan-container',
             ...commonStepProps,
+            placement: 'center',
         },
         {
             content: t('onboarding.content.measurements'),

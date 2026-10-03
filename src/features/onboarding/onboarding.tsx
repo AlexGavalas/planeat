@@ -1,4 +1,4 @@
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type EventHandler, Joyride } from 'react-joyride';
@@ -15,7 +15,6 @@ export const Onboarding = () => {
     const { t } = useTranslation();
     const router = useRouter();
     const localize = useLocalizedPath();
-    const pathname = usePathname();
     const { profile, updateProfile } = useProfile();
     const [shouldRun, setShouldRun] = useState(false);
     const [stepIndex, setStepIndex] = useState(0);
@@ -28,16 +27,46 @@ export const Onboarding = () => {
         setIsBrowser(true);
     }, []);
 
+    const currentTarget = steps[stepIndex]?.target;
+
     useEffect(() => {
-        if (isBrowser && !hasTourEnded) {
-            setShouldRun(true);
+        if (!isBrowser || hasTourEnded || typeof currentTarget !== 'string') {
+            return;
         }
-    }, [isBrowser, hasTourEnded, pathname]);
+
+        const startWhenTargetIsReady = () => {
+            if (!document.querySelector(currentTarget)) {
+                return false;
+            }
+
+            setShouldRun(true);
+
+            return true;
+        };
+
+        if (startWhenTargetIsReady()) {
+            return;
+        }
+
+        setShouldRun(false);
+
+        const observer = new MutationObserver(() => {
+            if (startWhenTargetIsReady()) {
+                observer.disconnect();
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [currentTarget, hasTourEnded, isBrowser]);
 
     const handleJoyrideEvent = useCallback<EventHandler>(
-        ({ type, step, action }) => {
+        ({ type, step, action, index }) => {
             if (type === 'step:after' && action === 'next') {
-                setStepIndex((p) => p + 1);
+                setStepIndex(index + 1);
             }
 
             if (
@@ -75,6 +104,10 @@ export const Onboarding = () => {
         <div style={{ position: 'fixed' }}>
             <Joyride
                 continuous
+                scrollToFirstStep
+                floatingOptions={{
+                    shiftOptions: { padding: 16 },
+                }}
                 locale={{
                     back: t('generic.misc.back'),
                     close: t('generic.actions.close'),
@@ -88,8 +121,8 @@ export const Onboarding = () => {
                     buttons: ['close', 'primary', 'skip'],
                     closeButtonAction: 'skip',
                     primaryColor: BRAND_COLORS[5],
+                    scrollOffset: 24,
                     showProgress: true,
-                    skipScroll: true,
                 }}
                 run={shouldRun}
                 stepIndex={stepIndex}
