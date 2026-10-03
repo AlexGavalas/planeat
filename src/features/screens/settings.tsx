@@ -20,13 +20,25 @@ export function Settings() {
         <Container className={styles.container}>
             <Tabs defaultValue="measurements" id="settings">
                 <Tabs.List className={styles.tabList}>
-                    <Tabs.Tab className={styles.tab} value="measurements">
+                    <Tabs.Tab
+                        className={styles.tab}
+                        id="settings-tab-measurements"
+                        value="measurements"
+                    >
                         {t('measurements')}
                     </Tabs.Tab>
-                    <Tabs.Tab className={styles.tab} value="personal">
+                    <Tabs.Tab
+                        className={styles.tab}
+                        id="settings-tab-personal"
+                        value="personal"
+                    >
                         {t('personal_info')}
                     </Tabs.Tab>
-                    <Tabs.Tab className={styles.tab} value="advanced">
+                    <Tabs.Tab
+                        className={styles.tab}
+                        id="settings-tab-advanced"
+                        value="advanced"
+                    >
                         {t('advanced_settings')}
                     </Tabs.Tab>
                 </Tabs.List>
