@@ -1,6 +1,14 @@
 'use client';
 
-import { Button, Group, Stack, Switch, Text, TextInput } from '@mantine/core';
+import {
+    Button,
+    Collapse,
+    Group,
+    Stack,
+    Switch,
+    Text,
+    TextInput,
+} from '@mantine/core';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -64,10 +72,50 @@ const subscribeCurrentDevice = async (): Promise<void> => {
     }
 };
 
+const getCurrentSubscription = async (): Promise<PushSubscription | null> => {
+    const registration = await navigator.serviceWorker.getRegistration('/');
+    return registration?.pushManager.getSubscription() ?? null;
+};
+
+const isSubscriptionSaved = async (
+    subscription: PushSubscription,
+): Promise<boolean> => {
+    const query = new URLSearchParams({ endpoint: subscription.endpoint });
+    const response = await fetch(`/api/v1/push-subscription?${query}`);
+
+    if (!response.ok) {
+        return false;
+    }
+
+    const { data: isSaved } = (await response.json()) as { data: boolean };
+    return isSaved;
+};
+
+const unsubscribeCurrentDevice = async (): Promise<void> => {
+    const subscription = await getCurrentSubscription();
+
+    if (!subscription) {
+        return;
+    }
+
+    const response = await fetch('/api/v1/push-subscription', {
+        body: JSON.stringify({ endpoint: subscription.endpoint }),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'DELETE',
+    });
+
+    if (!response.ok) {
+        throw new Error('Could not delete push subscription');
+    }
+
+    await subscription.unsubscribe();
+};
+
 export const MealReminders = () => {
     const { t } = useTranslation();
     const [detectedTimezone, setDetectedTimezone] = useState('');
-    const [isEnabled, setIsEnabled] = useState(false);
+    const [isMealReminderEnabled, setIsMealReminderEnabled] = useState(false);
+    const [isPushEnabled, setIsPushEnabled] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isSupported, setIsSupported] = useState<boolean | null>(null);
     const [time, setTime] = useState('20:00');
@@ -85,18 +133,25 @@ export const MealReminders = () => {
         );
 
         const load = async (): Promise<void> => {
-            const response = await fetch('/api/v1/notification-preferences');
+            const [preferencesResponse, subscription] = await Promise.all([
+                fetch('/api/v1/notification-preferences'),
+                getCurrentSubscription(),
+            ]);
 
-            if (!response.ok) {
+            if (subscription) {
+                setIsPushEnabled(await isSubscriptionSaved(subscription));
+            }
+
+            if (!preferencesResponse.ok) {
                 return;
             }
 
-            const { data } = (await response.json()) as {
+            const { data } = (await preferencesResponse.json()) as {
                 data: NotificationPreferences | null;
             };
 
             if (data) {
-                setIsEnabled(data.meal_reminder_enabled);
+                setIsMealReminderEnabled(data.meal_reminder_enabled);
                 setTime(data.meal_reminder_time.slice(0, 5));
                 setTimezone(data.timezone);
             }
@@ -121,16 +176,14 @@ export const MealReminders = () => {
         }
     };
 
-    const handleEnabledChange = async (nextEnabled: boolean): Promise<void> => {
+    const handleMealReminderChange = async (
+        nextEnabled: boolean,
+    ): Promise<void> => {
         setIsSaving(true);
 
         try {
-            if (nextEnabled) {
-                await subscribeCurrentDevice();
-            }
-
             await savePreferences(nextEnabled);
-            setIsEnabled(nextEnabled);
+            setIsMealReminderEnabled(nextEnabled);
             showSuccessNotification({
                 message: t('meal_reminders.saved'),
                 title: t('notification.success.title'),
@@ -149,11 +202,7 @@ export const MealReminders = () => {
         setIsSaving(true);
 
         try {
-            if (isEnabled) {
-                await subscribeCurrentDevice();
-            }
-
-            await savePreferences(isEnabled);
+            await savePreferences(isMealReminderEnabled);
             showSuccessNotification({
                 message: t('meal_reminders.saved'),
                 title: t('notification.success.title'),
@@ -168,8 +217,10 @@ export const MealReminders = () => {
         }
     };
 
-    const handleSwitchChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        void handleEnabledChange(event.currentTarget.checked);
+    const handleMealReminderSwitchChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        void handleMealReminderChange(event.currentTarget.checked);
     };
 
     const handleTimeChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -180,13 +231,23 @@ export const MealReminders = () => {
         setTimezone(detectedTimezone);
     };
 
-    const handleEnableDevice = async (): Promise<void> => {
+    const handlePushChange = async (nextEnabled: boolean): Promise<void> => {
         setIsSaving(true);
 
         try {
-            await subscribeCurrentDevice();
+            if (nextEnabled) {
+                await subscribeCurrentDevice();
+            } else {
+                await unsubscribeCurrentDevice();
+            }
+
+            setIsPushEnabled(nextEnabled);
             showSuccessNotification({
-                message: t('meal_reminders.device_enabled'),
+                message: t(
+                    nextEnabled
+                        ? 'meal_reminders.device_enabled'
+                        : 'meal_reminders.device_disabled',
+                ),
                 title: t('notification.success.title'),
             });
         } catch {
@@ -199,6 +260,12 @@ export const MealReminders = () => {
         }
     };
 
+    const handlePushSwitchChange = (
+        event: ChangeEvent<HTMLInputElement>,
+    ): void => {
+        void handlePushChange(event.currentTarget.checked);
+    };
+
     if (isSupported === null) {
         return null;
     }
@@ -208,53 +275,59 @@ export const MealReminders = () => {
     }
 
     return (
-        <Stack gap="sm">
+        <Stack gap="lg">
             <Switch
-                checked={isEnabled}
-                description={t('meal_reminders.description')}
+                checked={isPushEnabled}
+                description={t('meal_reminders.push_description')}
                 disabled={isSaving}
-                label={t('meal_reminders.label')}
-                onChange={handleSwitchChange}
+                label={t('meal_reminders.push_label')}
+                onChange={handlePushSwitchChange}
+                w="fit-content"
             />
-            <Group align="end">
-                <TextInput
-                    disabled={!isEnabled || isSaving}
-                    label={t('meal_reminders.time')}
-                    onChange={handleTimeChange}
-                    type="time"
-                    value={time}
-                />
-                <Button
-                    disabled={!isEnabled}
-                    loading={isSaving}
-                    onClick={handleSave}
-                >
-                    {t('generic.actions.save')}
-                </Button>
-            </Group>
-            <Text c="dimmed" size="sm">
-                {t('meal_reminders.timezone', { timezone })}
-            </Text>
-            {detectedTimezone && timezone !== detectedTimezone && (
-                <Button
+            <Stack gap="sm">
+                <Text fw="var(--mantine-font-weight-bold)">
+                    {t('meal_reminders.categories_title')}
+                </Text>
+                <Switch
+                    checked={isMealReminderEnabled}
+                    description={t('meal_reminders.description')}
                     disabled={isSaving}
-                    onClick={handleUseCurrentTimezone}
-                    variant="subtle"
-                >
-                    {t('meal_reminders.use_current_timezone', {
-                        timezone: detectedTimezone,
-                    })}
-                </Button>
-            )}
-            {isEnabled && (
-                <Button
-                    loading={isSaving}
-                    onClick={handleEnableDevice}
-                    variant="subtle"
-                >
-                    {t('meal_reminders.enable_device')}
-                </Button>
-            )}
+                    label={t('meal_reminders.label')}
+                    onChange={handleMealReminderSwitchChange}
+                    w="fit-content"
+                />
+                <Collapse expanded={isMealReminderEnabled}>
+                    <Stack gap="sm" ml="xl" mt="xs">
+                        <Group align="end">
+                            <TextInput
+                                disabled={isSaving}
+                                label={t('meal_reminders.time')}
+                                onChange={handleTimeChange}
+                                type="time"
+                                value={time}
+                            />
+                            <Button loading={isSaving} onClick={handleSave}>
+                                {t('generic.actions.save')}
+                            </Button>
+                        </Group>
+                        <Text c="dimmed" size="sm">
+                            {t('meal_reminders.timezone', { timezone })}
+                        </Text>
+                        {detectedTimezone && timezone !== detectedTimezone && (
+                            <Button
+                                disabled={isSaving}
+                                onClick={handleUseCurrentTimezone}
+                                variant="subtle"
+                                w="fit-content"
+                            >
+                                {t('meal_reminders.use_current_timezone', {
+                                    timezone: detectedTimezone,
+                                })}
+                            </Button>
+                        )}
+                    </Stack>
+                </Collapse>
+            </Stack>
         </Stack>
     );
 };

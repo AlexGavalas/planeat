@@ -15,23 +15,31 @@ export const AdvancedSettings = () => {
     };
 
     return (
-        <Stack gap="md">
+        <Stack gap="lg">
             <Title order={3}>
                 {t('account_settings.sections.advanced.title')}
             </Title>
-            <Switch
-                checked={profile?.is_discoverable}
-                description={t(
-                    'account_settings.sections.advanced.profile.toggle_discoverable_description',
-                )}
-                label={t(
-                    'account_settings.sections.advanced.profile.toggle_discoverable_label',
-                )}
-                onChange={handleIsDiscoverableChange}
-            />
+            <Stack component="section" gap="sm">
+                <Title order={4}>
+                    {t('account_settings.sections.advanced.profile.title')}
+                </Title>
+                <Switch
+                    checked={profile?.is_discoverable}
+                    description={t(
+                        'account_settings.sections.advanced.profile.toggle_discoverable_description',
+                    )}
+                    label={t(
+                        'account_settings.sections.advanced.profile.toggle_discoverable_label',
+                    )}
+                    onChange={handleIsDiscoverableChange}
+                    w="fit-content"
+                />
+            </Stack>
             <Divider />
-            <Title order={4}>{t('meal_reminders.title')}</Title>
-            <MealReminders />
+            <Stack component="section" gap="md">
+                <Title order={4}>{t('meal_reminders.title')}</Title>
+                <MealReminders />
+            </Stack>
         </Stack>
     );
 };

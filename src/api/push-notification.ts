@@ -64,6 +64,27 @@ export const deletePushSubscriptionByEndpoint = async (
         .where(eq(pushSubscriptions.endpoint, endpoint));
 };
 
+export const hasPushSubscription = async ({
+    endpoint,
+    userId,
+}: {
+    endpoint: string;
+    userId: number;
+}): Promise<boolean> => {
+    const rows = await getDb()
+        .select({ id: pushSubscriptions.id })
+        .from(pushSubscriptions)
+        .where(
+            and(
+                eq(pushSubscriptions.endpoint, endpoint),
+                eq(pushSubscriptions.user_id, userId),
+            ),
+        )
+        .limit(1);
+
+    return rows.length > 0;
+};
+
 export const fetchNotificationPreferences = async (
     userId: number,
 ): Promise<NotificationPreferences | null> =>

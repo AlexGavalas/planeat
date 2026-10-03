@@ -1,5 +1,6 @@
 import {
     deletePushSubscription,
+    hasPushSubscription,
     savePushSubscription,
 } from '~api/push-notification';
 import {
@@ -7,6 +8,20 @@ import {
     pushSubscriptionSchema,
 } from '~schemas/push-notification';
 import { withUser } from '~util/session';
+
+export const GET = withUser(async ({ request, user }) => {
+    const endpoint = request.nextUrl.searchParams.get('endpoint');
+
+    if (!endpoint) {
+        return Response.json({ data: false });
+    }
+
+    const isSubscribed = await hasPushSubscription({
+        endpoint,
+        userId: user.id,
+    });
+    return Response.json({ data: isSubscribed });
+});
 
 export const POST = withUser(async ({ request, user }) => {
     const subscription = pushSubscriptionSchema.parse(await request.json());
