@@ -13,6 +13,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { UserAvatar } from '~components/user-avatar';
+import { InstallApp } from '~features/install-app';
 import { NAV_LINKS } from '~features/nav/nav';
 import { useLocalizedPath } from '~hooks/use-localized-path';
 
@@ -54,8 +55,10 @@ export const UserMenu = () => {
 
     return (
         <Menu
+            keepMounted
             withArrow
             arrowPosition="center"
+            keepMountedMode="display-none"
             position="bottom-end"
             width={220}
         >
@@ -86,6 +89,7 @@ export const UserMenu = () => {
                     })}
                     <Menu.Divider />
                 </div>
+                <InstallApp placement="menu" />
                 <Menu.Item component={Link} href={localize('/settings')}>
                     {t('settings')}
                 </Menu.Item>

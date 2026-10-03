@@ -8,6 +8,17 @@
         "label": "Navigation",
         "open_menu": "Open navigation menu"
     },
+    "install": {
+        "action": "Install app",
+        "available": "Installable on your device",
+        "title": "Install Planeat",
+        "description": "Add Planeat to your Home Screen for quick access and an app-like experience.",
+        "ios": {
+            "open_safari": "Open this page in Safari.",
+            "tap_share": "Tap the Share button.",
+            "add": "Choose Add to Home Screen, then tap Add."
+        }
+    },
     "login": {
         "button": "Log in",
         "title": "Log in to Planeat",

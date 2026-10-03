@@ -4,7 +4,6 @@ import { Button, Group, Stack, Text, Title } from '@mantine/core';
 import {
     BellNotification,
     Calendar,
-    CheckCircle,
     Community,
     Copy,
     PrintingPage,
@@ -13,6 +12,7 @@ import {
 import Image from 'next/image';
 
 import { openAuthDialog } from '~features/header/auth-dialog-event';
+import { InstallApp } from '~features/install-app';
 
 import styles from './landing.module.css';
 
@@ -97,10 +97,7 @@ export function LandingPage() {
                         </Button>
                     </Group>
                     <Group className={styles.proofPoints} gap="lg">
-                        <Text component="span">
-                            <CheckCircle aria-hidden /> Installable on your
-                            device
-                        </Text>
+                        <InstallApp />
                     </Group>
                 </Stack>
 

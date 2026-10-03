@@ -1,0 +1,24 @@
+.landingTrigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mantine-spacing-xs);
+    border-radius: var(--mantine-radius-sm);
+    color: inherit;
+    font-size: inherit;
+}
+
+.landingTrigger:hover span {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.landingTrigger:focus-visible {
+    outline: 2px solid var(--mantine-color-brand-7);
+    outline-offset: 0.25rem;
+}
+
+.landingTrigger svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    color: var(--mantine-color-brand-7);
+}

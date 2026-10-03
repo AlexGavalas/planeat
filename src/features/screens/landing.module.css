@@ -49,17 +49,10 @@
     color: var(--mantine-color-gray-7);
 }
 
-.proofPoints span,
 .utilityItems span {
     display: inline-flex;
     align-items: center;
     gap: var(--mantine-spacing-xs);
-}
-
-.proofPoints svg {
-    width: 1.15rem;
-    height: 1.15rem;
-    color: var(--mantine-color-brand-7);
 }
 
 .heroVisual {
@@ -305,13 +298,10 @@
 
 @media (prefers-reduced-motion: no-preference) {
     .featureCard {
-        transition:
-            transform var(--app-motion-fast) ease,
-            box-shadow var(--app-motion-fast) ease;
+        transition: box-shadow var(--app-motion-fast) ease;
     }
 
     .featureCard:hover {
-        transform: translateY(-0.25rem);
         box-shadow: 0 1rem 2.5rem rgb(3 60 40 / 11%);
     }
 }
