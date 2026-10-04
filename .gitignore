@@ -11,6 +11,7 @@ tsconfig.tsbuildinfo
 
 # misc
 .DS_Store
+/BLS_4_0_2025_DE/
 
 # eslint
 .eslintcache

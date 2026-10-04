@@ -1,0 +1,16 @@
+.searchControls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 140px auto;
+    align-items: end;
+    gap: var(--mantine-spacing-xs);
+}
+
+@media (max-width: 48em) {
+    .searchControls {
+        grid-template-columns: 1fr;
+    }
+
+    .searchButton {
+        width: 100%;
+    }
+}

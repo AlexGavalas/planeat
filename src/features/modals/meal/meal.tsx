@@ -3,6 +3,7 @@ import {
     Group,
     List,
     Stack,
+    Tabs,
     Text,
     TextInput,
     Textarea,
@@ -19,6 +20,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { useGetMealPool } from '../meal-pool/hooks/use-get-meal-pool';
+import { FoodDatabaseSearch } from './food-database-search';
 
 type MealModalProps = {
     onDelete: () => Promise<void> | void;
@@ -119,20 +121,35 @@ export const MealModal = ({
         <form onSubmit={handleSubmit}>
             <Stack gap="sm">
                 <Text>{t('modals.meal_edit.helper')}</Text>
-                <TextInput
-                    label={t('generic.search.label')}
-                    onChange={handleSearchChange}
-                    placeholder={t('generic.search.placeholder')}
-                />
-                <List withPadding spacing="md">
-                    {results.map((result) => (
-                        <MealResult
-                            key={result}
-                            mealText={result}
-                            onEdit={handleEdit}
+                <Tabs defaultValue="my-meals">
+                    <Tabs.List>
+                        <Tabs.Tab value="my-meals">
+                            {t('modals.meal_edit.my_meals')}
+                        </Tabs.Tab>
+                        <Tabs.Tab value="food-database">
+                            {t('modals.meal_edit.food_search.tab')}
+                        </Tabs.Tab>
+                    </Tabs.List>
+                    <Tabs.Panel pt="sm" value="my-meals">
+                        <TextInput
+                            label={t('generic.search.label')}
+                            onChange={handleSearchChange}
+                            placeholder={t('generic.search.placeholder')}
                         />
-                    ))}
-                </List>
+                        <List withPadding mt="sm" spacing="md">
+                            {results.map((result) => (
+                                <MealResult
+                                    key={result}
+                                    mealText={result}
+                                    onEdit={handleEdit}
+                                />
+                            ))}
+                        </List>
+                    </Tabs.Panel>
+                    <Tabs.Panel pt="sm" value="food-database">
+                        <FoodDatabaseSearch onSelect={handleEdit} />
+                    </Tabs.Panel>
+                </Tabs>
                 <Textarea
                     autosize
                     error={error}

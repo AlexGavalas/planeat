@@ -14,6 +14,7 @@
         "start": "next start",
         "preview": "pnpm build && pnpm start",
         "push:generate-vapid-keys": "web-push generate-vapid-keys",
+        "data:generate-bls": "python3 scripts/generate-bls-index.py BLS_4_0_2025_DE/BLS_4_0_Daten_2025_DE.xlsx src/data/bls-foods.json",
         "test": "TZ=UTC jest",
         "test:e2e": "playwright test",
         "test:e2e:watch": "playwright test --ui",
