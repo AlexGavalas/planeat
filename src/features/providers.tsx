@@ -37,24 +37,45 @@ const modals = {
             loading: CenterLoader,
         },
     ),
-    'delete-account': dynamic(() =>
-        import('./modals/delete-account').then((m) => m.DeleteAccountModal),
+    'delete-account': dynamic(
+        () =>
+            import('./modals/delete-account').then((m) => m.DeleteAccountModal),
+        {
+            loading: CenterLoader,
+        },
     ),
-    meal: dynamic(() => import('./modals/meal').then((m) => m.MealModal)),
-    'meal-note': dynamic(() =>
-        import('./modals/meal-note').then((m) => m.MealNoteModal),
+    meal: dynamic(() => import('./modals/meal').then((m) => m.MealModal), {
+        loading: CenterLoader,
+    }),
+    'meal-note': dynamic(
+        () => import('./modals/meal-note').then((m) => m.MealNoteModal),
+        {
+            loading: CenterLoader,
+        },
     ),
-    'meal-pool': dynamic(() =>
-        import('./modals/meal-pool').then((m) => m.MealPoolModal),
+    'meal-pool': dynamic(
+        () => import('./modals/meal-pool').then((m) => m.MealPoolModal),
+        {
+            loading: CenterLoader,
+        },
     ),
-    'meal-rating': dynamic(() =>
-        import('./modals/meal-rating').then((m) => m.MealRatingModal),
+    'meal-rating': dynamic(
+        () => import('./modals/meal-rating').then((m) => m.MealRatingModal),
+        {
+            loading: CenterLoader,
+        },
     ),
-    measurement: dynamic(() =>
-        import('./modals/measurement').then((m) => m.MeasurementModal),
+    measurement: dynamic(
+        () => import('./modals/measurement').then((m) => m.MeasurementModal),
+        {
+            loading: CenterLoader,
+        },
     ),
-    'week-overview': dynamic(() =>
-        import('./modals/week-overview').then((m) => m.WeekOverviewModal),
+    'week-overview': dynamic(
+        () => import('./modals/week-overview').then((m) => m.WeekOverviewModal),
+        {
+            loading: CenterLoader,
+        },
     ),
 } as const;
 
@@ -90,12 +111,14 @@ export const Providers = ({
     // These instances intentionally persist for the lifetime of this account.
     // eslint-disable-next-line react/hook-use-state
     const [queryClient] = useState(createQueryClient);
+
     // eslint-disable-next-line react/hook-use-state
     const [store] = useState(() => {
         const value = createStore();
         value.set(currentWeekAtom, parseISO(initialWeek));
         return value;
     });
+
     const content = (
         <UserContext>
             <Header />
@@ -103,6 +126,7 @@ export const Providers = ({
             <div className="container">{children}</div>
         </UserContext>
     );
+
     const modalsContent = (
         // @ts-expect-error - dynamic modal components lose their specific props
         <ModalsProvider modals={modals}>
@@ -110,6 +134,7 @@ export const Providers = ({
             <Notifications />
         </ModalsProvider>
     );
+
     return (
         <I18nProvider
             fallbackLng="en"
