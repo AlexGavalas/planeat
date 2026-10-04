@@ -1,0 +1,227 @@
+.loader {
+    width: 100%;
+}
+
+.visuallyHidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.skeleton {
+    overflow: hidden;
+    position: relative;
+    border-radius: var(--mantine-radius-sm);
+    background: var(--app-color-loading-skeleton);
+}
+
+.skeleton::after {
+    position: absolute;
+    inset: 0;
+    animation: shimmer 1.4s infinite;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--app-color-loading-skeleton-highlight),
+        transparent
+    );
+    content: '';
+    transform: translateX(-100%);
+}
+
+.card {
+    padding: var(--mantine-spacing-md);
+    border-radius: var(--mantine-radius-default);
+    background: var(--app-color-surface-glass);
+    box-shadow: var(--mantine-shadow-sm);
+}
+
+.lines {
+    display: grid;
+    width: 100%;
+    gap: var(--mantine-spacing-sm);
+}
+
+.line {
+    width: 100%;
+    height: 0.75rem;
+}
+
+.line:last-child {
+    width: 72%;
+}
+
+.heading {
+    width: min(12rem, 55%);
+    height: 1.35rem;
+    margin-bottom: var(--mantine-spacing-md);
+}
+
+.title {
+    width: 14rem;
+    max-width: 60%;
+    height: 2rem;
+}
+
+.button {
+    width: 7rem;
+    height: 2.25rem;
+}
+
+.timeline {
+    display: grid;
+    gap: var(--mantine-spacing-lg);
+}
+
+.timelineItem {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    align-items: center;
+    gap: var(--mantine-spacing-sm);
+}
+
+.circle {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+}
+
+.dashboard {
+    display: grid;
+    gap: var(--mantine-spacing-md);
+}
+
+.metric {
+    width: 6rem;
+    height: 2.25rem;
+    margin-bottom: var(--mantine-spacing-md);
+}
+
+.chart {
+    width: 100%;
+    height: 10rem;
+}
+
+.sectionHeading,
+.calendarControls,
+.tabs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mantine-spacing-sm);
+}
+
+.sectionHeading .heading {
+    margin-bottom: 0;
+}
+
+.homeGrid {
+    display: grid;
+    grid-template-columns: minmax(15rem, 20%) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--mantine-spacing-md);
+}
+
+.narrowPage,
+.settingsPage {
+    display: grid;
+    width: 100%;
+    margin: 0 auto;
+    gap: var(--mantine-spacing-md);
+}
+
+.narrowPage {
+    max-width: 48rem;
+}
+
+.settingsPage {
+    max-width: 64rem;
+}
+
+.tabs {
+    justify-content: flex-start;
+    border-bottom: 1px solid var(--mantine-color-gray-3);
+}
+
+.tab {
+    width: 8rem;
+    height: 2.75rem;
+    border-radius: var(--mantine-radius-sm) var(--mantine-radius-sm) 0 0;
+}
+
+.wideControl {
+    width: min(20rem, 45%);
+    height: 2.25rem;
+}
+
+.calendarHeader,
+.calendarRow {
+    display: grid;
+    grid-template-columns: 0.75fr repeat(7, 1fr);
+    gap: var(--mantine-spacing-compact);
+}
+
+.calendarShell,
+.calendarRows {
+    display: grid;
+    gap: var(--mantine-spacing-sm);
+}
+
+.calendarHeaderCell {
+    min-width: 0;
+    height: 1.25rem;
+}
+
+.calendarRowLabel,
+.calendarRowContent {
+    min-width: 0;
+    height: 3.5rem;
+}
+
+.calendarRowContent {
+    grid-column: span 7;
+}
+
+@keyframes shimmer {
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skeleton::after {
+        animation: none;
+    }
+}
+
+@media (max-width: 48em) {
+    .homeGrid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .calendarControls {
+        flex-wrap: wrap;
+    }
+
+    .calendarHeader {
+        display: none;
+    }
+
+    .calendarRow {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .calendarRowLabel {
+        width: 35%;
+        height: 1rem;
+    }
+
+    .calendarRowContent {
+        height: 4rem;
+        grid-column: auto;
+    }
+}

@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, Button, Center, Group, Stack, Title } from '@mantine/core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';

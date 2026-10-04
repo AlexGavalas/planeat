@@ -1,3 +1,5 @@
+'use client';
+
 import { Stack, Text } from '@mantine/core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';

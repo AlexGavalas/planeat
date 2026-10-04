@@ -1,16 +1,20 @@
 'use client';
 
 import { Container, Stack, Title } from '@mantine/core';
+import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Card } from '~components/card';
 import { FindUsers } from '~features/find-users';
-import { ManageConnectionRequests } from '~features/manage-connection-requests';
-import { ManageConnections } from '~features/manage-connections';
 
 import styles from './connections.module.css';
 
-export function Connections() {
+type ConnectionsProps = Readonly<{
+    connections: ReactNode;
+    requests: ReactNode;
+}>;
+
+export function Connections({ connections, requests }: ConnectionsProps) {
     const { t } = useTranslation();
 
     return (
@@ -24,13 +28,13 @@ export function Connections() {
                     <Title order={3}>
                         {t('connections.manage_connection_requests.title')}
                     </Title>
-                    <ManageConnectionRequests />
+                    {requests}
                 </Card>
                 <Card>
                     <Title order={3}>
                         {t('connections.manage_connections.title')}
                     </Title>
-                    <ManageConnections />
+                    {connections}
                 </Card>
             </Stack>
         </Container>

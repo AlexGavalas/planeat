@@ -115,6 +115,7 @@ export const MealReminders = () => {
     const { t } = useTranslation();
     const [detectedTimezone, setDetectedTimezone] = useState('');
     const [isMealReminderEnabled, setIsMealReminderEnabled] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [isPushEnabled, setIsPushEnabled] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isSupported, setIsSupported] = useState<boolean | null>(null);
@@ -133,27 +134,31 @@ export const MealReminders = () => {
         );
 
         const load = async (): Promise<void> => {
-            const [preferencesResponse, subscription] = await Promise.all([
-                fetch('/api/v1/notification-preferences'),
-                getCurrentSubscription(),
-            ]);
+            try {
+                const [preferencesResponse, subscription] = await Promise.all([
+                    fetch('/api/v1/notification-preferences'),
+                    getCurrentSubscription(),
+                ]);
 
-            if (subscription) {
-                setIsPushEnabled(await isSubscriptionSaved(subscription));
-            }
+                if (subscription) {
+                    setIsPushEnabled(await isSubscriptionSaved(subscription));
+                }
 
-            if (!preferencesResponse.ok) {
-                return;
-            }
+                if (!preferencesResponse.ok) {
+                    return;
+                }
 
-            const { data } = (await preferencesResponse.json()) as {
-                data: NotificationPreferences | null;
-            };
+                const { data } = (await preferencesResponse.json()) as {
+                    data: NotificationPreferences | null;
+                };
 
-            if (data) {
-                setIsMealReminderEnabled(data.meal_reminder_enabled);
-                setTime(data.meal_reminder_time.slice(0, 5));
-                setTimezone(data.timezone);
+                if (data) {
+                    setIsMealReminderEnabled(data.meal_reminder_enabled);
+                    setTime(data.meal_reminder_time.slice(0, 5));
+                    setTimezone(data.timezone);
+                }
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -274,12 +279,14 @@ export const MealReminders = () => {
         return <Text>{t('meal_reminders.unsupported')}</Text>;
     }
 
+    const isBusy = isLoading || isSaving;
+
     return (
         <Stack gap="lg">
             <Switch
                 checked={isPushEnabled}
                 description={t('meal_reminders.push_description')}
-                disabled={isSaving}
+                disabled={isBusy}
                 label={t('meal_reminders.push_label')}
                 onChange={handlePushSwitchChange}
                 w="fit-content"
@@ -291,7 +298,7 @@ export const MealReminders = () => {
                 <Switch
                     checked={isMealReminderEnabled}
                     description={t('meal_reminders.description')}
-                    disabled={isSaving}
+                    disabled={isBusy}
                     label={t('meal_reminders.label')}
                     onChange={handleMealReminderSwitchChange}
                     w="fit-content"
@@ -300,13 +307,14 @@ export const MealReminders = () => {
                     <Stack gap="sm" ml="xl" mt="xs">
                         <Group align="end">
                             <TextInput
-                                disabled={isSaving}
+                                disabled={isBusy}
                                 label={t('meal_reminders.time')}
+                                loading={isBusy}
                                 onChange={handleTimeChange}
                                 type="time"
                                 value={time}
                             />
-                            <Button loading={isSaving} onClick={handleSave}>
+                            <Button loading={isBusy} onClick={handleSave}>
                                 {t('generic.actions.save')}
                             </Button>
                         </Group>
@@ -315,7 +323,7 @@ export const MealReminders = () => {
                         </Text>
                         {detectedTimezone && timezone !== detectedTimezone && (
                             <Button
-                                disabled={isSaving}
+                                disabled={isBusy}
                                 onClick={handleUseCurrentTimezone}
                                 variant="subtle"
                                 w="fit-content"

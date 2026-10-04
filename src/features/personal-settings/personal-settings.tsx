@@ -21,7 +21,7 @@ export const PersonalSettings = () => {
     const [height, setHeight] = useState<number>();
     const [targetWeight, setTargetWeight] = useState<number>();
     const [language, setLanguage] = useState<string>();
-    const { profile, updateProfile } = useProfile();
+    const { isFetching, profile, updateProfile } = useProfile();
 
     const handleHeightChange: NumberInputProps['onChange'] = (value) => {
         setHeight(Number(value));
@@ -63,22 +63,32 @@ export const PersonalSettings = () => {
                 <SimpleGrid cols={{ base: 1, md: 4 }} spacing="md">
                     <NumberInput
                         defaultValue={profile.height ?? undefined}
+                        disabled={isFetching}
                         label={t('height_input')}
+                        loading={isFetching}
                         onChange={handleHeightChange}
                     />
                     <NumberInput
                         defaultValue={profile.target_weight ?? undefined}
+                        disabled={isFetching}
                         label={t('target_weight_input')}
+                        loading={isFetching}
                         onChange={handleTargetWeightChange}
                     />
                     <Select
                         data={availableLanguages}
                         defaultValue={profile.language}
+                        disabled={isFetching}
                         label={t('languages.label')}
+                        loading={isFetching}
                         onChange={handleLanguageChange}
                         placeholder={t('languages.placeholder')}
                     />
-                    <Button className={styles.saveButton} onClick={handleSave}>
+                    <Button
+                        className={styles.saveButton}
+                        loading={isFetching}
+                        onClick={handleSave}
+                    >
                         {t('generic.actions.save')}
                     </Button>
                 </SimpleGrid>

@@ -6,7 +6,7 @@ import { useProfile } from '~hooks/use-profile';
 
 export const AdvancedSettings = () => {
     const { t } = useTranslation();
-    const { profile, updateProfile } = useProfile();
+    const { isFetching, profile, updateProfile } = useProfile();
 
     const handleIsDiscoverableChange: SwitchProps['onChange'] = ({
         target: { checked },
@@ -28,6 +28,7 @@ export const AdvancedSettings = () => {
                     description={t(
                         'account_settings.sections.advanced.profile.toggle_discoverable_description',
                     )}
+                    disabled={isFetching}
                     label={t(
                         'account_settings.sections.advanced.profile.toggle_discoverable_label',
                     )}

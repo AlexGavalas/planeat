@@ -15,7 +15,7 @@ import { Provider as JotaiProvider, createStore } from 'jotai';
 import { SessionProvider, type SessionProviderProps } from 'next-auth/react';
 import { I18nProvider } from 'next-i18next/client';
 import dynamic from 'next/dynamic';
-import { type PropsWithChildren, useState } from 'react';
+import { type PropsWithChildren, useEffect, useState } from 'react';
 
 import { Header } from '~features/header';
 import { Onboarding } from '~features/onboarding';
@@ -83,6 +83,10 @@ export const Providers = ({
     resources,
     initialWeek,
 }: ProvidersProps) => {
+    useEffect(() => {
+        document.documentElement.lang = language === 'gr' ? 'el' : 'en';
+    }, [language]);
+
     // These instances intentionally persist for the lifetime of this account.
     // eslint-disable-next-line react/hook-use-state
     const [queryClient] = useState(createQueryClient);

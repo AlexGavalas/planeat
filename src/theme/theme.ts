@@ -37,6 +37,8 @@ export const APP_TOKENS = {
         chartText: '#333333',
         decorationGrid: '#a7d3a5',
         decorationMuted: '#9d9d9d',
+        loadingSkeleton: BRAND_COLORS[1],
+        loadingSkeletonHighlight: BRAND_COLORS[0],
         surfacePage: '#ecf5ec',
         surfaceStripe: '#e5f6e5',
     },
@@ -105,6 +107,9 @@ export const appCssVariablesResolver: CSSVariablesResolver = () => ({
         '--app-color-chart-text': APP_TOKENS.color.chartText,
         '--app-color-decoration-grid': APP_TOKENS.color.decorationGrid,
         '--app-color-decoration-muted': APP_TOKENS.color.decorationMuted,
+        '--app-color-loading-skeleton': APP_TOKENS.color.loadingSkeleton,
+        '--app-color-loading-skeleton-highlight':
+            APP_TOKENS.color.loadingSkeletonHighlight,
         '--app-color-state-modified': 'var(--mantine-color-modified-6)',
         '--app-color-surface-default': 'var(--mantine-color-white)',
         '--app-color-surface-glass': `rgb(255 255 255 / ${APP_TOKENS.surfaceAlpha.glass})`,
