@@ -115,6 +115,11 @@
     gap: var(--mantine-spacing-sm);
 }
 
+.sectionHeading,
+.calendarControls {
+    margin-bottom: var(--mantine-spacing-sm);
+}
+
 .sectionHeading .heading {
     margin-bottom: 0;
 }

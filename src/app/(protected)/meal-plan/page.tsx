@@ -7,18 +7,20 @@ import {
     parseISO,
     startOfWeek,
 } from 'date-fns';
+import { Suspense } from 'react';
 
 import { fetchActivities } from '~api/activity';
 import { fetchMeals } from '~api/meal';
 import { getRequestDate, requireUser } from '~api/session';
+import { MealPlanPageSkeleton } from '~components/loading-skeleton';
 import { MealPlan } from '~features/screens/meal-plan';
 import { createQueryClient } from '~util/query-client';
 
-export default async function Page({
-    searchParams,
-}: Readonly<{
+type MealPlanPageProps = Readonly<{
     searchParams: Promise<{ date?: string }>;
-}>) {
+}>;
+
+async function MealPlanContent({ searchParams }: MealPlanPageProps) {
     const profile = await requireUser();
     const { date } = await searchParams;
     const parsedDate =
@@ -48,5 +50,13 @@ export default async function Page({
         <HydrationBoundary state={dehydrate(client)}>
             <MealPlan initialDate={format(now, 'yyyy-MM-dd')} />
         </HydrationBoundary>
+    );
+}
+
+export default function Page({ searchParams }: MealPlanPageProps) {
+    return (
+        <Suspense fallback={<MealPlanPageSkeleton />}>
+            <MealPlanContent searchParams={searchParams} />
+        </Suspense>
     );
 }
