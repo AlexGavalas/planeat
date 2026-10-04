@@ -8,9 +8,10 @@ import '@mantine/notifications/styles.css';
 import { dehydrate } from '@tanstack/react-query';
 import { format, startOfWeek } from 'date-fns';
 import { type Metadata, type Viewport } from 'next';
-import { type ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 
 import { getCurrentUser, getRequestDate, getServerSession } from '~api/session';
+import { AppStartup } from '~components/app-startup';
 import { Providers } from '~features/providers';
 import { getResources, getT } from '~util/i18n';
 import { createQueryClient } from '~util/query-client';
@@ -33,9 +34,7 @@ export const viewport: Viewport = {
     themeColor: '#047d55',
     viewportFit: 'cover',
 };
-export default async function RootLayout({
-    children,
-}: Readonly<{ children: ReactNode }>) {
+async function AppContent({ children }: Readonly<{ children: ReactNode }>) {
     const [session, profile] = await Promise.all([
         getServerSession(),
         getCurrentUser(),
@@ -50,28 +49,34 @@ export default async function RootLayout({
     queryClient.setQueryData(['user'], profile);
 
     return (
-        <html
-            data-scroll-behavior="smooth"
-            lang={language === 'gr' ? 'el' : 'en'}
-            {...mantineHtmlProps}
+        <Providers
+            key={profile?.id ?? 'anonymous'}
+            dehydratedState={dehydrate(queryClient)}
+            initialWeek={format(
+                startOfWeek(getRequestDate(), { weekStartsOn: 1 }),
+                'yyyy-MM-dd',
+            )}
+            language={language}
+            resources={getResources(i18n, ['common'])}
+            session={session}
         >
+            {children}
+        </Providers>
+    );
+}
+
+export default function RootLayout({
+    children,
+}: Readonly<{ children: ReactNode }>) {
+    return (
+        <html data-scroll-behavior="smooth" lang="en" {...mantineHtmlProps}>
             <head>
                 <ColorSchemeScript />
             </head>
             <body>
-                <Providers
-                    key={profile?.id ?? 'anonymous'}
-                    dehydratedState={dehydrate(queryClient)}
-                    initialWeek={format(
-                        startOfWeek(getRequestDate(), { weekStartsOn: 1 }),
-                        'yyyy-MM-dd',
-                    )}
-                    language={language}
-                    resources={getResources(i18n, ['common'])}
-                    session={session}
-                >
-                    {children}
-                </Providers>
+                <Suspense fallback={<AppStartup />}>
+                    <AppContent>{children}</AppContent>
+                </Suspense>
             </body>
         </html>
     );

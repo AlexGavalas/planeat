@@ -20,7 +20,7 @@ const formSchema = z.object({
 
 export const FoodPreferences = () => {
     const { t } = useTranslation();
-    const { profile } = useProfile();
+    const { isFetching, profile } = useProfile();
     const queryClient = useQueryClient();
 
     const handleSavePreferences = useCallback<SubmitEventHandler>(
@@ -74,9 +74,11 @@ export const FoodPreferences = () => {
                             defaultValue={
                                 profile?.food_preferences_positive ?? ''
                             }
+                            disabled={isFetching}
                             label={t(
                                 'account_settings.sections.food_preferences.positive.label',
                             )}
+                            loading={isFetching}
                             minRows={4}
                             name="positive"
                             placeholder={t(
@@ -88,9 +90,11 @@ export const FoodPreferences = () => {
                             defaultValue={
                                 profile?.food_preferences_negative ?? ''
                             }
+                            disabled={isFetching}
                             label={t(
                                 'account_settings.sections.food_preferences.negative.label',
                             )}
+                            loading={isFetching}
                             minRows={4}
                             name="negative"
                             placeholder={t(
@@ -98,7 +102,11 @@ export const FoodPreferences = () => {
                             )}
                         />
                     </SimpleGrid>
-                    <Button className={styles.saveButton} type="submit">
+                    <Button
+                        className={styles.saveButton}
+                        loading={isFetching}
+                        type="submit"
+                    >
                         {t('generic.actions.save')}
                     </Button>
                 </Stack>

@@ -5,12 +5,14 @@ import { Suspense } from 'react';
 import { fetchMeals } from '~api/meal';
 import { fetchMeasurementSummary } from '~api/measurement';
 import { getRequestDate, requireUser } from '~api/session';
+import {
+    DailyMealsSkeleton,
+    MeasurementDashboardSkeleton,
+} from '~components/loading-skeleton';
 import { DailyMeal } from '~features/daily-meal';
 import { Home } from '~features/screens/home';
 import { MeasurementDashboard } from '~features/screens/measurement-dashboard';
 import { createQueryClient } from '~util/query-client';
-
-import Loading from '../loading';
 
 async function DailyMeals() {
     const profile = await requireUser();
@@ -56,12 +58,12 @@ export default async function Page() {
     return (
         <Home
             dailyMeals={
-                <Suspense fallback={<Loading />}>
+                <Suspense fallback={<DailyMealsSkeleton />}>
                     <DailyMeals />
                 </Suspense>
             }
             measurements={
-                <Suspense fallback={<Loading />}>
+                <Suspense fallback={<MeasurementDashboardSkeleton />}>
                     <Measurements />
                 </Suspense>
             }

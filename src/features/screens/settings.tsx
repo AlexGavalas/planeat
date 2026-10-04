@@ -1,19 +1,23 @@
 'use client';
 
 import { Container, Space, Tabs } from '@mantine/core';
+import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Card } from '~components/card';
-import { Activities } from '~features/activities';
 import { AdvancedSettings } from '~features/advanced-settings';
 import { DeleteAccount } from '~features/delete-account';
 import { FoodPreferences } from '~features/food-preferences';
-import { Measurements } from '~features/measurements';
 import { PersonalSettings } from '~features/personal-settings';
 
 import styles from './settings.module.css';
 
-export function Settings() {
+type SettingsProps = Readonly<{
+    activities: ReactNode;
+    measurements: ReactNode;
+}>;
+
+export function Settings({ activities, measurements }: SettingsProps) {
     const { t } = useTranslation();
 
     return (
@@ -43,13 +47,9 @@ export function Settings() {
                     </Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panel pt="md" value="measurements">
-                    <Card>
-                        <Measurements />
-                    </Card>
+                    <Card>{measurements}</Card>
                     <Space h="lg" />
-                    <Card>
-                        <Activities />
-                    </Card>
+                    <Card>{activities}</Card>
                 </Tabs.Panel>
                 <Tabs.Panel pt="md" value="personal">
                     <Card>

@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, Button, Center, Group, Stack, Title } from '@mantine/core';
 import {
     keepPreviousData,
