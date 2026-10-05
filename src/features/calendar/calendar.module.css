@@ -28,6 +28,10 @@
         size: landscape;
     }
 
+    .desktopCalendar {
+        display: block;
+    }
+
     .print {
         display: flex;
         align-items: center;
