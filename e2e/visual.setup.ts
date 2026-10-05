@@ -2,32 +2,22 @@ import { expect, test as setup } from '@playwright/test';
 import { mkdir } from 'fs/promises';
 import { dirname } from 'path';
 
-import { VISUAL_AUTH_STATE_PATH, VISUAL_E2E_USER } from './support/auth';
+import {
+    VISUAL_AUTH_STATE_PATH,
+    VISUAL_E2E_USER,
+    authenticateE2eUser,
+} from './support/auth';
 import { loadE2eEnvironment } from './support/environment';
 
 setup('authenticate the visual test user', async ({ page }) => {
     const { mode } = loadE2eEnvironment();
 
-    await page.goto('/');
-    await page.getByRole('button', { exact: true, name: 'Log in' }).click();
+    setup.slow(
+        mode === 'preview',
+        'Hosted preview authentication can cold start',
+    );
 
-    if (mode === 'preview') {
-        await page.getByRole('button', { name: 'Sign up' }).click();
-        await page.getByLabel('Full name').fill(VISUAL_E2E_USER.FULL_NAME);
-    }
-
-    await page.getByLabel('Email').fill(VISUAL_E2E_USER.EMAIL);
-    await page
-        .getByLabel('Password', { exact: true })
-        .fill(VISUAL_E2E_USER.PASSWORD);
-    await page
-        .getByRole('button', {
-            exact: true,
-            name: mode === 'preview' ? 'Create account' : 'Log in with email',
-        })
-        .click();
-
-    await expect(page).toHaveURL('/home');
+    await authenticateE2eUser(page, VISUAL_E2E_USER, mode);
 
     if (mode === 'preview') {
         const response = await page.request.patch('/api/v1/user', {
@@ -41,7 +31,6 @@ setup('authenticate the visual test user', async ({ page }) => {
         });
 
         expect(response.ok()).toBe(true);
-        await page.reload();
     }
 
     const summaryResponse = await page.request.get(
@@ -63,8 +52,6 @@ setup('authenticate the visual test user', async ({ page }) => {
 
             expect(response.ok()).toBe(true);
         }
-
-        await page.reload();
     }
 
     await expect(page.getByRole('heading', { name: 'Day plan' })).toBeVisible();

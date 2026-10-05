@@ -56,13 +56,13 @@ export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
     const handlePreviewChange = useCallback<
         ChangeEventHandler<HTMLTextAreaElement>
     >((e) => {
-        setPreview(e.currentTarget.value);
+        setPreview(e.target.value);
     }, []);
 
     const handleSearchChange = useCallback<
         ChangeEventHandler<HTMLInputElement>
     >((e) => {
-        setSearchQuery(e.currentTarget.value);
+        setSearchQuery(e.target.value);
     }, []);
 
     return (

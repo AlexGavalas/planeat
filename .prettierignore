@@ -10,3 +10,4 @@ pnpm-lock.yaml
 # auto formatted
 tsconfig.json
 next-env.d.ts
+src/data/bls-foods.json

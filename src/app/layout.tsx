@@ -13,6 +13,7 @@ import { Suspense, type ReactNode } from 'react';
 import { getCurrentUser, getRequestDate, getServerSession } from '~api/session';
 import { AppStartup } from '~components/app-startup';
 import { Providers } from '~features/providers';
+import { foodDatabaseSearch } from '~flags';
 import { getResources, getT } from '~util/i18n';
 import { createQueryClient } from '~util/query-client';
 
@@ -35,9 +36,10 @@ export const viewport: Viewport = {
     viewportFit: 'cover',
 };
 async function AppContent({ children }: Readonly<{ children: ReactNode }>) {
-    const [session, profile] = await Promise.all([
+    const [session, profile, isFoodDatabaseSearchEnabled] = await Promise.all([
         getServerSession(),
         getCurrentUser(),
+        foodDatabaseSearch(),
     ]);
 
     const language = profile?.language === 'gr' ? 'gr' : 'en';
@@ -52,6 +54,7 @@ async function AppContent({ children }: Readonly<{ children: ReactNode }>) {
         <Providers
             key={profile?.id ?? 'anonymous'}
             dehydratedState={dehydrate(queryClient)}
+            featureFlags={{ isFoodDatabaseSearchEnabled }}
             initialWeek={format(
                 startOfWeek(getRequestDate(), { weekStartsOn: 1 }),
                 'yyyy-MM-dd',

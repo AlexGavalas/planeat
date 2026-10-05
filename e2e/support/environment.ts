@@ -1,7 +1,7 @@
 import { config as loadDotenv } from 'dotenv';
 import { resolve } from 'path';
 
-type E2eEnvironment = {
+export type E2eEnvironment = {
     baseUrl: string;
     databaseUrl?: string;
     mode: 'local' | 'preview';

@@ -39,6 +39,9 @@
       "~features/*": [
         "./src/features/*"
       ],
+      "~flags": [
+        "./src/flags"
+      ],
       "~hooks/*": [
         "./src/hooks/*"
       ],
@@ -77,6 +80,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "src/app/.well-known/**/*.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],

@@ -3,6 +3,7 @@ import {
     Group,
     List,
     Stack,
+    Tabs,
     Text,
     TextInput,
     Textarea,
@@ -18,7 +19,10 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useFeatureFlags } from '~features/feature-flags';
+
 import { useGetMealPool } from '../meal-pool/hooks/use-get-meal-pool';
+import { FoodDatabaseSearch } from './food-database-search';
 
 type MealModalProps = {
     onDelete: () => Promise<void> | void;
@@ -56,6 +60,7 @@ export const MealModal = ({
     innerProps: { initialMeal, onDelete, onSave },
 }: ContextModalProps<MealModalProps>) => {
     const { t } = useTranslation();
+    const { isFoodDatabaseSearchEnabled } = useFeatureFlags();
     const [error, setError] = useState('');
     const [preview, setPreview] = useState(initialMeal);
     const [searchQuery, setSearchQuery] = useState('');
@@ -101,7 +106,7 @@ export const MealModal = ({
     const handleSearchChange = useCallback<
         ChangeEventHandler<HTMLInputElement>
     >((e) => {
-        setSearchQuery(e.currentTarget.value);
+        setSearchQuery(e.target.value);
     }, []);
 
     const handleEdit = useCallback<OnEdit>((previewText) => {
@@ -110,29 +115,60 @@ export const MealModal = ({
 
     const handleChange = useCallback<ChangeEventHandler<HTMLTextAreaElement>>(
         (e) => {
-            setPreview(e.currentTarget.value);
+            setPreview(e.target.value);
         },
         [],
+    );
+
+    const mealSearch = (
+        <>
+            <TextInput
+                label={t('generic.search.label')}
+                onChange={handleSearchChange}
+                placeholder={t('generic.search.placeholder')}
+            />
+            <List withPadding mt="sm" spacing="md">
+                {results.map((result) => (
+                    <MealResult
+                        key={result}
+                        mealText={result}
+                        onEdit={handleEdit}
+                    />
+                ))}
+            </List>
+        </>
     );
 
     return (
         <form onSubmit={handleSubmit}>
             <Stack gap="sm">
-                <Text>{t('modals.meal_edit.helper')}</Text>
-                <TextInput
-                    label={t('generic.search.label')}
-                    onChange={handleSearchChange}
-                    placeholder={t('generic.search.placeholder')}
-                />
-                <List withPadding spacing="md">
-                    {results.map((result) => (
-                        <MealResult
-                            key={result}
-                            mealText={result}
-                            onEdit={handleEdit}
-                        />
-                    ))}
-                </List>
+                <Text>
+                    {t(
+                        isFoodDatabaseSearchEnabled
+                            ? 'modals.meal_edit.helper'
+                            : 'modals.meal_edit.helper_without_food_database',
+                    )}
+                </Text>
+                {isFoodDatabaseSearchEnabled ? (
+                    <Tabs defaultValue="my-meals">
+                        <Tabs.List>
+                            <Tabs.Tab value="my-meals">
+                                {t('modals.meal_edit.my_meals')}
+                            </Tabs.Tab>
+                            <Tabs.Tab value="food-database">
+                                {t('modals.meal_edit.food_search.tab')}
+                            </Tabs.Tab>
+                        </Tabs.List>
+                        <Tabs.Panel pt="sm" value="my-meals">
+                            {mealSearch}
+                        </Tabs.Panel>
+                        <Tabs.Panel pt="sm" value="food-database">
+                            <FoodDatabaseSearch onSelect={handleEdit} />
+                        </Tabs.Panel>
+                    </Tabs>
+                ) : (
+                    mealSearch
+                )}
                 <Textarea
                     autosize
                     error={error}
