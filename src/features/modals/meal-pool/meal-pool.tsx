@@ -3,12 +3,15 @@ import { type ContextModalProps } from '@mantine/modals';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useFeatureFlags } from '~features/feature-flags';
+
 import { FileUploadTab } from './file-upload';
 import { FoodDatabaseTab } from './food-database';
 import { ManualInputTab } from './manual-input';
 
 export const MealPoolModal = ({ context, id }: ContextModalProps) => {
     const { t } = useTranslation();
+    const { isFoodDatabaseSearchEnabled } = useFeatureFlags();
     const closeModal = useCallback(() => {
         context.closeContextModal(id);
     }, [context, id]);
@@ -19,9 +22,11 @@ export const MealPoolModal = ({ context, id }: ContextModalProps) => {
                 <Tabs.Tab value="manually">
                     {t('modals.meal_pool.tabs.manual')}
                 </Tabs.Tab>
-                <Tabs.Tab value="food-database">
-                    {t('modals.meal_pool.tabs.food_database')}
-                </Tabs.Tab>
+                {isFoodDatabaseSearchEnabled && (
+                    <Tabs.Tab value="food-database">
+                        {t('modals.meal_pool.tabs.food_database')}
+                    </Tabs.Tab>
+                )}
                 <Tabs.Tab value="automatic">
                     {t('modals.meal_pool.tabs.import')}
                 </Tabs.Tab>
@@ -32,9 +37,11 @@ export const MealPoolModal = ({ context, id }: ContextModalProps) => {
             <Tabs.Panel value="automatic">
                 <FileUploadTab />
             </Tabs.Panel>
-            <Tabs.Panel value="food-database">
-                <FoodDatabaseTab onDone={closeModal} />
-            </Tabs.Panel>
+            {isFoodDatabaseSearchEnabled && (
+                <Tabs.Panel value="food-database">
+                    <FoodDatabaseTab onDone={closeModal} />
+                </Tabs.Panel>
+            )}
         </Tabs>
     );
 };

@@ -36,16 +36,19 @@ type FoodResultProps = Readonly<{
 
 const FoodResult = ({ food, onSelect: handleSelect }: FoodResultProps) => {
     const { i18n, t } = useTranslation();
+
     const handleClick = useCallback<
         MouseEventHandler<HTMLButtonElement>
     >(() => {
         handleSelect([food.brand, food.name].filter(Boolean).join(' '));
     }, [food, handleSelect]);
+
     const format = useMemo(
         () =>
             new Intl.NumberFormat(i18n.language, { maximumFractionDigits: 1 }),
         [i18n.language],
     );
+
     const nutrients = [
         food.nutrition.calories === null
             ? null
@@ -108,10 +111,11 @@ export const FoodDatabaseSearch = ({
 
     const handleInputChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
         (event) => {
-            setInput(event.currentTarget.value);
+            setInput(event.target.value);
         },
         [],
     );
+
     const handleInputKeyDown = useCallback<
         KeyboardEventHandler<HTMLInputElement>
     >(
@@ -123,6 +127,7 @@ export const FoodDatabaseSearch = ({
         },
         [handleSearch],
     );
+
     const handleCountryChange = useCallback((value: string | null) => {
         setCountry((value ?? 'de') as FoodSearchCountry);
     }, []);

@@ -35,6 +35,7 @@ export const ActivityModal = ({
     const [date, setDate] = useState<string | null>(
         format(initialData?.date ?? new Date(), 'yyyy-MM-dd'),
     );
+
     const [activity, setActivity] = useState(initialData?.activity);
     const [error, setError] = useState('');
 
@@ -49,7 +50,7 @@ export const ActivityModal = ({
     const handleActivityChange = useCallback<
         ChangeEventHandler<HTMLTextAreaElement>
     >((e) => {
-        setActivity(e.currentTarget.value);
+        setActivity(e.target.value);
     }, []);
 
     const handleSave = useCallback<SubmitEventHandler<HTMLFormElement>>(

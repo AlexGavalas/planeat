@@ -225,11 +225,11 @@ export const MealReminders = () => {
     const handleMealReminderSwitchChange = (
         event: ChangeEvent<HTMLInputElement>,
     ): void => {
-        void handleMealReminderChange(event.currentTarget.checked);
+        void handleMealReminderChange(event.target.checked);
     };
 
     const handleTimeChange = (event: ChangeEvent<HTMLInputElement>): void => {
-        setTime(event.currentTarget.value);
+        setTime(event.target.value);
     };
 
     const handleUseCurrentTimezone = (): void => {
@@ -268,7 +268,7 @@ export const MealReminders = () => {
     const handlePushSwitchChange = (
         event: ChangeEvent<HTMLInputElement>,
     ): void => {
-        void handlePushChange(event.currentTarget.checked);
+        void handlePushChange(event.target.checked);
     };
 
     if (isSupported === null) {

@@ -32,7 +32,7 @@ export const FoodDatabaseTab = ({ onDone }: FoodDatabaseTabProps) => {
     const handlePreviewChange = useCallback<
         ChangeEventHandler<HTMLTextAreaElement>
     >((event) => {
-        setPreview(event.currentTarget.value);
+        setPreview(event.target.value);
     }, []);
 
     return (
