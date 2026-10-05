@@ -39,13 +39,14 @@ const config: Config = {
     testPathIgnorePatterns: ['./e2e/'],
 
     transform: {
-        '^.+\\.tsx?$': [
+        '^.+\\.[jt]sx?$': [
             'ts-jest',
             {
                 tsconfig: './tsconfig.test.json',
             },
         ],
     },
+    transformIgnorePatterns: ['<rootDir>/node_modules/.pnpm/(?!(jotai)@)'],
 };
 
 export default config;
