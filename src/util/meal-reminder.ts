@@ -1,5 +1,5 @@
-import { addDays, format } from 'date-fns';
-import { formatInTimeZone, utcToZonedTime, zonedTimeToUtc } from 'date-fns-tz';
+import { TZDate } from '@date-fns/tz';
+import { addDays, format, set } from 'date-fns';
 
 export const getNextReminderAt = ({
     now = new Date(),
@@ -10,22 +10,26 @@ export const getNextReminderAt = ({
     time: string;
     timezone: string;
 }): Date => {
-    const localNow = utcToZonedTime(now, timezone);
-    const localDate = format(localNow, 'yyyy-MM-dd');
-    let next = zonedTimeToUtc(`${localDate}T${time}:00`, timezone);
+    const localNow = new TZDate(now, timezone);
+    const [hours, minutes] = time.split(':').map(Number);
+    let next = set(localNow, {
+        hours,
+        milliseconds: 0,
+        minutes,
+        seconds: 0,
+    });
 
     if (next <= now) {
-        const nextLocalDate = format(addDays(localNow, 1), 'yyyy-MM-dd');
-        next = zonedTimeToUtc(`${nextLocalDate}T${time}:00`, timezone);
+        next = addDays(next, 1);
     }
 
-    return next;
+    return new Date(next);
 };
 
 export const getTomorrowInTimeZone = (now: Date, timezone: string): string => {
-    const localNow = utcToZonedTime(now, timezone);
+    const localNow = new TZDate(now, timezone);
     return format(addDays(localNow, 1), 'yyyy-MM-dd');
 };
 
 export const getLocalDateInTimeZone = (now: Date, timezone: string): string =>
-    formatInTimeZone(now, timezone, 'yyyy-MM-dd');
+    format(new TZDate(now, timezone), 'yyyy-MM-dd');

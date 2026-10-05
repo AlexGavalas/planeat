@@ -1,6 +1,6 @@
 import { eachDayOfInterval, endOfWeek, format, startOfWeek } from 'date-fns';
-import el from 'date-fns/locale/el';
-import enGB from 'date-fns/locale/en-GB';
+import { el } from 'date-fns/locale/el';
+import { enGB } from 'date-fns/locale/en-GB';
 
 const localeMap = {
     en: enGB,
