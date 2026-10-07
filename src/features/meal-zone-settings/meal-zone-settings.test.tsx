@@ -8,21 +8,8 @@ import { renderWithUser, screen, waitFor } from '~test/utils';
 import { saveMealZoneTimes } from '../../app/actions';
 import { MealZoneSettings } from './meal-zone-settings';
 
-jest.mock<typeof import('~hooks/use-meal-zone-times')>(
-    '~hooks/use-meal-zone-times',
-    () => ({
-        useMealZoneTimes: jest.fn(),
-    }),
-);
-jest.mock<
-    Pick<
-        typeof import('~util/notification'),
-        'showErrorNotification' | 'showSuccessNotification'
-    >
->('~util/notification', () => ({
-    showErrorNotification: jest.fn(),
-    showSuccessNotification: jest.fn(),
-}));
+jest.mock('~hooks/use-meal-zone-times');
+jest.mock('~util/notification');
 
 describe('meal zone settings', () => {
     it('captures a changed native time value before saving', async () => {

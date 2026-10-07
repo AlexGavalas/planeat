@@ -3,11 +3,11 @@ import { type Meal } from '~types/meal';
 
 import { Cell, type CellProps } from './cell';
 
-jest.mock<typeof import('~hooks/use-profile')>('~hooks/use-profile', () => ({
+jest.mock('~hooks/use-profile', () => ({
     useProfile: jest.fn().mockReturnValue({}),
 }));
 
-jest.mock<typeof import('~store/hooks')>('~store/hooks', () => ({
+jest.mock('~store/hooks', () => ({
     ...jest.requireActual<typeof import('~store/hooks')>('~store/hooks'),
     useMeals: jest.fn().mockReturnValue({
         deleteEntryCell: jest.fn(),

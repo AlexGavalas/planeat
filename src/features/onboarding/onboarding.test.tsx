@@ -8,7 +8,7 @@ import { Onboarding } from './onboarding';
 
 const mockJoyride = jest.fn<null, [JoyrideProps]>(() => null);
 
-jest.mock<typeof import('react-joyride')>('react-joyride', () => {
+jest.mock('react-joyride', () => {
     const actual =
         jest.requireActual<typeof import('react-joyride')>('react-joyride');
 

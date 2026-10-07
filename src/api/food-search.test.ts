@@ -1,7 +1,5 @@
 import { searchBlsFoods, searchOpenFoodFacts } from './food-search';
 
-jest.mock('server-only', () => ({}), { virtual: true });
-
 describe('food search', () => {
     it('finds BLS foods by German and English names', () => {
         expect.hasAssertions();

@@ -15,39 +15,15 @@ import {
 } from './actions';
 
 jest.unmock('./actions');
-jest.mock<Pick<typeof import('next/cache'), 'revalidatePath'>>(
-    'next/cache',
-    () => ({
-        revalidatePath: jest.fn(),
-    }),
-);
-jest.mock<Pick<typeof import('~api/connection'), 'acceptConnectionRequest'>>(
-    '~api/connection',
-    () => ({
-        acceptConnectionRequest: jest.fn(),
-    }),
-);
-jest.mock<Pick<typeof import('~api/meal'), 'saveMeals'>>('~api/meal', () => ({
-    saveMeals: jest.fn(),
-}));
-jest.mock<Pick<typeof import('~api/meal-zone'), 'saveMealZoneTimes'>>(
-    '~api/meal-zone',
-    () => ({
-        saveMealZoneTimes: jest.fn(),
-    }),
-);
-jest.mock<
-    Pick<typeof import('~api/session'), 'getCurrentUser' | 'getRequestDate'>
->('~api/session', () => ({
+jest.mock('next/cache');
+jest.mock('~api/connection');
+jest.mock('~api/meal');
+jest.mock('~api/meal-zone');
+jest.mock('~api/session', () => ({
     getCurrentUser: jest.fn(),
     getRequestDate: jest.fn(),
 }));
-jest.mock<Pick<typeof import('~api/user'), 'updateProfile'>>(
-    '~api/user',
-    () => ({
-        updateProfile: jest.fn(),
-    }),
-);
+jest.mock('~api/user');
 
 describe('server actions', () => {
     beforeEach(() => {

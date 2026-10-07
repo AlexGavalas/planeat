@@ -65,3 +65,5 @@ jest.mock('../app/actions', () => ({
 jest.mock<typeof nextNavigation>('next/navigation', () =>
     jest.requireActual('next-router-mock/navigation'),
 );
+
+jest.mock('server-only', () => ({}), { virtual: true });

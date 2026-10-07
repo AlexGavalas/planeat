@@ -6,15 +6,8 @@ import { type User } from '~types/user';
 
 import { withUser } from './session';
 
-jest.mock('server-only', () => ({}), { virtual: true });
-jest.mock<Pick<typeof import('next/cache'), 'revalidatePath'>>(
-    'next/cache',
-    () => ({ revalidatePath: jest.fn() }),
-);
-jest.mock<Pick<typeof import('~api/session'), 'getCurrentUser'>>(
-    '~api/session',
-    () => ({ getCurrentUser: jest.fn() }),
-);
+jest.mock('next/cache');
+jest.mock('~api/session', () => ({ getCurrentUser: jest.fn() }));
 
 const user: User = {
     created_at: '2024-01-01T00:00:00Z',
