@@ -58,6 +58,7 @@ Object.defineProperty(window, 'matchMedia', {
 jest.mock('../app/actions', () => ({
     acceptConnectionRequest: jest.fn(),
     saveMealPlan: jest.fn(),
+    saveMealZoneTimes: jest.fn(),
     saveProfile: jest.fn(),
 }));
 

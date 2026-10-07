@@ -1,5 +1,10 @@
-type RowKey = 'morning' | 'snack1' | 'lunch' | 'snack2' | 'dinner';
+import { type MealZoneKey } from '~types/meal-zone';
 
-type RowItem = {
-    key: RowKey;
-};
+declare global {
+    type RowKey = MealZoneKey;
+    type RowItem = {
+        key: MealZoneKey;
+    };
+}
+
+export {};

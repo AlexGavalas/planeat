@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ROWS } from '~constants/calendar';
+import { useMealZoneTimes } from '~hooks/use-meal-zone-times';
 import { useCurrentWeek, useMeals, useUnsavedChanges } from '~store/hooks';
 import { type MealsMap } from '~types/meal';
 import { getDaysOfWeek } from '~util/date';
@@ -14,6 +15,7 @@ export const Content = () => {
     const { currentWeek } = useCurrentWeek();
     const { unsavedChanges } = useUnsavedChanges();
     const { meals } = useMeals();
+    const { times } = useMealZoneTimes(currentWeek);
 
     const mealsMap = useMemo(
         () =>
@@ -48,7 +50,10 @@ export const Content = () => {
 
                     return (
                         <div key={row.key} className={styles.row}>
-                            <h3>{row.label}</h3>
+                            <h3>
+                                <span>{row.label}</span>
+                                <small>{times[row.key]}</small>
+                            </h3>
                             <Cell
                                 key={label}
                                 isRow
@@ -68,7 +73,10 @@ export const Content = () => {
 
                 return (
                     <div key={row.key} className={styles.row}>
-                        <h3>{row.label}</h3>
+                        <h3>
+                            <span>{row.label}</span>
+                            <small>{times[row.key]}</small>
+                        </h3>
                         {daysOfWeek.map(({ label, timestamp }) => (
                             <Cell
                                 key={label}

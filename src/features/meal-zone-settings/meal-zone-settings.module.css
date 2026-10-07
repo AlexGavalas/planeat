@@ -1,0 +1,10 @@
+.saveButton {
+    align-self: flex-end;
+}
+
+@media (max-width: 48em) {
+    .saveButton {
+        min-height: var(--app-size-action);
+        width: 100%;
+    }
+}

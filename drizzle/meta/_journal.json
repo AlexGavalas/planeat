@@ -29,6 +29,13 @@
             "when": 1790875511026,
             "tag": "0003_ancient_kate_bishop",
             "breakpoints": true
+        },
+        {
+            "idx": 4,
+            "version": "7",
+            "when": 1791387664446,
+            "tag": "0004_sharp_thunderbird",
+            "breakpoints": true
         }
     ]
 }

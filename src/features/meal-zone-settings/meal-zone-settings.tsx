@@ -1,0 +1,134 @@
+'use client';
+
+import { Button, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { TimeInput } from '@mantine/dates';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { format, parseISO } from 'date-fns';
+import { type ChangeEvent, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { DEFAULT_MEAL_ZONE_TIMES, ROWS } from '~constants/calendar';
+import { useMealZoneTimes } from '~hooks/use-meal-zone-times';
+import { mealZoneTimesSchema } from '~schemas/meal-zone';
+import { type MealZoneKey, type MealZoneTimes } from '~types/meal-zone';
+import {
+    showErrorNotification,
+    showSuccessNotification,
+} from '~util/notification';
+
+import { saveMealZoneTimes } from '../../app/actions';
+import styles from './meal-zone-settings.module.css';
+
+export const MealZoneSettings = () => {
+    const { t } = useTranslation();
+    const queryClient = useQueryClient();
+    const { effectiveFrom, isFetching, times } = useMealZoneTimes();
+    const [values, setValues] = useState<MealZoneTimes>(
+        DEFAULT_MEAL_ZONE_TIMES,
+    );
+    const [hasLoaded, setHasLoaded] = useState(false);
+
+    useEffect(() => {
+        if (!isFetching && !hasLoaded) {
+            setValues(times);
+            setHasLoaded(true);
+        }
+    }, [hasLoaded, isFetching, times]);
+
+    const validation = mealZoneTimesSchema.safeParse(values);
+
+    const { isPending, mutate } = useMutation({
+        mutationFn: async () => {
+            const response = await saveMealZoneTimes({ times: values });
+
+            if (!response.ok) {
+                throw new Error('Could not save meal zone times');
+            }
+
+            return response;
+        },
+        onError: () => {
+            showErrorNotification({
+                message: t('meal_zone_settings.save_error'),
+                title: t('notification.error.title'),
+            });
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: ['meal-zone-times'],
+            });
+            showSuccessNotification({
+                message: t('meal_zone_settings.save_success'),
+                title: t('notification.success.title'),
+            });
+        },
+    });
+
+    const handleChange =
+        (key: MealZoneKey) => (event: ChangeEvent<HTMLInputElement>) => {
+            const value = event.target.value;
+
+            setValues((current) => ({
+                ...current,
+                [key]: value,
+            }));
+        };
+
+    const handleSave = () => {
+        if (validation.success) {
+            mutate();
+        }
+    };
+
+    const isBusy = isFetching || isPending;
+    const formattedEffectiveDate = effectiveFrom
+        ? format(parseISO(effectiveFrom), 'dd/MM/yyyy')
+        : '';
+
+    return (
+        <Stack gap="md">
+            <div>
+                <Title order={3}>{t('meal_zone_settings.title')}</Title>
+                <Text c="dimmed" mt="xs" size="sm">
+                    {t('meal_zone_settings.description', {
+                        date: formattedEffectiveDate,
+                    })}
+                </Text>
+            </div>
+            <SimpleGrid cols={{ base: 1, md: 5, sm: 2 }} spacing="md">
+                {ROWS.map(({ key }, index) => {
+                    const previous = ROWS[index - 1];
+                    const next = ROWS[index + 1];
+
+                    return (
+                        <TimeInput
+                            key={key}
+                            disabled={isBusy}
+                            error={
+                                !validation.success &&
+                                validation.error.issues.some(
+                                    (issue) => issue.path[0] === key,
+                                )
+                                    ? t('meal_zone_settings.order_error')
+                                    : undefined
+                            }
+                            label={t(`meal_zone_settings.labels.${key}`)}
+                            maxTime={next ? values[next.key] : '23:59'}
+                            minTime={previous ? values[previous.key] : '00:00'}
+                            onChange={handleChange(key)}
+                            value={values[key]}
+                        />
+                    );
+                })}
+            </SimpleGrid>
+            <Button
+                className={styles.saveButton}
+                disabled={!validation.success || isFetching}
+                loading={isPending}
+                onClick={handleSave}
+            >
+                {t('generic.actions.save')}
+            </Button>
+        </Stack>
+    );
+};

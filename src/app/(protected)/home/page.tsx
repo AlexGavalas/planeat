@@ -3,6 +3,7 @@ import { endOfDay, format, startOfDay } from 'date-fns';
 import { Suspense } from 'react';
 
 import { fetchMeals } from '~api/meal';
+import { fetchMealZoneTimes } from '~api/meal-zone';
 import { fetchMeasurementSummary } from '~api/measurement';
 import { getRequestDate, requireUser } from '~api/session';
 import {
@@ -19,11 +20,15 @@ async function DailyMeals() {
 
     const now = getRequestDate();
 
-    const meals = await fetchMeals({
-        endDate: format(endOfDay(now), 'yyyy-MM-dd HH:mm'),
-        startDate: format(startOfDay(now), 'yyyy-MM-dd HH:mm'),
-        userId: profile.id,
-    });
+    const day = format(now, 'yyyy-MM-dd');
+    const [meals, mealZoneTimes] = await Promise.all([
+        fetchMeals({
+            endDate: format(endOfDay(now), 'yyyy-MM-dd HH:mm'),
+            startDate: format(startOfDay(now), 'yyyy-MM-dd HH:mm'),
+            userId: profile.id,
+        }),
+        fetchMealZoneTimes({ effectiveOn: day, userId: profile.id }),
+    ]);
 
     return (
         <DailyMeal
@@ -31,6 +36,7 @@ async function DailyMeals() {
                 meals.data.map((meal) => [meal.section_key, meal]),
             )}
             date={format(now, "yyyy-MM-dd'T'HH:mm:ss")}
+            mealZoneTimes={mealZoneTimes}
         />
     );
 }

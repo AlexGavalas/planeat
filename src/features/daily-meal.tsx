@@ -1,28 +1,30 @@
 'use client';
 
 import { Spoiler, Stack, Text, Timeline, Title } from '@mantine/core';
-import { format, isAfter, parseISO, set, startOfDay } from 'date-fns';
+import { format, isAfter, parse, parseISO, startOfDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
 import { MEAL_ICON, ROWS } from '~constants/calendar';
 import { type MealsMap } from '~types/meal';
+import { type MealZoneTimes } from '~types/meal-zone';
 
 type DailyMealProps = Readonly<{
     dailyMeals: MealsMap;
     date: string;
+    mealZoneTimes: MealZoneTimes;
 }>;
 
-export const DailyMeal = ({ dailyMeals, date }: DailyMealProps) => {
+export const DailyMeal = ({
+    dailyMeals,
+    date,
+    mealZoneTimes,
+}: DailyMealProps) => {
     const now = parseISO(date);
     const start = startOfDay(now);
 
-    const mealTimes: Record<RowKey, Date> = {
-        dinner: set(start, { hours: 20 }),
-        lunch: set(start, { hours: 13 }),
-        morning: set(start, { hours: 9 }),
-        snack1: set(start, { hours: 11 }),
-        snack2: set(start, { hours: 17 }),
-    };
+    const mealTimes = Object.fromEntries(
+        ROWS.map(({ key }) => [key, parse(mealZoneTimes[key], 'HH:mm', start)]),
+    ) as Record<RowKey, Date>;
 
     const { t } = useTranslation();
 
@@ -55,7 +57,7 @@ export const DailyMeal = ({ dailyMeals, date }: DailyMealProps) => {
                             bullet={<Icon />}
                             title={
                                 <Text fw="var(--mantine-font-weight-bold)">
-                                    {row.label}
+                                    {row.label} · {mealZoneTimes[row.key]}
                                 </Text>
                             }
                         >
