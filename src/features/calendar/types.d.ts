@@ -1,5 +1,7 @@
-type RowKey = 'morning' | 'snack1' | 'lunch' | 'snack2' | 'dinner';
+import { type MealZoneKey } from '~types/meal-zone';
 
-type RowItem = {
-    key: RowKey;
+export type RowKey = MealZoneKey;
+
+export type RowItem = {
+    key: MealZoneKey;
 };

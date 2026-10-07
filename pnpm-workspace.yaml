@@ -1,4 +1,5 @@
 saveExact: true
+pmOnFail: ignore
 
 allowBuilds:
     '@parcel/watcher': true

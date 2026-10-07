@@ -2,50 +2,51 @@ import { revalidatePath } from 'next/cache';
 
 import { acceptConnectionRequest as acceptRequest } from '~api/connection';
 import { saveMeals } from '~api/meal';
-import { getCurrentUser } from '~api/session';
+import { saveMealZoneTimes as saveZoneTimes } from '~api/meal-zone';
+import { getCurrentUser, getRequestDate } from '~api/session';
 import { updateProfile } from '~api/user';
 import { type User } from '~types/user';
 
-import { acceptConnectionRequest, saveMealPlan, saveProfile } from './actions';
+import {
+    acceptConnectionRequest,
+    saveMealPlan,
+    saveMealZoneTimes,
+    saveProfile,
+} from './actions';
 
 jest.unmock('./actions');
-jest.mock<Pick<typeof import('next/cache'), 'revalidatePath'>>(
-    'next/cache',
-    () => ({
-        revalidatePath: jest.fn(),
-    }),
-);
-jest.mock<Pick<typeof import('~api/connection'), 'acceptConnectionRequest'>>(
-    '~api/connection',
-    () => ({
-        acceptConnectionRequest: jest.fn(),
-    }),
-);
-jest.mock<Pick<typeof import('~api/meal'), 'saveMeals'>>('~api/meal', () => ({
-    saveMeals: jest.fn(),
+jest.mock('next/cache');
+jest.mock('~api/connection');
+jest.mock('~api/meal');
+jest.mock('~api/meal-zone');
+jest.mock('~api/session', () => ({
+    getCurrentUser: jest.fn(),
+    getRequestDate: jest.fn(),
 }));
-jest.mock<Pick<typeof import('~api/session'), 'getCurrentUser'>>(
-    '~api/session',
-    () => ({
-        getCurrentUser: jest.fn(),
-    }),
-);
-jest.mock<Pick<typeof import('~api/user'), 'updateProfile'>>(
-    '~api/user',
-    () => ({
-        updateProfile: jest.fn(),
-    }),
-);
+jest.mock('~api/user');
 
 describe('server actions', () => {
     beforeEach(() => {
         jest.mocked(getCurrentUser).mockResolvedValue({ id: 7 } as User);
+        jest.mocked(getRequestDate).mockReturnValue(
+            new Date('2026-10-07T12:00:00Z'),
+        );
     });
 
     it.each([
         (): Promise<{ ok: boolean }> =>
             saveMealPlan({ deletedIds: [], editedMeals: [], newMeals: [] }),
         (): Promise<{ ok: boolean }> => saveProfile({ height: 180 }),
+        (): Promise<{ ok: boolean }> =>
+            saveMealZoneTimes({
+                times: {
+                    dinner: '20:00',
+                    lunch: '13:00',
+                    morning: '09:00',
+                    snack1: '11:00',
+                    snack2: '17:00',
+                },
+            }),
         (): Promise<{ ok: boolean }> =>
             acceptConnectionRequest('aa6787bf-7452-4b54-b3c5-0d5588e7a558'),
     ])('rejects unauthenticated mutations (%#)', async (action) => {
@@ -59,21 +60,63 @@ describe('server actions', () => {
             jest.mocked(saveMeals).mock.calls,
             jest.mocked(updateProfile).mock.calls,
             jest.mocked(acceptRequest).mock.calls,
-        ]).toStrictEqual([[], [], []]);
+            jest.mocked(saveZoneTimes).mock.calls,
+        ]).toStrictEqual([[], [], [], []]);
     });
 
     it('rejects malformed input before writing', async () => {
         expect.hasAssertions();
 
-        await expect(
+        const results = await Promise.all([
             saveMealPlan({ newMeals: 'invalid' }),
-        ).resolves.toStrictEqual({ ok: false });
+            saveProfile({ height: 'invalid' }),
+            saveMealZoneTimes({
+                times: {
+                    dinner: '20:00',
+                    lunch: '10:00',
+                    morning: '09:00',
+                    snack1: '11:00',
+                    snack2: '17:00',
+                },
+            }),
+        ]);
 
-        await expect(saveProfile({ height: 'invalid' })).resolves.toStrictEqual(
+        expect(results).toStrictEqual([
             { ok: false },
-        );
+            { ok: false },
+            { ok: false },
+        ]);
 
-        expect(revalidatePath).not.toHaveBeenCalled();
+        expect({
+            revalidationCalls: jest.mocked(revalidatePath).mock.calls,
+            zoneTimeCalls: jest.mocked(saveZoneTimes).mock.calls,
+        }).toStrictEqual({ revalidationCalls: [], zoneTimeCalls: [] });
+    });
+
+    it('saves ordered zone times for next Monday and preserves history', async () => {
+        expect.hasAssertions();
+
+        const times = {
+            dinner: '21:00',
+            lunch: '13:30',
+            morning: '08:30',
+            snack1: '11:00',
+            snack2: '17:30',
+        };
+
+        await expect(saveMealZoneTimes({ times })).resolves.toStrictEqual({
+            effectiveFrom: '2026-10-12',
+            ok: true,
+        });
+
+        expect(saveZoneTimes).toHaveBeenCalledWith({
+            effectiveFrom: '2026-10-12',
+            times,
+            userId: 7,
+        });
+        expect(jest.mocked(revalidatePath).mock.calls).toStrictEqual(
+            expect.arrayContaining([['/home'], ['/meal-plan'], ['/settings']]),
+        );
     });
 
     it('uses the authenticated identity and invalidates affected pages', async () => {

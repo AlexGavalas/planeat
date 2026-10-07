@@ -15,6 +15,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MEAL_ICON, ROWS } from '~constants/calendar';
+import { useMealZoneTimes } from '~hooks/use-meal-zone-times';
 import { useProfile } from '~hooks/use-profile';
 import { useCurrentWeek, useMeals, useUnsavedChanges } from '~store/hooks';
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
@@ -22,6 +23,7 @@ import { getDaysOfWeek } from '~util/date';
 import { useOpenContextModal } from '~util/modal';
 
 import styles from './mobile-content.module.css';
+import type { RowItem, RowKey } from './types';
 
 type MobileMealProps = Readonly<{
     id: string;
@@ -29,6 +31,7 @@ type MobileMealProps = Readonly<{
     isRow: boolean;
     label: string;
     meal?: Meal | EditedMeal;
+    time: string;
     timestamp: Date;
 }>;
 
@@ -74,6 +77,7 @@ const MobileMeal = ({
     isRow,
     label,
     meal,
+    time,
     timestamp,
 }: MobileMealProps) => {
     const { t } = useTranslation();
@@ -193,7 +197,7 @@ const MobileMeal = ({
                     )}
                     <Stack gap="micro">
                         <Text fw="var(--mantine-font-weight-bold)">
-                            {label}
+                            {label} · {time}
                         </Text>
                         <Text c={meal?.meal ? undefined : 'dimmed'}>
                             {meal?.meal || 'N/A'}
@@ -267,6 +271,7 @@ export const MobileContent = ({
 }: Readonly<{ initialDate: string }>) => {
     const { i18n, t } = useTranslation();
     const { currentWeek } = useCurrentWeek();
+    const { times } = useMealZoneTimes(currentWeek);
     const { meals } = useMeals();
     const { unsavedChanges } = useUnsavedChanges();
     const [selectedDay, setSelectedDay] = useState(
@@ -319,6 +324,7 @@ export const MobileContent = ({
                 isRow={isRow}
                 label={t(`row.${row.key}`)}
                 meal={unsavedChanges[id] ?? mealsMap[id]}
+                time={times[row.key]}
                 timestamp={sectionDay.timestamp}
             />
         );

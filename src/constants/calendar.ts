@@ -1,12 +1,15 @@
 import { AppleHalf, Bbq, CrackedEgg, OrangeSliceAlt } from 'iconoir-react';
 
-export const ROWS: RowItem[] = [
-    { key: 'morning' },
-    { key: 'snack1' },
-    { key: 'lunch' },
-    { key: 'snack2' },
-    { key: 'dinner' },
-];
+import { MEAL_ZONE_KEYS } from '~constants/meal-zones';
+import { type MealZoneKey } from '~types/meal-zone';
+
+export { DEFAULT_MEAL_ZONE_TIMES } from './meal-zones';
+
+export type MealZone = {
+    key: MealZoneKey;
+};
+
+export const ROWS: MealZone[] = MEAL_ZONE_KEYS.map((key) => ({ key }));
 
 export const MEAL_ICON = {
     dinner: Bbq,

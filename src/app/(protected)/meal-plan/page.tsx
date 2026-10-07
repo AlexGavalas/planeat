@@ -11,6 +11,7 @@ import { Suspense } from 'react';
 
 import { fetchActivities } from '~api/activity';
 import { fetchMeals } from '~api/meal';
+import { fetchMealZoneTimes } from '~api/meal-zone';
 import { getRequestDate, requireUser } from '~api/session';
 import { MealPlanPageSkeleton } from '~components/loading-skeleton';
 import { MealPlan } from '~features/screens/meal-plan';
@@ -36,15 +37,20 @@ async function MealPlanContent({ searchParams }: MealPlanPageProps) {
 
     const endDate = format(endOfWeek(now, { weekStartsOn: 1 }), 'yyyy-MM-dd');
 
-    const [meals, activities] = await Promise.all([
+    const [meals, activities, mealZoneTimes] = await Promise.all([
         fetchMeals({ endDate, startDate, userId: profile.id }),
         fetchActivities({ endDate, startDate, userId: profile.id }),
+        fetchMealZoneTimes({ effectiveOn: startDate, userId: profile.id }),
     ]);
 
     const client = createQueryClient();
 
     client.setQueryData(['meals', startDate], meals.data);
     client.setQueryData(['activities', 'week', startDate], activities);
+    client.setQueryData(['meal-zone-times', startDate], {
+        data: mealZoneTimes,
+        effectiveFrom: startDate,
+    });
 
     return (
         <HydrationBoundary state={dehydrate(client)}>

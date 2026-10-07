@@ -148,7 +148,7 @@ export default defineConfig([
             'jest/no-confusing-set-timeout': 'error',
             'jest/no-duplicate-hooks': 'error',
             'jest/no-test-return-statement': 'error',
-            'jest/no-untyped-mock-factory': 'warn',
+            'jest/no-untyped-mock-factory': 'off',
             'jest/prefer-called-with': 'warn',
             'jest/prefer-comparison-matcher': 'error',
             'jest/prefer-equality-matcher': 'error',

@@ -6,6 +6,7 @@ import {
     doublePrecision,
     index,
     pgTable,
+    primaryKey,
     text,
     time,
     timestamp,
@@ -54,6 +55,28 @@ export const meals = pgTable(
         rating: doublePrecision('rating'),
     },
     (table) => [index('meals_user_id_day_idx').on(table.user_id, table.day)],
+);
+
+export const mealZoneTimes = pgTable(
+    'meal_zone_times',
+    {
+        effective_from: date('effective_from').notNull(),
+        time: time('time').notNull(),
+        user_id: bigint('user_id', { mode: 'number' })
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+        zone_key: text('zone_key').notNull(),
+    },
+    (table) => [
+        primaryKey({
+            columns: [table.user_id, table.effective_from, table.zone_key],
+            name: 'meal_zone_times_user_effective_zone_pk',
+        }),
+        index('meal_zone_times_user_effective_idx').on(
+            table.user_id,
+            table.effective_from,
+        ),
+    ],
 );
 
 export const measurements = pgTable(

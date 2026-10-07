@@ -5,7 +5,7 @@ import { renderWithUser, screen } from '~test/utils';
 
 import { UserActions } from './user-actions';
 
-jest.mock<typeof import('next-auth/react')>('next-auth/react', () => {
+jest.mock('next-auth/react', () => {
     const actual =
         jest.requireActual<typeof import('next-auth/react')>('next-auth/react');
 

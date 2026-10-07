@@ -11,9 +11,17 @@
 }
 
 .row h3 {
+    flex-direction: column;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     word-break: break-all;
     hyphens: auto;
+}
+
+.row h3 small {
+    color: var(--mantine-color-dimmed);
+    font-size: var(--mantine-font-size-sm);
+    font-weight: normal;
+    margin-top: var(--mantine-spacing-micro);
 }

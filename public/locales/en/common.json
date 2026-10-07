@@ -104,6 +104,20 @@
         "more_actions": "More actions",
         "select_day": "Select a day"
     },
+    "meal_zone_settings": {
+        "title": "Meal schedule",
+        "description": "Set the default times for new weeks. These changes will apply from {{date}}; earlier weeks will not change.",
+        "labels": {
+            "morning": "Morning",
+            "snack1": "First snack",
+            "lunch": "Lunch",
+            "snack2": "Second snack",
+            "dinner": "Dinner"
+        },
+        "order_error": "Must not be earlier than the previous meal zone",
+        "save_error": "We could not save your meal schedule. Please try again.",
+        "save_success": "Your meal schedule has been saved for future weeks."
+    },
     "settings": "Settings",
     "height_input": "Your height (in cm)",
     "target_weight_input": "Your target weight (in kg)",

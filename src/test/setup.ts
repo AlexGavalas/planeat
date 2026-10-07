@@ -58,9 +58,12 @@ Object.defineProperty(window, 'matchMedia', {
 jest.mock('../app/actions', () => ({
     acceptConnectionRequest: jest.fn(),
     saveMealPlan: jest.fn(),
+    saveMealZoneTimes: jest.fn(),
     saveProfile: jest.fn(),
 }));
 
 jest.mock<typeof nextNavigation>('next/navigation', () =>
     jest.requireActual('next-router-mock/navigation'),
 );
+
+jest.mock('server-only', () => ({}), { virtual: true });
