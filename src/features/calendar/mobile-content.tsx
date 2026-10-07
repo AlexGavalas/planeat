@@ -23,6 +23,7 @@ import { getDaysOfWeek } from '~util/date';
 import { useOpenContextModal } from '~util/modal';
 
 import styles from './mobile-content.module.css';
+import type { RowItem, RowKey } from './types';
 
 type MobileMealProps = Readonly<{
     id: string;

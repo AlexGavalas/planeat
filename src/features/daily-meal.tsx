@@ -8,6 +8,8 @@ import { MEAL_ICON, ROWS } from '~constants/calendar';
 import { type MealsMap } from '~types/meal';
 import { type MealZoneTimes } from '~types/meal-zone';
 
+import type { RowKey } from './calendar/types';
+
 type DailyMealProps = Readonly<{
     dailyMeals: MealsMap;
     date: string;
