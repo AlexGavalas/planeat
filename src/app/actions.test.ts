@@ -3,15 +3,20 @@ import { revalidatePath } from 'next/cache';
 import { acceptConnectionRequest as acceptRequest } from '~api/connection';
 import { saveMeals } from '~api/meal';
 import { saveMealZoneTimes as saveZoneTimes } from '~api/meal-zone';
+import {
+    requireMealPlanAccess,
+    setProfessionalRole as updateProfessionalRole,
+} from '~api/professional';
 import { getCurrentUser, getRequestDate } from '~api/session';
 import { updateProfile } from '~api/user';
-import { type User } from '~types/user';
+import { type UserProfile } from '~types/user';
 
 import {
     acceptConnectionRequest,
     saveMealPlan,
     saveMealZoneTimes,
     saveProfile,
+    setProfessionalRole,
 } from './actions';
 
 jest.unmock('./actions');
@@ -19,6 +24,7 @@ jest.mock('next/cache');
 jest.mock('~api/connection');
 jest.mock('~api/meal');
 jest.mock('~api/meal-zone');
+jest.mock('~api/professional');
 jest.mock('~api/session', () => ({
     getCurrentUser: jest.fn(),
     getRequestDate: jest.fn(),
@@ -27,7 +33,11 @@ jest.mock('~api/user');
 
 describe('server actions', () => {
     beforeEach(() => {
-        jest.mocked(getCurrentUser).mockResolvedValue({ id: 7 } as User);
+        jest.mocked(getCurrentUser).mockResolvedValue({
+            id: 7,
+            professional_is_discoverable: false,
+            roles: [],
+        } as unknown as UserProfile);
         jest.mocked(getRequestDate).mockReturnValue(
             new Date('2026-10-07T12:00:00Z'),
         );
@@ -137,6 +147,45 @@ describe('server actions', () => {
         });
         expect(revalidatePath).toHaveBeenCalledWith('/home');
         expect(revalidatePath).toHaveBeenCalledWith('/meal-plan');
+    });
+
+    it('authorizes a delegated owner before saving their meal plan', async () => {
+        expect.hasAssertions();
+
+        await expect(
+            saveMealPlan({
+                deletedIds: [],
+                editedMeals: [],
+                newMeals: [],
+                ownerUserId: 42,
+            }),
+        ).resolves.toStrictEqual({ ok: true });
+
+        expect(requireMealPlanAccess).toHaveBeenCalledWith({
+            actorUserId: 7,
+            ownerUserId: 42,
+        });
+        expect(saveMeals).toHaveBeenCalledWith({
+            allowAnnotations: false,
+            deletedIds: [],
+            editedMeals: [],
+            newMeals: [],
+            userId: 42,
+        });
+    });
+
+    it('updates the professional role for the authenticated account', async () => {
+        expect.hasAssertions();
+
+        await expect(
+            setProfessionalRole({ enabled: true }),
+        ).resolves.toStrictEqual({ ok: true });
+
+        expect(updateProfessionalRole).toHaveBeenCalledWith({
+            enabled: true,
+            userId: 7,
+        });
+        expect(revalidatePath).toHaveBeenCalledWith('/', 'layout');
     });
 
     it('returns failure without invalidating pages if the transaction fails', async () => {

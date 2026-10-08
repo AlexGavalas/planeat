@@ -37,13 +37,15 @@ describe('useWeeklyScheduleOps', () => {
             new Date('2024-01-08T12:00:00Z'),
         );
         expect(store.get(unsavedChangesAtom)).toStrictEqual({
-            'Breakfast_Mon 08/01/2024': {
-                day: '2024-01-08',
-                meal: 'Greek yogurt and fruit',
-                note: 'Add honey',
-                rating: 4,
-                section_key: 'Breakfast_Mon 08/01/2024',
-                user_id: 7,
+            anonymous: {
+                'Breakfast_Mon 08/01/2024': {
+                    day: '2024-01-08',
+                    meal: 'Greek yogurt and fruit',
+                    note: 'Add honey',
+                    rating: 4,
+                    section_key: 'Breakfast_Mon 08/01/2024',
+                    user_id: 7,
+                },
             },
         });
     });

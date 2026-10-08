@@ -50,11 +50,11 @@ describe('<UserActions />', () => {
         );
 
         expect(mockSignIn).toHaveBeenCalledWith('credentials', {
-            callbackUrl: '/home',
+            callbackUrl: '/',
             email: 'USER@example.com',
             password: 'password123',
             redirect: false,
         });
-        expect(mockRouter.asPath).toBe('/home');
+        expect(mockRouter.asPath).toBe('/');
     });
 });

@@ -2,8 +2,8 @@ import { and, eq, ilike, ne } from 'drizzle-orm';
 import 'server-only';
 
 import { getDb } from '~db';
-import { userCredentials, users } from '~db/schema';
-import { type User } from '~types/user';
+import { userCredentials, userRoles, users } from '~db/schema';
+import { type User, type UserProfile, type UserRole } from '~types/user';
 
 const MAX_QUERY_RESULTS = 5;
 
@@ -19,14 +19,33 @@ export const fetchUser = async ({
     email,
 }: {
     email: string;
-}): Promise<User | null> =>
-    (
-        await getDb()
-            .select()
-            .from(users)
-            .where(eq(users.email, email))
-            .limit(1)
-    )[0] ?? null;
+}): Promise<UserProfile | null> => {
+    const db = getDb();
+    const user =
+        (
+            await db.select().from(users).where(eq(users.email, email)).limit(1)
+        )[0] ?? null;
+
+    if (!user) {
+        return null;
+    }
+
+    const roles = await db
+        .select({
+            isDiscoverable: userRoles.is_discoverable,
+            role: userRoles.role,
+        })
+        .from(userRoles)
+        .where(eq(userRoles.user_id, user.id));
+
+    const professionalRole = roles.find(({ role }) => role === 'professional');
+
+    return {
+        ...user,
+        professional_is_discoverable: professionalRole?.isDiscoverable ?? false,
+        roles: roles.map(({ role }) => role as UserRole),
+    };
+};
 
 export const fetchUserCredentials = async ({
     email,
@@ -52,10 +71,12 @@ export const createCredentialsUser = async ({
     email,
     fullName,
     passwordHash,
+    professional = false,
 }: {
     email: string;
     fullName: string;
     passwordHash: string;
+    professional?: boolean;
 }): Promise<{ id: number }> =>
     getDb().transaction(async (transaction) => {
         const [user] = await transaction
@@ -71,6 +92,13 @@ export const createCredentialsUser = async ({
             password_hash: passwordHash,
             user_id: user.id,
         });
+
+        if (professional) {
+            await transaction.insert(userRoles).values({
+                role: 'professional',
+                user_id: user.id,
+            });
+        }
 
         return user;
     });

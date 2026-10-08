@@ -13,6 +13,7 @@ export const Header = () => {
     const { profile, isFetching } = useProfile();
 
     const hasUser = !isFetching && !!profile;
+    const isProfessional = profile?.roles.includes('professional') ?? false;
 
     return (
         <Group
@@ -30,10 +31,13 @@ export const Header = () => {
                 <Group className={styles.actions} gap="md" wrap="nowrap">
                     {hasUser && (
                         <Box visibleFrom="sm">
-                            <Nav />
+                            <Nav isProfessional={isProfessional} />
                         </Box>
                     )}
-                    <UserActions hasUser={hasUser} />
+                    <UserActions
+                        hasUser={hasUser}
+                        isProfessional={isProfessional}
+                    />
                 </Group>
             )}
         </Group>

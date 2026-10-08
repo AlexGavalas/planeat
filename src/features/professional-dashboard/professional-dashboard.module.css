@@ -1,0 +1,20 @@
+.layout {
+    align-items: start;
+    display: grid;
+    gap: var(--mantine-spacing-lg);
+    grid-template-columns: minmax(20rem, 0.8fr) minmax(0, 1.7fr);
+}
+
+.rowButton {
+    color: inherit;
+    cursor: pointer;
+    display: block;
+    text-align: left;
+    width: 100%;
+}
+
+@media (max-width: 64em) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+}

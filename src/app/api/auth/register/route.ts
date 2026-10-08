@@ -14,7 +14,12 @@ export async function POST(request: Request): Promise<Response> {
         );
     }
 
-    const { email, fullName, password } = parsed.data;
+    const {
+        email,
+        fullName,
+        password,
+        professional: isProfessional,
+    } = parsed.data;
 
     if (await fetchUser({ email })) {
         return Response.json(
@@ -26,7 +31,12 @@ export async function POST(request: Request): Promise<Response> {
     const passwordHash = await hashPassword(password);
 
     try {
-        await createCredentialsUser({ email, fullName, passwordHash });
+        await createCredentialsUser({
+            email,
+            fullName,
+            passwordHash,
+            professional: isProfessional,
+        });
     } catch (error) {
         if (
             typeof error === 'object' &&

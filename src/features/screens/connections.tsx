@@ -11,16 +11,22 @@ import styles from './connections.module.css';
 
 type ConnectionsProps = Readonly<{
     connections: ReactNode;
+    professional: ReactNode;
     requests: ReactNode;
 }>;
 
-export function Connections({ connections, requests }: ConnectionsProps) {
+export function Connections({
+    connections,
+    professional,
+    requests,
+}: ConnectionsProps) {
     const { t } = useTranslation();
 
     return (
         <Container className={styles.container}>
             <Stack gap="md">
                 <Title order={2}>{t('connections.title')}</Title>
+                <Card>{professional}</Card>
                 <Card>
                     <FindUsers />
                 </Card>

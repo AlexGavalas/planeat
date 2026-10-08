@@ -11,4 +11,5 @@ export const loginSchema = z.object({
 
 export const registrationSchema = loginSchema.extend({
     fullName: z.string().trim().min(2).max(100),
+    professional: z.boolean().optional().default(false),
 });

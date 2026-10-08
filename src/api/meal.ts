@@ -59,10 +59,12 @@ export const deleteMeals = async ({
 };
 
 export const updateMeals = async ({
+    allowAnnotations = true,
     editedMeals,
     userId,
     db = getDb(),
 }: {
+    allowAnnotations?: boolean;
     db?: ReturnType<typeof getDb>;
     editedMeals: EditedMeal[];
     userId: number;
@@ -78,8 +80,10 @@ export const updateMeals = async ({
                 .set({
                     day: meal.day,
                     meal: meal.meal,
-                    note: meal.note,
-                    rating: meal.rating,
+                    ...(allowAnnotations && {
+                        note: meal.note,
+                        rating: meal.rating,
+                    }),
                     section_key: meal.section_key,
                 })
                 .where(and(eq(meals.id, meal.id), eq(meals.user_id, userId)));
@@ -90,10 +94,12 @@ export const updateMeals = async ({
 };
 
 export const createMeals = async ({
+    allowAnnotations = true,
     newMeals,
     userId,
     db = getDb(),
 }: {
+    allowAnnotations?: boolean;
     db?: ReturnType<typeof getDb>;
     newMeals: EditedMeal[];
     userId: number;
@@ -103,6 +109,7 @@ export const createMeals = async ({
             newMeals.map((meal) => ({
                 ...meal,
                 id: undefined,
+                ...(!allowAnnotations && { note: null, rating: null }),
                 user_id: userId,
             })),
         );
@@ -112,6 +119,7 @@ export const createMeals = async ({
 };
 
 export const saveMeals = async (input: {
+    allowAnnotations?: boolean;
     deletedIds: string[];
     editedMeals: EditedMeal[];
     newMeals: EditedMeal[];

@@ -15,6 +15,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MEAL_ICON, ROWS } from '~constants/calendar';
+import { useMealPlanOwnerId } from '~features/meal-plan-owner';
 import { useMealZoneTimes } from '~hooks/use-meal-zone-times';
 import { useProfile } from '~hooks/use-profile';
 import { useCurrentWeek, useMeals, useUnsavedChanges } from '~store/hooks';
@@ -81,7 +82,9 @@ const MobileMeal = ({
     timestamp,
 }: MobileMealProps) => {
     const { t } = useTranslation();
+    const ownerUserId = useMealPlanOwnerId();
     const { profile } = useProfile();
+    const canEditAnnotations = ownerUserId === profile?.id;
     const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =
         useMeals();
     const openEditMealModal = useOpenContextModal('meal');
@@ -91,7 +94,7 @@ const MobileMeal = ({
     const Icon = MEAL_ICON[rowKey as RowKey];
 
     const handleSave = (newMeal: Partial<Meal>): Promise<void> => {
-        if (!profile || !newMeal.meal) {
+        if (!ownerUserId || !newMeal.meal) {
             return Promise.resolve();
         }
 
@@ -100,7 +103,7 @@ const MobileMeal = ({
                 note: newMeal.note,
                 rating: newMeal.rating,
                 sectionKey: id,
-                userId: profile.id,
+                userId: ownerUserId,
                 value: newMeal.meal,
             });
         } else {
@@ -110,7 +113,7 @@ const MobileMeal = ({
                 rating: newMeal.rating,
                 sectionKey: id,
                 timestamp,
-                userId: profile.id,
+                userId: ownerUserId,
                 value: newMeal.meal,
             });
         }
@@ -137,6 +140,7 @@ const MobileMeal = ({
                 initialMeal: meal?.meal ?? '',
                 onDelete: handleDelete,
                 onSave: (value: string) => handleSave({ ...meal, meal: value }),
+                ownerUserId,
             },
             size: 'lg',
             title: t('edit_meal'),
@@ -235,7 +239,7 @@ const MobileMeal = ({
                                 </UnstyledButton>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                {isSavedMeal(meal) && (
+                                {isSavedMeal(meal) && canEditAnnotations && (
                                     <>
                                         <Menu.Item
                                             leftSection={<Notes />}

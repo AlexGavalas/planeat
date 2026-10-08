@@ -4,14 +4,22 @@ import { parseISO } from 'date-fns';
 import { useEffect } from 'react';
 
 import { Calendar } from '~features/calendar';
+import { MealPlanOwnerProvider } from '~features/meal-plan-owner';
 import { useCurrentWeek } from '~store/hooks';
 
-export function MealPlan({ initialDate }: Readonly<{ initialDate: string }>) {
+export function MealPlan({
+    initialDate,
+    ownerUserId,
+}: Readonly<{ initialDate: string; ownerUserId: number }>) {
     const { goToDate } = useCurrentWeek();
 
     useEffect(() => {
         goToDate(parseISO(initialDate));
     }, [goToDate, initialDate]);
 
-    return <Calendar initialDate={initialDate} />;
+    return (
+        <MealPlanOwnerProvider ownerUserId={ownerUserId}>
+            <Calendar initialDate={initialDate} />
+        </MealPlanOwnerProvider>
+    );
 }

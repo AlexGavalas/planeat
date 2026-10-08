@@ -1,4 +1,5 @@
 import { Alert, List, Stack, Text } from '@mantine/core';
+import { type ContextModalProps } from '@mantine/modals';
 import { format, parse, parseISO } from 'date-fns';
 import groupBy from 'lodash/fp/groupBy';
 import { useMemo } from 'react';
@@ -14,9 +15,15 @@ const groupByDay = groupBy<Meal>((item) =>
     format(parseISO(item.day), 'EEE dd/MM/yyyy'),
 );
 
-export const WeekOverviewModal = () => {
+type WeekOverviewModalProps = {
+    ownerUserId?: number;
+};
+
+export const WeekOverviewModal = ({
+    innerProps: { ownerUserId },
+}: ContextModalProps<WeekOverviewModalProps>) => {
     const { t } = useTranslation();
-    const { meals } = useMeals();
+    const { meals } = useMeals(ownerUserId);
 
     const mealsMap = useMemo(() => groupByDay(meals), [meals]);
 

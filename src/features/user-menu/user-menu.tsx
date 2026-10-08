@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 
 import { UserAvatar } from '~components/user-avatar';
 import { InstallApp } from '~features/install-app';
-import { NAV_LINKS } from '~features/nav/nav';
+import { NAV_LINKS, PROFESSIONAL_LINK } from '~features/nav/nav';
 import { useLocalizedPath } from '~hooks/use-localized-path';
 
 import styles from './user-menu.module.css';
@@ -35,12 +35,17 @@ const MenuTrigger = forwardRef<
 
 MenuTrigger.displayName = 'MenuTrigger';
 
-export const UserMenu = () => {
+export const UserMenu = ({
+    isProfessional = false,
+}: Readonly<{ isProfessional?: boolean }>) => {
     const localize = useLocalizedPath();
     const pathname = usePathname();
     const router = useRouter();
     const queryClient = useQueryClient();
     const { t } = useTranslation();
+    const links = isProfessional
+        ? [PROFESSIONAL_LINK, ...NAV_LINKS]
+        : NAV_LINKS;
 
     const handleLogout = useCallback<
         MouseEventHandler<HTMLButtonElement>
@@ -68,7 +73,7 @@ export const UserMenu = () => {
             <Menu.Dropdown>
                 <div className={styles.mobileNavigation}>
                     <Menu.Label>{t('navigation.label')}</Menu.Label>
-                    {NAV_LINKS.map(({ href, label }) => {
+                    {links.map(({ href, label }) => {
                         const localizedHref = localize(href);
 
                         return (

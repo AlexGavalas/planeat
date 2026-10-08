@@ -15,9 +15,11 @@ import { type EditedMeal, type Meal } from '~types/meal';
 import { useOpenContextModal } from '~util/modal';
 
 type CellOverlayProps = Readonly<{
+    canEditAnnotations?: boolean;
     onDelete: () => Promise<void> | void;
     onSave: (value: Partial<Meal>) => Promise<void> | void;
     meal?: Meal | EditedMeal;
+    ownerUserId?: number;
 }>;
 
 const isSavedMeal = (meal?: Meal | EditedMeal): meal is Meal => {
@@ -33,7 +35,13 @@ const commonButtonProps = {
     variant: 'outline',
 } satisfies ActionIconProps;
 
-export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
+export const CellOverlay = ({
+    canEditAnnotations = true,
+    onDelete,
+    onSave,
+    meal,
+    ownerUserId,
+}: CellOverlayProps) => {
     const { t } = useTranslation();
     const openEditMealModal = useOpenContextModal('meal');
     const openMealNoteModal = useOpenContextModal('meal-note');
@@ -78,11 +86,19 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                 initialMeal: meal?.meal ?? '',
                 onDelete,
                 onSave: handleMealSave,
+                ownerUserId,
             },
             size: 'lg',
             title: t('edit_meal'),
         });
-    }, [openEditMealModal, onDelete, handleMealSave, meal?.meal, t]);
+    }, [
+        openEditMealModal,
+        onDelete,
+        handleMealSave,
+        meal?.meal,
+        ownerUserId,
+        t,
+    ]);
 
     const handleNoteClick = useCallback(() => {
         if (!isMealSaved) {
@@ -153,7 +169,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                             <EditPencil />
                         </ActionIcon>
                     </Tooltip>
-                    {isMealSaved && (
+                    {isMealSaved && canEditAnnotations && (
                         <>
                             <Tooltip
                                 withArrow
@@ -162,6 +178,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                             >
                                 <ActionIcon
                                     {...commonButtonProps}
+                                    aria-label={t('tooltip.edit_note')}
                                     onClick={handleNoteClick}
                                 >
                                     <Notes />
@@ -174,6 +191,7 @@ export const CellOverlay = ({ onDelete, onSave, meal }: CellOverlayProps) => {
                             >
                                 <ActionIcon
                                     {...commonButtonProps}
+                                    aria-label={t('tooltip.rate')}
                                     onClick={handleRateClick}
                                 >
                                     <ThreeStars />

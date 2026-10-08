@@ -347,6 +347,58 @@
             }
         }
     },
+    "professional": {
+        "navigation": "Professional dashboard",
+        "registration": {
+            "label": "Register as a professional",
+            "description": "Manage client meal plans in addition to your own account."
+        },
+        "settings": {
+            "title": "Professional account",
+            "description": "Enable professional tools while keeping your normal Planeat experience.",
+            "role_label": "Use Planeat as a professional",
+            "discoverable_label": "Allow clients to find me",
+            "discoverable_description": "Your name and email will appear when clients search for a professional.",
+            "active_clients_error": "Stop managing all active clients before disabling professional tools."
+        },
+        "connections": {
+            "title": "Professional relationship",
+            "description": "Invite a professional to manage your meal plan, or respond to client invitations.",
+            "current_title": "My professional",
+            "no_current": "You are not currently managed by a professional.",
+            "find_title": "Find a professional",
+            "search_label": "Search professionals",
+            "search_placeholder": "Search by name or email",
+            "invite": "Invite",
+            "pending": "Invitation pending",
+            "outgoing_title": "Pending professional invitations",
+            "incoming_title": "Client invitations",
+            "no_incoming": "You do not have any client invitations.",
+            "stop_client": "Stop relationship",
+            "capacity_error": "You are already managing the maximum number of clients.",
+            "action_error": "We could not update this professional relationship. Please try again."
+        },
+        "dashboard": {
+            "title": "Professional dashboard",
+            "capacity": "{{count}} of {{limit}} clients",
+            "search_label": "Search clients",
+            "search_placeholder": "Search by name or email",
+            "client": "Client",
+            "no_clients": "No clients match this search.",
+            "select_client": "Select a client to view and edit their meal plan.",
+            "stop_managing": "Stop managing"
+        },
+        "unsaved": {
+            "title": "Unsaved meal-plan changes",
+            "description": "Save or discard the current client's changes before continuing.",
+            "save": "Save and continue",
+            "discard": "Discard and continue"
+        },
+        "meal_pool": {
+            "own": "My meals",
+            "client": "Client's meals"
+        }
+    },
     "util": {
         "copy": "Copy",
         "copied": "Copied"

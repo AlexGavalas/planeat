@@ -3,12 +3,13 @@ import { type NextRequest } from 'next/server';
 import 'server-only';
 import { ZodError } from 'zod';
 
+import { ProfessionalError } from '~api/professional';
 import { getCurrentUser } from '~api/session';
-import { type User } from '~types/user';
+import { type UserProfile } from '~types/user';
 
 export type RouteHandlerWithUser = (params: {
     request: NextRequest;
-    user: User;
+    user: UserProfile;
 }) => Promise<Response>;
 
 export const withUser =
@@ -54,6 +55,19 @@ export const withUser =
 
             return response;
         } catch (error) {
+            if (error instanceof ProfessionalError) {
+                return Response.json(
+                    { message: 'Not Found' },
+                    {
+                        status:
+                            error.code === 'forbidden' ||
+                            error.code === 'not_professional'
+                                ? 404
+                                : 409,
+                    },
+                );
+            }
+
             if (error instanceof ZodError || error instanceof SyntaxError) {
                 return Response.json(
                     { message: 'Bad Request' },

@@ -20,6 +20,7 @@ import {
 import { type MouseEventHandler, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useMealPlanOwnerId } from '~features/meal-plan-owner';
 import {
     useCurrentWeek,
     useMeals,
@@ -40,6 +41,7 @@ const defaultButtonProps = {
 
 export const Controls = ({ onPrint }: ControlsProps) => {
     const { t } = useTranslation();
+    const ownerUserId = useMealPlanOwnerId();
     const { nextWeek: handleNextWeek, previousWeek: handlePreviousWeek } =
         useCurrentWeek();
     const { hasUnsavedChanges } = useUnsavedChanges();
@@ -50,11 +52,11 @@ export const Controls = ({ onPrint }: ControlsProps) => {
 
     const toggleWeekOverview = useCallback(() => {
         openWeekOverviewModal({
-            innerProps: {},
+            innerProps: { ownerUserId },
             size: 'lg',
             title: t('modals.week_overview.title'),
         });
-    }, [openWeekOverviewModal, t]);
+    }, [openWeekOverviewModal, ownerUserId, t]);
 
     const handleCopyToNextWeek = useCallback(() => {
         copyToNextWeek(meals);

@@ -8,6 +8,7 @@ import { partition } from 'lodash/fp';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useMealPlanOwnerId } from '~features/meal-plan-owner';
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 import { getDaysOfWeek } from '~util/date';
 import {
@@ -41,10 +42,10 @@ type SaveEntryRow = (params: {
     rating: EditedMeal['rating'];
 }) => void;
 
-type UseMeals = () => {
+type UseMeals = (explicitOwnerUserId?: number) => {
     meals: Meal[];
     isLoading: boolean;
-    savePlan: () => Promise<void>;
+    savePlan: () => Promise<boolean>;
     revert: () => void;
     deleteEntryCell: DeleteEntryCell;
     deleteEntryRow: DeleteEntryRow;
@@ -52,12 +53,14 @@ type UseMeals = () => {
     saveEntryRow: SaveEntryRow;
 };
 
-export const useMeals: UseMeals = () => {
+export const useMeals: UseMeals = (explicitOwnerUserId) => {
     const { t } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const queryClient = useQueryClient();
 
-    const { unsavedChanges, removeChanges, addChange } = useUnsavedChanges();
+    const ownerUserId = useMealPlanOwnerId(explicitOwnerUserId);
+    const { unsavedChanges, removeChanges, addChange } =
+        useUnsavedChanges(ownerUserId);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -67,6 +70,7 @@ export const useMeals: UseMeals = () => {
     );
 
     const { data: meals = [], isFetching: isFetchingMeals } = useQuery({
+        enabled: ownerUserId !== -1,
         placeholderData: keepPreviousData,
         queryFn: async () => {
             const endDate = format(
@@ -79,8 +83,9 @@ export const useMeals: UseMeals = () => {
                 'yyyy-MM-dd',
             );
 
+            const ownerQuery = ownerUserId ? `&ownerUserId=${ownerUserId}` : '';
             const response = await fetch(
-                `/api/v1/meal?startDate=${startDate}&endDate=${endDate}`,
+                `/api/v1/meal?startDate=${startDate}&endDate=${endDate}${ownerQuery}`,
             );
 
             const result = (await response.json()) as { data?: Meal[] };
@@ -89,7 +94,9 @@ export const useMeals: UseMeals = () => {
 
             return result.data ?? [];
         },
-        queryKey: ['meals', currentWeekKey],
+        queryKey: ownerUserId
+            ? ['meals', ownerUserId, currentWeekKey]
+            : ['meals', currentWeekKey],
     });
 
     const mealsMap = useMemo(
@@ -101,7 +108,7 @@ export const useMeals: UseMeals = () => {
         [meals],
     );
 
-    const savePlan = async (): Promise<void> => {
+    const savePlan = async (): Promise<boolean> => {
         setIsSubmitting(true);
 
         // The edited meals will have the id from the db
@@ -114,11 +121,15 @@ export const useMeals: UseMeals = () => {
 
         const deletedIds = deletedMeals.map(({ id }) => id);
 
-        const response = await saveMealPlan({
+        const mealPlan = {
             deletedIds,
             editedMeals,
             newMeals,
-        }).catch(() => ({ ok: false }));
+            ...(ownerUserId ? { ownerUserId } : {}),
+        };
+        const response = await saveMealPlan(mealPlan).catch(() => ({
+            ok: false,
+        }));
 
         if (!response.ok) {
             setIsSubmitting(false);
@@ -127,9 +138,10 @@ export const useMeals: UseMeals = () => {
                 message: `${t('errors.meal_save')}. ${t('try_again')}`,
                 title: t('notification.error.title'),
             });
+            return false;
         } else {
             await queryClient.invalidateQueries({
-                queryKey: ['meals'],
+                queryKey: ownerUserId ? ['meals', ownerUserId] : ['meals'],
             });
             setIsSubmitting(false);
 
@@ -139,6 +151,7 @@ export const useMeals: UseMeals = () => {
                 message: t('notification.success.message'),
                 title: t('notification.success.title'),
             });
+            return true;
         }
     };
 

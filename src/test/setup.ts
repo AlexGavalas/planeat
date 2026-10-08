@@ -57,9 +57,14 @@ Object.defineProperty(window, 'matchMedia', {
 // Next transforms these imports into RPC references in client bundles.
 jest.mock('../app/actions', () => ({
     acceptConnectionRequest: jest.fn(),
+    acceptProfessionalInvitation: jest.fn(),
+    inviteProfessional: jest.fn(),
+    removeProfessionalRelationship: jest.fn(),
     saveMealPlan: jest.fn(),
     saveMealZoneTimes: jest.fn(),
     saveProfile: jest.fn(),
+    setProfessionalDiscoverable: jest.fn(),
+    setProfessionalRole: jest.fn(),
 }));
 
 jest.mock<typeof nextNavigation>('next/navigation', () =>

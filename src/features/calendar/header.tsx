@@ -4,6 +4,7 @@ import { endOfWeek, format, isToday, startOfWeek } from 'date-fns';
 import { Running } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 
+import { useMealPlanOwnerId } from '~features/meal-plan-owner';
 import { useProfile } from '~hooks/use-profile';
 import { useCurrentWeek } from '~store/hooks';
 import { type ActivitysMap } from '~types/activity';
@@ -15,6 +16,8 @@ export const Header = () => {
     const { i18n } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const { profile } = useProfile();
+    const ownerUserId = useMealPlanOwnerId();
+    const shouldShowActivities = ownerUserId === profile?.id;
 
     const currentWeekKey = format(
         startOfWeek(currentWeek, { weekStartsOn: 1 }),
@@ -28,8 +31,9 @@ export const Header = () => {
     );
 
     const { data: activities = [] } = useQuery({
+        enabled: shouldShowActivities,
         queryFn: async () => {
-            if (!profile?.id) {
+            if (!profile?.id || !shouldShowActivities) {
                 return;
             }
 
@@ -53,7 +57,7 @@ export const Header = () => {
 
             return data;
         },
-        queryKey: ['activities', 'week', currentWeekKey],
+        queryKey: ['activities', 'week', ownerUserId, currentWeekKey],
     });
 
     const activitiesMap = activities.reduce<ActivitysMap>((acc, activity) => {
