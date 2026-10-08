@@ -101,13 +101,22 @@ test('accepts an invitation and opens the assigned client meal plan', async ({
 
     await page.getByRole('button', { name: 'E2E User' }).click();
 
-    await expect(page.getByRole('heading', { name: 'E2E User' })).toBeVisible();
+    const drawer = page.getByRole('dialog');
+
+    await expect(drawer).toBeVisible();
     await expect(
-        page.getByRole('button', { name: 'Previous week' }),
+        drawer.getByRole('heading', { exact: true, name: 'E2E User' }),
     ).toBeVisible();
     await expect(
-        page.getByRole('heading', { name: 'Meal schedule' }),
+        drawer.getByRole('button', { name: 'Previous week' }),
     ).toBeVisible();
+    await expect(
+        drawer.getByRole('heading', { name: 'Meal schedule' }),
+    ).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(drawer).toBeHidden();
+    await expect(page).not.toHaveURL(/client=/);
 
     await clientContext.close();
 });

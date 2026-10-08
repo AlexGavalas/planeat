@@ -4,6 +4,7 @@ import {
     Badge,
     Button,
     Container,
+    Drawer,
     Group,
     Modal,
     Pagination,
@@ -16,6 +17,7 @@ import {
 } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import {
+    type ChangeEventHandler,
     type FormEventHandler,
     type ReactNode,
     useEffect,
@@ -41,6 +43,61 @@ type ProfessionalDashboardProps = Readonly<{
     query: string;
     selectedClient: ProfessionalClientSummary | null;
 }>;
+
+type ClientListProps = Readonly<{
+    clients: ProfessionalClientSummary[];
+    onSelectClient: (clientId: number) => void;
+    selectedClientId?: number;
+}>;
+
+const ClientList = ({
+    clients,
+    onSelectClient,
+    selectedClientId,
+}: ClientListProps) => {
+    const { t } = useTranslation();
+
+    if (!clients.length) {
+        return <Text>{t('professional.dashboard.no_clients')}</Text>;
+    }
+
+    return (
+        <Table highlightOnHover>
+            <Table.Thead>
+                <Table.Tr>
+                    <Table.Th>{t('professional.dashboard.client')}</Table.Th>
+                    <Table.Th>{t('login.email')}</Table.Th>
+                </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+                {clients.map((client) => {
+                    const handleClientClick = () => {
+                        onSelectClient(client.id);
+                    };
+
+                    return (
+                        <Table.Tr key={client.id}>
+                            <Table.Td>
+                                <UnstyledButton
+                                    className={styles.rowButton}
+                                    fw={
+                                        selectedClientId === client.id
+                                            ? 'var(--mantine-font-weight-bold)'
+                                            : undefined
+                                    }
+                                    onClick={handleClientClick}
+                                >
+                                    {client.fullName}
+                                </UnstyledButton>
+                            </Table.Td>
+                            <Table.Td>{client.email}</Table.Td>
+                        </Table.Tr>
+                    );
+                })}
+            </Table.Tbody>
+        </Table>
+    );
+};
 
 export const ProfessionalDashboard = ({
     clients,
@@ -170,24 +227,24 @@ export const ProfessionalDashboard = ({
         }
     };
 
-    const discardAndContinue = () => {
+    const handleDiscardAndContinue = () => {
         removeChanges();
         void continueNavigation();
     };
 
-    const cancelNavigation = () => {
+    const handleCancelNavigation = () => {
         setPendingUrl(null);
         setShouldStopAfterPrompt(false);
         setIsPromptOpen(false);
     };
 
-    const saveAndContinue = async () => {
+    const handleSaveAndContinue = async () => {
         if (await savePlan()) {
             await continueNavigation();
         }
     };
 
-    const stopManaging = async () => {
+    const handleStopManaging = async () => {
         if (!selectedClient) {
             return;
         }
@@ -206,6 +263,24 @@ export const ProfessionalDashboard = ({
         }
     };
 
+    const handleSearchChange: ChangeEventHandler<HTMLInputElement> = (
+        event,
+    ) => {
+        setSearch(event.target.value);
+    };
+
+    const handleSelectClient = (clientId: number) => {
+        navigate(destination({ client: clientId }));
+    };
+
+    const handlePageChange = (page: number) => {
+        navigate(destination({ page }));
+    };
+
+    const handleCloseDrawer = () => {
+        navigate(destination({}));
+    };
+
     return (
         <Container fluid>
             <Stack gap="lg">
@@ -218,143 +293,90 @@ export const ProfessionalDashboard = ({
                         })}
                     </Badge>
                 </Group>
-                <div className={styles.layout}>
-                    <Card>
-                        <Stack gap="md">
-                            <form onSubmit={handleSearch}>
-                                <Group align="end" wrap="nowrap">
-                                    <TextInput
-                                        label={t(
-                                            'professional.dashboard.search_label',
-                                        )}
-                                        onChange={(event) => {
-                                            setSearch(event.target.value);
-                                        }}
-                                        placeholder={t(
-                                            'professional.dashboard.search_placeholder',
-                                        )}
-                                        value={search}
-                                        w="100%"
-                                    />
-                                    <Button type="submit">
-                                        {t('generic.search.label')}
-                                    </Button>
-                                </Group>
-                            </form>
-                            {clients.clients.length ? (
-                                <Table highlightOnHover>
-                                    <Table.Thead>
-                                        <Table.Tr>
-                                            <Table.Th>
-                                                {t(
-                                                    'professional.dashboard.client',
-                                                )}
-                                            </Table.Th>
-                                            <Table.Th>
-                                                {t('login.email')}
-                                            </Table.Th>
-                                        </Table.Tr>
-                                    </Table.Thead>
-                                    <Table.Tbody>
-                                        {clients.clients.map((client) => (
-                                            <Table.Tr key={client.id}>
-                                                <Table.Td>
-                                                    <UnstyledButton
-                                                        className={
-                                                            styles.rowButton
-                                                        }
-                                                        fw={
-                                                            selectedClient?.id ===
-                                                            client.id
-                                                                ? 'var(--mantine-font-weight-bold)'
-                                                                : undefined
-                                                        }
-                                                        onClick={() => {
-                                                            navigate(
-                                                                destination({
-                                                                    client: client.id,
-                                                                }),
-                                                            );
-                                                        }}
-                                                    >
-                                                        {client.fullName}
-                                                    </UnstyledButton>
-                                                </Table.Td>
-                                                <Table.Td>
-                                                    {client.email}
-                                                </Table.Td>
-                                            </Table.Tr>
-                                        ))}
-                                    </Table.Tbody>
-                                </Table>
-                            ) : (
-                                <Text>
-                                    {t('professional.dashboard.no_clients')}
-                                </Text>
-                            )}
-                            {clients.pageCount > 1 && (
-                                <Pagination
-                                    onChange={(page) => {
-                                        navigate(destination({ page }));
-                                    }}
-                                    total={clients.pageCount}
-                                    value={clients.page}
+                <Card>
+                    <Stack gap="md">
+                        <form onSubmit={handleSearch}>
+                            <Group align="end">
+                                <TextInput
+                                    flex={1}
+                                    label={t(
+                                        'professional.dashboard.search_label',
+                                    )}
+                                    onChange={handleSearchChange}
+                                    placeholder={t(
+                                        'professional.dashboard.search_placeholder',
+                                    )}
+                                    value={search}
                                 />
-                            )}
-                        </Stack>
-                    </Card>
-                    <Card>
-                        {selectedClient ? (
-                            <Stack gap="lg">
-                                <Group justify="space-between">
-                                    <div>
-                                        <Title order={3}>
-                                            {selectedClient.fullName}
-                                        </Title>
-                                        <Text c="dimmed">
-                                            {selectedClient.email}
-                                        </Text>
-                                    </div>
-                                    <Button
-                                        color="danger"
-                                        onClick={() => void stopManaging()}
-                                        variant="outline"
-                                    >
-                                        {t(
-                                            'professional.dashboard.stop_managing',
-                                        )}
-                                    </Button>
-                                </Group>
-                                {detail}
-                            </Stack>
-                        ) : (
-                            <Text>
-                                {t('professional.dashboard.select_client')}
-                            </Text>
+                                <Button type="submit">
+                                    {t('generic.search.label')}
+                                </Button>
+                            </Group>
+                        </form>
+                        <ClientList
+                            clients={clients.clients}
+                            onSelectClient={handleSelectClient}
+                            selectedClientId={selectedClient?.id}
+                        />
+                        {clients.pageCount > 1 && (
+                            <Pagination
+                                onChange={handlePageChange}
+                                total={clients.pageCount}
+                                value={clients.page}
+                            />
                         )}
-                    </Card>
-                </div>
+                    </Stack>
+                </Card>
             </Stack>
+            <Drawer
+                classNames={{ body: styles.drawerBody }}
+                onClose={handleCloseDrawer}
+                opened={Boolean(selectedClient)}
+                position="right"
+                size="min(100%, 76rem)"
+                title={selectedClient?.fullName}
+            >
+                {selectedClient && (
+                    <Stack gap="lg">
+                        <Group justify="space-between">
+                            <Text c="dimmed">{selectedClient.email}</Text>
+                            <Button
+                                color="danger"
+                                onClick={handleStopManaging}
+                                variant="outline"
+                            >
+                                {t('professional.dashboard.stop_managing')}
+                            </Button>
+                        </Group>
+                        {detail}
+                    </Stack>
+                )}
+            </Drawer>
             <Modal
                 centered
-                onClose={cancelNavigation}
+                onClose={handleCancelNavigation}
                 opened={isPromptOpen}
+                size="lg"
                 title={t('professional.unsaved.title')}
+                zIndex={400}
             >
                 <Stack>
                     <Text>{t('professional.unsaved.description')}</Text>
-                    <Group justify="end">
-                        <Button onClick={cancelNavigation} variant="default">
+                    <Group className={styles.modalActions} justify="end">
+                        <Button
+                            onClick={handleCancelNavigation}
+                            variant="default"
+                        >
                             {t('generic.actions.cancel')}
                         </Button>
                         <Button
                             color="danger"
-                            onClick={discardAndContinue}
+                            onClick={handleDiscardAndContinue}
                             variant="outline"
                         >
                             {t('professional.unsaved.discard')}
                         </Button>
-                        <Button onClick={() => void saveAndContinue()}>
+                        <Button onClick={handleSaveAndContinue}>
                             {t('professional.unsaved.save')}
                         </Button>
                     </Group>

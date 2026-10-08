@@ -170,7 +170,7 @@ export const UserActions = ({
                         isRegistering ? 'login.register_title' : 'login.title',
                     )}
                 >
-                    <Stack gap="md">
+                    <Stack gap="md" pt="sm">
                         <Button
                             leftSection={<Google />}
                             onClick={handleLoginWithGoogle}
@@ -240,8 +240,9 @@ export const UserActions = ({
                                 isRegistering
                                     ? 'login.has_account'
                                     : 'login.no_account',
-                            )}{' '}
+                            )}
                             <Button
+                                ml="xs"
                                 onClick={toggleMode}
                                 size="compact-sm"
                                 type="button"
