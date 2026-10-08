@@ -3,8 +3,10 @@ import { EditPencil } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 
 import { MEAL_ICON } from '~constants/calendar';
-import { useMealPlanOwnerId } from '~features/meal-plan-owner';
-import { useProfile } from '~hooks/use-profile';
+import {
+    useCanEditMealAnnotations,
+    useMealPlanOwnerId,
+} from '~features/meal-plan-owner';
 import { useMeals } from '~store/hooks';
 import { type EditedMeal, type Meal } from '~types/meal';
 import { useOpenContextModal } from '~util/modal';
@@ -38,8 +40,7 @@ export const MobileMeal = ({
 }: MobileMealProps) => {
     const { t } = useTranslation();
     const ownerUserId = useMealPlanOwnerId();
-    const { profile } = useProfile();
-    const canEditAnnotations = ownerUserId === profile?.id;
+    const canEditAnnotations = useCanEditMealAnnotations();
     const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =
         useMeals();
     const openEditMealModal = useOpenContextModal('meal');

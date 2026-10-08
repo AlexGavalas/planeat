@@ -8,9 +8,14 @@ import { MealPlanOwnerProvider } from '~features/meal-plan-owner';
 import { useCurrentWeek } from '~store/hooks';
 
 export function MealPlan({
+    canEditAnnotations,
     initialDate,
     ownerUserId,
-}: Readonly<{ initialDate: string; ownerUserId: number }>) {
+}: Readonly<{
+    canEditAnnotations: boolean;
+    initialDate: string;
+    ownerUserId: number;
+}>) {
     const { goToDate } = useCurrentWeek();
 
     useEffect(() => {
@@ -18,7 +23,10 @@ export function MealPlan({
     }, [goToDate, initialDate]);
 
     return (
-        <MealPlanOwnerProvider ownerUserId={ownerUserId}>
+        <MealPlanOwnerProvider
+            canEditAnnotations={canEditAnnotations}
+            ownerUserId={ownerUserId}
+        >
             <Calendar initialDate={initialDate} />
         </MealPlanOwnerProvider>
     );

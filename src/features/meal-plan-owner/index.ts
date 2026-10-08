@@ -1,1 +1,5 @@
-export { MealPlanOwnerProvider, useMealPlanOwnerId } from './meal-plan-owner';
+export {
+    MealPlanOwnerProvider,
+    useCanEditMealAnnotations,
+    useMealPlanOwnerId,
+} from './meal-plan-owner';

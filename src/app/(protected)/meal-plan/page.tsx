@@ -58,6 +58,7 @@ async function MealPlanContent({ searchParams }: MealPlanPageProps) {
     return (
         <HydrationBoundary state={dehydrate(client)}>
             <MealPlan
+                canEditAnnotations
                 initialDate={format(now, 'yyyy-MM-dd')}
                 ownerUserId={profile.id}
             />

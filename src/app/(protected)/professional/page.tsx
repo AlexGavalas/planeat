@@ -11,7 +11,6 @@ import {
 } from '~api/professional';
 import { getRequestDate, requireUser } from '~api/session';
 import { MealPlanPageSkeleton } from '~components/loading-skeleton';
-import { MealPlanOwnerProvider } from '~features/meal-plan-owner';
 import { MealZoneSettings } from '~features/meal-zone-settings';
 import { ProfessionalDashboard } from '~features/professional-dashboard';
 import { MealPlan } from '~features/screens/meal-plan';
@@ -90,13 +89,12 @@ async function ProfessionalDashboardContent({
 
         detail = (
             <HydrationBoundary state={dehydrate(queryClient)}>
-                <MealPlanOwnerProvider ownerUserId={selectedClient.id}>
-                    <MealPlan
-                        initialDate={format(now, 'yyyy-MM-dd')}
-                        ownerUserId={selectedClient.id}
-                    />
-                    <MealZoneSettings ownerUserId={selectedClient.id} />
-                </MealPlanOwnerProvider>
+                <MealPlan
+                    canEditAnnotations={false}
+                    initialDate={format(now, 'yyyy-MM-dd')}
+                    ownerUserId={selectedClient.id}
+                />
+                <MealZoneSettings ownerUserId={selectedClient.id} />
             </HydrationBoundary>
         );
     }

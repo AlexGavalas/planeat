@@ -3,8 +3,10 @@ import { useHover } from '@mantine/hooks';
 import { MultiplePages } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 
-import { useMealPlanOwnerId } from '~features/meal-plan-owner';
-import { useProfile } from '~hooks/use-profile';
+import {
+    useCanEditMealAnnotations,
+    useMealPlanOwnerId,
+} from '~features/meal-plan-owner';
 import { useMeals } from '~store/hooks';
 import { type EditedMeal, type Meal } from '~types/meal';
 
@@ -22,7 +24,7 @@ export type CellProps = Readonly<{
 export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
     const { t } = useTranslation();
     const ownerUserId = useMealPlanOwnerId();
-    const { profile } = useProfile();
+    const canEditAnnotations = useCanEditMealAnnotations();
     const { hovered: isHovered, ref } = useHover();
 
     const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =
@@ -78,7 +80,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
         >
             {isHovered && (
                 <CellOverlay
-                    canEditAnnotations={ownerUserId === profile?.id}
+                    canEditAnnotations={canEditAnnotations}
                     meal={meal}
                     onDelete={handleDelete}
                     onSave={handleSave}

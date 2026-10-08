@@ -45,6 +45,35 @@ describe('meal plan server actions', () => {
         expect(revalidatePath).toHaveBeenCalledWith('/meal-plan');
     });
 
+    it('allows the meal owner to save notes and ratings', async () => {
+        expect.hasAssertions();
+
+        const editedMeal = {
+            day: '2026-10-08',
+            id: '10accc9d-f0b7-4225-87df-3e91d5639d75',
+            meal: 'Porridge',
+            note: 'Add honey',
+            rating: 5,
+            section_key: 'morning_Thu 08/10/2026',
+            user_id: 7,
+        };
+
+        await expect(
+            saveMealPlan({
+                deletedIds: [],
+                editedMeals: [editedMeal],
+                newMeals: [],
+            }),
+        ).resolves.toStrictEqual({ ok: true });
+
+        expect(saveMeals).toHaveBeenCalledWith({
+            deletedIds: [],
+            editedMeals: [editedMeal],
+            newMeals: [],
+            userId: 7,
+        });
+    });
+
     it('authorizes a delegated owner before saving their meal plan', async () => {
         expect.hasAssertions();
 
