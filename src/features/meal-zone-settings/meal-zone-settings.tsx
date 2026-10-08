@@ -8,6 +8,7 @@ import { type ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_MEAL_ZONE_TIMES, ROWS } from '~constants/calendar';
+import { SettingsActions } from '~features/settings-actions';
 import { useMealZoneTimes } from '~hooks/use-meal-zone-times';
 import { mealZoneTimesSchema } from '~schemas/meal-zone';
 import { type MealZoneKey, type MealZoneTimes } from '~types/meal-zone';
@@ -17,7 +18,6 @@ import {
 } from '~util/notification';
 
 import { saveMealZoneTimes } from '../../app/actions';
-import styles from './meal-zone-settings.module.css';
 
 export const MealZoneSettings = ({
     ownerUserId,
@@ -129,14 +129,15 @@ export const MealZoneSettings = ({
                     );
                 })}
             </SimpleGrid>
-            <Button
-                className={styles.saveButton}
-                disabled={!validation.success || isFetching}
-                loading={isPending}
-                onClick={handleSave}
-            >
-                {t('generic.actions.save')}
-            </Button>
+            <SettingsActions>
+                <Button
+                    disabled={!validation.success || isFetching}
+                    loading={isPending}
+                    onClick={handleSave}
+                >
+                    {t('generic.actions.save')}
+                </Button>
+            </SettingsActions>
         </Stack>
     );
 };

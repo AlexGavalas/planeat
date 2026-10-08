@@ -1,5 +1,9 @@
+.actions {
+    width: 100%;
+}
+
 @media (max-width: 48em) {
-    .saveButton {
+    .actions > button {
         min-height: var(--app-size-action);
         width: 100%;
     }

@@ -3,7 +3,6 @@
 import {
     Button,
     Collapse,
-    Group,
     Stack,
     Switch,
     Text,
@@ -12,6 +11,7 @@ import {
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { SettingsActions } from '~features/settings-actions';
 import type { NotificationPreferences } from '~types/push-notification';
 import {
     showErrorNotification,
@@ -305,22 +305,22 @@ export const MealReminders = () => {
                 />
                 <Collapse expanded={isMealReminderEnabled}>
                     <Stack gap="sm" ml="xl" mt="xs">
-                        <Group align="end">
-                            <TextInput
-                                disabled={isBusy}
-                                label={t('meal_reminders.time')}
-                                loading={isBusy}
-                                onChange={handleTimeChange}
-                                type="time"
-                                value={time}
-                            />
-                            <Button loading={isBusy} onClick={handleSave}>
-                                {t('generic.actions.save')}
-                            </Button>
-                        </Group>
+                        <TextInput
+                            disabled={isBusy}
+                            label={t('meal_reminders.time')}
+                            loading={isBusy}
+                            onChange={handleTimeChange}
+                            type="time"
+                            value={time}
+                        />
                         <Text c="dimmed" size="sm">
                             {t('meal_reminders.timezone', { timezone })}
                         </Text>
+                        <SettingsActions>
+                            <Button loading={isBusy} onClick={handleSave}>
+                                {t('generic.actions.save')}
+                            </Button>
+                        </SettingsActions>
                         {detectedTimezone && timezone !== detectedTimezone && (
                             <Button
                                 disabled={isBusy}

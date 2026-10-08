@@ -4,6 +4,7 @@ import { type SubmitEventHandler, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
+import { SettingsActions } from '~features/settings-actions';
 import { useProfile } from '~hooks/use-profile';
 import {
     showErrorNotification,
@@ -11,7 +12,6 @@ import {
 } from '~util/notification';
 
 import { saveProfile } from '../../app/actions';
-import styles from './food-preferences.module.css';
 
 const formSchema = z.object({
     negative: z.string(),
@@ -102,13 +102,11 @@ export const FoodPreferences = () => {
                             )}
                         />
                     </SimpleGrid>
-                    <Button
-                        className={styles.saveButton}
-                        loading={isFetching}
-                        type="submit"
-                    >
-                        {t('generic.actions.save')}
-                    </Button>
+                    <SettingsActions>
+                        <Button loading={isFetching} type="submit">
+                            {t('generic.actions.save')}
+                        </Button>
+                    </SettingsActions>
                 </Stack>
             </form>
         </Stack>

@@ -324,6 +324,7 @@
             },
             "delete_account": {
                 "title": "Delete account",
+                "description": "Permanently delete your account and all associated data. This action cannot be undone.",
                 "button": {
                     "label": "Delete account"
                 },

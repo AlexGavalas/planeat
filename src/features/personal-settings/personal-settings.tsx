@@ -12,9 +12,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
+import { SettingsActions } from '~features/settings-actions';
 import { useProfile } from '~hooks/use-profile';
-
-import styles from './personal-settings.module.css';
 
 export const PersonalSettings = () => {
     const { t } = useTranslation();
@@ -60,38 +59,38 @@ export const PersonalSettings = () => {
                 {t('account_settings.sections.general.title')}
             </Title>
             {profile ? (
-                <SimpleGrid cols={{ base: 1, md: 4 }} spacing="md">
-                    <NumberInput
-                        defaultValue={profile.height ?? undefined}
-                        disabled={isFetching}
-                        label={t('height_input')}
-                        loading={isFetching}
-                        onChange={handleHeightChange}
-                    />
-                    <NumberInput
-                        defaultValue={profile.target_weight ?? undefined}
-                        disabled={isFetching}
-                        label={t('target_weight_input')}
-                        loading={isFetching}
-                        onChange={handleTargetWeightChange}
-                    />
-                    <Select
-                        data={availableLanguages}
-                        defaultValue={profile.language}
-                        disabled={isFetching}
-                        label={t('languages.label')}
-                        loading={isFetching}
-                        onChange={handleLanguageChange}
-                        placeholder={t('languages.placeholder')}
-                    />
-                    <Button
-                        className={styles.saveButton}
-                        loading={isFetching}
-                        onClick={handleSave}
-                    >
-                        {t('generic.actions.save')}
-                    </Button>
-                </SimpleGrid>
+                <Stack gap="md">
+                    <SimpleGrid cols={{ base: 1, md: 3 }} spacing="md">
+                        <NumberInput
+                            defaultValue={profile.height ?? undefined}
+                            disabled={isFetching}
+                            label={t('height_input')}
+                            loading={isFetching}
+                            onChange={handleHeightChange}
+                        />
+                        <NumberInput
+                            defaultValue={profile.target_weight ?? undefined}
+                            disabled={isFetching}
+                            label={t('target_weight_input')}
+                            loading={isFetching}
+                            onChange={handleTargetWeightChange}
+                        />
+                        <Select
+                            data={availableLanguages}
+                            defaultValue={profile.language}
+                            disabled={isFetching}
+                            label={t('languages.label')}
+                            loading={isFetching}
+                            onChange={handleLanguageChange}
+                            placeholder={t('languages.placeholder')}
+                        />
+                    </SimpleGrid>
+                    <SettingsActions>
+                        <Button loading={isFetching} onClick={handleSave}>
+                            {t('generic.actions.save')}
+                        </Button>
+                    </SettingsActions>
+                </Stack>
             ) : (
                 <div style={{ height: 100 }}>
                     <LoadingOverlay visible />
