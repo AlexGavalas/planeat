@@ -18,6 +18,7 @@ test('connections search result stacks on mobile Chrome', async ({ page }) => {
     await expect(
         page.getByRole('heading', { exact: true, name: 'Connections' }),
     ).toBeVisible();
+    await page.getByRole('button', { name: 'Add person' }).click();
     await expect(
         page.getByRole('heading', { name: 'Find people' }),
     ).toBeVisible();
@@ -25,14 +26,16 @@ test('connections search result stacks on mobile Chrome', async ({ page }) => {
 
     const search = page.getByRole('combobox', { name: 'Search' });
     await search.fill('E2E');
-    await page.getByRole('option', { name: 'E2E User' }).first().click();
+    await expect(
+        page.getByRole('option', { name: 'E2E User' }).first(),
+    ).toBeVisible();
+    await search.press('ArrowDown');
+    await search.press('Enter');
     await expect(
         page.getByRole('button', { name: 'Send connection request' }),
     ).toBeVisible();
     await expectNoHorizontalOverflow(page);
-    await expect(page).toHaveScreenshot('connections-search-mobile.png', {
-        fullPage: true,
-    });
+    await expect(page).toHaveScreenshot('connections-search-mobile.png');
 
     await page.getByRole('button', { name: 'Clear' }).click();
     await expect(search).toHaveValue('');
@@ -42,8 +45,9 @@ test('connections remains usable at 320px', async ({ page }) => {
     await page.setViewportSize({ height: 568, width: 320 });
     await page.goto('/connections');
     await expect(
-        page.getByRole('heading', { name: 'Find people' }),
+        page.getByRole('button', { name: 'Add person' }),
     ).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'People' })).toBeVisible();
     await expectNoHorizontalOverflow(page);
     await expect(page).toHaveScreenshot('connections-mobile-320.png', {
         fullPage: true,

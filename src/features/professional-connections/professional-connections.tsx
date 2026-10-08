@@ -1,8 +1,9 @@
 'use client';
 
-import { Alert, Stack, Text, Title } from '@mantine/core';
+import { Alert, Button, Group, Stack, Text, Title } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Heart, Search } from 'iconoir-react';
 import { type ChangeEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,6 +21,7 @@ export const ProfessionalConnections = () => {
     const { profile } = useProfile();
     const queryClient = useQueryClient();
     const [search, setSearch] = useState('');
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [debouncedSearch] = useDebouncedValue(search, 350);
     const [error, setError] = useState<string | null>(null);
     const isProfessional = profile?.roles.includes('professional') ?? false;
@@ -81,16 +83,35 @@ export const ProfessionalConnections = () => {
     ) => {
         setSearch(event.target.value);
     };
+    const handleToggleSearch = () => {
+        setIsSearchOpen((value) => !value);
+    };
 
     return (
         <Stack gap="lg">
             <LoadingOverlay visible={isFetching} />
-            <div>
-                <Title order={3}>{t('professional.connections.title')}</Title>
-                <Text c="dimmed" mt="xs" size="sm">
-                    {t('professional.connections.description')}
-                </Text>
-            </div>
+            <Group align="flex-start" justify="space-between">
+                <Group align="flex-start" gap="sm" wrap="nowrap">
+                    <Heart aria-hidden="true" />
+                    <div>
+                        <Title order={3}>
+                            {t('professional.connections.title')}
+                        </Title>
+                        <Text c="dimmed" mt={4} size="sm">
+                            {t('professional.connections.description')}
+                        </Text>
+                    </div>
+                </Group>
+                {!state?.currentProfessional && (
+                    <Button
+                        leftSection={<Search />}
+                        onClick={handleToggleSearch}
+                        variant={isSearchOpen ? 'light' : 'outline'}
+                    >
+                        {t('professional.connections.find_title')}
+                    </Button>
+                )}
+            </Group>
             {error && (
                 <Alert color="danger" variant="outline">
                     {error}
@@ -98,6 +119,7 @@ export const ProfessionalConnections = () => {
             )}
             <ConnectionSections
                 isProfessional={isProfessional}
+                isSearchOpen={isSearchOpen}
                 isSearching={isSearching}
                 onSearchChange={handleSearchChange}
                 professionals={professionals}

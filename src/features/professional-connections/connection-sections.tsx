@@ -27,6 +27,7 @@ type RunAction = (
 
 type ConnectionSectionsProps = Readonly<{
     isProfessional: boolean;
+    isSearchOpen: boolean;
     isSearching: boolean;
     onSearchChange: ChangeEventHandler<HTMLInputElement>;
     professionals: ProfessionalSummary[];
@@ -37,6 +38,7 @@ type ConnectionSectionsProps = Readonly<{
 
 export const ConnectionSections = ({
     isProfessional,
+    isSearchOpen,
     isSearching,
     onSearchChange,
     professionals,
@@ -82,11 +84,8 @@ export const ConnectionSections = ({
                     <Text>{t('professional.connections.no_current')}</Text>
                 )}
             </Stack>
-            {!current && (
+            {!current && isSearchOpen && (
                 <Stack gap="sm">
-                    <Title order={4}>
-                        {t('professional.connections.find_title')}
-                    </Title>
                     <TextInput
                         label={t('professional.connections.search_label')}
                         loading={isSearching}

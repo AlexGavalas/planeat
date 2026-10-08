@@ -1,7 +1,8 @@
 'use client';
 
-import { Stack, Text } from '@mantine/core';
+import { Badge, Group, Stack, Text, Title } from '@mantine/core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Community } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
@@ -60,12 +61,26 @@ export const ManageConnections = () => {
     const hasConnections = !isFetchingConnections && connections.length > 0;
 
     return (
-        <Stack gap="md" mt="sm">
+        <Stack gap="md">
             <LoadingOverlay visible={isFetchingConnections} />
+            <Group justify="space-between" wrap="nowrap">
+                <Group gap="sm" wrap="nowrap">
+                    <Community aria-hidden="true" />
+                    <Title order={3}>
+                        {t('connections.manage_connections.title')}
+                    </Title>
+                </Group>
+                <Badge variant="light">{connections.length}</Badge>
+            </Group>
             {!hasConnections && (
-                <Text>
-                    {t('connections.manage_connections.no_connections')}
-                </Text>
+                <Stack align="center" gap={4} py="lg" ta="center">
+                    <Text fw="var(--mantine-font-weight-semibold)">
+                        {t('connections.manage_connections.empty_title')}
+                    </Text>
+                    <Text c="dimmed" maw="26rem" size="sm">
+                        {t('connections.manage_connections.no_connections')}
+                    </Text>
+                </Stack>
             )}
             <Stack gap="sm" role="list">
                 {connections.map((connection) => (
