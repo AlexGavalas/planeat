@@ -15,6 +15,9 @@ test('accepts an invitation and opens the assigned client meal plan', async ({
 
     await clientPage.goto('/connections');
     await clientPage
+        .getByRole('button', { name: 'Find a professional' })
+        .click();
+    await clientPage
         .getByLabel('Search professionals')
         .fill('professional-e2e-user@');
     await expect(

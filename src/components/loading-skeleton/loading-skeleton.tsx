@@ -92,16 +92,33 @@ export function HomePageSkeleton() {
 export function ConnectionsPageSkeleton() {
     return (
         <Loader>
-            <div className={styles.narrowPage}>
-                <div className={`${styles.skeleton} ${styles.title}`} />
-                {[0, 1, 2].map((item) => (
-                    <Card key={item}>
+            <div className={styles.connectionsPage}>
+                <div className={styles.connectionsHeader}>
+                    <div>
+                        <div className={`${styles.skeleton} ${styles.title}`} />
                         <div
-                            className={`${styles.skeleton} ${styles.heading}`}
+                            className={`${styles.skeleton} ${styles.subtitle}`}
                         />
-                        <Lines />
-                    </Card>
-                ))}
+                    </div>
+                    <div className={`${styles.skeleton} ${styles.button}`} />
+                </div>
+                <div className={styles.connectionsGrid}>
+                    {[0, 1, 2].map((item) => (
+                        <div
+                            key={item}
+                            className={
+                                item === 0 ? styles.connectionsCare : undefined
+                            }
+                        >
+                            <Card>
+                                <div
+                                    className={`${styles.skeleton} ${styles.heading}`}
+                                />
+                                <Lines />
+                            </Card>
+                        </div>
+                    ))}
+                </div>
             </div>
         </Loader>
     );

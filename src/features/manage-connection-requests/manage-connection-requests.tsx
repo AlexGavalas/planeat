@@ -1,7 +1,8 @@
 'use client';
 
-import { Stack, Text } from '@mantine/core';
+import { Badge, Group, Stack, Text, Title } from '@mantine/core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { CheckCircle, Mail } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
@@ -118,11 +119,25 @@ export const ManageConnectionRequests = () => {
     };
 
     return (
-        <Stack gap="md" mt="sm">
+        <Stack data-has-requests={hasConnectionsRequests} gap="md">
+            <Group justify="space-between" wrap="nowrap">
+                <Group gap="sm" wrap="nowrap">
+                    <Mail aria-hidden="true" />
+                    <Title order={3}>
+                        {t('connections.manage_connection_requests.title')}
+                    </Title>
+                </Group>
+                <Badge variant="light">{connectionRequests.length}</Badge>
+            </Group>
             {!hasConnectionsRequests && (
-                <Text>
-                    {t('connections.manage_connection_requests.no_requests')}
-                </Text>
+                <Group gap="xs" wrap="nowrap">
+                    <CheckCircle aria-hidden="true" />
+                    <Text c="dimmed" size="sm">
+                        {t(
+                            'connections.manage_connection_requests.no_requests',
+                        )}
+                    </Text>
+                </Group>
             )}
             {isFetchingConnectionRequests ? (
                 <LoadingOverlay visible />

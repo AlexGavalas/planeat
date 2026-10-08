@@ -105,7 +105,17 @@ test('accepts a connection request atomically and removes the connection', async
     ).json()) as { data: unknown[] };
     expect(reciprocal.data).toHaveLength(1);
     await page
+        .getByRole('button', { name: en.generic.actions.more_actions })
+        .click();
+    await page
+        .getByRole('menuitem', {
+            name: en.connections.manage_connections.remove_connection,
+        })
+        .click();
+    await page
+        .getByRole('dialog')
         .getByRole('button', {
+            exact: true,
             name: en.connections.manage_connections.remove_connection,
         })
         .click();

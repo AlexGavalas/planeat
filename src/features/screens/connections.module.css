@@ -1,10 +1,56 @@
 .container {
     width: 100%;
-    max-width: 48rem;
+    max-width: 72rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-areas:
+        'care care'
+        'people requests';
+    grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr);
+    align-items: start;
+    gap: var(--mantine-spacing-md);
+}
+
+.careTeam {
+    grid-area: care;
+}
+
+.people {
+    grid-area: people;
+}
+
+.requests {
+    grid-area: requests;
 }
 
 @media (max-width: 48em) {
     .container {
         padding-inline: var(--mantine-spacing-sm);
+    }
+
+    .header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .header button {
+        width: 100%;
+    }
+
+    .grid {
+        grid-template-areas:
+            'requests'
+            'people'
+            'care';
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .grid:not(:has(.requests [data-has-requests='true'])) {
+        grid-template-areas:
+            'people'
+            'care'
+            'requests';
     }
 }

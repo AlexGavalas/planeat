@@ -1,14 +1,5 @@
-.removeButton {
+.moreButton {
+    flex: 0 0 auto;
     min-height: var(--app-size-action);
-}
-
-@media (max-width: 48em) {
-    .row {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .removeButton {
-        width: 100%;
-    }
+    min-width: var(--app-size-action);
 }

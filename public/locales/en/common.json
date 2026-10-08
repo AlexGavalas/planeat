@@ -63,6 +63,7 @@
             "show_more": "Show more",
             "clear": "Clear",
             "reset": "Reset",
+            "more_actions": "More actions",
             "redo": "Redo",
             "undo": "Undo"
         },
@@ -279,6 +280,8 @@
     },
     "connections": {
         "title": "Connections",
+        "description": "People who can share or help manage your meal planning.",
+        "add_person": "Add person",
         "search": {
             "label": "Search",
             "placeholder": "Write here",
@@ -293,7 +296,7 @@
             "success": "Your connection request was sent successfully"
         },
         "manage_connection_requests": {
-            "title": "Manage connection requests",
+            "title": "Requests",
             "accept": "Accept",
             "decline": "Decline",
             "no_requests": "You don't have any connection requests",
@@ -303,9 +306,12 @@
             "decline_success": "This connection request was declined successfully"
         },
         "manage_connections": {
-            "title": "Manage connections",
-            "no_connections": "You don't have any connections",
+            "title": "People",
+            "empty_title": "Your circle is ready to grow",
+            "no_connections": "Add someone to start sharing your meal-planning journey.",
             "remove_connection": "Remove connection",
+            "remove_title": "Remove connection?",
+            "remove_confirm": "Remove {{fullName}} from your connections?",
             "remove_connection_error": "We could not remove this connection. Please try again."
         }
     },
@@ -363,8 +369,8 @@
             "active_clients_error": "Stop managing all active clients before disabling professional tools."
         },
         "connections": {
-            "title": "Professional relationship",
-            "description": "Invite a professional to manage your meal plan, or respond to client invitations.",
+            "title": "Care team",
+            "description": "Connect with a professional who can help manage your meal plan.",
             "current_title": "My professional",
             "no_current": "You are not currently managed by a professional.",
             "find_title": "Find a professional",
