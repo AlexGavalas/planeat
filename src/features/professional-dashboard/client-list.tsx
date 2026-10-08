@@ -1,4 +1,5 @@
-import { Table, Text, UnstyledButton } from '@mantine/core';
+import { Table, Text } from '@mantine/core';
+import { type KeyboardEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { type ProfessionalClientSummary } from '~types/professional';
@@ -34,20 +35,38 @@ export const ClientList = ({
                     const handleSelectClient = () => {
                         onSelectClient(client.id);
                     };
+                    const handleKeyDown: KeyboardEventHandler<HTMLElement> = (
+                        event,
+                    ) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            handleSelectClient();
+                        }
+                    };
                     return (
-                        <Table.Tr key={client.id}>
+                        <Table.Tr
+                            key={client.id}
+                            aria-current={
+                                selectedClientId === client.id
+                                    ? 'true'
+                                    : undefined
+                            }
+                            className={styles.clientRow}
+                            onClick={handleSelectClient}
+                            onKeyDown={handleKeyDown}
+                            role="button"
+                            tabIndex={0}
+                        >
                             <Table.Td>
-                                <UnstyledButton
-                                    className={styles.rowButton}
+                                <Text
                                     fw={
                                         selectedClientId === client.id
                                             ? 'var(--mantine-font-weight-bold)'
                                             : undefined
                                     }
-                                    onClick={handleSelectClient}
                                 >
                                     {client.fullName}
-                                </UnstyledButton>
+                                </Text>
                             </Table.Td>
                             <Table.Td>{client.email}</Table.Td>
                         </Table.Tr>

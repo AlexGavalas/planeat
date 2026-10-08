@@ -1,9 +1,5 @@
-.rowButton {
-    color: inherit;
+.clientRow {
     cursor: pointer;
-    display: block;
-    text-align: left;
-    width: 100%;
 }
 
 .drawerBody {
