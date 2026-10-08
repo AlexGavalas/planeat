@@ -1,16 +1,6 @@
 import { Avatar, type AvatarProps } from '@mantine/core';
 
-const getInitials = (name: string): string | null => {
-    const parts = name.trim().split(/\s+/).filter(Boolean);
-    const first = parts.at(0)?.match(/[\p{L}\p{N}]/u)?.[0];
-    const last = parts.at(-1)?.match(/[\p{L}\p{N}]/u)?.[0];
-
-    if (!first) {
-        return null;
-    }
-
-    return (parts.length === 1 ? first : `${first}${last ?? ''}`).toUpperCase();
-};
+import { getInitials } from '~util/name';
 
 type NameAvatarProps = Readonly<{
     name: string;

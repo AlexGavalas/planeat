@@ -2,35 +2,7 @@ import { Avatar } from '@mantine/core';
 import Image from 'next/image';
 
 import { useProfile } from '~hooks/use-profile';
-
-const getInitials = (name: string | null | undefined): string | null => {
-    const nameParts = name?.trim().split(/\s+/).filter(Boolean) ?? [];
-
-    if (!nameParts.length) {
-        return null;
-    }
-
-    const firstName = nameParts[0];
-    const lastName = nameParts[nameParts.length - 1];
-
-    if (!firstName || !lastName) {
-        return null;
-    }
-
-    const initialPattern = /[\p{L}\p{N}]/u;
-    const firstInitial = initialPattern.exec(firstName)?.[0];
-    const lastInitial = initialPattern.exec(lastName)?.[0];
-
-    if (!firstInitial) {
-        return null;
-    }
-
-    return (
-        nameParts.length === 1
-            ? firstInitial
-            : `${firstInitial}${lastInitial ?? ''}`
-    ).toUpperCase();
-};
+import { getInitials } from '~util/name';
 
 export const UserAvatar = () => {
     const { user } = useProfile();
