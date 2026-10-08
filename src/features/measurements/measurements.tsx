@@ -6,7 +6,7 @@ import {
     useQuery,
     useQueryClient,
 } from '@tanstack/react-query';
-import { format, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,8 @@ import { useProfile } from '~hooks/use-profile';
 import { type Measurement } from '~types/measurement';
 import { useOpenContextModal } from '~util/modal';
 import { showErrorNotification } from '~util/notification';
+
+import { getMeasurementHeaders } from './measurement-table';
 
 export const Measurements = () => {
     const { t } = useTranslation();
@@ -144,32 +146,7 @@ export const Measurements = () => {
         });
     };
 
-    const headers = [
-        {
-            formatValue: (item: Measurement) =>
-                format(parseISO(item.date), 'dd/MM/yy'),
-            key: 'date',
-            label: t('date'),
-            width: '25%',
-        },
-        {
-            key: 'weight',
-            label: t('weight'),
-            width: '20%',
-        },
-        {
-            formatValue: (item: Measurement) =>
-                item.fat_percentage ? `${item.fat_percentage}%` : '-',
-            key: 'fat',
-            label: t('fat_label'),
-            width: '20%',
-        },
-        {
-            key: 'actions',
-            label: t('actions'),
-            width: '35%',
-        },
-    ];
+    const headers = getMeasurementHeaders(t);
 
     return (
         <Stack gap="md">

@@ -1,115 +1,23 @@
 'use client';
 
-import {
-    Button,
-    Collapse,
-    Stack,
-    Switch,
-    Text,
-    TextInput,
-} from '@mantine/core';
+import { Text } from '@mantine/core';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { SettingsActions } from '~features/settings-actions';
 import type { NotificationPreferences } from '~types/push-notification';
 import {
     showErrorNotification,
     showSuccessNotification,
 } from '~util/notification';
 
-const urlBase64ToUint8Array = (value: string): Uint8Array<ArrayBuffer> => {
-    const padding = '='.repeat((4 - (value.length % 4)) % 4);
-    const base64 = `${value}${padding}`.replace(/-/g, '+').replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    const output = new Uint8Array(new ArrayBuffer(rawData.length));
-
-    for (let index = 0; index < rawData.length; index += 1) {
-        output[index] = rawData.charCodeAt(index);
-    }
-
-    return output;
-};
-
-const getSubscription = async (): Promise<PushSubscription> => {
-    const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-
-    if (!publicKey) {
-        throw new Error('Push notifications are not configured');
-    }
-
-    const permission = await Notification.requestPermission();
-
-    if (permission !== 'granted') {
-        throw new Error('Notification permission was not granted');
-    }
-
-    const registration = await navigator.serviceWorker.register('/sw.js', {
-        scope: '/',
-        updateViaCache: 'none',
-    });
-    const existing = await registration.pushManager.getSubscription();
-
-    return (
-        existing ??
-        registration.pushManager.subscribe({
-            applicationServerKey: urlBase64ToUint8Array(publicKey),
-            userVisibleOnly: true,
-        })
-    );
-};
-
-const subscribeCurrentDevice = async (): Promise<void> => {
-    const subscription = await getSubscription();
-    const response = await fetch('/api/v1/push-subscription', {
-        body: JSON.stringify(subscription.toJSON()),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'POST',
-    });
-
-    if (!response.ok) {
-        throw new Error('Could not save push subscription');
-    }
-};
-
-const getCurrentSubscription = async (): Promise<PushSubscription | null> => {
-    const registration = await navigator.serviceWorker.getRegistration('/');
-    return registration?.pushManager.getSubscription() ?? null;
-};
-
-const isSubscriptionSaved = async (
-    subscription: PushSubscription,
-): Promise<boolean> => {
-    const query = new URLSearchParams({ endpoint: subscription.endpoint });
-    const response = await fetch(`/api/v1/push-subscription?${query}`);
-
-    if (!response.ok) {
-        return false;
-    }
-
-    const { data: isSaved } = (await response.json()) as { data: boolean };
-    return isSaved;
-};
-
-const unsubscribeCurrentDevice = async (): Promise<void> => {
-    const subscription = await getCurrentSubscription();
-
-    if (!subscription) {
-        return;
-    }
-
-    const response = await fetch('/api/v1/push-subscription', {
-        body: JSON.stringify({ endpoint: subscription.endpoint }),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'DELETE',
-    });
-
-    if (!response.ok) {
-        throw new Error('Could not delete push subscription');
-    }
-
-    await subscription.unsubscribe();
-};
+import {
+    getCurrentSubscription,
+    isSubscriptionSaved,
+    subscribeCurrentDevice,
+    unsubscribeCurrentDevice,
+} from './push-subscription';
+import { saveReminderPreferences } from './reminder-api';
+import { ReminderControls } from './reminder-controls';
 
 export const MealReminders = () => {
     const { t } = useTranslation();
@@ -165,29 +73,17 @@ export const MealReminders = () => {
         void load();
     }, []);
 
-    const savePreferences = async (nextEnabled: boolean): Promise<void> => {
-        const response = await fetch('/api/v1/notification-preferences', {
-            body: JSON.stringify({
-                mealReminderEnabled: nextEnabled,
-                mealReminderTime: time,
-                timezone,
-            }),
-            headers: { 'Content-Type': 'application/json' },
-            method: 'PATCH',
-        });
-
-        if (!response.ok) {
-            throw new Error('Could not save notification preferences');
-        }
-    };
-
     const handleMealReminderChange = async (
         nextEnabled: boolean,
     ): Promise<void> => {
         setIsSaving(true);
 
         try {
-            await savePreferences(nextEnabled);
+            await saveReminderPreferences({
+                enabled: nextEnabled,
+                time,
+                timezone,
+            });
             setIsMealReminderEnabled(nextEnabled);
             showSuccessNotification({
                 message: t('meal_reminders.saved'),
@@ -207,7 +103,11 @@ export const MealReminders = () => {
         setIsSaving(true);
 
         try {
-            await savePreferences(isMealReminderEnabled);
+            await saveReminderPreferences({
+                enabled: isMealReminderEnabled,
+                time,
+                timezone,
+            });
             showSuccessNotification({
                 message: t('meal_reminders.saved'),
                 title: t('notification.success.title'),
@@ -282,60 +182,18 @@ export const MealReminders = () => {
     const isBusy = isLoading || isSaving;
 
     return (
-        <Stack gap="lg">
-            <Switch
-                checked={isPushEnabled}
-                description={t('meal_reminders.push_description')}
-                disabled={isBusy}
-                label={t('meal_reminders.push_label')}
-                onChange={handlePushSwitchChange}
-                w="fit-content"
-            />
-            <Stack gap="sm">
-                <Text fw="var(--mantine-font-weight-bold)">
-                    {t('meal_reminders.categories_title')}
-                </Text>
-                <Switch
-                    checked={isMealReminderEnabled}
-                    description={t('meal_reminders.description')}
-                    disabled={isBusy}
-                    label={t('meal_reminders.label')}
-                    onChange={handleMealReminderSwitchChange}
-                    w="fit-content"
-                />
-                <Collapse expanded={isMealReminderEnabled}>
-                    <Stack gap="sm" ml="xl" mt="xs">
-                        <TextInput
-                            disabled={isBusy}
-                            label={t('meal_reminders.time')}
-                            loading={isBusy}
-                            onChange={handleTimeChange}
-                            type="time"
-                            value={time}
-                        />
-                        <Text c="dimmed" size="sm">
-                            {t('meal_reminders.timezone', { timezone })}
-                        </Text>
-                        <SettingsActions>
-                            <Button loading={isBusy} onClick={handleSave}>
-                                {t('generic.actions.save')}
-                            </Button>
-                        </SettingsActions>
-                        {detectedTimezone && timezone !== detectedTimezone && (
-                            <Button
-                                disabled={isBusy}
-                                onClick={handleUseCurrentTimezone}
-                                variant="subtle"
-                                w="fit-content"
-                            >
-                                {t('meal_reminders.use_current_timezone', {
-                                    timezone: detectedTimezone,
-                                })}
-                            </Button>
-                        )}
-                    </Stack>
-                </Collapse>
-            </Stack>
-        </Stack>
+        <ReminderControls
+            detectedTimezone={detectedTimezone}
+            isBusy={isBusy}
+            isMealReminderEnabled={isMealReminderEnabled}
+            isPushEnabled={isPushEnabled}
+            onMealReminderChange={handleMealReminderSwitchChange}
+            onPushChange={handlePushSwitchChange}
+            onSave={handleSave}
+            onTimeChange={handleTimeChange}
+            onUseCurrentTimezone={handleUseCurrentTimezone}
+            time={time}
+            timezone={timezone}
+        />
     );
 };

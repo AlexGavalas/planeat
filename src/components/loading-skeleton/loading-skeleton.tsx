@@ -1,3 +1,4 @@
+import calendarStyles from './calendar-skeleton.module.css';
 import styles from './loading-skeleton.module.css';
 
 const Lines = ({ count = 3 }: Readonly<{ count?: number }>) => (
@@ -131,29 +132,32 @@ export function SettingsPageSkeleton() {
 export function MealPlanPageSkeleton() {
     return (
         <Loader>
-            <div className={styles.calendarControls}>
+            <div className={calendarStyles.calendarControls}>
                 <div className={`${styles.skeleton} ${styles.button}`} />
                 <div className={`${styles.skeleton} ${styles.wideControl}`} />
                 <div className={`${styles.skeleton} ${styles.button}`} />
             </div>
             <Card>
-                <div className={styles.calendarShell}>
-                    <div className={styles.calendarHeader}>
+                <div className={calendarStyles.calendarShell}>
+                    <div className={calendarStyles.calendarHeader}>
                         {Array.from({ length: 8 }, (_, index) => (
                             <div
                                 key={index}
-                                className={`${styles.skeleton} ${styles.calendarHeaderCell}`}
+                                className={`${styles.skeleton} ${calendarStyles.calendarHeaderCell}`}
                             />
                         ))}
                     </div>
-                    <div className={styles.calendarRows}>
+                    <div className={calendarStyles.calendarRows}>
                         {Array.from({ length: 3 }, (_, index) => (
-                            <div key={index} className={styles.calendarRow}>
+                            <div
+                                key={index}
+                                className={calendarStyles.calendarRow}
+                            >
                                 <div
-                                    className={`${styles.skeleton} ${styles.calendarRowLabel}`}
+                                    className={`${styles.skeleton} ${calendarStyles.calendarRowLabel}`}
                                 />
                                 <div
-                                    className={`${styles.skeleton} ${styles.calendarRowContent}`}
+                                    className={`${styles.skeleton} ${calendarStyles.calendarRowContent}`}
                                 />
                             </div>
                         ))}

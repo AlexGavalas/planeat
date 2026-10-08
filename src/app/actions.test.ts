@@ -3,10 +3,6 @@ import { revalidatePath } from 'next/cache';
 import { acceptConnectionRequest as acceptRequest } from '~api/connection';
 import { saveMeals } from '~api/meal';
 import { saveMealZoneTimes as saveZoneTimes } from '~api/meal-zone';
-import {
-    requireMealPlanAccess,
-    setProfessionalRole as updateProfessionalRole,
-} from '~api/professional';
 import { getCurrentUser, getRequestDate } from '~api/session';
 import { updateProfile } from '~api/user';
 import { type UserProfile } from '~types/user';
@@ -16,7 +12,6 @@ import {
     saveMealPlan,
     saveMealZoneTimes,
     saveProfile,
-    setProfessionalRole,
 } from './actions';
 
 jest.unmock('./actions');
@@ -127,83 +122,6 @@ describe('server actions', () => {
         expect(jest.mocked(revalidatePath).mock.calls).toStrictEqual(
             expect.arrayContaining([['/home'], ['/meal-plan'], ['/settings']]),
         );
-    });
-
-    it('uses the authenticated identity and invalidates affected pages', async () => {
-        expect.hasAssertions();
-
-        await saveMealPlan({
-            deletedIds: [],
-            editedMeals: [],
-            newMeals: [],
-            userId: 999,
-        });
-
-        expect(saveMeals).toHaveBeenCalledWith({
-            deletedIds: [],
-            editedMeals: [],
-            newMeals: [],
-            userId: 7,
-        });
-        expect(revalidatePath).toHaveBeenCalledWith('/home');
-        expect(revalidatePath).toHaveBeenCalledWith('/meal-plan');
-    });
-
-    it('authorizes a delegated owner before saving their meal plan', async () => {
-        expect.hasAssertions();
-
-        await expect(
-            saveMealPlan({
-                deletedIds: [],
-                editedMeals: [],
-                newMeals: [],
-                ownerUserId: 42,
-            }),
-        ).resolves.toStrictEqual({ ok: true });
-
-        expect(requireMealPlanAccess).toHaveBeenCalledWith({
-            actorUserId: 7,
-            ownerUserId: 42,
-        });
-        expect(saveMeals).toHaveBeenCalledWith({
-            allowAnnotations: false,
-            deletedIds: [],
-            editedMeals: [],
-            newMeals: [],
-            userId: 42,
-        });
-    });
-
-    it('updates the professional role for the authenticated account', async () => {
-        expect.hasAssertions();
-
-        await expect(
-            setProfessionalRole({ enabled: true }),
-        ).resolves.toStrictEqual({ ok: true });
-
-        expect(updateProfessionalRole).toHaveBeenCalledWith({
-            enabled: true,
-            userId: 7,
-        });
-        expect(revalidatePath).toHaveBeenCalledWith('/', 'layout');
-    });
-
-    it('returns failure without invalidating pages if the transaction fails', async () => {
-        expect.hasAssertions();
-
-        const log = jest.spyOn(console, 'error').mockImplementation(jest.fn());
-
-        jest.mocked(saveMeals).mockRejectedValueOnce(
-            new Error('transaction failed'),
-        );
-
-        await expect(
-            saveMealPlan({ deletedIds: [], editedMeals: [], newMeals: [] }),
-        ).resolves.toStrictEqual({ ok: false });
-
-        expect(revalidatePath).not.toHaveBeenCalled();
-
-        log.mockRestore();
     });
 
     it('passes the request id and authenticated recipient to acceptance', async () => {

@@ -1,19 +1,18 @@
 import { LineChart as MantineLineChart } from '@mantine/charts';
-import { Card } from '@mantine/core';
-import { format, isValid, parse } from 'date-fns';
-import { type TooltipContentProps, type XAxisTickContentProps } from 'recharts';
 
 import { BRAND_COLORS } from '~theme';
+
+import {
+    type ChartPoint,
+    ChartTooltip,
+    DateTick,
+    getTargetValue,
+    getTicks,
+} from './line-parts';
 
 type ChartDataItem = {
     x: string;
     y: number | null;
-};
-
-type ChartPoint = {
-    date: string;
-    index: number;
-    value: number | null;
 };
 
 type LineChartProps<DataItem> = Readonly<{
@@ -24,128 +23,6 @@ type LineChartProps<DataItem> = Readonly<{
         data: DataItem[];
     }[];
 }>;
-
-const formatDate = (value: unknown) => {
-    if (typeof value !== 'string' && typeof value !== 'number') {
-        return '-';
-    }
-
-    const date = parse(String(value), 'yyyy-MM-dd', new Date());
-
-    return isValid(date) ? format(date, 'dd/MM/yy') : '-';
-};
-
-const getTicks = (min: number, max: number, count = 10) => {
-    const roughStep = Math.abs(max - min) / count;
-
-    if (!roughStep) {
-        return [min];
-    }
-
-    const power = Math.floor(Math.log10(roughStep));
-    const powerOfTen = 10 ** power;
-    const error = roughStep / powerOfTen;
-    const factor =
-        error >= Math.sqrt(50)
-            ? 10
-            : error >= Math.sqrt(10)
-              ? 5
-              : error >= Math.sqrt(2)
-                ? 2
-                : 1;
-    const step = factor * powerOfTen;
-    const first = Math.ceil(min / step) * step;
-    const last = Math.floor(max / step) * step;
-    const length = Math.round((last - first) / step) + 1;
-
-    return Array.from({ length }, (_, index) =>
-        Number((first + index * step).toPrecision(12)),
-    );
-};
-
-const DateTick = ({
-    index,
-    payload,
-    visibleTicksCount,
-    x,
-    y,
-}: XAxisTickContentProps) => {
-    const isFirst = index === 0;
-    const isLast = index === visibleTicksCount - 1;
-    const textAnchor =
-        isFirst && isLast
-            ? 'middle'
-            : isFirst
-              ? 'start'
-              : isLast
-                ? 'end'
-                : 'middle';
-
-    return (
-        <text
-            dominantBaseline="text-before-edge"
-            fill="var(--app-color-chart-text)"
-            fontSize={12}
-            textAnchor={textAnchor}
-            x={x}
-            y={Number(y) + 10}
-        >
-            {formatDate(payload.value)}
-        </text>
-    );
-};
-
-type ChartTooltipProps = TooltipContentProps<number, string> &
-    Readonly<{
-        dataLength: number;
-        max: number;
-        unit: string;
-    }>;
-
-const ChartTooltip = ({
-    active,
-    dataLength,
-    label,
-    max,
-    payload,
-    unit,
-}: ChartTooltipProps) => {
-    const item = payload[0];
-
-    if (!active || !item || typeof item.value !== 'number') {
-        return null;
-    }
-
-    const point = item.payload as ChartPoint | undefined;
-    const index = point?.index;
-    const transforms = [];
-
-    if (index === 0) {
-        transforms.push('translateX(50%)');
-    } else if (index === dataLength - 1) {
-        transforms.push('translateX(-50%)');
-    }
-
-    if (max - item.value < 3) {
-        transforms.push('translateY(75%)');
-    }
-
-    return (
-        <Card
-            withBorder
-            shadow="md"
-            style={{ transform: transforms.join(' ') || undefined }}
-        >
-            {formatDate(label ?? '-')}: {item.value} {unit}
-        </Card>
-    );
-};
-
-const getTargetValue = (target?: number): number | undefined => {
-    if (target && target > 0) {
-        return target;
-    }
-};
 
 export const LineChart = <DataItem extends ChartDataItem>({
     data,

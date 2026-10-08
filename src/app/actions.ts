@@ -7,20 +7,51 @@ import { z } from 'zod';
 import { acceptConnectionRequest as acceptRequest } from '~api/connection';
 import { saveMeals } from '~api/meal';
 import { saveMealZoneTimes as saveZoneTimes } from '~api/meal-zone';
-import {
-    ProfessionalError,
-    acceptProfessionalInvitation as acceptProfessional,
-    inviteProfessional as createProfessionalInvitation,
-    removeProfessionalRelationship as removeProfessional,
-    requireMealPlanAccess,
-    setProfessionalDiscoverable as updateProfessionalDiscoverability,
-    setProfessionalRole as updateProfessionalRole,
-} from '~api/professional';
+import { requireMealPlanAccess } from '~api/professional';
 import { getCurrentUser, getRequestDate } from '~api/session';
 import { updateProfile } from '~api/user';
 import { patchRequestSchema as mealSchema } from '~schemas/meal';
 import { mealZoneTimesRequestSchema } from '~schemas/meal-zone';
 import { patchRequestSchema as profileSchema } from '~schemas/user';
+
+import {
+    type ProfessionalActionResult,
+    acceptProfessionalInvitation as acceptProfessionalInvitationAction,
+    inviteProfessional as inviteProfessionalAction,
+    removeProfessionalRelationship as removeProfessionalRelationshipAction,
+    setProfessionalDiscoverable as setProfessionalDiscoverableAction,
+    setProfessionalRole as setProfessionalRoleAction,
+} from './professional-actions';
+
+export async function acceptProfessionalInvitation(
+    input: unknown,
+): Promise<ProfessionalActionResult> {
+    return acceptProfessionalInvitationAction(input);
+}
+
+export async function inviteProfessional(
+    input: unknown,
+): Promise<ProfessionalActionResult> {
+    return inviteProfessionalAction(input);
+}
+
+export async function removeProfessionalRelationship(
+    input: unknown,
+): Promise<ProfessionalActionResult> {
+    return removeProfessionalRelationshipAction(input);
+}
+
+export async function setProfessionalDiscoverable(
+    input: unknown,
+): Promise<ProfessionalActionResult> {
+    return setProfessionalDiscoverableAction(input);
+}
+
+export async function setProfessionalRole(
+    input: unknown,
+): Promise<ProfessionalActionResult> {
+    return setProfessionalRoleAction(input);
+}
 
 export async function saveMealPlan(input: unknown): Promise<{ ok: boolean }> {
     const user = await getCurrentUser();
@@ -102,141 +133,6 @@ export async function saveMealZoneTimes(
     revalidatePath('/settings');
 
     return { effectiveFrom, ok: true };
-}
-
-type ProfessionalActionResult = {
-    error?: string;
-    ok: boolean;
-};
-
-const professionalActionError = (error: unknown): ProfessionalActionResult => {
-    if (error instanceof ProfessionalError) {
-        return { error: error.code, ok: false };
-    }
-
-    console.error(error);
-    return { error: 'unknown', ok: false };
-};
-
-export async function setProfessionalRole(
-    input: unknown,
-): Promise<ProfessionalActionResult> {
-    const user = await getCurrentUser();
-    const parsed = z.object({ enabled: z.boolean() }).safeParse(input);
-
-    if (!user || !parsed.success) {
-        return { ok: false };
-    }
-
-    try {
-        await updateProfessionalRole({
-            enabled: parsed.data.enabled,
-            userId: user.id,
-        });
-        revalidatePath('/', 'layout');
-        revalidatePath('/connections');
-        revalidatePath('/professional');
-        return { ok: true };
-    } catch (error) {
-        return professionalActionError(error);
-    }
-}
-
-export async function setProfessionalDiscoverable(
-    input: unknown,
-): Promise<ProfessionalActionResult> {
-    const user = await getCurrentUser();
-    const parsed = z.object({ discoverable: z.boolean() }).safeParse(input);
-
-    if (!user || !parsed.success) {
-        return { ok: false };
-    }
-
-    try {
-        await updateProfessionalDiscoverability({
-            discoverable: parsed.data.discoverable,
-            userId: user.id,
-        });
-        revalidatePath('/', 'layout');
-        revalidatePath('/connections');
-        return { ok: true };
-    } catch (error) {
-        return professionalActionError(error);
-    }
-}
-
-export async function inviteProfessional(
-    input: unknown,
-): Promise<ProfessionalActionResult> {
-    const user = await getCurrentUser();
-    const parsed = z
-        .object({ professionalUserId: z.number().int().positive() })
-        .safeParse(input);
-
-    if (!user || !parsed.success) {
-        return { ok: false };
-    }
-
-    try {
-        await createProfessionalInvitation({
-            clientUserId: user.id,
-            professionalUserId: parsed.data.professionalUserId,
-        });
-        revalidatePath('/connections');
-        return { ok: true };
-    } catch (error) {
-        return professionalActionError(error);
-    }
-}
-
-export async function acceptProfessionalInvitation(
-    input: unknown,
-): Promise<ProfessionalActionResult> {
-    const user = await getCurrentUser();
-    const parsed = z
-        .object({ relationshipId: z.string().uuid() })
-        .safeParse(input);
-
-    if (!user || !parsed.success) {
-        return { ok: false };
-    }
-
-    try {
-        await acceptProfessional({
-            professionalUserId: user.id,
-            relationshipId: parsed.data.relationshipId,
-        });
-        revalidatePath('/connections');
-        revalidatePath('/professional');
-        return { ok: true };
-    } catch (error) {
-        return professionalActionError(error);
-    }
-}
-
-export async function removeProfessionalRelationship(
-    input: unknown,
-): Promise<ProfessionalActionResult> {
-    const user = await getCurrentUser();
-    const parsed = z
-        .object({ relationshipId: z.string().uuid() })
-        .safeParse(input);
-
-    if (!user || !parsed.success) {
-        return { ok: false };
-    }
-
-    try {
-        await removeProfessional({
-            relationshipId: parsed.data.relationshipId,
-            userId: user.id,
-        });
-        revalidatePath('/connections');
-        revalidatePath('/professional');
-        return { ok: true };
-    } catch (error) {
-        return professionalActionError(error);
-    }
 }
 
 export async function saveProfile(input: unknown): Promise<{ ok: boolean }> {

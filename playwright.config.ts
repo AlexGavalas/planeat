@@ -73,7 +73,7 @@ export default defineConfig({
         {
             dependencies: ['visual-auth-setup'],
             name: 'mobile-authenticated',
-            testMatch: /visual\/authenticated\.spec\.ts/,
+            testMatch: /visual\/(authenticated|connections)\.spec\.ts/,
             use: {
                 ...devices['Pixel 5'],
                 storageState: VISUAL_AUTH_STATE_PATH,

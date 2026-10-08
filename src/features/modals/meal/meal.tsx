@@ -1,13 +1,4 @@
-import {
-    Button,
-    Group,
-    List,
-    Stack,
-    Tabs,
-    Text,
-    TextInput,
-    Textarea,
-} from '@mantine/core';
+import { Button, Group, Stack, Tabs, Text, Textarea } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { type ContextModalProps } from '@mantine/modals';
 import {
@@ -23,36 +14,14 @@ import { useProfile } from '~hooks/use-profile';
 
 import { useGetMealPool } from '../meal-pool/hooks/use-get-meal-pool';
 import { FoodDatabaseSearch } from './food-database-search';
+import { type OnMealEdit } from './meal-result';
+import { MealSearch } from './meal-search';
 
 type MealModalProps = {
     onDelete: () => Promise<void> | void;
     onSave: (meal: string) => Promise<void> | void;
     initialMeal: string;
     ownerUserId?: number;
-};
-
-type OnEdit = (params: string) => void;
-
-type MealResultProps = Readonly<{
-    mealText: string;
-    onEdit: OnEdit;
-}>;
-
-const MealResult = ({ mealText, onEdit }: MealResultProps) => {
-    const { t } = useTranslation();
-
-    const handleEdit = (() => {
-        onEdit(mealText);
-    }) satisfies MouseEventHandler<HTMLButtonElement>;
-
-    return (
-        <List.Item>
-            {mealText}{' '}
-            <Button onClick={handleEdit} size="compact-xs">
-                {t('generic.actions.edit')}
-            </Button>
-        </List.Item>
-    );
 };
 
 export const MealModal = ({
@@ -112,49 +81,19 @@ export const MealModal = ({
 
     const handleEdit = ((previewText) => {
         setPreview(previewText);
-    }) satisfies OnEdit;
+    }) satisfies OnMealEdit;
 
     const handleChange = ((e) => {
         setPreview(e.target.value);
     }) satisfies ChangeEventHandler<HTMLTextAreaElement>;
 
     const mealSearch = (
-        <>
-            <TextInput
-                label={t('generic.search.label')}
-                onChange={handleSearchChange}
-                placeholder={t('generic.search.placeholder')}
-            />
-
-            <Text fw="var(--mantine-font-weight-semibold)" mt="sm">
-                {t('professional.meal_pool.own')}
-            </Text>
-            <List withPadding mt="xs" spacing="md">
-                {results.own.map((result) => (
-                    <MealResult
-                        key={result}
-                        mealText={result}
-                        onEdit={handleEdit}
-                    />
-                ))}
-            </List>
-            {shouldIncludeClient && (
-                <>
-                    <Text fw="var(--mantine-font-weight-semibold)" mt="md">
-                        {t('professional.meal_pool.client')}
-                    </Text>
-                    <List withPadding mt="xs" spacing="md">
-                        {results.client.map((result) => (
-                            <MealResult
-                                key={result}
-                                mealText={result}
-                                onEdit={handleEdit}
-                            />
-                        ))}
-                    </List>
-                </>
-            )}
-        </>
+        <MealSearch
+            onEdit={handleEdit}
+            onSearchChange={handleSearchChange}
+            results={results}
+            showClientMeals={shouldIncludeClient}
+        />
     );
 
     return (

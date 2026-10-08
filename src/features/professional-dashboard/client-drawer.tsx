@@ -1,0 +1,50 @@
+import { Button, Drawer, Group, Stack, Text } from '@mantine/core';
+import { type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { type ProfessionalClientSummary } from '~types/professional';
+
+import styles from './professional-dashboard.module.css';
+
+type ClientDrawerProps = Readonly<{
+    client: ProfessionalClientSummary | null;
+    detail: ReactNode;
+    onClose: () => void;
+    onStopManaging: () => void;
+}>;
+
+export const ClientDrawer = ({
+    client,
+    detail,
+    onClose,
+    onStopManaging,
+}: ClientDrawerProps) => {
+    const { t } = useTranslation();
+
+    return (
+        <Drawer
+            classNames={{ body: styles.drawerBody }}
+            onClose={onClose}
+            opened={Boolean(client)}
+            position="right"
+            size="min(100%, 76rem)"
+            title={client?.fullName}
+        >
+            {client && (
+                <Stack gap="lg">
+                    <Group justify="space-between">
+                        <Text c="dimmed">{client.email}</Text>
+                        <Button
+                            color="danger"
+                            onClick={onStopManaging}
+                            variant="outline"
+                        >
+                            {t('professional.dashboard.stop_managing')}
+                        </Button>
+                    </Group>
+                    {detail}
+                </Stack>
+            )}
+        </Drawer>
+    );
+};

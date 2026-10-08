@@ -3,13 +3,12 @@ import {
     useQuery,
     useQueryClient,
 } from '@tanstack/react-query';
-import { endOfWeek, format, startOfWeek } from 'date-fns';
-import { partition } from 'lodash/fp';
+import { format, startOfWeek } from 'date-fns';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useMealPlanOwnerId } from '~features/meal-plan-owner';
-import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
+import { type Meal } from '~types/meal';
 import { getDaysOfWeek } from '~util/date';
 import {
     showErrorNotification,
@@ -18,40 +17,17 @@ import {
 
 import { saveMealPlan } from '../../app/actions';
 import { useCurrentWeek } from './current-week';
+import {
+    type DeleteEntryCell,
+    type DeleteEntryRow,
+    type SaveEntryCell,
+    type SaveEntryRow,
+    type UseMeals,
+    getMealPlanChanges,
+    getMealsMap,
+    getWeekRange,
+} from './meal-operations';
 import { useUnsavedChanges } from './unsaved-changes';
-
-type DeleteEntryCell = (params: { meal: Meal | EditedMeal }) => void;
-
-type DeleteEntryRow = (id: string) => void;
-
-type SaveEntryCell = (params: {
-    meal?: Meal | EditedMeal;
-    sectionKey: string;
-    timestamp: Date;
-    userId: number;
-    value: string;
-    note: EditedMeal['note'];
-    rating: EditedMeal['rating'];
-}) => void;
-
-type SaveEntryRow = (params: {
-    sectionKey: string;
-    userId: number;
-    value: string;
-    note: EditedMeal['note'];
-    rating: EditedMeal['rating'];
-}) => void;
-
-type UseMeals = (explicitOwnerUserId?: number) => {
-    meals: Meal[];
-    isLoading: boolean;
-    savePlan: () => Promise<boolean>;
-    revert: () => void;
-    deleteEntryCell: DeleteEntryCell;
-    deleteEntryRow: DeleteEntryRow;
-    saveEntryCell: SaveEntryCell;
-    saveEntryRow: SaveEntryRow;
-};
 
 export const useMeals: UseMeals = (explicitOwnerUserId) => {
     const { t } = useTranslation();
@@ -73,15 +49,7 @@ export const useMeals: UseMeals = (explicitOwnerUserId) => {
         enabled: ownerUserId !== -1,
         placeholderData: keepPreviousData,
         queryFn: async () => {
-            const endDate = format(
-                endOfWeek(currentWeek, { weekStartsOn: 1 }),
-                'yyyy-MM-dd',
-            );
-
-            const startDate = format(
-                startOfWeek(currentWeek, { weekStartsOn: 1 }),
-                'yyyy-MM-dd',
-            );
+            const { endDate, startDate } = getWeekRange(currentWeek);
 
             const ownerQuery = ownerUserId ? `&ownerUserId=${ownerUserId}` : '';
             const response = await fetch(
@@ -99,30 +67,12 @@ export const useMeals: UseMeals = (explicitOwnerUserId) => {
             : ['meals', currentWeekKey],
     });
 
-    const mealsMap = meals.reduce<MealsMap>((acc, meal) => {
-        acc[meal.section_key] = meal;
-        return acc;
-    }, {});
+    const mealsMap = getMealsMap(meals);
 
     const savePlan = async (): Promise<boolean> => {
         setIsSubmitting(true);
 
-        // The edited meals will have the id from the db
-        const [changedMeals, newMeals] = partition(
-            'id',
-            Object.values(unsavedChanges),
-        );
-
-        const [editedMeals, deletedMeals] = partition('meal', changedMeals);
-
-        const deletedIds = deletedMeals.map(({ id }) => id);
-
-        const mealPlan = {
-            deletedIds,
-            editedMeals,
-            newMeals,
-            ...(ownerUserId ? { ownerUserId } : {}),
-        };
+        const mealPlan = getMealPlanChanges(unsavedChanges, ownerUserId);
         const response = await saveMealPlan(mealPlan).catch(() => ({
             ok: false,
         }));

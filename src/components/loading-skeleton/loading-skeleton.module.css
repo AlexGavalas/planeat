@@ -107,7 +107,6 @@
 }
 
 .sectionHeading,
-.calendarControls,
 .tabs {
     display: flex;
     align-items: center;
@@ -115,8 +114,7 @@
     gap: var(--mantine-spacing-sm);
 }
 
-.sectionHeading,
-.calendarControls {
+.sectionHeading {
     margin-bottom: var(--mantine-spacing-sm);
 }
 
@@ -163,34 +161,6 @@
     height: 2.25rem;
 }
 
-.calendarHeader,
-.calendarRow {
-    display: grid;
-    grid-template-columns: 0.75fr repeat(7, 1fr);
-    gap: var(--mantine-spacing-compact);
-}
-
-.calendarShell,
-.calendarRows {
-    display: grid;
-    gap: var(--mantine-spacing-sm);
-}
-
-.calendarHeaderCell {
-    min-width: 0;
-    height: 1.25rem;
-}
-
-.calendarRowLabel,
-.calendarRowContent {
-    min-width: 0;
-    height: 3.5rem;
-}
-
-.calendarRowContent {
-    grid-column: span 7;
-}
-
 @keyframes shimmer {
     to {
         transform: translateX(100%);
@@ -206,27 +176,5 @@
 @media (max-width: 48em) {
     .homeGrid {
         grid-template-columns: minmax(0, 1fr);
-    }
-
-    .calendarControls {
-        flex-wrap: wrap;
-    }
-
-    .calendarHeader {
-        display: none;
-    }
-
-    .calendarRow {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .calendarRowLabel {
-        width: 35%;
-        height: 1rem;
-    }
-
-    .calendarRowContent {
-        height: 4rem;
-        grid-column: auto;
     }
 }
