@@ -1,6 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 
-import { AUTH_STATE_PATH, VISUAL_AUTH_STATE_PATH } from './e2e/support/auth';
+import {
+    AUTH_STATE_PATH,
+    PROFESSIONAL_AUTH_STATE_PATH,
+    VISUAL_AUTH_STATE_PATH,
+} from './e2e/support/auth';
 import { loadE2eEnvironment } from './e2e/support/environment';
 
 const environment = loadE2eEnvironment();
@@ -34,6 +38,24 @@ export default defineConfig({
             testMatch: /visual\.setup\.ts/,
             use: { ...devices['Desktop Chrome'] },
         },
+        ...(environment.mode === 'local'
+            ? [
+                  {
+                      name: 'professional-auth-setup',
+                      testMatch: /professional\.setup\.ts/,
+                      use: { ...devices['Desktop Chrome'] },
+                  },
+                  {
+                      dependencies: ['auth-setup', 'professional-auth-setup'],
+                      name: 'professional',
+                      testMatch: /professional\/.*\.spec\.ts/,
+                      use: {
+                          ...devices['Desktop Chrome'],
+                          storageState: PROFESSIONAL_AUTH_STATE_PATH,
+                      },
+                  },
+              ]
+            : []),
         {
             dependencies: ['auth-setup'],
             name: 'authenticated',

@@ -36,6 +36,20 @@
             "when": 1791387664446,
             "tag": "0004_sharp_thunderbird",
             "breakpoints": true
+        },
+        {
+            "idx": 5,
+            "version": "7",
+            "when": 1791394131752,
+            "tag": "0005_tearful_magus",
+            "breakpoints": true
+        },
+        {
+            "idx": 6,
+            "version": "7",
+            "when": 1791394144468,
+            "tag": "0006_flawless_meltdown",
+            "breakpoints": true
         }
     ]
 }

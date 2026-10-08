@@ -4,7 +4,7 @@ import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
-import { type User } from '~types/user';
+import { type UserProfile } from '~types/user';
 import {
     showErrorNotification,
     showSuccessNotification,
@@ -23,7 +23,7 @@ type MutationProps = {
 };
 
 type UseProfile = () => {
-    profile?: User;
+    profile?: UserProfile;
     isFetching: boolean;
     updateProfile: (params: MutationProps) => void;
     user: Session['user'];
@@ -42,7 +42,7 @@ export const useProfile: UseProfile = () => {
         queryFn: async () => {
             const response = await fetch('/api/v1/user');
 
-            const { data } = (await response.json()) as { data?: User };
+            const { data } = (await response.json()) as { data?: UserProfile };
 
             if (!response.ok || !data) {
                 throw new Error('Could not fetch user profile');

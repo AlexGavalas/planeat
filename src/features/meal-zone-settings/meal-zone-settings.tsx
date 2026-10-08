@@ -19,10 +19,15 @@ import {
 import { saveMealZoneTimes } from '../../app/actions';
 import styles from './meal-zone-settings.module.css';
 
-export const MealZoneSettings = () => {
+export const MealZoneSettings = ({
+    ownerUserId,
+}: Readonly<{ ownerUserId?: number }>) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
-    const { effectiveFrom, isFetching, times } = useMealZoneTimes();
+    const { effectiveFrom, isFetching, times } = useMealZoneTimes(
+        undefined,
+        ownerUserId,
+    );
     const [values, setValues] = useState<MealZoneTimes>(
         DEFAULT_MEAL_ZONE_TIMES,
     );
@@ -39,7 +44,10 @@ export const MealZoneSettings = () => {
 
     const { isPending, mutate } = useMutation({
         mutationFn: async () => {
-            const response = await saveMealZoneTimes({ times: values });
+            const response = await saveMealZoneTimes({
+                ownerUserId,
+                times: values,
+            });
 
             if (!response.ok) {
                 throw new Error('Could not save meal zone times');
@@ -55,7 +63,7 @@ export const MealZoneSettings = () => {
         },
         onSuccess: async () => {
             await queryClient.invalidateQueries({
-                queryKey: ['meal-zone-times'],
+                queryKey: ['meal-zone-times', ownerUserId],
             });
             showSuccessNotification({
                 message: t('meal_zone_settings.save_success'),

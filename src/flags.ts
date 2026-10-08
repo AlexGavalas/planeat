@@ -1,4 +1,5 @@
 import { vercelAdapter } from '@flags-sdk/vercel';
+import type { Adapter } from 'flags';
 import { dedupe, flag } from 'flags/next';
 
 import { getCurrentUser } from '~api/session';
@@ -23,8 +24,13 @@ const identify = dedupe(async (): Promise<Entities> => {
     };
 });
 
+const localE2eAdapter: Adapter<boolean, Entities> = {
+    decide: () => false,
+};
+
 export const foodDatabaseSearch = flag<boolean, Entities>({
-    adapter: vercelAdapter(),
+    adapter:
+        process.env.E2E_MODE === 'local' ? localE2eAdapter : vercelAdapter(),
     defaultValue: false,
     description: 'Show BLS and Open Food Facts search in meal modals',
     identify,

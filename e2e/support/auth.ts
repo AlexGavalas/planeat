@@ -13,6 +13,11 @@ export const VISUAL_AUTH_STATE_PATH = resolve(
     'playwright/.auth/visual-user.json',
 );
 
+export const PROFESSIONAL_AUTH_STATE_PATH = resolve(
+    process.cwd(),
+    'playwright/.auth/professional-user.json',
+);
+
 const e2eUserEmail = process.env.E2E_USER_EMAIL ?? 'e2e-user@example.test';
 
 export const E2E_USER = Object.freeze({
@@ -27,6 +32,12 @@ export const VISUAL_E2E_USER = Object.freeze({
     PASSWORD: 'visual-e2e-password',
 });
 
+export const PROFESSIONAL_E2E_USER = Object.freeze({
+    EMAIL: 'professional-e2e-user@example.test',
+    FULL_NAME: 'Professional E2E User',
+    PASSWORD: 'professional-e2e-password',
+});
+
 type E2eUser = {
     EMAIL: string;
     FULL_NAME: string;
@@ -37,6 +48,7 @@ export const authenticateE2eUser = async (
     page: Page,
     user: E2eUser,
     mode: E2eEnvironment['mode'],
+    expectedPath = '/home',
 ): Promise<void> => {
     await page.goto('/');
     await page.getByRole('button', { exact: true, name: 'Log in' }).click();
@@ -90,5 +102,5 @@ export const authenticateE2eUser = async (
             .click();
     }
 
-    await expect(page).toHaveURL('/home');
+    await expect(page).toHaveURL(expectedPath);
 };

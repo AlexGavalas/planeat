@@ -20,6 +20,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { useFeatureFlags } from '~features/feature-flags';
+import { useProfile } from '~hooks/use-profile';
 
 import { useGetMealPool } from '../meal-pool/hooks/use-get-meal-pool';
 import { FoodDatabaseSearch } from './food-database-search';
@@ -28,6 +29,7 @@ type MealModalProps = {
     onDelete: () => Promise<void> | void;
     onSave: (meal: string) => Promise<void> | void;
     initialMeal: string;
+    ownerUserId?: number;
 };
 
 type OnEdit = (params: string) => void;
@@ -57,18 +59,25 @@ const MealResult = ({ mealText, onEdit }: MealResultProps) => {
 export const MealModal = ({
     context,
     id,
-    innerProps: { initialMeal, onDelete, onSave },
+    innerProps: { initialMeal, onDelete, onSave, ownerUserId },
 }: ContextModalProps<MealModalProps>) => {
     const { t } = useTranslation();
     const { isFoodDatabaseSearchEnabled } = useFeatureFlags();
+    const { profile } = useProfile();
     const [error, setError] = useState('');
     const [preview, setPreview] = useState(initialMeal);
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 350);
 
-    const { data: results = [] } = useGetMealPool({
+    const shouldIncludeClient = Boolean(
+        ownerUserId && profile?.id && ownerUserId !== profile.id,
+    );
+    const { data = [] } = useGetMealPool({
+        includeClient: shouldIncludeClient,
+        ownerUserId,
         searchQuery: debouncedSearchQuery,
     });
+    const results = Array.isArray(data) ? { client: [], own: data } : data;
 
     const closeModal = useCallback(() => {
         context.closeContextModal(id);
@@ -127,8 +136,11 @@ export const MealModal = ({
                 onChange={handleSearchChange}
                 placeholder={t('generic.search.placeholder')}
             />
-            <List withPadding mt="sm" spacing="md">
-                {results.map((result) => (
+            <Text fw="var(--mantine-font-weight-semibold)" mt="sm">
+                {t('professional.meal_pool.own')}
+            </Text>
+            <List withPadding mt="xs" spacing="md">
+                {results.own.map((result) => (
                     <MealResult
                         key={result}
                         mealText={result}
@@ -136,6 +148,22 @@ export const MealModal = ({
                     />
                 ))}
             </List>
+            {shouldIncludeClient && (
+                <>
+                    <Text fw="var(--mantine-font-weight-semibold)" mt="md">
+                        {t('professional.meal_pool.client')}
+                    </Text>
+                    <List withPadding mt="xs" spacing="md">
+                        {results.client.map((result) => (
+                            <MealResult
+                                key={result}
+                                mealText={result}
+                                onEdit={handleEdit}
+                            />
+                        ))}
+                    </List>
+                </>
+            )}
         </>
     );
 

@@ -1,0 +1,2 @@
+ALTER TABLE "professional_clients" ADD CONSTRAINT "professional_clients_status_check" CHECK ("professional_clients"."status" IN ('pending', 'active'));--> statement-breakpoint
+ALTER TABLE "professional_clients" ADD CONSTRAINT "professional_clients_distinct_users_check" CHECK ("professional_clients"."professional_user_id" <> "professional_clients"."client_user_id");

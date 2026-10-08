@@ -2,6 +2,7 @@ import { Divider, Stack, Switch, type SwitchProps, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 import { MealReminders } from '~features/meal-reminders';
+import { ProfessionalSettings } from '~features/professional-settings';
 import { useProfile } from '~hooks/use-profile';
 
 export const AdvancedSettings = () => {
@@ -36,6 +37,8 @@ export const AdvancedSettings = () => {
                     w="fit-content"
                 />
             </Stack>
+            <Divider />
+            <ProfessionalSettings />
             <Divider />
             <Stack component="section" gap="md">
                 <Title order={4}>{t('meal_reminders.title')}</Title>

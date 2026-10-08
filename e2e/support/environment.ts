@@ -75,6 +75,7 @@ export const loadE2eEnvironment = (): E2eEnvironment => {
 
     const serverEnvironment = {
         E2E_DATABASE_URL: databaseUrl,
+        E2E_MODE: mode,
         E2E_REQUEST_DATE: requestDate,
         GOOGLE_ID: googleId,
         GOOGLE_SECRET: googleSecret,

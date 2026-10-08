@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import 'server-only';
 
-import { type User } from '~types/user';
+import { type UserProfile } from '~types/user';
 
 import { authOptions } from './auth-options';
 import { fetchUser } from './user';
@@ -15,7 +15,7 @@ export const getCurrentUser = cache(async () => {
         ? fetchUser({ email: session.user.email })
         : null;
 });
-export const requireUser = async (): Promise<User> => {
+export const requireUser = async (): Promise<UserProfile> => {
     const user = await getCurrentUser();
     if (!user) {
         redirect('/');

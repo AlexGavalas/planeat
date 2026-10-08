@@ -67,7 +67,9 @@ describe('useMeals', () => {
             });
         });
 
-        expect(store.get(unsavedChangesAtom)[meal.section_key]).toMatchObject({
+        expect(
+            store.get(unsavedChangesAtom).anonymous?.[meal.section_key],
+        ).toMatchObject({
             id: meal.id,
             meal: 'Banana porridge',
             note: 'Use oat milk',

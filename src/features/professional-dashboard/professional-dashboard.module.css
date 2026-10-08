@@ -1,0 +1,22 @@
+.rowButton {
+    color: inherit;
+    cursor: pointer;
+    display: block;
+    text-align: left;
+    width: 100%;
+}
+
+.drawerBody {
+    padding-bottom: var(--mantine-spacing-xl);
+}
+
+@media (max-width: 48em) {
+    .modalActions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .modalActions button {
+        width: 100%;
+    }
+}

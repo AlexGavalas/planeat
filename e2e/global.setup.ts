@@ -3,9 +3,18 @@ import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { resolve } from 'path';
 import postgres from 'postgres';
 
-import { measurements, userCredentials, users } from '../src/db/schema';
+import {
+    measurements,
+    userCredentials,
+    userRoles,
+    users,
+} from '../src/db/schema';
 import { hashPassword } from '../src/util/password';
-import { E2E_USER, VISUAL_E2E_USER } from './support/auth';
+import {
+    E2E_USER,
+    PROFESSIONAL_E2E_USER,
+    VISUAL_E2E_USER,
+} from './support/auth';
 import {
     assertE2eDatabaseUrl,
     loadE2eEnvironment,
@@ -34,27 +43,31 @@ const globalSetup = async (): Promise<void> => {
 
         await sql`TRUNCATE TABLE ${sql('users')} RESTART IDENTITY CASCADE`;
 
-        const [passwordHash, visualPasswordHash] = await Promise.all([
-            hashPassword(E2E_USER.PASSWORD),
-            hashPassword(VISUAL_E2E_USER.PASSWORD),
-        ]);
+        const [passwordHash, visualPasswordHash, professionalPasswordHash] =
+            await Promise.all([
+                hashPassword(E2E_USER.PASSWORD),
+                hashPassword(VISUAL_E2E_USER.PASSWORD),
+                hashPassword(PROFESSIONAL_E2E_USER.PASSWORD),
+            ]);
 
         const seededUsers = await db
             .insert(users)
             .values(
-                [E2E_USER, VISUAL_E2E_USER].map((user) => ({
-                    email: user.EMAIL,
-                    full_name: user.FULL_NAME,
-                    has_completed_onboarding: true,
-                    height: 180,
-                    is_discoverable: user.EMAIL === E2E_USER.EMAIL,
-                    language: 'en',
-                    target_weight: 75,
-                })),
+                [E2E_USER, VISUAL_E2E_USER, PROFESSIONAL_E2E_USER].map(
+                    (user) => ({
+                        email: user.EMAIL,
+                        full_name: user.FULL_NAME,
+                        has_completed_onboarding: true,
+                        height: 180,
+                        is_discoverable: user.EMAIL === E2E_USER.EMAIL,
+                        language: 'en',
+                        target_weight: 75,
+                    }),
+                ),
             )
             .returning({ email: users.email, id: users.id });
 
-        if (seededUsers.length !== 2) {
+        if (seededUsers.length !== 3) {
             throw new Error('Could not seed the e2e users');
         }
 
@@ -63,7 +76,9 @@ const globalSetup = async (): Promise<void> => {
                 password_hash:
                     user.email === VISUAL_E2E_USER.EMAIL
                         ? visualPasswordHash
-                        : passwordHash,
+                        : user.email === PROFESSIONAL_E2E_USER.EMAIL
+                          ? professionalPasswordHash
+                          : passwordHash,
                 user_id: user.id,
             })),
         );
@@ -76,6 +91,22 @@ const globalSetup = async (): Promise<void> => {
             throw new Error('Could not find the visual e2e user');
         }
 
+        const clientUser = seededUsers.find(
+            ({ email }) => email === E2E_USER.EMAIL,
+        );
+        const professionalUser = seededUsers.find(
+            ({ email }) => email === PROFESSIONAL_E2E_USER.EMAIL,
+        );
+
+        if (!clientUser || !professionalUser) {
+            throw new Error('Could not find the professional e2e users');
+        }
+
+        await db.insert(userRoles).values({
+            is_discoverable: true,
+            role: 'professional',
+            user_id: professionalUser.id,
+        });
         await db.insert(measurements).values([
             {
                 date: '2026-01-05',

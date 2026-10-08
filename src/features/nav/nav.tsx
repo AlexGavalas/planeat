@@ -17,14 +17,24 @@ export const NAV_LINKS = [
     { href: '/connections', label: 'connections.title' },
 ] as const satisfies readonly LinkItem[];
 
-export const Nav = () => {
+export const PROFESSIONAL_LINK = {
+    href: '/professional',
+    label: 'professional.navigation',
+} as const satisfies LinkItem;
+
+export const Nav = ({
+    isProfessional = false,
+}: Readonly<{ isProfessional?: boolean }>) => {
     const localize = useLocalizedPath();
     const { t } = useTranslation();
     const pathname = usePathname();
+    const links = isProfessional
+        ? [PROFESSIONAL_LINK, ...NAV_LINKS]
+        : NAV_LINKS;
 
     return (
         <Group>
-            {NAV_LINKS.map(({ href, label }) => {
+            {links.map(({ href, label }) => {
                 const isCurrent = pathname === localize(href);
 
                 return (

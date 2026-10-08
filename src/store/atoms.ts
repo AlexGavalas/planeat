@@ -4,4 +4,6 @@ import { type EditedMeal } from '~types/meal';
 
 export const currentWeekAtom = atom(new Date());
 
-export const unsavedChangesAtom = atom<Record<string, EditedMeal>>({});
+export const unsavedChangesAtom = atom<
+    Record<string, Record<string, EditedMeal>>
+>({});

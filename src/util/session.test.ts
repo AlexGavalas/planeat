@@ -2,14 +2,14 @@ import { revalidatePath } from 'next/cache';
 import { NextRequest } from 'next/server';
 
 import { getCurrentUser } from '~api/session';
-import { type User } from '~types/user';
+import { type UserProfile } from '~types/user';
 
 import { withUser } from './session';
 
 jest.mock('next/cache');
 jest.mock('~api/session', () => ({ getCurrentUser: jest.fn() }));
 
-const user: User = {
+const user: UserProfile = {
     created_at: '2024-01-01T00:00:00Z',
     email: 'alex@example.com',
     food_preferences_negative: null,
@@ -20,6 +20,8 @@ const user: User = {
     id: 7,
     is_discoverable: true,
     language: 'en',
+    professional_is_discoverable: false,
+    roles: [],
     target_weight: 75,
 };
 

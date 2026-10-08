@@ -3,6 +3,7 @@ import { useHover } from '@mantine/hooks';
 import { MultiplePages } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 
+import { useMealPlanOwnerId } from '~features/meal-plan-owner';
 import { useProfile } from '~hooks/use-profile';
 import { useMeals } from '~store/hooks';
 import { type EditedMeal, type Meal } from '~types/meal';
@@ -20,6 +21,7 @@ export type CellProps = Readonly<{
 
 export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
     const { t } = useTranslation();
+    const ownerUserId = useMealPlanOwnerId();
     const { profile } = useProfile();
     const { hovered: isHovered, ref } = useHover();
 
@@ -27,7 +29,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
         useMeals();
 
     const handleSave = (newMeal: Partial<Meal>) => {
-        if (!profile || !newMeal.meal) {
+        if (!ownerUserId || !newMeal.meal) {
             return;
         }
 
@@ -36,7 +38,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                 note: newMeal.note,
                 rating: newMeal.rating,
                 sectionKey: id,
-                userId: profile.id,
+                userId: ownerUserId,
                 value: newMeal.meal,
             });
         } else {
@@ -46,7 +48,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                 rating: newMeal.rating,
                 sectionKey: id,
                 timestamp,
-                userId: profile.id,
+                userId: ownerUserId,
                 value: newMeal.meal,
             });
         }
@@ -76,9 +78,11 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
         >
             {isHovered && (
                 <CellOverlay
+                    canEditAnnotations={ownerUserId === profile?.id}
                     meal={meal}
                     onDelete={handleDelete}
                     onSave={handleSave}
+                    ownerUserId={ownerUserId}
                 />
             )}
             <Box

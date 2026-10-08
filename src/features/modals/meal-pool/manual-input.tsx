@@ -30,9 +30,10 @@ export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 350);
 
-    const { data: results = [] } = useGetMealPool({
+    const { data = [] } = useGetMealPool({
         searchQuery: debouncedSearchQuery,
     });
+    const results = Array.isArray(data) ? data : data.own;
 
     const {
         mutate,

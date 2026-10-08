@@ -1,6 +1,7 @@
 import {
     Alert,
     Button,
+    Checkbox,
     Divider,
     Modal,
     PasswordInput,
@@ -28,6 +29,7 @@ import { AUTH_DIALOG_EVENT, type AuthDialogMode } from './auth-dialog-event';
 
 type UserActionsProps = Readonly<{
     hasUser: boolean;
+    isProfessional?: boolean;
 }>;
 
 const loginSchema = z.object({
@@ -37,9 +39,13 @@ const loginSchema = z.object({
 
 const registerSchema = loginSchema.extend({
     fullName: z.string(),
+    professional: z.string().optional().transform(Boolean),
 });
 
-export const UserActions = ({ hasUser }: UserActionsProps) => {
+export const UserActions = ({
+    hasUser,
+    isProfessional = false,
+}: UserActionsProps) => {
     const { t } = useTranslation();
     const router = useRouter();
     const localize = useLocalizedPath();
@@ -75,7 +81,7 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
     }, []);
 
     const handleLoginWithGoogle = useCallback<MouseEventHandler>(async () => {
-        await signIn('google', { callbackUrl: localize('/home') });
+        await signIn('google', { callbackUrl: localize('/') });
     }, [localize]);
 
     const handleEmailSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
@@ -90,14 +96,19 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
 
             try {
                 if (isRegistering) {
-                    const { email, fullName, password } =
-                        registerSchema.parse(formData);
+                    const {
+                        email,
+                        fullName,
+                        password,
+                        professional: isProfessional,
+                    } = registerSchema.parse(formData);
 
                     const response = await fetch('/api/auth/register', {
                         body: JSON.stringify({
                             email,
                             fullName,
                             password,
+                            professional: isProfessional,
                         }),
                         headers: { 'Content-Type': 'application/json' },
                         method: 'POST',
@@ -116,7 +127,7 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                 const { email, password } = loginSchema.parse(formData);
 
                 const result = await signIn('credentials', {
-                    callbackUrl: localize('/home'),
+                    callbackUrl: localize('/'),
                     email,
                     password,
                     redirect: false,
@@ -127,7 +138,7 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                     return;
                 }
 
-                router.push(localize('/home'));
+                router.push(localize('/'));
                 router.refresh();
                 closeModal();
             } catch (e) {
@@ -159,7 +170,7 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                         isRegistering ? 'login.register_title' : 'login.title',
                     )}
                 >
-                    <Stack gap="md">
+                    <Stack gap="md" pt="sm">
                         <Button
                             leftSection={<Google />}
                             onClick={handleLoginWithGoogle}
@@ -199,6 +210,17 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                                     minLength={8}
                                     name="password"
                                 />
+                                {isRegistering && (
+                                    <Checkbox
+                                        description={t(
+                                            'professional.registration.description',
+                                        )}
+                                        label={t(
+                                            'professional.registration.label',
+                                        )}
+                                        name="professional"
+                                    />
+                                )}
                                 {error && (
                                     <Alert color="danger" variant="outline">
                                         {error}
@@ -218,8 +240,9 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
                                 isRegistering
                                     ? 'login.has_account'
                                     : 'login.no_account',
-                            )}{' '}
+                            )}
                             <Button
+                                ml="xs"
                                 onClick={toggleMode}
                                 size="compact-sm"
                                 type="button"
@@ -238,5 +261,5 @@ export const UserActions = ({ hasUser }: UserActionsProps) => {
         );
     }
 
-    return <UserMenu />;
+    return <UserMenu isProfessional={isProfessional} />;
 };

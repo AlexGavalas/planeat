@@ -45,16 +45,22 @@ async function MealPlanContent({ searchParams }: MealPlanPageProps) {
 
     const client = createQueryClient();
 
-    client.setQueryData(['meals', startDate], meals.data);
-    client.setQueryData(['activities', 'week', startDate], activities);
-    client.setQueryData(['meal-zone-times', startDate], {
+    client.setQueryData(['meals', profile.id, startDate], meals.data);
+    client.setQueryData(
+        ['activities', 'week', profile.id, startDate],
+        activities,
+    );
+    client.setQueryData(['meal-zone-times', profile.id, startDate], {
         data: mealZoneTimes,
         effectiveFrom: startDate,
     });
 
     return (
         <HydrationBoundary state={dehydrate(client)}>
-            <MealPlan initialDate={format(now, 'yyyy-MM-dd')} />
+            <MealPlan
+                initialDate={format(now, 'yyyy-MM-dd')}
+                ownerUserId={profile.id}
+            />
         </HydrationBoundary>
     );
 }
