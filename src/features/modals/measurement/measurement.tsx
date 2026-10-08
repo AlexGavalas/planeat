@@ -11,7 +11,7 @@ import { DatePicker } from '@mantine/dates';
 import { type ContextModalProps } from '@mantine/modals';
 import { format } from 'date-fns';
 import 'dayjs/locale/el';
-import { type SubmitEventHandler, useCallback, useState } from 'react';
+import { type SubmitEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { showErrorNotification } from '~util/notification';
@@ -43,70 +43,61 @@ export const MeasurementModal = ({
     const [fatPercent, setFatPercent] = useState(initialData?.fat_percentage);
     const [error, setError] = useState('');
 
-    const closeModal = useCallback(() => {
+    const closeModal = () => {
         context.closeContextModal(id);
-    }, [context, id]);
+    };
 
-    const resetError = useCallback(() => {
+    const resetError = () => {
         setError('');
-    }, []);
+    };
 
-    const handleWeightChange = useCallback<
-        NonNullable<NumberInputProps['onChange']>
-    >((value) => {
+    const handleWeightChange = ((value) => {
         setWeight(Number(value));
-    }, []);
+    }) satisfies NonNullable<NumberInputProps['onChange']>;
 
-    const handleFatPercentChange = useCallback<
-        NonNullable<NumberInputProps['onChange']>
-    >((value) => {
+    const handleFatPercentChange = ((value) => {
         setFatPercent(Number(value));
-    }, []);
+    }) satisfies NonNullable<NumberInputProps['onChange']>;
 
-    const handleSave = useCallback<SubmitEventHandler<HTMLFormElement>>(
-        async (e) => {
-            e.preventDefault();
+    const handleSave = (async (e) => {
+        e.preventDefault();
 
-            if (!weight) {
-                setError(t('errors.weight_empty'));
-                return;
-            }
+        if (!weight) {
+            setError(t('errors.weight_empty'));
+            return;
+        }
 
-            if (!date) {
-                setError(t('errors.date_empty'));
-                return;
-            }
+        if (!date) {
+            setError(t('errors.date_empty'));
+            return;
+        }
 
-            const url = initialData?.id
-                ? `/api/v1/measurement?id=${initialData.id}`
-                : '/api/v1/measurement';
+        const url = initialData?.id
+            ? `/api/v1/measurement?id=${initialData.id}`
+            : '/api/v1/measurement';
 
-            const response = await fetch(url, {
-                body: JSON.stringify({
-                    date,
-                    fatPercent,
-                    weight,
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                method: initialData ? 'PATCH' : 'POST',
+        const response = await fetch(url, {
+            body: JSON.stringify({
+                date,
+                fatPercent,
+                weight,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: initialData ? 'PATCH' : 'POST',
+        });
+
+        if (!response.ok) {
+            showErrorNotification({
+                message: `${t('errors.measurement_save')}. ${t('try_again')}`,
+                title: t('notification.error.title'),
             });
-
-            if (!response.ok) {
-                showErrorNotification({
-                    message: `${t('errors.measurement_save')}. ${t(
-                        'try_again',
-                    )}`,
-                    title: t('notification.error.title'),
-                });
-            } else {
-                await onSave?.();
-                closeModal();
-            }
-        },
-        [closeModal, date, fatPercent, initialData, onSave, t, weight],
-    );
+        } else {
+            await onSave?.();
+            closeModal();
+        }
+    }) satisfies SubmitEventHandler<HTMLFormElement>;
 
     return (
         <form className="calendar" onSubmit={handleSave}>
@@ -128,6 +119,7 @@ export const MeasurementModal = ({
                 onFocus={resetError}
                 value={weight}
             />
+
             <Space h="lg" />
             <NumberInput
                 decimalScale={2}
@@ -137,6 +129,7 @@ export const MeasurementModal = ({
                 onChange={handleFatPercentChange}
                 value={fatPercent}
             />
+
             <Space h="lg" />
             <Group justify="space-between">
                 <Button color="danger" onClick={closeModal} variant="light">

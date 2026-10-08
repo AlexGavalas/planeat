@@ -1,5 +1,4 @@
 import { add, format, parse, parseISO } from 'date-fns';
-import { useCallback } from 'react';
 
 import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
 
@@ -39,14 +38,11 @@ export const useWeeklyScheduleOps = (): {
     const { nextWeek } = useCurrentWeek();
     const { addChange } = useUnsavedChanges();
 
-    const copyToNextWeek = useCallback<CopyToNextWeek>(
-        (meals) => {
-            nextWeek();
+    const copyToNextWeek: CopyToNextWeek = (meals) => {
+        nextWeek();
 
-            Object.values(cloneState(meals)).forEach(addChange);
-        },
-        [addChange, nextWeek],
-    );
+        Object.values(cloneState(meals)).forEach(addChange);
+    };
 
     return {
         copyToNextWeek,

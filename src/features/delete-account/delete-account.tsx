@@ -1,5 +1,5 @@
 import { Button, Stack, Text, Title } from '@mantine/core';
-import { type MouseEventHandler, useCallback } from 'react';
+import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SettingsActions } from '~features/settings-actions';
@@ -9,15 +9,13 @@ export const DeleteAccount = () => {
     const { t } = useTranslation();
     const openDeleteAccountModal = useOpenContextModal('delete-account');
 
-    const handleOpenDeleteAccountModal = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(() => {
+    const handleOpenDeleteAccountModal = (() => {
         openDeleteAccountModal({
             centered: true,
             innerProps: {},
             title: t('account_settings.sections.delete_account.title'),
         });
-    }, [openDeleteAccountModal, t]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
     return (
         <Stack align="start" gap="md">

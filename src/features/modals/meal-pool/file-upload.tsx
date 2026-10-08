@@ -12,7 +12,6 @@ import { InfoCircle, Redo, Trash, Undo } from 'iconoir-react';
 import {
     type MouseEventHandler,
     type SubmitEventHandler,
-    useCallback,
     useRef,
     useState,
 } from 'react';
@@ -55,44 +54,38 @@ export const FileUploadTab = () => {
     const { mutate: createMealPool, isPending: isCreating } =
         useCreateMealPool();
 
-    const handleClear = useCallback(() => {
+    const handleClear = () => {
         setFile(null);
         clearHistory();
         resetRef.current?.();
-    }, [clearHistory]);
+    };
 
-    const handleUpload = useCallback<MouseEventHandler>(() => {
+    const handleUpload = (() => {
         mutate({ file });
-    }, [file, mutate]);
+    }) satisfies MouseEventHandler;
 
-    const handleReset = useCallback(() => {
+    const handleReset = () => {
         resetUpload();
         setFile(null);
-    }, [resetUpload]);
+    };
 
-    const handleSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
-        (e) => {
-            e.preventDefault();
+    const handleSubmit = ((e) => {
+        e.preventDefault();
 
-            const formData = Array.from(new FormData(e.currentTarget));
+        const formData = Array.from(new FormData(e.currentTarget));
 
-            const content = formSchema.parse(formData);
+        const content = formSchema.parse(formData);
 
-            createMealPool({ content });
-        },
-        [createMealPool],
-    );
+        createMealPool({ content });
+    }) satisfies SubmitEventHandler<HTMLFormElement>;
 
-    const handleRemoveItem = useCallback<MouseEventHandler<HTMLButtonElement>>(
-        (e) => {
-            const itemIndex = e.currentTarget.dataset.itemIndex;
+    const handleRemoveItem = ((e) => {
+        const itemIndex = e.currentTarget.dataset.itemIndex;
 
-            if (itemIndex && currentState) {
-                set(currentState.filter((_, idx) => idx !== +itemIndex));
-            }
-        },
-        [currentState, set],
-    );
+        if (itemIndex && currentState) {
+            set(currentState.filter((_, idx) => idx !== +itemIndex));
+        }
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
     return (
         <Stack gap="md">
@@ -117,6 +110,7 @@ export const FileUploadTab = () => {
                 onReset={handleReset}
                 onUpload={handleUpload}
             />
+
             {isSuccess && (
                 <>
                     <Group gap="md">
@@ -154,6 +148,7 @@ export const FileUploadTab = () => {
                                         name="meal"
                                         style={{ flexGrow: 1 }}
                                     />
+
                                     <ActionIcon
                                         color="danger"
                                         data-item-index={idx}

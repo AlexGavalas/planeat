@@ -17,7 +17,7 @@ import {
     StatsReport,
     Xmark,
 } from 'iconoir-react';
-import { type MouseEventHandler, useCallback } from 'react';
+import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useMealPlanOwnerId } from '~features/meal-plan-owner';
@@ -50,31 +50,29 @@ export const Controls = ({ onPrint }: ControlsProps) => {
     const openMealPoolModal = useOpenContextModal('meal-pool');
     const openWeekOverviewModal = useOpenContextModal('week-overview');
 
-    const toggleWeekOverview = useCallback(() => {
+    const toggleWeekOverview = () => {
         openWeekOverviewModal({
             innerProps: { ownerUserId },
             size: 'lg',
             title: t('modals.week_overview.title'),
         });
-    }, [openWeekOverviewModal, ownerUserId, t]);
+    };
 
-    const handleCopyToNextWeek = useCallback(() => {
+    const handleCopyToNextWeek = () => {
         copyToNextWeek(meals);
-    }, [copyToNextWeek, meals]);
+    };
 
-    const handleSave = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(async () => {
+    const handleSave = (async () => {
         await savePlan();
-    }, [savePlan]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleMealCreation = useCallback(() => {
+    const handleMealCreation = () => {
         openMealPoolModal({
             innerProps: {},
             size: 'lg',
             title: t('modals.meal_pool.title'),
         });
-    }, [openMealPoolModal, t]);
+    };
 
     return (
         <>

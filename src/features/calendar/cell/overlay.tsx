@@ -7,7 +7,6 @@ import {
     Tooltip,
 } from '@mantine/core';
 import { EditPencil, Notes, ThreeStars } from 'iconoir-react';
-import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CopyButton } from '~components/copy-button';
@@ -50,36 +49,27 @@ export const CellOverlay = ({
     const isMealSaved = isSavedMeal(meal);
     const isMealFilled = isFilledMeal(meal);
 
-    const handleMealSave = useCallback(
-        async (value: string) => {
-            await onSave({ ...meal, meal: value });
-        },
-        [onSave, meal],
-    );
+    const handleMealSave = async (value: string) => {
+        await onSave({ ...meal, meal: value });
+    };
 
-    const handleMealNoteSave = useCallback(
-        async (note: string) => {
-            await onSave({ ...meal, note });
-        },
-        [onSave, meal],
-    );
+    const handleMealNoteSave = async (note: string) => {
+        await onSave({ ...meal, note });
+    };
 
-    const handleMealNoteDelete = useCallback(async () => {
+    const handleMealNoteDelete = async () => {
         await onSave({ ...meal, note: null });
-    }, [onSave, meal]);
+    };
 
-    const handleMealRatingSave = useCallback(
-        async (rating: number) => {
-            await onSave({ ...meal, rating });
-        },
-        [onSave, meal],
-    );
+    const handleMealRatingSave = async (rating: number) => {
+        await onSave({ ...meal, rating });
+    };
 
-    const handleMealRatingDelete = useCallback(async () => {
+    const handleMealRatingDelete = async () => {
         await onSave({ ...meal, rating: null });
-    }, [onSave, meal]);
+    };
 
-    const handleEditClick = useCallback(() => {
+    const handleEditClick = () => {
         openEditMealModal({
             centered: true,
             innerProps: {
@@ -91,16 +81,9 @@ export const CellOverlay = ({
             size: 'lg',
             title: t('edit_meal'),
         });
-    }, [
-        openEditMealModal,
-        onDelete,
-        handleMealSave,
-        meal?.meal,
-        ownerUserId,
-        t,
-    ]);
+    };
 
-    const handleNoteClick = useCallback(() => {
+    const handleNoteClick = () => {
         if (!isMealSaved) {
             return;
         }
@@ -114,16 +97,9 @@ export const CellOverlay = ({
             },
             title: t('notes'),
         });
-    }, [
-        handleMealNoteDelete,
-        handleMealNoteSave,
-        isMealSaved,
-        meal,
-        openMealNoteModal,
-        t,
-    ]);
+    };
 
-    const handleRateClick = useCallback(() => {
+    const handleRateClick = () => {
         if (!isMealSaved) {
             return;
         }
@@ -137,14 +113,7 @@ export const CellOverlay = ({
             },
             title: t('modals.meal_rate.title'),
         });
-    }, [
-        handleMealRatingDelete,
-        handleMealRatingSave,
-        isMealSaved,
-        meal,
-        openMealRatingModal,
-        t,
-    ]);
+    };
 
     const shouldShowColumnLayout = isMealSaved || isMealFilled;
 

@@ -1,5 +1,5 @@
 import { Button, Group, Paper, Text } from '@mantine/core';
-import { type MouseEventHandler, useCallback } from 'react';
+import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -22,17 +22,13 @@ export const ConnectionRequest = ({
 }: ConnectionRequestProps) => {
     const { t } = useTranslation();
 
-    const handleAccept = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(async () => {
+    const handleAccept = (async () => {
         await onAcceptConnectionRequest(connectionRequest);
-    }, [connectionRequest, onAcceptConnectionRequest]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleDecline = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(async () => {
+    const handleDecline = (async () => {
         await onDeclineConnectionRequest(connectionRequest.id);
-    }, [connectionRequest.id, onDeclineConnectionRequest]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
     return (
         <Paper withBorder p="md" role="listitem">

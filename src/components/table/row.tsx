@@ -11,12 +11,7 @@ import {
 } from '@mantine/core';
 import { EditPencil, Trash } from 'iconoir-react';
 import get from 'lodash/fp/get';
-import {
-    type MouseEventHandler,
-    type ReactNode,
-    useCallback,
-    useState,
-} from 'react';
+import { type MouseEventHandler, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ConfirmationPopover } from './confirm-popover';
@@ -56,27 +51,23 @@ const RowActions = <ItemType extends Item>({
     const [hasOpenConfirmation, setHasOpenConfirmation] = useState(false);
     const [isDeleteInProgress, setIsDeleteInProgress] = useState(false);
 
-    const handleDelete = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(async () => {
+    const handleDelete = (async () => {
         setIsDeleteInProgress(true);
         await onDelete(item);
         setIsDeleteInProgress(false);
         setHasOpenConfirmation(false);
-    }, [item, onDelete]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleEdit = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(async () => {
+    const handleEdit = (async () => {
         await onEdit(item);
-    }, [item, onEdit]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleOpenConfirmation = useCallback(() => {
+    const handleOpenConfirmation = () => {
         setHasOpenConfirmation(true);
-    }, []);
-    const handleCloseConfirmation = useCallback(() => {
+    };
+    const handleCloseConfirmation = () => {
         setHasOpenConfirmation(false);
-    }, []);
+    };
 
     const editControl = isMobile ? (
         <Button

@@ -1,6 +1,5 @@
 import { Tabs } from '@mantine/core';
 import { type ContextModalProps } from '@mantine/modals';
-import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useFeatureFlags } from '~features/feature-flags';
@@ -12,9 +11,9 @@ import { ManualInputTab } from './manual-input';
 export const MealPoolModal = ({ context, id }: ContextModalProps) => {
     const { t } = useTranslation();
     const { isFoodDatabaseSearchEnabled } = useFeatureFlags();
-    const closeModal = useCallback(() => {
+    const closeModal = () => {
         context.closeContextModal(id);
-    }, [context, id]);
+    };
 
     return (
         <Tabs defaultValue="manually">

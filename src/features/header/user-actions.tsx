@@ -15,7 +15,6 @@ import { useRouter } from 'next/navigation';
 import {
     type MouseEventHandler,
     type SubmitEventHandler,
-    useCallback,
     useEffect,
     useState,
 } from 'react';
@@ -54,15 +53,15 @@ export const UserActions = ({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const closeModal = useCallback(() => {
+    const closeModal = () => {
         setIsOpen(false);
         setIsRegistering(false);
         setError(null);
-    }, []);
+    };
 
-    const openModal = useCallback(() => {
+    const openModal = () => {
         setIsOpen(true);
-    }, []);
+    };
 
     useEffect(() => {
         const handleOpen = (event: Event) => {
@@ -80,81 +79,76 @@ export const UserActions = ({
         };
     }, []);
 
-    const handleLoginWithGoogle = useCallback<MouseEventHandler>(async () => {
+    const handleLoginWithGoogle = (async () => {
         await signIn('google', { callbackUrl: localize('/') });
-    }, [localize]);
+    }) satisfies MouseEventHandler;
 
-    const handleEmailSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
-        async (event) => {
-            event.preventDefault();
-            setError(null);
-            setIsSubmitting(true);
+    const handleEmailSubmit = (async (event) => {
+        event.preventDefault();
+        setError(null);
+        setIsSubmitting(true);
 
-            const formData = Object.fromEntries(
-                new FormData(event.currentTarget),
-            );
+        const formData = Object.fromEntries(new FormData(event.currentTarget));
 
-            try {
-                if (isRegistering) {
-                    const {
+        try {
+            if (isRegistering) {
+                const {
+                    email,
+                    fullName,
+                    password,
+                    professional: isProfessional,
+                } = registerSchema.parse(formData);
+
+                const response = await fetch('/api/auth/register', {
+                    body: JSON.stringify({
                         email,
                         fullName,
                         password,
                         professional: isProfessional,
-                    } = registerSchema.parse(formData);
-
-                    const response = await fetch('/api/auth/register', {
-                        body: JSON.stringify({
-                            email,
-                            fullName,
-                            password,
-                            professional: isProfessional,
-                        }),
-                        headers: { 'Content-Type': 'application/json' },
-                        method: 'POST',
-                    });
-
-                    if (!response.ok) {
-                        setError(
-                            response.status === 409
-                                ? t('login.errors.account_exists')
-                                : t('login.errors.registration_failed'),
-                        );
-                        return;
-                    }
-                }
-
-                const { email, password } = loginSchema.parse(formData);
-
-                const result = await signIn('credentials', {
-                    callbackUrl: localize('/'),
-                    email,
-                    password,
-                    redirect: false,
+                    }),
+                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST',
                 });
 
-                if (!result?.ok) {
-                    setError(t('login.errors.invalid_credentials'));
+                if (!response.ok) {
+                    setError(
+                        response.status === 409
+                            ? t('login.errors.account_exists')
+                            : t('login.errors.registration_failed'),
+                    );
                     return;
                 }
-
-                router.push(localize('/'));
-                router.refresh();
-                closeModal();
-            } catch (e) {
-                console.log(e);
-                setError(t('login.errors.generic'));
-            } finally {
-                setIsSubmitting(false);
             }
-        },
-        [closeModal, isRegistering, router, t, localize],
-    );
 
-    const toggleMode = useCallback(() => {
+            const { email, password } = loginSchema.parse(formData);
+
+            const result = await signIn('credentials', {
+                callbackUrl: localize('/'),
+                email,
+                password,
+                redirect: false,
+            });
+
+            if (!result?.ok) {
+                setError(t('login.errors.invalid_credentials'));
+                return;
+            }
+
+            router.push(localize('/'));
+            router.refresh();
+            closeModal();
+        } catch (e) {
+            console.log(e);
+            setError(t('login.errors.generic'));
+        } finally {
+            setIsSubmitting(false);
+        }
+    }) satisfies SubmitEventHandler<HTMLFormElement>;
+
+    const toggleMode = () => {
         setIsRegistering((value) => !value);
         setError(null);
-    }, []);
+    };
 
     if (!hasUser) {
         return (
@@ -198,6 +192,7 @@ export const UserActions = ({
                                     name="email"
                                     type="email"
                                 />
+
                                 <PasswordInput
                                     required
                                     aria-label={t('login.password')}
@@ -210,6 +205,7 @@ export const UserActions = ({
                                     minLength={8}
                                     name="password"
                                 />
+
                                 {isRegistering && (
                                     <Checkbox
                                         description={t(

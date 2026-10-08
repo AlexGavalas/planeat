@@ -11,7 +11,7 @@ import {
 } from '@mantine/core';
 import { format, getDay, parseISO } from 'date-fns';
 import { Copy, EditPencil, MoreHoriz, Notes, ThreeStars } from 'iconoir-react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MEAL_ICON, ROWS } from '~constants/calendar';
@@ -287,14 +287,11 @@ export const MobileContent = ({
         'EEE',
         i18n.language === 'gr' ? 'gr' : 'en',
     );
-    const mealsMap = useMemo(
-        () =>
-            meals.reduce<MealsMap>((acc, meal) => {
-                acc[meal.section_key] = meal;
-                return acc;
-            }, {}),
-        [meals],
-    );
+    const mealsMap = meals.reduce<MealsMap>((acc, meal) => {
+        acc[meal.section_key] = meal;
+        return acc;
+    }, {});
+
     const day = daysOfWeek[selectedDay] ?? daysOfWeek[0];
 
     if (!day) {

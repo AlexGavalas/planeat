@@ -11,8 +11,6 @@ import {
     type ChangeEventHandler,
     type KeyboardEventHandler,
     type MouseEventHandler,
-    useCallback,
-    useMemo,
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -37,17 +35,13 @@ type FoodResultProps = Readonly<{
 const FoodResult = ({ food, onSelect: handleSelect }: FoodResultProps) => {
     const { i18n, t } = useTranslation();
 
-    const handleClick = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(() => {
+    const handleClick = (() => {
         handleSelect([food.brand, food.name].filter(Boolean).join(' '));
-    }, [food, handleSelect]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const format = useMemo(
-        () =>
-            new Intl.NumberFormat(i18n.language, { maximumFractionDigits: 1 }),
-        [i18n.language],
-    );
+    const format = new Intl.NumberFormat(i18n.language, {
+        maximumFractionDigits: 1,
+    });
 
     const nutrients = [
         food.nutrition.calories === null
@@ -102,35 +96,27 @@ export const FoodDatabaseSearch = ({
     const [country, setCountry] = useState<FoodSearchCountry>('de');
     const { data, error, isFetching } = useFoodSearch({ country, query });
 
-    const handleSearch = useCallback(() => {
+    const handleSearch = () => {
         const nextQuery = input.trim();
         if (nextQuery.length >= 2) {
             setQuery(nextQuery);
         }
-    }, [input]);
+    };
 
-    const handleInputChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
-        (event) => {
-            setInput(event.target.value);
-        },
-        [],
-    );
+    const handleInputChange = ((event) => {
+        setInput(event.target.value);
+    }) satisfies ChangeEventHandler<HTMLInputElement>;
 
-    const handleInputKeyDown = useCallback<
-        KeyboardEventHandler<HTMLInputElement>
-    >(
-        (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                handleSearch();
-            }
-        },
-        [handleSearch],
-    );
+    const handleInputKeyDown = ((event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSearch();
+        }
+    }) satisfies KeyboardEventHandler<HTMLInputElement>;
 
-    const handleCountryChange = useCallback((value: string | null) => {
+    const handleCountryChange = (value: string | null) => {
         setCountry((value ?? 'de') as FoodSearchCountry);
-    }, []);
+    };
 
     const hasSearched = query.length >= 2 && !isFetching;
     const bls = data?.data.bls ?? [];
@@ -147,6 +133,7 @@ export const FoodDatabaseSearch = ({
                     placeholder={t('modals.meal_edit.food_search.placeholder')}
                     value={input}
                 />
+
                 <Select
                     data={[
                         {
@@ -172,6 +159,7 @@ export const FoodDatabaseSearch = ({
                     onChange={handleCountryChange}
                     value={country}
                 />
+
                 <Button
                     className={styles.searchButton}
                     disabled={input.trim().length < 2}

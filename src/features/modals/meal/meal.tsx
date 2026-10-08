@@ -14,7 +14,6 @@ import {
     type ChangeEventHandler,
     type MouseEventHandler,
     type SubmitEventHandler,
-    useCallback,
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -42,9 +41,9 @@ type MealResultProps = Readonly<{
 const MealResult = ({ mealText, onEdit }: MealResultProps) => {
     const { t } = useTranslation();
 
-    const handleEdit = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
+    const handleEdit = (() => {
         onEdit(mealText);
-    }, [onEdit, mealText]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
     return (
         <List.Item>
@@ -79,55 +78,45 @@ export const MealModal = ({
     });
     const results = Array.isArray(data) ? { client: [], own: data } : data;
 
-    const closeModal = useCallback(() => {
+    const closeModal = () => {
         context.closeContextModal(id);
-    }, [context, id]);
+    };
 
-    const resetError = useCallback(() => {
+    const resetError = () => {
         setError('');
-    }, []);
+    };
 
-    const handleSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
-        async (e) => {
-            e.preventDefault();
+    const handleSubmit = (async (e) => {
+        e.preventDefault();
 
-            const meal = preview;
+        const meal = preview;
 
-            if (!meal) {
-                setError(t('errors.meal_empty'));
-                return;
-            }
+        if (!meal) {
+            setError(t('errors.meal_empty'));
+            return;
+        }
 
-            await onSave(meal);
+        await onSave(meal);
 
-            closeModal();
-        },
-        [closeModal, preview, onSave, t],
-    );
+        closeModal();
+    }) satisfies SubmitEventHandler<HTMLFormElement>;
 
-    const handleDelete = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(async () => {
+    const handleDelete = (async () => {
         await onDelete();
         closeModal();
-    }, [closeModal, onDelete]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleSearchChange = useCallback<
-        ChangeEventHandler<HTMLInputElement>
-    >((e) => {
+    const handleSearchChange = ((e) => {
         setSearchQuery(e.target.value);
-    }, []);
+    }) satisfies ChangeEventHandler<HTMLInputElement>;
 
-    const handleEdit = useCallback<OnEdit>((previewText) => {
+    const handleEdit = ((previewText) => {
         setPreview(previewText);
-    }, []);
+    }) satisfies OnEdit;
 
-    const handleChange = useCallback<ChangeEventHandler<HTMLTextAreaElement>>(
-        (e) => {
-            setPreview(e.target.value);
-        },
-        [],
-    );
+    const handleChange = ((e) => {
+        setPreview(e.target.value);
+    }) satisfies ChangeEventHandler<HTMLTextAreaElement>;
 
     const mealSearch = (
         <>
@@ -136,6 +125,7 @@ export const MealModal = ({
                 onChange={handleSearchChange}
                 placeholder={t('generic.search.placeholder')}
             />
+
             <Text fw="var(--mantine-font-weight-semibold)" mt="sm">
                 {t('professional.meal_pool.own')}
             </Text>
@@ -209,6 +199,7 @@ export const MealModal = ({
                     placeholder={t('meal_placeholder')}
                     value={preview}
                 />
+
                 <Group justify="space-between">
                     <Button color="danger" onClick={closeModal} variant="light">
                         {t('generic.actions.cancel')}

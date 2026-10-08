@@ -1,5 +1,5 @@
 import { Button, Group, Paper, Text } from '@mantine/core';
-import { type MouseEventHandler, useCallback } from 'react';
+import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { type Connection, type ConnectionWithUser } from '~types/connection';
@@ -17,11 +17,9 @@ export const ConnectionItem = ({
 }: ConnectionItemProps) => {
     const { t } = useTranslation();
 
-    const handleRemoveConnection = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(async () => {
+    const handleRemoveConnection = (async () => {
         await removeConnection(connection);
-    }, [connection, removeConnection]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
     return (
         <Paper withBorder p="md" role="listitem">

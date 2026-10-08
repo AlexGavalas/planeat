@@ -2,7 +2,7 @@
 
 import { List, Menu, Modal, Stack, Text, UnstyledButton } from '@mantine/core';
 import { CheckCircle, DownloadCircle } from 'iconoir-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './install-app.module.css';
@@ -65,7 +65,7 @@ export const InstallApp = ({ placement = 'landing' }: InstallAppProps) => {
         };
     }, []);
 
-    const handleInstall = useCallback(async () => {
+    const handleInstall = async () => {
         if (!installPrompt) {
             setIsIosInstallOpen(true);
             return;
@@ -74,10 +74,10 @@ export const InstallApp = ({ placement = 'landing' }: InstallAppProps) => {
         await installPrompt.prompt();
         await installPrompt.userChoice;
         setInstallPrompt(null);
-    }, [installPrompt]);
-    const handleCloseIosInstall = useCallback(() => {
+    };
+    const handleCloseIosInstall = () => {
         setIsIosInstallOpen(false);
-    }, []);
+    };
 
     if (!installPrompt && !canShowIosInstall) {
         return null;

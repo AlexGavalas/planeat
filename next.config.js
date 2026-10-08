@@ -8,6 +8,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: true });
  * @type {import('next').NextConfig}
  **/
 const config = {
+    reactCompiler: true,
+    experimental: {
+        turbopackRustReactCompiler: !isAnalyze,
+    },
     reactStrictMode: true,
     images: {
         remotePatterns: [

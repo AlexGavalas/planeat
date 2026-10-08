@@ -11,7 +11,6 @@ import { useDebouncedValue } from '@mantine/hooks';
 import {
     type ChangeEventHandler,
     type MouseEventHandler,
-    useCallback,
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,27 +43,21 @@ export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
         onSuccess: onDone,
     });
 
-    const handleCreate = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(() => {
+    const handleCreate = (() => {
         mutate({ content: [preview] });
-    }, [mutate, preview]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleEdit = useCallback<OnEdit>((previewText) => {
+    const handleEdit = ((previewText) => {
         setPreview(previewText);
-    }, []);
+    }) satisfies OnEdit;
 
-    const handlePreviewChange = useCallback<
-        ChangeEventHandler<HTMLTextAreaElement>
-    >((e) => {
+    const handlePreviewChange = ((e) => {
         setPreview(e.target.value);
-    }, []);
+    }) satisfies ChangeEventHandler<HTMLTextAreaElement>;
 
-    const handleSearchChange = useCallback<
-        ChangeEventHandler<HTMLInputElement>
-    >((e) => {
+    const handleSearchChange = ((e) => {
         setSearchQuery(e.target.value);
-    }, []);
+    }) satisfies ChangeEventHandler<HTMLInputElement>;
 
     return (
         <Stack gap="sm">
@@ -73,6 +66,7 @@ export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
                 onChange={handleSearchChange}
                 placeholder={t('generic.search.placeholder')}
             />
+
             <List spacing="md">
                 {results.map((result) => (
                     <SearchResult

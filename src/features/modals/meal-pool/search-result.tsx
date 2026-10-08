@@ -1,5 +1,5 @@
 import { Button, List } from '@mantine/core';
-import { type MouseEventHandler, memo, useCallback } from 'react';
+import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export type OnEdit = (params: string) => void;
@@ -9,12 +9,12 @@ type SearchResultProps = Readonly<{
     onEdit: OnEdit;
 }>;
 
-export const SearchResult = memo(({ mealText, onEdit }: SearchResultProps) => {
+export const SearchResult = ({ mealText, onEdit }: SearchResultProps) => {
     const { t } = useTranslation();
 
-    const handleEdit = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
+    const handleEdit = (() => {
         onEdit(mealText);
-    }, [onEdit, mealText]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
     return (
         <List.Item
@@ -30,6 +30,4 @@ export const SearchResult = memo(({ mealText, onEdit }: SearchResultProps) => {
             {mealText}
         </List.Item>
     );
-});
-
-SearchResult.displayName = 'SearchResult';
+};

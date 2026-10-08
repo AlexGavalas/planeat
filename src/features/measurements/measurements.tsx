@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
@@ -60,7 +60,7 @@ export const Measurements = () => {
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
     const isLoading = (!measurements.length && !isFetched) || isFetching;
 
-    const handleNewWeightSave = useCallback(async () => {
+    const handleNewWeightSave = async () => {
         setPage(INITIAL_PAGE);
 
         await queryClient.invalidateQueries({
@@ -73,7 +73,7 @@ export const Measurements = () => {
         await queryClient.invalidateQueries({
             queryKey: ['measurements'],
         });
-    }, [queryClient]);
+    };
 
     const handleDelete = async (item: Measurement) => {
         const response = await fetch(`/api/v1/measurement?id=${item.id}`, {
@@ -99,44 +99,41 @@ export const Measurements = () => {
         }
     };
 
-    const handleEdit = useCallback(
-        (item: Measurement) => {
-            const handleSave = async () => {
-                await queryClient.invalidateQueries({
-                    queryKey: ['measurement-summary'],
-                });
-                await queryClient.invalidateQueries({
-                    queryKey: ['measurements', page],
-                });
-            };
-
-            openMeasurementModal({
-                centered: true,
-                innerProps: {
-                    initialData: {
-                        date: parseISO(item.date),
-                        id: item.id,
-                        ...(item.fat_percentage && {
-                            fat_percentage: item.fat_percentage,
-                        }),
-                        ...(item.weight && {
-                            weight: item.weight,
-                        }),
-                    },
-                    onSave: handleSave,
-                },
-                size: 'sm',
-                title: t('edit_measurement'),
+    const handleEdit = (item: Measurement) => {
+        const handleSave = async () => {
+            await queryClient.invalidateQueries({
+                queryKey: ['measurement-summary'],
             });
-        },
-        [openMeasurementModal, page, queryClient, t],
-    );
+            await queryClient.invalidateQueries({
+                queryKey: ['measurements', page],
+            });
+        };
 
-    const handlePageChange = useCallback((page: number) => {
+        openMeasurementModal({
+            centered: true,
+            innerProps: {
+                initialData: {
+                    date: parseISO(item.date),
+                    id: item.id,
+                    ...(item.fat_percentage && {
+                        fat_percentage: item.fat_percentage,
+                    }),
+                    ...(item.weight && {
+                        weight: item.weight,
+                    }),
+                },
+                onSave: handleSave,
+            },
+            size: 'sm',
+            title: t('edit_measurement'),
+        });
+    };
+
+    const handlePageChange = (page: number) => {
         setPage(page);
-    }, []);
+    };
 
-    const handleAddMeasurement = useCallback(() => {
+    const handleAddMeasurement = () => {
         openMeasurementModal({
             centered: true,
             innerProps: {
@@ -145,37 +142,34 @@ export const Measurements = () => {
             size: 'sm',
             title: t('new_measurement'),
         });
-    }, [openMeasurementModal, handleNewWeightSave, t]);
+    };
 
-    const headers = useMemo(
-        () => [
-            {
-                formatValue: (item: Measurement) =>
-                    format(parseISO(item.date), 'dd/MM/yy'),
-                key: 'date',
-                label: t('date'),
-                width: '25%',
-            },
-            {
-                key: 'weight',
-                label: t('weight'),
-                width: '20%',
-            },
-            {
-                formatValue: (item: Measurement) =>
-                    item.fat_percentage ? `${item.fat_percentage}%` : '-',
-                key: 'fat',
-                label: t('fat_label'),
-                width: '20%',
-            },
-            {
-                key: 'actions',
-                label: t('actions'),
-                width: '35%',
-            },
-        ],
-        [t],
-    );
+    const headers = [
+        {
+            formatValue: (item: Measurement) =>
+                format(parseISO(item.date), 'dd/MM/yy'),
+            key: 'date',
+            label: t('date'),
+            width: '25%',
+        },
+        {
+            key: 'weight',
+            label: t('weight'),
+            width: '20%',
+        },
+        {
+            formatValue: (item: Measurement) =>
+                item.fat_percentage ? `${item.fat_percentage}%` : '-',
+            key: 'fat',
+            label: t('fat_label'),
+            width: '20%',
+        },
+        {
+            key: 'actions',
+            label: t('actions'),
+            width: '35%',
+        },
+    ];
 
     return (
         <Stack gap="md">

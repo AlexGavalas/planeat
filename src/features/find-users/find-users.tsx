@@ -11,7 +11,7 @@ import {
 import { useDebouncedValue } from '@mantine/hooks';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ProfileCircle, UserPlus, Xmark } from 'iconoir-react';
-import { type MouseEventHandler, useCallback, useState } from 'react';
+import { type MouseEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useProfile } from '~hooks/use-profile';
@@ -88,20 +88,16 @@ export const FindUsers = () => {
         queryKey: ['connection_request', selectedUserProfileId],
     });
 
-    const handleUserSelect = useCallback<
-        NonNullable<AutocompleteProps['onOptionSubmit']>
-    >((value) => {
+    const handleUserSelect = ((value) => {
         setSelectedUserId(value);
-    }, []);
+    }) satisfies NonNullable<AutocompleteProps['onOptionSubmit']>;
 
-    const handleClearInput = useCallback(() => {
+    const handleClearInput = () => {
         setSearchQuery('');
         setSelectedUserId('');
-    }, []);
+    };
 
-    const handleConnectionRequest = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(async () => {
+    const handleConnectionRequest = (async () => {
         if (!profile || !selectedUser) {
             return;
         }
@@ -131,7 +127,7 @@ export const FindUsers = () => {
                 queryKey: ['connection_request', selectedUserProfileId],
             });
         }
-    }, [profile, selectedUser, selectedUserProfileId, t, queryClient]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
     const shouldShowConnectionInfo =
         selectedUser && !isFetchingHasAlreadySentRequest;
@@ -158,6 +154,7 @@ export const FindUsers = () => {
                 }
                 value={searchQuery}
             />
+
             {shouldShowConnectionInfo &&
                 (hasAlreadySentRequest ? (
                     <Text

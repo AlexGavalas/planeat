@@ -8,7 +8,6 @@ import {
     type ComponentPropsWithoutRef,
     type MouseEventHandler,
     forwardRef,
-    useCallback,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -47,16 +46,14 @@ export const UserMenu = ({
         ? [PROFESSIONAL_LINK, ...NAV_LINKS]
         : NAV_LINKS;
 
-    const handleLogout = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(async () => {
+    const handleLogout = (async () => {
         queryClient.clear();
 
         await signOut({ callbackUrl: '/' });
 
         router.push('/');
         router.refresh();
-    }, [router, queryClient]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
     return (
         <Menu

@@ -2,7 +2,6 @@ import { Alert, List, Stack, Text } from '@mantine/core';
 import { type ContextModalProps } from '@mantine/modals';
 import { format, parse, parseISO } from 'date-fns';
 import groupBy from 'lodash/fp/groupBy';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MEAL_ICON, ROWS } from '~constants/calendar';
@@ -25,7 +24,7 @@ export const WeekOverviewModal = ({
     const { t } = useTranslation();
     const { meals } = useMeals(ownerUserId);
 
-    const mealsMap = useMemo(() => groupByDay(meals), [meals]);
+    const mealsMap = groupByDay(meals);
 
     const sortedKeys = Object.keys(mealsMap).sort((a, b) => {
         const d1 = parse(a, 'EEE dd/MM/yyyy', new Date()).getTime();

@@ -3,7 +3,6 @@ import { type ContextModalProps } from '@mantine/modals';
 import {
     type MouseEventHandler,
     type SubmitEventHandler,
-    useCallback,
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -31,39 +30,34 @@ export const MealNoteModal = ({
     const { t } = useTranslation();
     const [error, setError] = useState('');
 
-    const closeModal = useCallback(() => {
+    const closeModal = () => {
         context.closeContextModal(id);
-    }, [context, id]);
+    };
 
-    const resetError = useCallback(() => {
+    const resetError = () => {
         setError('');
-    }, []);
+    };
 
-    const handleSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
-        async (e) => {
-            e.preventDefault();
+    const handleSubmit = (async (e) => {
+        e.preventDefault();
 
-            const formData = Object.fromEntries(new FormData(e.currentTarget));
+        const formData = Object.fromEntries(new FormData(e.currentTarget));
 
-            const { note } = formSchema.parse(formData);
+        const { note } = formSchema.parse(formData);
 
-            if (!note) {
-                setError(t('errors.note_empty'));
-                return;
-            }
+        if (!note) {
+            setError(t('errors.note_empty'));
+            return;
+        }
 
-            await onSave(note);
-            closeModal();
-        },
-        [closeModal, onSave, t],
-    );
+        await onSave(note);
+        closeModal();
+    }) satisfies SubmitEventHandler<HTMLFormElement>;
 
-    const handleDelete = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(async () => {
+    const handleDelete = (async () => {
         await onDelete();
         closeModal();
-    }, [closeModal, onDelete]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
     return (
         <form onSubmit={handleSubmit}>
@@ -79,6 +73,7 @@ export const MealNoteModal = ({
                     onFocus={resetError}
                     placeholder={t('modals.meal_note.placeholder')}
                 />
+
                 <Group justify="space-between">
                     <Button color="danger" onClick={closeModal} variant="light">
                         {t('generic.actions.cancel')}

@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useMealPlanOwnerId } from '~features/meal-plan-owner';
@@ -99,14 +99,10 @@ export const useMeals: UseMeals = (explicitOwnerUserId) => {
             : ['meals', currentWeekKey],
     });
 
-    const mealsMap = useMemo(
-        () =>
-            meals.reduce<MealsMap>((acc, meal) => {
-                acc[meal.section_key] = meal;
-                return acc;
-            }, {}),
-        [meals],
-    );
+    const mealsMap = meals.reduce<MealsMap>((acc, meal) => {
+        acc[meal.section_key] = meal;
+        return acc;
+    }, {});
 
     const savePlan = async (): Promise<boolean> => {
         setIsSubmitting(true);

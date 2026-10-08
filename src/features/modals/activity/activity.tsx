@@ -6,7 +6,6 @@ import 'dayjs/locale/el';
 import {
     type ChangeEventHandler,
     type SubmitEventHandler,
-    useCallback,
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,61 +38,56 @@ export const ActivityModal = ({
     const [activity, setActivity] = useState(initialData?.activity);
     const [error, setError] = useState('');
 
-    const closeModal = useCallback(() => {
+    const closeModal = () => {
         context.closeContextModal(id);
-    }, [context, id]);
+    };
 
-    const resetError = useCallback(() => {
+    const resetError = () => {
         setError('');
-    }, []);
+    };
 
-    const handleActivityChange = useCallback<
-        ChangeEventHandler<HTMLTextAreaElement>
-    >((e) => {
+    const handleActivityChange = ((e) => {
         setActivity(e.target.value);
-    }, []);
+    }) satisfies ChangeEventHandler<HTMLTextAreaElement>;
 
-    const handleSave = useCallback<SubmitEventHandler<HTMLFormElement>>(
-        async (e) => {
-            e.preventDefault();
+    const handleSave = (async (e) => {
+        e.preventDefault();
 
-            if (!activity) {
-                setError(t('errors.activity_empty'));
-                return;
-            }
+        if (!activity) {
+            setError(t('errors.activity_empty'));
+            return;
+        }
 
-            if (!date) {
-                setError(t('errors.date_empty'));
-                return;
-            }
+        if (!date) {
+            setError(t('errors.date_empty'));
+            return;
+        }
 
-            const url = initialData?.id
-                ? `/api/v1/activity?id=${initialData.id}`
-                : '/api/v1/activity';
+        const url = initialData?.id
+            ? `/api/v1/activity?id=${initialData.id}`
+            : '/api/v1/activity';
 
-            const response = await fetch(url, {
-                body: JSON.stringify({
-                    activity,
-                    date,
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                method: initialData ? 'PATCH' : 'POST',
+        const response = await fetch(url, {
+            body: JSON.stringify({
+                activity,
+                date,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: initialData ? 'PATCH' : 'POST',
+        });
+
+        if (!response.ok) {
+            showErrorNotification({
+                message: `${t('errors.activity_save')}. ${t('try_again')}`,
+                title: t('notification.error.title'),
             });
-
-            if (!response.ok) {
-                showErrorNotification({
-                    message: `${t('errors.activity_save')}. ${t('try_again')}`,
-                    title: t('notification.error.title'),
-                });
-            } else {
-                await onSave?.();
-                closeModal();
-            }
-        },
-        [activity, date, initialData, onSave, closeModal, t],
-    );
+        } else {
+            await onSave?.();
+            closeModal();
+        }
+    }) satisfies SubmitEventHandler<HTMLFormElement>;
 
     return (
         <form className="calendar" onSubmit={handleSave}>
@@ -116,6 +110,7 @@ export const ActivityModal = ({
                 onFocus={resetError}
                 placeholder={t('activity.placeholder')}
             />
+
             <Space h="lg" />
             <Group gap="md" justify="space-between">
                 <Button color="danger" onClick={closeModal} variant="light">

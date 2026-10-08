@@ -4,7 +4,7 @@ import { Box, Button, Center, Group, Stack, Title } from '@mantine/core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
@@ -53,7 +53,7 @@ export const Activities = () => {
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
     const isLoading = (!activities.length && !isCountFetched) || isFetching;
 
-    const onNewActivitySave = useCallback(async () => {
+    const onNewActivitySave = async () => {
         setPage(INITIAL_PAGE);
 
         await queryClient.invalidateQueries({
@@ -63,30 +63,27 @@ export const Activities = () => {
         await queryClient.invalidateQueries({
             queryKey: ['activities'],
         });
-    }, [queryClient]);
+    };
 
-    const headers = useMemo(
-        () => [
-            {
-                formatValue: (item: Activity) =>
-                    format(parseISO(item.date), 'dd/MM/yy'),
-                key: 'date',
-                label: t('date'),
-                width: '25%',
-            },
-            {
-                key: 'activity',
-                label: t('activity.label'),
-                width: '40%',
-            },
-            {
-                key: 'actions',
-                label: t('actions'),
-                width: '35%',
-            },
-        ],
-        [t],
-    );
+    const headers = [
+        {
+            formatValue: (item: Activity) =>
+                format(parseISO(item.date), 'dd/MM/yy'),
+            key: 'date',
+            label: t('date'),
+            width: '25%',
+        },
+        {
+            key: 'activity',
+            label: t('activity.label'),
+            width: '40%',
+        },
+        {
+            key: 'actions',
+            label: t('actions'),
+            width: '35%',
+        },
+    ];
 
     const onDelete = async (item: Activity) => {
         const response = await fetch(`/api/v1/activity?id=${item.id}`, {
@@ -131,11 +128,11 @@ export const Activities = () => {
         });
     };
 
-    const onPageChange = useCallback((page: number) => {
+    const onPageChange = (page: number) => {
         setPage(page);
-    }, []);
+    };
 
-    const handleAddActivity = useCallback(() => {
+    const handleAddActivity = () => {
         openNewActivityModal({
             centered: true,
             innerProps: {
@@ -144,7 +141,7 @@ export const Activities = () => {
             size: 'sm',
             title: t('add_activity'),
         });
-    }, [openNewActivityModal, onNewActivitySave, t]);
+    };
 
     return (
         <Stack gap="md">

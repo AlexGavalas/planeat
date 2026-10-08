@@ -1,6 +1,6 @@
 import { Button, SimpleGrid, Stack, Textarea, Title } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
-import { type SubmitEventHandler, useCallback } from 'react';
+import { type SubmitEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
@@ -23,39 +23,36 @@ export const FoodPreferences = () => {
     const { isFetching, profile } = useProfile();
     const queryClient = useQueryClient();
 
-    const handleSavePreferences = useCallback<SubmitEventHandler>(
-        async (e) => {
-            e.preventDefault();
+    const handleSavePreferences = (async (e) => {
+        e.preventDefault();
 
-            if (!profile?.email) {
-                return null;
-            }
+        if (!profile?.email) {
+            return null;
+        }
 
-            const formData = Object.fromEntries(new FormData(e.target));
+        const formData = Object.fromEntries(new FormData(e.target));
 
-            const { negative, positive } = formSchema.parse(formData);
+        const { negative, positive } = formSchema.parse(formData);
 
-            const response = await saveProfile({
-                foodPreferencesNegative: negative,
-                foodPreferencesPositive: positive,
-            }).catch(() => ({ ok: false }));
+        const response = await saveProfile({
+            foodPreferencesNegative: negative,
+            foodPreferencesPositive: positive,
+        }).catch(() => ({ ok: false }));
 
-            if (!response.ok) {
-                showErrorNotification({
-                    message: t('notification.error.message'),
-                    title: t('notification.error.title'),
-                });
-            } else {
-                await queryClient.invalidateQueries({ queryKey: ['user'] });
+        if (!response.ok) {
+            showErrorNotification({
+                message: t('notification.error.message'),
+                title: t('notification.error.title'),
+            });
+        } else {
+            await queryClient.invalidateQueries({ queryKey: ['user'] });
 
-                showSuccessNotification({
-                    message: t('notification.success.message'),
-                    title: t('notification.success.title'),
-                });
-            }
-        },
-        [profile?.email, t, queryClient],
-    );
+            showSuccessNotification({
+                message: t('notification.success.message'),
+                title: t('notification.success.title'),
+            });
+        }
+    }) satisfies SubmitEventHandler;
 
     return (
         <Stack align="start" gap="md">
@@ -85,6 +82,7 @@ export const FoodPreferences = () => {
                                 'account_settings.sections.food_preferences.positive.placeholder',
                             )}
                         />
+
                         <Textarea
                             autosize
                             defaultValue={

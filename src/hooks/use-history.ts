@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 type UseHistoryReturn<ItemType> = {
     canRedo: boolean;
@@ -12,9 +12,7 @@ type UseHistoryReturn<ItemType> = {
 
 export const useHistory = <ItemType>({
     initialState,
-}: {
-    initialState?: ItemType;
-} = {}): UseHistoryReturn<ItemType> => {
+}: { initialState?: ItemType } = {}): UseHistoryReturn<ItemType> => {
     const [currentIndex, setCurrentIndex] = useState(
         initialState !== undefined ? 0 : -1,
     );
@@ -23,28 +21,25 @@ export const useHistory = <ItemType>({
         initialState !== undefined ? [initialState] : [],
     );
 
-    const clear = useCallback(() => {
+    const clear: UseHistoryReturn<ItemType>['clear'] = () => {
         setHistory(initialState !== undefined ? [initialState] : []);
         setCurrentIndex(initialState !== undefined ? 0 : -1);
-    }, [initialState]);
+    };
 
-    const set = useCallback(
-        (item: ItemType) => {
-            const newHistory = [...history.slice(0, currentIndex + 1), item];
+    const set: UseHistoryReturn<ItemType>['set'] = (item) => {
+        const newHistory = [...history.slice(0, currentIndex + 1), item];
 
-            setHistory(newHistory);
-            setCurrentIndex(newHistory.length - 1);
-        },
-        [currentIndex, history],
-    );
+        setHistory(newHistory);
+        setCurrentIndex(newHistory.length - 1);
+    };
 
-    const undo = useCallback(() => {
+    const undo: UseHistoryReturn<ItemType>['undo'] = () => {
         setCurrentIndex((prev) => Math.max(prev - 1, 0));
-    }, []);
+    };
 
-    const redo = useCallback(() => {
+    const redo: UseHistoryReturn<ItemType>['redo'] = () => {
         setCurrentIndex((prev) => Math.min(prev + 1, history.length - 1));
-    }, [history.length]);
+    };
 
     const canUndo = currentIndex > 0;
     const canRedo = currentIndex < history.length - 1;

@@ -3,7 +3,6 @@ import { type ContextModalProps } from '@mantine/modals';
 import {
     type MouseEventHandler,
     type SubmitEventHandler,
-    useCallback,
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,30 +23,25 @@ export const MealRatingModal = ({
     const { t } = useTranslation();
     const [rating, setRating] = useState<number>();
 
-    const closeModal = useCallback(() => {
+    const closeModal = () => {
         context.closeContextModal(id);
-    }, [context, id]);
+    };
 
-    const handleSubmit = useCallback<SubmitEventHandler<HTMLFormElement>>(
-        async (e) => {
-            e.preventDefault();
+    const handleSubmit = (async (e) => {
+        e.preventDefault();
 
-            if (!rating) {
-                return;
-            }
+        if (!rating) {
+            return;
+        }
 
-            await onSave(rating);
-            closeModal();
-        },
-        [closeModal, onSave, rating],
-    );
+        await onSave(rating);
+        closeModal();
+    }) satisfies SubmitEventHandler<HTMLFormElement>;
 
-    const handleDelete = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(async () => {
+    const handleDelete = (async () => {
         await onDelete();
         closeModal();
-    }, [closeModal, onDelete]);
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
 
     return (
         <form onSubmit={handleSubmit}>

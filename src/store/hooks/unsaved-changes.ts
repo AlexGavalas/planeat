@@ -1,6 +1,5 @@
 import { useAtom } from 'jotai';
 import { omit, set } from 'lodash/fp';
-import { useCallback } from 'react';
 
 import { useMealPlanOwnerId } from '~features/meal-plan-owner';
 import { unsavedChangesAtom } from '~store/atoms';
@@ -28,33 +27,27 @@ export const useUnsavedChanges = (
     const [changesByOwner, setUnsavedChanges] = useAtom(unsavedChangesAtom);
     const unsavedChanges = changesByOwner[ownerKey] ?? {};
 
-    const addChange = useCallback<AddChange>(
-        (meal) => {
-            setUnsavedChanges((prevChanges) => ({
-                ...prevChanges,
-                [ownerKey]: set(
-                    meal.section_key,
-                    meal,
-                    prevChanges[ownerKey] ?? {},
-                ),
-            }));
-        },
-        [ownerKey, setUnsavedChanges],
-    );
+    const addChange: AddChange = (meal) => {
+        setUnsavedChanges((prevChanges) => ({
+            ...prevChanges,
+            [ownerKey]: set(
+                meal.section_key,
+                meal,
+                prevChanges[ownerKey] ?? {},
+            ),
+        }));
+    };
 
-    const removeChange = useCallback<RemoveChange>(
-        (key) => {
-            setUnsavedChanges((prevChanges) => ({
-                ...prevChanges,
-                [ownerKey]: omit(key, prevChanges[ownerKey] ?? {}),
-            }));
-        },
-        [ownerKey, setUnsavedChanges],
-    );
+    const removeChange: RemoveChange = (key) => {
+        setUnsavedChanges((prevChanges) => ({
+            ...prevChanges,
+            [ownerKey]: omit(key, prevChanges[ownerKey] ?? {}),
+        }));
+    };
 
-    const removeChanges = useCallback<RemoveChanges>(() => {
+    const removeChanges: RemoveChanges = () => {
         setUnsavedChanges((prevChanges) => omit(ownerKey, prevChanges));
-    }, [ownerKey, setUnsavedChanges]);
+    };
 
     return {
         addChange,

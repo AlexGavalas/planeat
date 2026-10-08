@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
 import { EditPencil, Plus, Running } from 'iconoir-react';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useOpenContextModal } from '~util/modal';
@@ -30,11 +30,11 @@ export const Fab = () => {
     const openNewActivityModal = useOpenContextModal('activity');
     const openMeasurementModal = useOpenContextModal('measurement');
 
-    const handleToggleMenu = useCallback(() => {
+    const handleToggleMenu = () => {
         setShouldShowMenu((prev) => !prev);
-    }, []);
+    };
 
-    const handleMeasurementSave = useCallback(async () => {
+    const handleMeasurementSave = async () => {
         await Promise.all([
             queryClient.invalidateQueries({
                 queryKey: ['measurement-summary'],
@@ -42,9 +42,9 @@ export const Fab = () => {
             queryClient.invalidateQueries({ queryKey: ['measurements'] }),
             queryClient.invalidateQueries({ queryKey: ['measurements-count'] }),
         ]);
-    }, [queryClient]);
+    };
 
-    const handleActivitySave = useCallback(async () => {
+    const handleActivitySave = async () => {
         await queryClient.invalidateQueries({
             queryKey: ['activities-count'],
         });
@@ -52,9 +52,9 @@ export const Fab = () => {
         await queryClient.invalidateQueries({
             queryKey: ['activities'],
         });
-    }, [queryClient]);
+    };
 
-    const handleAddMeasurement = useCallback(() => {
+    const handleAddMeasurement = () => {
         handleToggleMenu();
 
         openMeasurementModal({
@@ -64,9 +64,9 @@ export const Fab = () => {
             size: 'md',
             title: t('add_measurement'),
         });
-    }, [openMeasurementModal, handleMeasurementSave, t, handleToggleMenu]);
+    };
 
-    const handleAddActivity = useCallback(() => {
+    const handleAddActivity = () => {
         handleToggleMenu();
 
         openNewActivityModal({
@@ -76,7 +76,7 @@ export const Fab = () => {
             size: 'md',
             title: t('add_activity'),
         });
-    }, [openNewActivityModal, handleActivitySave, t, handleToggleMenu]);
+    };
 
     return (
         <Box className={styles.container}>

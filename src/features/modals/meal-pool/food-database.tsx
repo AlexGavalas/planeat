@@ -2,7 +2,6 @@ import { Button, Group, Stack, Text, Textarea } from '@mantine/core';
 import {
     type ChangeEventHandler,
     type MouseEventHandler,
-    useCallback,
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,16 +23,12 @@ export const FoodDatabaseTab = ({ onDone }: FoodDatabaseTabProps) => {
         reset: resetCreationState,
     } = useCreateMealPool({ onSuccess: onDone });
 
-    const handleCreate = useCallback<
-        MouseEventHandler<HTMLButtonElement>
-    >(() => {
+    const handleCreate = (() => {
         mutate({ content: [preview] });
-    }, [mutate, preview]);
-    const handlePreviewChange = useCallback<
-        ChangeEventHandler<HTMLTextAreaElement>
-    >((event) => {
+    }) satisfies MouseEventHandler<HTMLButtonElement>;
+    const handlePreviewChange = ((event) => {
         setPreview(event.target.value);
-    }, []);
+    }) satisfies ChangeEventHandler<HTMLTextAreaElement>;
 
     return (
         <Stack gap="md">

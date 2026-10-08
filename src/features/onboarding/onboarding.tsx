@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type EventHandler, Joyride } from 'react-joyride';
 
@@ -63,38 +63,35 @@ export const Onboarding = () => {
         };
     }, [currentTarget, hasTourEnded, isBrowser]);
 
-    const handleJoyrideEvent = useCallback<EventHandler>(
-        ({ type, step, action, index }) => {
-            if (type === 'step:after' && action === 'next') {
-                setStepIndex(index + 1);
-            }
+    const handleJoyrideEvent = (({ type, step, action, index }) => {
+        if (type === 'step:after' && action === 'next') {
+            setStepIndex(index + 1);
+        }
 
-            if (
-                type === 'step:after' &&
-                action === 'next' &&
-                step.target === '#weight-container'
-            ) {
-                setShouldRun(false);
-                router.push(localize('/meal-plan'));
-            } else if (
-                type === 'step:after' &&
-                action === 'next' &&
-                step.target === '#meal-plan-container'
-            ) {
-                setShouldRun(false);
-                router.push(localize('/settings'));
-            } else if (type === 'tour:end') {
-                setShouldRun(false);
-                setHasTourEnded(true);
+        if (
+            type === 'step:after' &&
+            action === 'next' &&
+            step.target === '#weight-container'
+        ) {
+            setShouldRun(false);
+            router.push(localize('/meal-plan'));
+        } else if (
+            type === 'step:after' &&
+            action === 'next' &&
+            step.target === '#meal-plan-container'
+        ) {
+            setShouldRun(false);
+            router.push(localize('/settings'));
+        } else if (type === 'tour:end') {
+            setShouldRun(false);
+            setHasTourEnded(true);
 
-                updateProfile({
-                    hasCompletedOnboarding: true,
-                    silent: true,
-                });
-            }
-        },
-        [router, updateProfile, localize],
-    );
+            updateProfile({
+                hasCompletedOnboarding: true,
+                silent: true,
+            });
+        }
+    }) satisfies EventHandler;
 
     if (!isBrowser || profile?.has_completed_onboarding) {
         return null;

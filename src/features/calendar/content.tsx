@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ROWS } from '~constants/calendar';
@@ -17,14 +16,10 @@ export const Content = () => {
     const { meals } = useMeals();
     const { times } = useMealZoneTimes(currentWeek);
 
-    const mealsMap = useMemo(
-        () =>
-            meals.reduce<MealsMap>((acc, meal) => {
-                acc[meal.section_key] = meal;
-                return acc;
-            }, {}),
-        [meals],
-    );
+    const mealsMap = meals.reduce<MealsMap>((acc, meal) => {
+        acc[meal.section_key] = meal;
+        return acc;
+    }, {});
 
     const daysOfWeek = getDaysOfWeek(currentWeek);
 
