@@ -10,7 +10,9 @@ const expectNoHorizontalOverflow = async (page: Page): Promise<void> => {
 
 test.beforeEach(async ({ page }) => {
     await page.goto('/home');
-    await expect(page.getByRole('heading', { name: 'Day plan' })).toBeVisible();
+    await expect(
+        page.getByRole('heading', { name: 'Today’s meals' }),
+    ).toBeVisible();
 });
 
 test('connections search result stacks on mobile Chrome', async ({ page }) => {

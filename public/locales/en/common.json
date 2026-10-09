@@ -142,6 +142,47 @@
         "fat5": "Obese"
     },
     "day_plan": "Day plan",
+    "home_dashboard": {
+        "greeting": {
+            "morning": "Good morning, {{name}}",
+            "afternoon": "Good afternoon, {{name}}",
+            "evening": "Good evening, {{name}}"
+        },
+        "subtitle": "{{date}} · Here’s what matters today",
+        "add_measurement": "Add measurement",
+        "add_activity": "Add an activity",
+        "at_a_glance": "Today at a glance",
+        "next_meal": "Next meal",
+        "day_finished": "Meals finished for today",
+        "day_finished_hint": "Review or prepare tomorrow’s plan",
+        "todays_plan": "Today’s plan",
+        "planned_count": "{{count}} of {{total}} meals planned",
+        "weight_target": "Weight target",
+        "set_target": "Set a target weight",
+        "target_value": "Target: {{amount}} {{unit}}",
+        "to_target": "{{amount}} {{unit}} to target",
+        "target_reached": "Target reached",
+        "todays_meals": "Today’s meals",
+        "view_meal_plan": "View meal plan",
+        "not_planned": "Not planned",
+        "add_in_planner": "Add this meal in the planner",
+        "up_next_at": "Up next at {{time}}",
+        "earlier_today": "Earlier today",
+        "planned": "Planned",
+        "plan": "Plan",
+        "health_trend": "Health trend",
+        "details": "Details",
+        "no_measurements": "Add your first measurement to see your progress here.",
+        "latest_weight": "Latest weight · {{date}}",
+        "body_fat": "Body fat",
+        "weight_trend_label": "Weight trend",
+        "percentage_points": "pp",
+        "trend": {
+            "down": "↓ {{amount}} {{unit}} since {{since}}",
+            "up": "↑ {{amount}} {{unit}} since {{since}}",
+            "unchanged": "No change since {{since}}"
+        }
+    },
     "week": {
         "previous": "Previous week",
         "next": "Next week",

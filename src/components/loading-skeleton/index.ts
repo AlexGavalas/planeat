@@ -2,9 +2,9 @@ export {
     ConnectionsPageSkeleton,
     ConnectionsSectionSkeleton,
     DailyMealsSkeleton,
-    HomePageSkeleton,
     MealPlanPageSkeleton,
     MeasurementDashboardSkeleton,
     SettingsPageSkeleton,
     TableSectionSkeleton,
 } from './loading-skeleton';
+export { HomePageSkeleton } from './home-page-skeleton';

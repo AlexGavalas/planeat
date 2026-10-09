@@ -1,18 +1,177 @@
 .layout {
-    align-items: start;
     display: grid;
     gap: var(--mantine-spacing-md);
-    grid-template-columns: minmax(15rem, 20%) minmax(0, 1fr);
+    margin: 0 auto;
+    max-width: 76rem;
 }
 
-.dailyMeals,
-.measurements {
+.hero {
+    align-items: flex-end;
+    display: flex;
+    gap: var(--mantine-spacing-md);
+    justify-content: space-between;
+}
+
+.targetLink {
+    color: var(--mantine-color-brand-7);
+    text-decoration: underline;
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.2em;
+}
+
+.targetLink:hover {
+    color: var(--mantine-color-brand-9);
+}
+
+.summaryGrid {
+    display: grid;
+    gap: var(--mantine-spacing-sm);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.summaryGrid > * {
     min-width: 0;
+}
+
+.summaryValue,
+.metricValue {
+    font-size: var(--mantine-font-size-xl);
+    font-weight: var(--mantine-font-weight-medium);
+    line-height: 1.25;
+    margin-top: var(--mantine-spacing-xs);
+}
+
+.summaryContext,
+.trend {
+    color: var(--mantine-color-brand-7);
+    margin-top: var(--mantine-spacing-xs);
+}
+
+.planProgress {
+    margin-top: var(--mantine-spacing-sm);
+}
+
+.contentGrid {
+    align-items: start;
+    display: grid;
+    gap: var(--mantine-spacing-sm);
+    grid-template-columns: minmax(0, 1.45fr) minmax(17.5rem, 0.8fr);
+}
+
+.contentGrid > * {
+    min-width: 0;
+}
+
+.mealList {
+    display: grid;
+}
+
+.mealRow {
+    align-items: center;
+    border-top: 1px solid var(--mantine-color-gray-3);
+    display: grid;
+    gap: var(--mantine-spacing-sm);
+    grid-template-columns: 3rem 2.25rem minmax(0, 1fr) auto;
+    min-height: 4rem;
+}
+
+.mealRow:first-child {
+    border-top: 0;
+}
+
+.mealIcon {
+    align-items: center;
+    background: var(--mantine-color-brand-0);
+    border-radius: 50%;
+    color: var(--mantine-color-brand-7);
+    display: flex;
+    height: 2.25rem;
+    justify-content: center;
+    width: 2.25rem;
+}
+
+.mealIcon svg,
+.mealStatusIcon {
+    height: 1.125rem;
+    width: 1.125rem;
+}
+
+.mealCopy {
+    min-width: 0;
+    padding-block: var(--mantine-spacing-xs);
+}
+
+.mealCopy p {
+    overflow-wrap: anywhere;
+}
+
+.mealStatusIcon {
+    color: var(--mantine-color-dimmed);
+}
+
+.sparkline {
+    display: block;
+    height: 3rem;
+    margin-top: var(--mantine-spacing-xs);
+    overflow: visible;
     width: 100%;
 }
 
+.sparkline polyline {
+    fill: none;
+    stroke: var(--mantine-color-brand-6);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.75;
+    vector-effect: non-scaling-stroke;
+}
+
 @media (max-width: 48em) {
-    .layout {
+    .hero {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .heroActions {
+        width: 100%;
+    }
+
+    .summaryGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .summaryGrid > :first-child {
+        grid-column: 1 / -1;
+    }
+
+    .contentGrid {
         grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 30em) {
+    .heroActions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 23em) {
+    .summaryGrid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .summaryGrid > :first-child {
+        grid-column: auto;
+    }
+
+    .mealRow {
+        gap: var(--mantine-spacing-xs);
+        grid-template-columns: 2.75rem 2.25rem minmax(0, 1fr) auto;
+    }
+
+    .sectionHeader {
+        align-items: flex-start;
+        flex-wrap: wrap;
     }
 }

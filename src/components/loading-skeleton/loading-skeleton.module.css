@@ -128,42 +128,12 @@
     margin-bottom: 0;
 }
 
-.homeGrid {
-    display: grid;
-    grid-template-columns: minmax(15rem, 20%) minmax(0, 1fr);
-    align-items: start;
-    gap: var(--mantine-spacing-md);
-}
-
 .narrowPage,
-.connectionsPage,
 .settingsPage {
     display: grid;
     width: 100%;
     margin: 0 auto;
     gap: var(--mantine-spacing-md);
-}
-
-.connectionsPage {
-    max-width: 72rem;
-}
-
-.connectionsHeader {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: var(--mantine-spacing-md);
-}
-
-.connectionsGrid {
-    display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr);
-    align-items: start;
-    gap: var(--mantine-spacing-md);
-}
-
-.connectionsCare {
-    grid-column: 1 / -1;
 }
 
 .narrowPage {
@@ -199,28 +169,5 @@
 @media (prefers-reduced-motion: reduce) {
     .skeleton::after {
         animation: none;
-    }
-}
-
-@media (max-width: 48em) {
-    .homeGrid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .connectionsHeader {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .connectionsHeader .button {
-        width: 100%;
-    }
-
-    .connectionsGrid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .connectionsCare {
-        grid-column: auto;
     }
 }

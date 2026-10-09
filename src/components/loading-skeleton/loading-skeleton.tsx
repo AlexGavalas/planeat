@@ -1,5 +1,6 @@
 import calendarStyles from './calendar-skeleton.module.css';
 import styles from './loading-skeleton.module.css';
+import pageStyles from './page-skeletons.module.css';
 
 const Lines = ({ count = 3 }: Readonly<{ count?: number }>) => (
     <div className={styles.lines}>
@@ -9,11 +10,15 @@ const Lines = ({ count = 3 }: Readonly<{ count?: number }>) => (
     </div>
 );
 
-const Card = ({ children }: Readonly<{ children: React.ReactNode }>) => (
+export const SkeletonCard = ({
+    children,
+}: Readonly<{ children: React.ReactNode }>) => (
     <div className={styles.card}>{children}</div>
 );
 
-const Loader = ({ children }: Readonly<{ children: React.ReactNode }>) => (
+export const SkeletonLoader = ({
+    children,
+}: Readonly<{ children: React.ReactNode }>) => (
     <div aria-label="Loading" className={styles.loader} role="status">
         <span className={styles.visuallyHidden}>Loading</span>
         <div aria-hidden="true">{children}</div>
@@ -22,7 +27,7 @@ const Loader = ({ children }: Readonly<{ children: React.ReactNode }>) => (
 
 export function DailyMealsSkeleton() {
     return (
-        <Loader>
+        <SkeletonLoader>
             <div className={`${styles.skeleton} ${styles.heading}`} />
             <div className={styles.timeline}>
                 {Array.from({ length: 5 }, (_, index) => (
@@ -34,16 +39,16 @@ export function DailyMealsSkeleton() {
                     </div>
                 ))}
             </div>
-        </Loader>
+        </SkeletonLoader>
     );
 }
 
 export function MeasurementDashboardSkeleton() {
     return (
-        <Loader>
+        <SkeletonLoader>
             <div className={styles.dashboard}>
                 {[0, 1].map((item) => (
-                    <Card key={item}>
+                    <SkeletonCard key={item}>
                         <div
                             className={`${styles.skeleton} ${styles.heading}`}
                         />
@@ -51,82 +56,75 @@ export function MeasurementDashboardSkeleton() {
                             className={`${styles.skeleton} ${styles.metric}`}
                         />
                         <div className={`${styles.skeleton} ${styles.chart}`} />
-                    </Card>
+                    </SkeletonCard>
                 ))}
             </div>
-        </Loader>
+        </SkeletonLoader>
     );
 }
 
 export function TableSectionSkeleton() {
     return (
-        <Loader>
+        <SkeletonLoader>
             <div className={styles.sectionHeading}>
                 <div className={`${styles.skeleton} ${styles.heading}`} />
                 <div className={`${styles.skeleton} ${styles.button}`} />
             </div>
             <Lines count={4} />
-        </Loader>
+        </SkeletonLoader>
     );
 }
 
 export function ConnectionsSectionSkeleton() {
     return (
-        <Loader>
+        <SkeletonLoader>
             <Lines count={3} />
-        </Loader>
-    );
-}
-
-export function HomePageSkeleton() {
-    return (
-        <div className={styles.homeGrid}>
-            <Card>
-                <DailyMealsSkeleton />
-            </Card>
-            <MeasurementDashboardSkeleton />
-        </div>
+        </SkeletonLoader>
     );
 }
 
 export function ConnectionsPageSkeleton() {
     return (
-        <Loader>
-            <div className={styles.connectionsPage}>
-                <div className={styles.connectionsHeader}>
+        <SkeletonLoader>
+            <div className={pageStyles.connectionsPage}>
+                <div className={pageStyles.connectionsHeader}>
                     <div>
                         <div className={`${styles.skeleton} ${styles.title}`} />
                         <div
                             className={`${styles.skeleton} ${styles.subtitle}`}
                         />
                     </div>
-                    <div className={`${styles.skeleton} ${styles.button}`} />
+                    <div
+                        className={`${styles.skeleton} ${styles.button} ${pageStyles.mobileButton}`}
+                    />
                 </div>
-                <div className={styles.connectionsGrid}>
+                <div className={pageStyles.connectionsGrid}>
                     {[0, 1, 2].map((item) => (
                         <div
                             key={item}
                             className={
-                                item === 0 ? styles.connectionsCare : undefined
+                                item === 0
+                                    ? pageStyles.connectionsCare
+                                    : undefined
                             }
                         >
-                            <Card>
+                            <SkeletonCard>
                                 <div
                                     className={`${styles.skeleton} ${styles.heading}`}
                                 />
                                 <Lines />
-                            </Card>
+                            </SkeletonCard>
                         </div>
                     ))}
                 </div>
             </div>
-        </Loader>
+        </SkeletonLoader>
     );
 }
 
 export function SettingsPageSkeleton() {
     return (
-        <Loader>
+        <SkeletonLoader>
             <div className={styles.settingsPage}>
                 <div className={styles.tabs}>
                     {Array.from({ length: 3 }, (_, index) => (
@@ -137,24 +135,24 @@ export function SettingsPageSkeleton() {
                     ))}
                 </div>
                 {[0, 1].map((item) => (
-                    <Card key={item}>
+                    <SkeletonCard key={item}>
                         <TableSectionSkeleton />
-                    </Card>
+                    </SkeletonCard>
                 ))}
             </div>
-        </Loader>
+        </SkeletonLoader>
     );
 }
 
 export function MealPlanPageSkeleton() {
     return (
-        <Loader>
+        <SkeletonLoader>
             <div className={calendarStyles.calendarControls}>
                 <div className={`${styles.skeleton} ${styles.button}`} />
                 <div className={`${styles.skeleton} ${styles.wideControl}`} />
                 <div className={`${styles.skeleton} ${styles.button}`} />
             </div>
-            <Card>
+            <SkeletonCard>
                 <div className={calendarStyles.calendarShell}>
                     <div className={calendarStyles.calendarHeader}>
                         {Array.from({ length: 8 }, (_, index) => (
@@ -180,7 +178,7 @@ export function MealPlanPageSkeleton() {
                         ))}
                     </div>
                 </div>
-            </Card>
-        </Loader>
+            </SkeletonCard>
+        </SkeletonLoader>
     );
 }

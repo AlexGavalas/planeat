@@ -22,12 +22,13 @@
         "*.config.mjs"
     ],
     "rules": {
+        "curly": "error",
+        "max-lines": ["error", { "max": 200 }],
         "no-array-constructor": "error",
         "no-unused-expressions": "error",
         "no-unused-vars": "error",
         "no-useless-constructor": "error",
         "no-empty-function": "error",
-        "curly": "error",
         "import/no-default-export": "error",
         "sort-keys": [
             "warn",
