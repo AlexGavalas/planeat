@@ -36,7 +36,7 @@ export const MeasurementModal = ({
     innerProps: { onSave, initialData },
 }: ContextModalProps<ModalContentProps>) => {
     const { t, i18n } = useTranslation();
-    const [date, setDate] = useState<string | null>(
+    const [date, setDate] = useState<string | null>(() =>
         format(initialData?.date ?? new Date(), 'yyyy-MM-dd'),
     );
     const [weight, setWeight] = useState(initialData?.weight);

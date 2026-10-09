@@ -31,7 +31,7 @@ export const ActivityModal = ({
     innerProps: { onSave, initialData },
 }: ContextModalProps<ActivityModalProps>) => {
     const { t, i18n } = useTranslation();
-    const [date, setDate] = useState<string | null>(
+    const [date, setDate] = useState<string | null>(() =>
         format(initialData?.date ?? new Date(), 'yyyy-MM-dd'),
     );
 

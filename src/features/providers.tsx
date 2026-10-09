@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-max-depth -- Providers are fine to have more nesting */
+/* oxlint-disable react/jsx-max-depth -- Providers are fine to have more nesting */
 'use client';
 
 import { Center, Loader, MantineProvider } from '@mantine/core';
@@ -84,7 +84,7 @@ const modals = {
 } as const;
 
 declare module '@mantine/modals' {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+    // oxlint-disable-next-line typescript/consistent-type-definitions
     interface MantineModalsOverride {
         modals: typeof modals;
     }
@@ -115,10 +115,10 @@ export const Providers = ({
     }, [language]);
 
     // These instances intentionally persist for the lifetime of this account.
-    // eslint-disable-next-line react/hook-use-state
+    // oxlint-disable-next-line react/hook-use-state
     const [queryClient] = useState(createQueryClient);
 
-    // eslint-disable-next-line react/hook-use-state
+    // oxlint-disable-next-line react/hook-use-state
     const [store] = useState(() => {
         const value = createStore();
         value.set(currentWeekAtom, parseISO(initialWeek));

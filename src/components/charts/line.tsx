@@ -15,20 +15,16 @@ type ChartDataItem = {
     y: number | null;
 };
 
-type LineChartProps<DataItem> = Readonly<{
+type LineChartProps = Readonly<{
     target?: number;
     unit: string;
     data: {
         id: string;
-        data: DataItem[];
+        data: ChartDataItem[];
     }[];
 }>;
 
-export const LineChart = <DataItem extends ChartDataItem>({
-    data,
-    target,
-    unit,
-}: LineChartProps<DataItem>) => {
+export const LineChart = ({ data, target, unit }: LineChartProps) => {
     const sourceData = data[0]?.data ?? [];
     const targetValue = getTargetValue(target);
     const values = sourceData.flatMap(({ y }) =>

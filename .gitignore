@@ -13,9 +13,6 @@ tsconfig.tsbuildinfo
 .DS_Store
 /BLS_4_0_2025_DE/
 
-# eslint
-.eslintcache
-
 # local env files
 .env
 .env.*

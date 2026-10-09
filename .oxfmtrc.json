@@ -1,0 +1,55 @@
+{
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "arrowParens": "always",
+    "bracketSpacing": true,
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 4,
+    "trailingComma": "all",
+    "useTabs": false,
+    "printWidth": 80,
+    "sortImports": {
+        "groups": [
+            [
+                "side_effect",
+                "type-builtin",
+                "value-builtin",
+                "type-external",
+                "value-external"
+            ],
+            { "newlinesBetween": true },
+            ["type-internal", "value-internal"],
+            { "newlinesBetween": true },
+            [
+                "type-parent",
+                "value-parent",
+                "type-sibling",
+                "value-sibling",
+                "type-index",
+                "value-index",
+                "style",
+                "side_effect_style"
+            ],
+            "unknown"
+        ],
+        "internalPattern": ["~"],
+        "newlinesBetween": false
+    },
+    "sortPackageJson": false,
+    "overrides": [
+        {
+            "files": ["**/*.json"],
+            "options": {
+                "trailingComma": "none"
+            }
+        }
+    ],
+    "ignorePatterns": [
+        ".env*",
+        ".next",
+        "pnpm-lock.yaml",
+        "tsconfig.json",
+        "next-env.d.ts",
+        "src/data/bls-foods.json"
+    ]
+}

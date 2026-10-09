@@ -96,7 +96,7 @@ export const FileUploadTab = () => {
                 <FileButton
                     accept=".docx"
                     onChange={setFile}
-                    // eslint-disable-next-line react/jsx-handler-names
+                    // oxlint-disable-next-line react/jsx-handler-names
                     resetRef={resetRef}
                 >
                     {(props) => <Button {...props}>{t('upload.label')}</Button>}

@@ -1,10 +1,5 @@
-// sort-imports-ignore -- Mantine extension styles must load after core styles.
 import '@fontsource-variable/noto-sans';
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
-import '@mantine/core/styles.css';
-import '@mantine/charts/styles.css';
-import '@mantine/dates/styles.css';
-import '@mantine/notifications/styles.css';
 import { dehydrate } from '@tanstack/react-query';
 import { format, startOfWeek } from 'date-fns';
 import { type Metadata, type Viewport } from 'next';
@@ -17,6 +12,10 @@ import { foodDatabaseSearch } from '~flags';
 import { getResources, getT } from '~util/i18n';
 import { createQueryClient } from '~util/query-client';
 
+import '@mantine/core/styles.css';
+import '@mantine/charts/styles.css';
+import '@mantine/dates/styles.css';
+import '@mantine/notifications/styles.css';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {

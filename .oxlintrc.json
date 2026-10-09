@@ -1,0 +1,356 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "plugins": ["typescript", "unicorn", "import", "react"],
+    "categories": {
+        "correctness": "off"
+    },
+    "options": {
+        "typeAware": true
+    },
+    "env": {
+        "builtin": true
+    },
+    "ignorePatterns": [
+        ".next/**",
+        "out/**",
+        "build/**",
+        "next-env.d.ts",
+        "coverage/**",
+        "node_modules/**",
+        "public/sw.js",
+        "*.config.js",
+        "*.config.mjs"
+    ],
+    "rules": {
+        "no-array-constructor": "error",
+        "no-unused-expressions": "error",
+        "no-unused-vars": "error",
+        "no-useless-constructor": "error",
+        "no-empty-function": "error",
+        "curly": "error",
+        "import/no-default-export": "error",
+        "sort-keys": [
+            "warn",
+            "asc",
+            {
+                "caseSensitive": true,
+                "minKeys": 2,
+                "natural": true
+            }
+        ],
+        "typescript/ban-ts-comment": [
+            "error",
+            {
+                "minimumDescriptionLength": 10
+            }
+        ],
+        "typescript/no-duplicate-enum-values": "error",
+        "typescript/no-empty-object-type": "error",
+        "typescript/no-explicit-any": "error",
+        "typescript/no-extra-non-null-assertion": "error",
+        "typescript/no-misused-new": "error",
+        "typescript/no-namespace": "error",
+        "typescript/no-non-null-asserted-optional-chain": "error",
+        "typescript/no-require-imports": "error",
+        "typescript/no-this-alias": "error",
+        "typescript/no-unnecessary-type-constraint": "error",
+        "typescript/no-unsafe-declaration-merging": "error",
+        "typescript/no-unsafe-function-type": "error",
+        "typescript/no-wrapper-object-types": "error",
+        "typescript/prefer-as-const": "error",
+        "typescript/prefer-namespace-keyword": "error",
+        "typescript/triple-slash-reference": "error",
+        "typescript/await-thenable": "error",
+        "typescript/no-array-delete": "error",
+        "typescript/no-base-to-string": "error",
+        "typescript/no-confusing-void-expression": "error",
+        "typescript/no-duplicate-type-constituents": "error",
+        "typescript/no-dynamic-delete": "error",
+        "typescript/no-extraneous-class": "error",
+        "typescript/no-floating-promises": "error",
+        "typescript/no-for-in-array": "error",
+        "typescript/no-generated-empty-object-type": "error",
+        "typescript/no-implied-eval": "error",
+        "typescript/no-invalid-void-type": "error",
+        "typescript/no-meaningless-void-operator": "error",
+        "typescript/no-misused-spread": "error",
+        "typescript/no-mixed-enums": "error",
+        "typescript/no-non-null-asserted-nullish-coalescing": "error",
+        "typescript/no-non-null-assertion": "error",
+        "typescript/no-redundant-type-constituents": "error",
+        "typescript/no-unnecessary-boolean-literal-compare": "error",
+        "typescript/no-unnecessary-template-expression": "error",
+        "typescript/no-unnecessary-type-arguments": "error",
+        "typescript/no-unnecessary-type-assertion": "error",
+        "typescript/no-unnecessary-type-conversion": "error",
+        "typescript/no-unnecessary-type-parameters": "error",
+        "typescript/no-unsafe-argument": "error",
+        "typescript/no-unsafe-assignment": "error",
+        "typescript/no-unsafe-call": "error",
+        "typescript/no-unsafe-enum-comparison": "error",
+        "typescript/no-unsafe-member-access": "error",
+        "typescript/no-unsafe-return": "error",
+        "typescript/no-unsafe-unary-minus": "error",
+        "typescript/no-useless-default-assignment": "error",
+        "typescript/only-throw-error": "error",
+        "typescript/prefer-literal-enum-member": "error",
+        "typescript/prefer-reduce-type-parameter": "error",
+        "typescript/prefer-return-this-type": "error",
+        "typescript/related-getter-setter-pairs": "error",
+        "typescript/require-await": "error",
+        "typescript/return-await": ["error", "error-handling-correctness-only"],
+        "typescript/unbound-method": "error",
+        "typescript/unified-signatures": "error",
+        "typescript/use-unknown-in-catch-callback-variable": "error",
+        "typescript/adjacent-overload-signatures": "error",
+        "typescript/array-type": "error",
+        "typescript/ban-tslint-comment": "error",
+        "typescript/class-literal-property-style": "error",
+        "typescript/consistent-generic-constructors": "error",
+        "typescript/consistent-indexed-object-style": "error",
+        "typescript/consistent-type-assertions": "error",
+        "typescript/consistent-type-definitions": ["error", "type"],
+        "typescript/dot-notation": "error",
+        "typescript/no-confusing-non-null-assertion": "error",
+        "typescript/no-inferrable-types": "error",
+        "typescript/non-nullable-type-assertion-style": "error",
+        "typescript/prefer-find": "error",
+        "typescript/prefer-for-of": "error",
+        "typescript/prefer-function-type": "error",
+        "typescript/prefer-includes": "error",
+        "typescript/prefer-nullish-coalescing": [
+            "error",
+            {
+                "ignorePrimitives": true
+            }
+        ],
+        "typescript/prefer-optional-chain": "error",
+        "typescript/prefer-regexp-exec": "error",
+        "typescript/prefer-string-starts-ends-with": "error",
+        "typescript/consistent-type-imports": [
+            "warn",
+            {
+                "fixStyle": "inline-type-imports",
+                "prefer": "type-imports"
+            }
+        ],
+        "typescript/explicit-function-return-type": "warn"
+    },
+    "overrides": [
+        {
+            "files": ["**/*.{js,jsx,mjs,ts,tsx,mts,cts}"],
+            "rules": {
+                "react/display-name": "error",
+                "react/jsx-key": "error",
+                "react/jsx-no-comment-textnodes": "error",
+                "react/jsx-no-duplicate-props": "error",
+                "react/jsx-no-target-blank": "off",
+                "react/jsx-no-undef": "error",
+                "react/no-children-prop": "error",
+                "react/no-danger-with-children": "error",
+                "react/no-direct-mutation-state": "error",
+                "react/no-find-dom-node": "error",
+                "react/no-is-mounted": "error",
+                "react/no-render-return-value": "error",
+                "react/no-string-refs": "error",
+                "react/no-unescaped-entities": "error",
+                "react/no-unknown-property": "off",
+                "react/no-unsafe": "off",
+                "react/react-in-jsx-scope": "off",
+                "react/require-render-return": "error",
+                "import/no-anonymous-default-export": "warn",
+                "jsx-a11y/alt-text": [
+                    "warn",
+                    {
+                        "elements": ["img"],
+                        "img": ["Image"]
+                    }
+                ],
+                "jsx-a11y/aria-props": "warn",
+                "jsx-a11y/aria-proptypes": "warn",
+                "jsx-a11y/aria-unsupported-elements": "warn",
+                "jsx-a11y/role-has-required-aria-props": "warn",
+                "jsx-a11y/role-supports-aria-props": "warn",
+                "nextjs/google-font-display": "warn",
+                "nextjs/google-font-preconnect": "warn",
+                "nextjs/next-script-for-ga": "warn",
+                "nextjs/no-async-client-component": "warn",
+                "nextjs/no-before-interactive-script-outside-document": "warn",
+                "nextjs/no-css-tags": "warn",
+                "nextjs/no-head-element": "warn",
+                "nextjs/no-html-link-for-pages": "warn",
+                "nextjs/no-img-element": "warn",
+                "nextjs/no-page-custom-font": "warn",
+                "nextjs/no-styled-jsx-in-document": "warn",
+                "nextjs/no-sync-scripts": "warn",
+                "nextjs/no-title-in-document-head": "warn",
+                "nextjs/no-typos": "warn",
+                "nextjs/no-unwanted-polyfillio": "warn",
+                "nextjs/inline-script-id": "error",
+                "nextjs/no-assign-module-variable": "error",
+                "nextjs/no-document-import-in-page": "error",
+                "nextjs/no-duplicate-head": "error",
+                "nextjs/no-head-import-in-document": "error",
+                "nextjs/no-script-component-in-head": "error",
+                "react/rules-of-hooks": "error",
+                "react/exhaustive-deps": "warn",
+                "react/static-components": "error",
+                "react/use-memo": "error",
+                "react/preserve-manual-memoization": "error",
+                "react/incompatible-library": "warn",
+                "react/immutability": "error",
+                "react/globals": "error",
+                "react/refs": "error",
+                "react/error-boundaries": "error",
+                "react/purity": "error",
+                "react/set-state-in-render": "error",
+                "react/unsupported-syntax": "warn"
+            },
+            "plugins": ["nextjs", "jsx-a11y"],
+            "env": {
+                "node": true
+            }
+        },
+        {
+            "files": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+            "rules": {
+                "constructor-super": "off",
+                "getter-return": "off",
+                "no-class-assign": "off",
+                "no-const-assign": "off",
+                "no-dupe-class-members": "off",
+                "no-dupe-keys": "off",
+                "no-func-assign": "off",
+                "no-import-assign": "off",
+                "no-new-native-nonconstructor": "off",
+                "no-obj-calls": "off",
+                "no-redeclare": "off",
+                "no-setter-return": "off",
+                "no-this-before-super": "off",
+                "no-undef": "off",
+                "no-unreachable": "off",
+                "no-unsafe-negation": "off",
+                "no-var": "error",
+                "no-with": "off",
+                "prefer-const": "error",
+                "prefer-rest-params": "error",
+                "prefer-spread": "error"
+            }
+        },
+        {
+            "files": ["**/*.tsx"],
+            "rules": {
+                "react/button-has-type": "error",
+                "react/hook-use-state": [
+                    "error",
+                    {
+                        "allowDestructuredState": true
+                    }
+                ],
+                "react/jsx-boolean-value": "error",
+                "react/jsx-handler-names": [
+                    "warn",
+                    {
+                        "checkInlineFunction": true,
+                        "checkLocalVariables": true,
+                        "eventHandlerPrefix": "handle|set|reset|open|close|toggle|on",
+                        "eventHandlerPropPrefix": "on"
+                    }
+                ],
+                "react/jsx-max-depth": [
+                    "warn",
+                    {
+                        "max": 6
+                    }
+                ],
+                "react/jsx-no-useless-fragment": "error",
+                "react/void-dom-elements-no-children": "error",
+                "typescript/explicit-function-return-type": "off"
+            }
+        },
+        {
+            "files": ["src/app/**/*", "*.config.*", "e2e/global.setup.ts"],
+            "rules": {
+                "import/no-default-export": "off"
+            }
+        },
+        {
+            "files": ["**/*.test.ts", "**/*.test.tsx"],
+            "rules": {
+                "jest/expect-expect": "warn",
+                "jest/no-alias-methods": "error",
+                "jest/no-commented-out-tests": "warn",
+                "jest/no-conditional-expect": "error",
+                "jest/no-deprecated-functions": "error",
+                "jest/no-disabled-tests": "warn",
+                "jest/no-done-callback": "error",
+                "jest/no-export": "error",
+                "jest/no-focused-tests": "error",
+                "jest/no-identical-title": "error",
+                "jest/no-interpolation-in-snapshots": "error",
+                "jest/no-jasmine-globals": "error",
+                "jest/no-mocks-import": "error",
+                "jest/no-standalone-expect": "error",
+                "jest/no-test-prefixes": "error",
+                "jest/valid-describe-callback": "error",
+                "jest/valid-expect": "error",
+                "jest/valid-expect-in-promise": "error",
+                "jest/valid-title": "error",
+                "jest/consistent-test-it": [
+                    "error",
+                    {
+                        "fn": "it"
+                    }
+                ],
+                "jest/max-expects": [
+                    "warn",
+                    {
+                        "max": 3
+                    }
+                ],
+                "jest/max-nested-describe": [
+                    "error",
+                    {
+                        "max": 3
+                    }
+                ],
+                "jest/no-conditional-in-test": "error",
+                "jest/no-confusing-set-timeout": "error",
+                "jest/no-duplicate-hooks": "error",
+                "jest/no-test-return-statement": "error",
+                "jest/no-untyped-mock-factory": "off",
+                "jest/prefer-called-with": "warn",
+                "jest/prefer-comparison-matcher": "error",
+                "jest/prefer-equality-matcher": "error",
+                "jest/prefer-expect-assertions": [
+                    "warn",
+                    {
+                        "onlyFunctionsWithAsyncKeyword": true
+                    }
+                ],
+                "jest/prefer-expect-resolves": "warn",
+                "jest/prefer-hooks-in-order": "error",
+                "jest/prefer-hooks-on-top": "error",
+                "jest/prefer-lowercase-title": "error",
+                "jest/prefer-mock-promise-shorthand": "error",
+                "jest/prefer-spy-on": "warn",
+                "jest/prefer-strict-equal": "error",
+                "jest/require-hook": "warn",
+                "jest/require-to-throw-message": "error",
+                "jest/require-top-level-describe": "error",
+                "typescript/consistent-type-imports": "off",
+                "typescript/no-unsafe-assignment": "off"
+            },
+            "plugins": ["jest"],
+            "env": {
+                "jest": true
+            }
+        },
+        {
+            "files": ["**/*.d.ts"],
+            "rules": {
+                "typescript/consistent-type-definitions": "off"
+            }
+        }
+    ]
+}

@@ -9,6 +9,7 @@ import { useMeals } from '~store/hooks';
 import { type Meal } from '~types/meal';
 
 const MAX_RATING = 5;
+const DATE_PARSE_REFERENCE = new Date(0);
 
 const groupByDay = groupBy<Meal>((item) =>
     format(parseISO(item.day), 'EEE dd/MM/yyyy'),
@@ -27,8 +28,8 @@ export const WeekOverviewModal = ({
     const mealsMap = groupByDay(meals);
 
     const sortedKeys = Object.keys(mealsMap).sort((a, b) => {
-        const d1 = parse(a, 'EEE dd/MM/yyyy', new Date()).getTime();
-        const d2 = parse(b, 'EEE dd/MM/yyyy', new Date()).getTime();
+        const d1 = parse(a, 'EEE dd/MM/yyyy', DATE_PARSE_REFERENCE).getTime();
+        const d2 = parse(b, 'EEE dd/MM/yyyy', DATE_PARSE_REFERENCE).getTime();
 
         return d1 - d2;
     });
