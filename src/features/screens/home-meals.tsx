@@ -115,7 +115,10 @@ export function TodayMeals({ day, mealItems, nextMealIndex }: TodayMealsProps) {
 
     return (
         <Card>
-            <section aria-labelledby="todays-meals-title">
+            <section
+                aria-labelledby="todays-meals-title"
+                id="daily-meals-container"
+            >
                 <Group
                     className={styles.sectionHeader}
                     justify="space-between"

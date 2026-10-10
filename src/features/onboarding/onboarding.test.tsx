@@ -1,20 +1,23 @@
-import { type Props as JoyrideProps } from 'react-joyride';
+import { type TourProps } from '@mantine/core';
+import mockRouter from 'next-router-mock';
 
 import { useLocalizedPath } from '~hooks/use-localized-path';
 import { useProfile } from '~hooks/use-profile';
-import { renderWithUser, waitFor } from '~test/utils';
+import { act, renderWithUser, waitFor } from '~test/utils';
 
 import { Onboarding } from './onboarding';
 
-const mockJoyride = jest.fn<null, [JoyrideProps]>(() => null);
+const mockTour = jest.fn<null, [TourProps]>(() => null);
 
-jest.mock('react-joyride', () => {
+jest.mock('@mantine/core', () => {
     const actual =
-        jest.requireActual<typeof import('react-joyride')>('react-joyride');
+        jest.requireActual<typeof import('@mantine/core')>('@mantine/core');
 
     return {
         ...actual,
-        Joyride: (props: JoyrideProps) => mockJoyride(props),
+        Tour: Object.assign((props: TourProps) => mockTour(props), {
+            Step: actual.Tour.Step,
+        }),
     };
 });
 
@@ -22,7 +25,10 @@ jest.mock('~hooks/use-localized-path');
 jest.mock('~hooks/use-profile');
 
 describe('<Onboarding />', () => {
+    const updateProfile = jest.fn();
+
     beforeEach(() => {
+        mockRouter.setCurrentUrl('/home');
         jest.mocked(useLocalizedPath).mockReturnValue((path) => path);
         jest.mocked(useProfile).mockReturnValue({
             deleteProfile: jest.fn(),
@@ -43,7 +49,7 @@ describe('<Onboarding />', () => {
                 roles: [],
                 target_weight: null,
             },
-            updateProfile: jest.fn(),
+            updateProfile,
             user: {
                 email: 'user@example.test',
                 name: 'Test User',
@@ -57,8 +63,8 @@ describe('<Onboarding />', () => {
         renderWithUser(<Onboarding />);
 
         await waitFor(() => {
-            expect(mockJoyride).toHaveBeenLastCalledWith(
-                expect.objectContaining({ run: false }),
+            expect(mockTour).toHaveBeenLastCalledWith(
+                expect.objectContaining({ active: false }),
             );
         });
 
@@ -67,13 +73,13 @@ describe('<Onboarding />', () => {
         document.body.append(target);
 
         await waitFor(() => {
-            expect(mockJoyride).toHaveBeenLastCalledWith(
-                expect.objectContaining({ run: true }),
+            expect(mockTour).toHaveBeenLastCalledWith(
+                expect.objectContaining({ active: true }),
             );
         });
     });
 
-    it('scrolls targets into the padded viewport', async () => {
+    it('configures localized guided navigation and target scrolling', async () => {
         expect.hasAssertions();
 
         const target = document.createElement('div');
@@ -83,18 +89,77 @@ describe('<Onboarding />', () => {
         renderWithUser(<Onboarding />);
 
         await waitFor(() => {
-            expect(mockJoyride).toHaveBeenLastCalledWith({
-                continuous: true,
-                floatingOptions: { shiftOptions: { padding: 16 } },
-                locale: expect.any(Object),
-                onEvent: expect.any(Function),
-                options: expect.objectContaining({ scrollOffset: 24 }),
-                run: true,
-                scrollToFirstStep: true,
-                stepIndex: 0,
-                steps: expect.any(Array),
-                styles: expect.any(Object),
-            });
+            expect(mockTour).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    active: true,
+                    attributes: {
+                        closeButton: { 'aria-label': 'Close' },
+                    },
+                    labels: {
+                        back: 'Back',
+                        close: 'Done',
+                        next: 'Next',
+                        skip: 'Skip',
+                    },
+                    onClose: expect.any(Function),
+                    onStepChange: expect.any(Function),
+                    step: 0,
+                    styles: {
+                        body: {
+                            paddingInlineEnd:
+                                'calc(var(--mantine-spacing-lg) + var(--mantine-spacing-xs))',
+                        },
+                    },
+                    withScrollIntoView: true,
+                }),
+            );
+        });
+    });
+
+    it('pauses the tour and navigates when the next step is on another route', async () => {
+        expect.assertions(2);
+
+        const target = document.createElement('div');
+        target.id = 'daily-meals-container';
+        document.body.append(target);
+
+        renderWithUser(<Onboarding />);
+
+        await waitFor(() => {
+            expect(mockTour).toHaveBeenLastCalledWith(
+                expect.objectContaining({ active: true }),
+            );
+        });
+
+        act(() => {
+            mockTour.mock.lastCall?.[0].onStepChange?.(2);
+        });
+
+        expect(mockRouter.asPath).toBe('/meal-plan');
+    });
+
+    it('completes onboarding when the tour is closed', async () => {
+        expect.assertions(2);
+
+        const target = document.createElement('div');
+        target.id = 'daily-meals-container';
+        document.body.append(target);
+
+        renderWithUser(<Onboarding />);
+
+        await waitFor(() => {
+            expect(mockTour).toHaveBeenLastCalledWith(
+                expect.objectContaining({ active: true }),
+            );
+        });
+
+        act(() => {
+            mockTour.mock.lastCall?.[0].onClose?.();
+        });
+
+        expect(updateProfile).toHaveBeenCalledWith({
+            hasCompletedOnboarding: true,
+            silent: true,
         });
     });
 });

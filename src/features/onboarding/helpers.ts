@@ -1,50 +1,46 @@
+import { type TourStepProps } from '@mantine/core';
+import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { type Step } from 'react-joyride';
 
-const commonStepProps: Partial<Step> = {
-    placement: 'auto',
-    skipBeacon: true,
+export type OnboardingStep = TourStepProps & {
+    children: ReactNode;
+    route: '/home' | '/meal-plan' | '/settings';
+    target: string;
 };
 
-export const useSteps = (): Step[] => {
+export const useSteps = (): OnboardingStep[] => {
     const { t } = useTranslation();
 
-    const steps: Step[] = [
+    const steps: OnboardingStep[] = [
         {
-            content: t('onboarding.content.daily_meals'),
+            children: t('onboarding.content.daily_meals'),
+            route: '/home',
             target: '#daily-meals-container',
-            ...commonStepProps,
         },
         {
-            content: t('onboarding.content.fat_timeline'),
-            target: '#fat-container',
-            ...commonStepProps,
+            children: t('onboarding.content.health_trend'),
+            route: '/home',
+            target: '#health-trend-container',
         },
         {
-            content: t('onboarding.content.weight_timeline'),
-            target: '#weight-container',
-            ...commonStepProps,
-        },
-        {
-            content: t('onboarding.content.meal_plan'),
+            children: t('onboarding.content.meal_plan'),
+            route: '/meal-plan',
             target: '#meal-plan-container',
-            ...commonStepProps,
-            placement: 'center',
         },
         {
-            content: t('onboarding.content.measurements'),
+            children: t('onboarding.content.measurements'),
+            route: '/settings',
             target: '#settings-tab-measurements',
-            ...commonStepProps,
         },
         {
-            content: t('onboarding.content.personal_settings'),
+            children: t('onboarding.content.personal_settings'),
+            route: '/settings',
             target: '#settings-tab-personal',
-            ...commonStepProps,
         },
         {
-            content: t('onboarding.content.advanced_settings'),
+            children: t('onboarding.content.advanced_settings'),
+            route: '/settings',
             target: '#settings-tab-advanced',
-            ...commonStepProps,
         },
     ];
 

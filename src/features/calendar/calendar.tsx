@@ -25,9 +25,11 @@ export const Calendar = ({
     });
 
     return (
-        <section className={styles.container} id="meal-plan-container">
+        <section className={styles.container}>
             <LoadingOverlay visible={isLoading} />
-            <Controls onPrint={handlePrint} />
+            <div id="meal-plan-container">
+                <Controls onPrint={handlePrint} />
+            </div>
             <Space h="md" />
             <div ref={ref} className={styles.desktopCalendar}>
                 <Header />

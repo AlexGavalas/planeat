@@ -12,3 +12,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - Use the Node.js and pnpm versions declared in `.mise.toml`.
 - Run pnpm commands as `mise exec -- pnpm <command>` so repository commands do not fall back to a globally installed pnpm.
+
+## Mantine
+
+- Use the Mantine MCP server to check current component, hook, and API documentation before adding or changing Mantine code.

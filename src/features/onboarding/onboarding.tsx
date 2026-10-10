@@ -1,15 +1,13 @@
+import { Tour } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { type EventHandler, Joyride } from 'react-joyride';
 
 import { useLocalizedPath } from '~hooks/use-localized-path';
 import { useProfile } from '~hooks/use-profile';
 import { BRAND_COLORS } from '~theme';
 
 import { useSteps } from './helpers';
-
-const outlineColor = BRAND_COLORS[7];
 
 export const Onboarding = () => {
     const { t } = useTranslation();
@@ -63,82 +61,61 @@ export const Onboarding = () => {
         };
     }, [currentTarget, hasTourEnded, isBrowser]);
 
-    const handleJoyrideEvent = (({ type, step, action, index }) => {
-        if (type === 'step:after' && action === 'next') {
-            setStepIndex(index + 1);
-        }
+    const handleStepChange = (nextStepIndex: number) => {
+        const currentStep = steps[stepIndex];
+        const nextStep = steps[nextStepIndex];
 
-        if (
-            type === 'step:after' &&
-            action === 'next' &&
-            step.target === '#weight-container'
-        ) {
-            setShouldRun(false);
-            router.push(localize('/meal-plan'));
-        } else if (
-            type === 'step:after' &&
-            action === 'next' &&
-            step.target === '#meal-plan-container'
-        ) {
-            setShouldRun(false);
-            router.push(localize('/settings'));
-        } else if (type === 'tour:end') {
-            setShouldRun(false);
-            setHasTourEnded(true);
+        setStepIndex(nextStepIndex);
 
-            updateProfile({
-                hasCompletedOnboarding: true,
-                silent: true,
-            });
+        if (currentStep && nextStep && currentStep.route !== nextStep.route) {
+            setShouldRun(false);
+            router.push(localize(nextStep.route));
         }
-    }) satisfies EventHandler;
+    };
+
+    const handleTourClose = () => {
+        setShouldRun(false);
+        setHasTourEnded(true);
+
+        updateProfile({
+            hasCompletedOnboarding: true,
+            silent: true,
+        });
+    };
 
     if (!isBrowser || profile?.has_completed_onboarding) {
         return null;
     }
 
     return (
-        <div style={{ position: 'fixed' }}>
-            <Joyride
-                continuous
-                scrollToFirstStep
-                floatingOptions={{
-                    shiftOptions: { padding: 16 },
-                }}
-                locale={{
-                    back: t('generic.misc.back'),
-                    close: t('generic.actions.close'),
-                    last: t('generic.misc.done'),
-                    next: t('generic.misc.next'),
-                    open: t('generic.actions.open'),
-                    skip: t('generic.misc.skip'),
-                }}
-                onEvent={handleJoyrideEvent}
-                options={{
-                    buttons: ['close', 'primary', 'skip'],
-                    closeButtonAction: 'skip',
-                    primaryColor: BRAND_COLORS[5],
-                    scrollOffset: 24,
-                    showProgress: true,
-                }}
-                run={shouldRun}
-                stepIndex={stepIndex}
-                steps={steps}
-                styles={{
-                    buttonBack: {
-                        outlineColor,
-                    },
-                    buttonClose: {
-                        outlineColor,
-                    },
-                    buttonPrimary: {
-                        outlineColor,
-                    },
-                    buttonSkip: {
-                        outlineColor,
-                    },
-                }}
-            />
-        </div>
+        <Tour
+            active={shouldRun}
+            attributes={{
+                closeButton: {
+                    'aria-label': t('generic.actions.close'),
+                },
+            }}
+            color={BRAND_COLORS[5]}
+            labels={{
+                back: t('generic.misc.back'),
+                close: t('generic.misc.done'),
+                next: t('generic.misc.next'),
+                skip: t('generic.misc.skip'),
+            }}
+            onClose={handleTourClose}
+            onStepChange={handleStepChange}
+            step={stepIndex}
+            styles={{
+                body: {
+                    paddingInlineEnd:
+                        'calc(var(--mantine-spacing-lg) + var(--mantine-spacing-xs))',
+                },
+            }}
+            withScrollIntoView
+        >
+            {steps.map(({ route: _route, ...step }) => (
+                <Tour.Step key={step.target} {...step} />
+            ))}
+        </Tour>
     );
 };

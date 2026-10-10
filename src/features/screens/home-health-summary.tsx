@@ -40,7 +40,10 @@ export function HealthSummary({
 
     return (
         <Card>
-            <section aria-labelledby="health-trend-title">
+            <section
+                aria-labelledby="health-trend-title"
+                id="health-trend-container"
+            >
                 <Group
                     className={styles.sectionHeader}
                     justify="space-between"
