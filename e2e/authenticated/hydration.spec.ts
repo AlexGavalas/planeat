@@ -4,7 +4,13 @@ import en from '../../public/locales/en/common.json';
 import { E2E_USER } from '../support/auth';
 
 const hydrationCases = [
-    { headings: [en.day_plan, en.fat_change, en.weight_change], path: '/home' },
+    {
+        headings: [
+            en.home_dashboard.todays_meals,
+            en.home_dashboard.health_trend,
+        ],
+        path: '/home',
+    },
     { headings: [], path: '/meal-plan' },
     { headings: [en.measurements, en.activities], path: '/settings' },
     {

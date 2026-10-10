@@ -10,9 +10,11 @@ const expectNoHorizontalOverflow = async (page: Page): Promise<void> => {
 
 test.beforeEach(async ({ page }) => {
     await page.goto('/home');
-    await expect(page.getByRole('heading', { name: 'Day plan' })).toBeVisible();
     await expect(
-        page.getByRole('heading', { name: 'Body Mass Index (BMI)' }),
+        page.getByRole('heading', { name: 'Today’s meals' }),
+    ).toBeVisible();
+    await expect(
+        page.getByRole('heading', { name: 'Health trend' }),
     ).toBeVisible();
 });
 
@@ -60,36 +62,29 @@ test('homepage remains usable at 320px', async ({ page }) => {
     });
 });
 
-test('expanded quick actions stay anchored to the right', async ({ page }) => {
-    const trigger = page.getByRole('button', { name: 'Open quick actions' });
-    await trigger.click();
+test('dashboard creation actions open the existing forms', async ({ page }) => {
+    await page.getByRole('button', { name: 'Add measurement' }).click();
 
-    const expandedTrigger = page.getByRole('button', {
-        name: 'Close quick actions',
-    });
-    const measurementAction = page.getByRole('button', {
+    const dialog = page.getByRole('dialog', {
         name: 'Add a new measurement',
     });
-    await expect(measurementAction).toBeVisible();
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByLabel('Weight')).toBeVisible();
+    await expect(dialog.getByLabel('Fat percentage')).toBeVisible();
 
-    const [triggerBox, actionBox] = await Promise.all([
-        expandedTrigger.boundingBox(),
-        measurementAction.boundingBox(),
-    ]);
+    await dialog.getByRole('button', { name: 'Cancel' }).click();
+    await expect(dialog).toBeHidden();
 
-    const viewport = page.viewportSize();
+    await page.getByRole('button', { name: 'Add an activity' }).click();
 
-    if (!triggerBox || !actionBox || !viewport) {
-        throw new Error('Could not measure the expanded quick actions');
-    }
+    const activityDialog = page.getByRole('dialog', {
+        name: 'Add a new activity',
+    });
+    await expect(activityDialog).toBeVisible();
+    await expect(activityDialog.getByLabel('Activity')).toBeVisible();
 
-    expect(triggerBox.x + triggerBox.width).toBeCloseTo(
-        actionBox.x + actionBox.width,
-        0,
-    );
-    expect(triggerBox.x + triggerBox.width).toBeCloseTo(viewport.width - 20, 0);
-
-    await expect(page).toHaveScreenshot('homepage-fab-mobile.png');
+    await activityDialog.getByRole('button', { name: 'Cancel' }).click();
+    await expect(activityDialog).toBeHidden();
 });
 
 test('meal plan is touch-friendly on mobile Chrome', async ({ page }) => {

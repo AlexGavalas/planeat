@@ -1,6 +1,7 @@
 'use client';
 
 import { Container, Space, Tabs } from '@mantine/core';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -18,12 +19,42 @@ type SettingsProps = Readonly<{
     measurements: ReactNode;
 }>;
 
+const SETTINGS_TABS = ['advanced', 'measurements', 'personal'] as const;
+type SettingsTab = (typeof SETTINGS_TABS)[number];
+
+const isSettingsTab = (value: string | null): value is SettingsTab =>
+    SETTINGS_TABS.some((tab) => tab === value);
+
 export function Settings({ activities, measurements }: SettingsProps) {
     const { t } = useTranslation();
+    const pathname = usePathname();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const requestedTab = searchParams.get('tab');
+    const activeTab = isSettingsTab(requestedTab)
+        ? requestedTab
+        : 'measurements';
+
+    const handleTabChange = (value: string | null): void => {
+        if (!isSettingsTab(value)) {
+            return;
+        }
+
+        const params = new URLSearchParams(searchParams.toString());
+        if (value === 'measurements') {
+            params.delete('tab');
+        } else {
+            params.set('tab', value);
+        }
+        const query = params.toString();
+        router.replace(query ? `${pathname}?${query}` : pathname, {
+            scroll: false,
+        });
+    };
 
     return (
         <Container className={styles.container}>
-            <Tabs defaultValue="measurements" id="settings">
+            <Tabs id="settings" onChange={handleTabChange} value={activeTab}>
                 <Tabs.List className={styles.tabList}>
                     <Tabs.Tab
                         className={styles.tab}

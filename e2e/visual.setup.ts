@@ -54,7 +54,9 @@ setup('authenticate the visual test user', async ({ page }) => {
         }
     }
 
-    await expect(page.getByRole('heading', { name: 'Day plan' })).toBeVisible();
+    await expect(
+        page.getByRole('heading', { name: 'Today’s meals' }),
+    ).toBeVisible();
 
     await mkdir(dirname(VISUAL_AUTH_STATE_PATH), { recursive: true });
     await page.context().storageState({ path: VISUAL_AUTH_STATE_PATH });

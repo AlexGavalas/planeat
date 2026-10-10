@@ -112,7 +112,6 @@ export const Measurements = () => {
         };
 
         openMeasurementModal({
-            centered: true,
             innerProps: {
                 initialData: {
                     date: parseISO(item.date),
@@ -137,7 +136,6 @@ export const Measurements = () => {
 
     const handleAddMeasurement = () => {
         openMeasurementModal({
-            centered: true,
             innerProps: {
                 onSave: handleNewWeightSave,
             },

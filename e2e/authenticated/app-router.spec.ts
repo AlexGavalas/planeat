@@ -17,7 +17,11 @@ test('creates a measurement and refreshes the dashboard summary', async ({
         page.getByRole('cell', { exact: true, name: '81' }),
     ).toBeVisible();
     await page.getByRole('link', { exact: true, name: 'Home' }).click();
-    await expect(page.getByText('19', { exact: true })).toBeVisible();
+    await expect(
+        page
+            .getByRole('region', { name: en.home_dashboard.health_trend })
+            .getByText('19%', { exact: true }),
+    ).toBeVisible();
 
     const response = await page.request.get('/api/v1/measurement?type=summary');
     const summary = (await response.json()) as {

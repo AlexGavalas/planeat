@@ -1,9 +1,5 @@
 {
     "logout": "Logout",
-    "fab": {
-        "close_actions": "Close quick actions",
-        "open_actions": "Open quick actions"
-    },
     "navigation": {
         "label": "Navigation",
         "open_menu": "Open navigation menu"
@@ -77,8 +73,6 @@
         }
     },
     "no_data": "No data",
-    "weight_measurements": "Weight measurements",
-    "fat_measurements": "Fat measurements",
     "measurements": "Measurements",
     "add_measurement": "Add a new measurement",
     "edit_measurement": "Edit measurement",
@@ -122,26 +116,50 @@
     "settings": "Settings",
     "height_input": "Your height (in cm)",
     "target_weight_input": "Your target weight (in kg)",
-    "bmi_label": "Body Mass Index (BMI)",
-    "bmi_sections": {
-        "bmi1": "Underweight",
-        "bmi2": "Normal",
-        "bmi3": "Overweight",
-        "bmi4": "1st degree Obese",
-        "bmi5": "2nd/3rd degree Obese"
-    },
-    "fat_change": "Fat change",
-    "weight_change": "Weight change",
     "kg": "kg",
     "fat_label": "Fat percentage",
-    "fat_sections": {
-        "fat1": "Underweight",
-        "fat2": "Athletic",
-        "fat3": "Ideal",
-        "fat4": "Average",
-        "fat5": "Obese"
+    "home_dashboard": {
+        "greeting": {
+            "morning": "Good morning, {{name}}",
+            "afternoon": "Good afternoon, {{name}}",
+            "evening": "Good evening, {{name}}"
+        },
+        "subtitle": "{{date}} · Here’s what matters today",
+        "add_measurement": "Add measurement",
+        "add_activity": "Add an activity",
+        "at_a_glance": "Today at a glance",
+        "next_meal": "Next meal",
+        "day_finished": "Meals finished for today",
+        "day_finished_hint": "Review or prepare tomorrow’s plan",
+        "todays_plan": "Today’s plan",
+        "planned_count": "{{count}} of {{total}} meals planned",
+        "weight_target": "Weight target",
+        "set_target": "Set a target weight",
+        "target_value": "Target: {{amount}} {{unit}}",
+        "to_target": "{{amount}} {{unit}} to target",
+        "target_reached": "Target reached",
+        "todays_meals": "Today’s meals",
+        "view_meal_plan": "View meal plan",
+        "not_planned": "Not planned",
+        "add_in_planner": "Add this meal in the planner",
+        "up_next_at": "Up next at {{time}}",
+        "earlier_today": "Earlier today",
+        "planned": "Planned",
+        "plan": "Plan",
+        "plan_meal": "Plan {{meal}}",
+        "health_trend": "Health trend",
+        "details": "Details",
+        "no_measurements": "Add your first measurement to see your progress here.",
+        "latest_weight": "Latest weight · {{date}}",
+        "body_fat": "Body fat",
+        "weight_trend_label": "Weight trend",
+        "percentage_points": "pp",
+        "trend": {
+            "down": "↓ {{amount}} {{unit}} since {{since}}",
+            "up": "↑ {{amount}} {{unit}} since {{since}}",
+            "unchanged": "No change since {{since}}"
+        }
     },
-    "day_plan": "Day plan",
     "week": {
         "previous": "Previous week",
         "next": "Next week",

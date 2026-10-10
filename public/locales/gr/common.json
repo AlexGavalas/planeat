@@ -1,9 +1,5 @@
 {
     "logout": "Αποσύνδεση",
-    "fab": {
-        "close_actions": "Κλείσιμο γρήγορων ενεργειών",
-        "open_actions": "Άνοιγμα γρήγορων ενεργειών"
-    },
     "navigation": {
         "label": "Πλοήγηση",
         "open_menu": "Άνοιγμα μενού πλοήγησης"
@@ -77,8 +73,6 @@
         }
     },
     "no_data": "Δεν βρέθηκαν αποτελέσματα",
-    "weight_measurements": "Μετρήσεις βάρους",
-    "fat_measurements": "Μετρήσεις λίπους",
     "measurements": "Μέτρήσεις",
     "add_measurement": "Προσθήκη νέας μέτρησης",
     "edit_measurement": "Επεξεργασία μέτρησης",
@@ -122,26 +116,50 @@
     "settings": "Ρυθμίσεις",
     "height_input": "Το ύψος σας (σε εκ)",
     "target_weight_input": "Το βάρος-στόχος σας (σε κιλά)",
-    "bmi_label": "Δείκτης Μάζας Σώματος (BMI)",
-    "bmi_sections": {
-        "bmi1": "Ελλιποβαρές",
-        "bmi2": "Φυσιολογικό",
-        "bmi3": "Υπέρβαρο",
-        "bmi4": "Παχύσαρκος Α' βαθμού",
-        "bmi5": "Παχύσαρκος Β'/Γ' βαθμού"
-    },
-    "fat_change": "Μεταβολή λίπους",
-    "weight_change": "Μεταβολή βάρους",
     "kg": "κιλά",
     "fat_label": "Ποσοστό λίπους",
-    "fat_sections": {
-        "fat1": "Ελλιποβαρές",
-        "fat2": "Αθλητικό",
-        "fat3": "Ιδανικό",
-        "fat4": "Μέσος όρος",
-        "fat5": "Παχύσαρκο"
+    "home_dashboard": {
+        "greeting": {
+            "morning": "Καλημέρα, {{name}}",
+            "afternoon": "Καλό απόγευμα, {{name}}",
+            "evening": "Καλησπέρα, {{name}}"
+        },
+        "subtitle": "{{date}} · Ό,τι έχει σημασία σήμερα",
+        "add_measurement": "Προσθήκη μέτρησης",
+        "add_activity": "Προσθήκη δραστηριότητας",
+        "at_a_glance": "Η σημερινή ημέρα με μια ματιά",
+        "next_meal": "Επόμενο γεύμα",
+        "day_finished": "Τα γεύματα ολοκληρώθηκαν για σήμερα",
+        "day_finished_hint": "Δείτε ή ετοιμάστε το αυριανό πλάνο",
+        "todays_plan": "Σημερινό πλάνο",
+        "planned_count": "{{count}} από {{total}} γεύματα προγραμματισμένα",
+        "weight_target": "Στόχος βάρους",
+        "set_target": "Ορίστε στόχο βάρους",
+        "target_value": "Στόχος: {{amount}} {{unit}}",
+        "to_target": "{{amount}} {{unit}} μέχρι τον στόχο",
+        "target_reached": "Ο στόχος επιτεύχθηκε",
+        "todays_meals": "Σημερινά γεύματα",
+        "view_meal_plan": "Προβολή διαιτολογίου",
+        "not_planned": "Δεν έχει προγραμματιστεί",
+        "add_in_planner": "Προσθέστε αυτό το γεύμα στο διαιτολόγιο",
+        "up_next_at": "Επόμενο στις {{time}}",
+        "earlier_today": "Νωρίτερα σήμερα",
+        "planned": "Προγραμματισμένο",
+        "plan": "Προσθήκη",
+        "plan_meal": "Προγραμματισμός: {{meal}}",
+        "health_trend": "Πορεία υγείας",
+        "details": "Λεπτομέρειες",
+        "no_measurements": "Προσθέστε την πρώτη σας μέτρηση για να δείτε εδώ την πορεία σας.",
+        "latest_weight": "Τελευταίο βάρος · {{date}}",
+        "body_fat": "Σωματικό λίπος",
+        "weight_trend_label": "Πορεία βάρους",
+        "percentage_points": "μον. %",
+        "trend": {
+            "down": "↓ {{amount}} {{unit}} από {{since}}",
+            "up": "↑ {{amount}} {{unit}} από {{since}}",
+            "unchanged": "Χωρίς αλλαγή από {{since}}"
+        }
     },
-    "day_plan": "Πλάνο ημέρας",
     "week": {
         "previous": "Προηγούμενη εβδομάδα",
         "next": "Επόμενη εβδομάδα",
