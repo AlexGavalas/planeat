@@ -18,9 +18,53 @@ import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
 import '../styles/globals.css';
 
+const APPLE_STARTUP_SCREENS = [
+    [320, 568, 2],
+    [375, 667, 2],
+    [414, 736, 3],
+    [375, 812, 3],
+    [414, 896, 2],
+    [414, 896, 3],
+    [390, 844, 3],
+    [393, 852, 3],
+    [402, 874, 3],
+    [430, 932, 3],
+    [440, 956, 3],
+    [744, 1133, 2],
+    [768, 1024, 2],
+    [810, 1080, 2],
+    [820, 1180, 2],
+    [834, 1112, 2],
+    [834, 1194, 2],
+    [834, 1210, 2],
+    [1024, 1366, 2],
+    [1032, 1376, 2],
+] as const;
+
+const appleStartupImages = [
+    '/images/apple-startup/apple-startup-1320x2868.png',
+    ...APPLE_STARTUP_SCREENS.flatMap(([width, height, pixelRatio]) => {
+        const media = `(device-width: ${width}px) and (device-height: ${height}px) and (-webkit-device-pixel-ratio: ${pixelRatio})`;
+        const portraitWidth = width * pixelRatio;
+        const portraitHeight = height * pixelRatio;
+
+        return [
+            {
+                media: `${media} and (orientation: portrait)`,
+                url: `/images/apple-startup/apple-startup-${portraitWidth}x${portraitHeight}.png`,
+            },
+            {
+                media: `${media} and (orientation: landscape)`,
+                url: `/images/apple-startup/apple-startup-${portraitHeight}x${portraitWidth}.png`,
+            },
+        ];
+    }),
+];
+
 export const metadata: Metadata = {
     appleWebApp: {
         capable: true,
+        startupImage: appleStartupImages,
         statusBarStyle: 'default',
         title: 'Planeat',
     },
