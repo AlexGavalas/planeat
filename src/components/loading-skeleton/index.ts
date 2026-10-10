@@ -3,7 +3,6 @@ export {
     ConnectionsSectionSkeleton,
     DailyMealsSkeleton,
     MealPlanPageSkeleton,
-    MeasurementDashboardSkeleton,
     SettingsPageSkeleton,
     TableSectionSkeleton,
 } from './loading-skeleton';

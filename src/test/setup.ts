@@ -18,26 +18,23 @@ const clone = <Value>(value: Value): Value => {
     return cloned as Value;
 };
 
-Object.defineProperties(global, {
-    ReadableStream: { value: ReadableStream },
-    TextDecoder: { value: TextDecoder },
-    TextDecoderStream: { value: TextDecoderStream },
-    TextEncoder: { value: TextEncoder },
-    TextEncoderStream: { value: TextEncoderStream },
-    TransformStream: { value: TransformStream },
-    WritableStream: { value: WritableStream },
-    structuredClone: { value: clone },
-});
-
 const fetchPrimitives = jest.requireActual<typeof FetchPrimitives>(
     'next/dist/compiled/@edge-runtime/primitives',
 );
 
 Object.defineProperties(global, {
     Headers: { value: fetchPrimitives.Headers },
+    ReadableStream: { value: ReadableStream },
     Request: { value: fetchPrimitives.Request },
     Response: { value: fetchPrimitives.Response },
+    TextDecoder: { value: TextDecoder },
+    TextDecoderStream: { value: TextDecoderStream },
+    TextEncoder: { value: TextEncoder },
+    TextEncoderStream: { value: TextEncoderStream },
+    TransformStream: { value: TransformStream },
+    WritableStream: { value: WritableStream },
     fetch: { configurable: true, value: fetchPrimitives.fetch, writable: true },
+    structuredClone: { value: clone },
 });
 
 Object.defineProperty(window, 'matchMedia', {

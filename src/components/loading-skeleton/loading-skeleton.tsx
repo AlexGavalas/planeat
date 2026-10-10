@@ -43,26 +43,6 @@ export function DailyMealsSkeleton() {
     );
 }
 
-export function MeasurementDashboardSkeleton() {
-    return (
-        <SkeletonLoader>
-            <div className={styles.dashboard}>
-                {[0, 1].map((item) => (
-                    <SkeletonCard key={item}>
-                        <div
-                            className={`${styles.skeleton} ${styles.heading}`}
-                        />
-                        <div
-                            className={`${styles.skeleton} ${styles.metric}`}
-                        />
-                        <div className={`${styles.skeleton} ${styles.chart}`} />
-                    </SkeletonCard>
-                ))}
-            </div>
-        </SkeletonLoader>
-    );
-}
-
 export function TableSectionSkeleton() {
     return (
         <SkeletonLoader>
