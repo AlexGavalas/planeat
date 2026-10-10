@@ -44,7 +44,6 @@ export const APP_TOKENS = {
     },
     layer: {
         behind: '-1',
-        fab: '10',
         sticky: '20',
     },
     motion: {
@@ -120,7 +119,6 @@ export const appCssVariablesResolver: CSSVariablesResolver = () => ({
         '--app-color-surface-sticky': `rgb(255 255 255 / ${APP_TOKENS.surfaceAlpha.sticky})`,
         '--app-color-surface-stripe': APP_TOKENS.color.surfaceStripe,
         '--app-layer-behind': APP_TOKENS.layer.behind,
-        '--app-layer-fab': APP_TOKENS.layer.fab,
         '--app-layer-sticky': APP_TOKENS.layer.sticky,
         '--app-motion-fast': APP_TOKENS.motion.fast,
         '--app-size-action': APP_TOKENS.size.action,

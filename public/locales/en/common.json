@@ -1,9 +1,5 @@
 {
     "logout": "Logout",
-    "fab": {
-        "close_actions": "Close quick actions",
-        "open_actions": "Open quick actions"
-    },
     "navigation": {
         "label": "Navigation",
         "open_menu": "Open navigation menu"
@@ -170,6 +166,7 @@
         "earlier_today": "Earlier today",
         "planned": "Planned",
         "plan": "Plan",
+        "plan_meal": "Plan {{meal}}",
         "health_trend": "Health trend",
         "details": "Details",
         "no_measurements": "Add your first measurement to see your progress here.",

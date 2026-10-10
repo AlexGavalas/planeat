@@ -55,8 +55,11 @@ function MealRow({ day, index, item, nextMealIndex }: MealRowProps) {
             )}
             {!item.meal && (
                 <Button
+                    aria-label={t('home_dashboard.plan_meal', {
+                        meal: t(`row.${item.key}`),
+                    })}
                     component={Link}
-                    href={`/meal-plan?date=${day}`}
+                    href={`/meal-plan?date=${day}&meal=${item.key}`}
                     size="compact-sm"
                     variant="subtle"
                 >

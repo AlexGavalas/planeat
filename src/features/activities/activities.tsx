@@ -114,7 +114,6 @@ export const Activities = () => {
         };
 
         openNewActivityModal({
-            centered: true,
             innerProps: {
                 initialData: {
                     activity: item.activity,
@@ -134,7 +133,6 @@ export const Activities = () => {
 
     const handleAddActivity = () => {
         openNewActivityModal({
-            centered: true,
             innerProps: {
                 onSave: onNewActivitySave,
             },

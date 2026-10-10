@@ -33,14 +33,13 @@ export function useHomeActions(): HomeActions {
                     ]);
                 },
             },
-            size: 'md',
+            size: 'sm',
             title: t('add_measurement'),
         });
     };
 
     const handleAddActivity = (): void => {
         openActivityModal({
-            centered: true,
             innerProps: {
                 onSave: async () => {
                     await Promise.all([

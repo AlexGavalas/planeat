@@ -14,16 +14,21 @@ import { fetchMeals } from '~api/meal';
 import { fetchMealZoneTimes } from '~api/meal-zone';
 import { getRequestDate, requireUser } from '~api/session';
 import { MealPlanPageSkeleton } from '~components/loading-skeleton';
+import { MEAL_ZONE_KEYS } from '~constants/meal-zones';
 import { MealPlan } from '~features/screens/meal-plan';
+import { type MealZoneKey } from '~types/meal-zone';
 import { createQueryClient } from '~util/query-client';
 
 type MealPlanPageProps = Readonly<{
-    searchParams: Promise<{ date?: string }>;
+    searchParams: Promise<{ date?: string; meal?: string }>;
 }>;
+
+const isMealZoneKey = (value?: string): value is MealZoneKey =>
+    MEAL_ZONE_KEYS.some((key) => key === value);
 
 async function MealPlanContent({ searchParams }: MealPlanPageProps) {
     const profile = await requireUser();
-    const { date } = await searchParams;
+    const { date, meal } = await searchParams;
     const parsedDate =
         date && isMatch(date, 'yyyy-MM-dd') ? parseISO(date) : null;
 
@@ -60,6 +65,7 @@ async function MealPlanContent({ searchParams }: MealPlanPageProps) {
             <MealPlan
                 canEditAnnotations
                 initialDate={format(now, 'yyyy-MM-dd')}
+                initialMealZone={isMealZoneKey(meal) ? meal : undefined}
                 ownerUserId={profile.id}
             />
         </HydrationBoundary>

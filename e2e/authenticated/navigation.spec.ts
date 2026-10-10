@@ -27,10 +27,25 @@ test('homepage actions open their advertised destinations', async ({
 }) => {
     await page.goto('/home');
 
+    await page.getByRole('link', { name: 'Plan Lunch' }).click();
+    await expect(page).toHaveURL(
+        /\/meal-plan\?date=\d{4}-\d{2}-\d{2}&meal=lunch$/,
+    );
+    const mealDialog = page.getByRole('dialog', { name: 'Edit meal' });
+    await expect(mealDialog).toBeVisible();
+    await expect(mealDialog.getByLabel('The meal')).toBeVisible();
+    await mealDialog.getByRole('button', { name: 'Cancel' }).click();
+
+    await page.goto('/home');
     await page.getByRole('link', { name: 'View meal plan' }).click();
     await expect(page).toHaveURL(/\/meal-plan\?date=\d{4}-\d{2}-\d{2}$/);
 
     await page.goto('/home');
     await page.getByRole('link', { name: 'Details' }).click();
     await expect(page).toHaveURL('/settings');
+
+    await page.goto('/settings?tab=personal');
+    await expect(
+        page.getByRole('tab', { name: 'Personal Information' }),
+    ).toHaveAttribute('aria-selected', 'true');
 });

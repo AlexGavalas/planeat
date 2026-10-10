@@ -86,7 +86,7 @@ export function SummaryCards({
                     <Text
                         className={`${styles.summaryValue} ${styles.targetLink}`}
                         component={Link}
-                        href="/settings"
+                        href="/settings?tab=personal"
                     >
                         {targetSummary}
                     </Text>
