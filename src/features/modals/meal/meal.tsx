@@ -11,15 +11,20 @@ import { useTranslation } from 'react-i18next';
 
 import { useFeatureFlags } from '~features/feature-flags';
 import { useProfile } from '~hooks/use-profile';
+import { type FoodSearchResult } from '~types/food-search';
+import { type EditedMealItem } from '~types/meal';
+import { foodToMealItem } from '~util/nutrition';
 
 import { useGetMealPool } from '../meal-pool/hooks/use-get-meal-pool';
 import { FoodDatabaseSearch } from './food-database-search';
+import { MealItemsEditor } from './meal-items-editor';
 import { type OnMealEdit } from './meal-result';
 import { MealSearch } from './meal-search';
 
 type MealModalProps = {
     onDelete: () => Promise<void> | void;
-    onSave: (meal: string) => Promise<void> | void;
+    initialItems?: EditedMealItem[];
+    onSave: (meal: string, items: EditedMealItem[]) => Promise<void> | void;
     initialMeal: string;
     ownerUserId?: number;
 };
@@ -27,13 +32,20 @@ type MealModalProps = {
 export const MealModal = ({
     context,
     id,
-    innerProps: { initialMeal, onDelete, onSave, ownerUserId },
+    innerProps: {
+        initialItems = [],
+        initialMeal,
+        onDelete,
+        onSave,
+        ownerUserId,
+    },
 }: ContextModalProps<MealModalProps>) => {
     const { t } = useTranslation();
     const { isFoodDatabaseSearchEnabled } = useFeatureFlags();
     const { profile } = useProfile();
     const [error, setError] = useState('');
     const [preview, setPreview] = useState(initialMeal);
+    const [items, setItems] = useState<EditedMealItem[]>(initialItems);
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 350);
 
@@ -65,7 +77,7 @@ export const MealModal = ({
             return;
         }
 
-        await onSave(meal);
+        await onSave(meal, items);
 
         closeModal();
     }) satisfies SubmitEventHandler<HTMLFormElement>;
@@ -79,13 +91,27 @@ export const MealModal = ({
         setSearchQuery(e.target.value);
     }) satisfies ChangeEventHandler<HTMLInputElement>;
 
-    const handleEdit = ((previewText) => {
-        setPreview(previewText);
+    const handleEdit = ((template) => {
+        setPreview(template.content);
+        setItems(template.items.map(({ id: _id, ...item }) => ({ ...item })));
     }) satisfies OnMealEdit;
+
+    const handleFoodSelect = (food: FoodSearchResult) => {
+        setItems((current) => [
+            ...current,
+            foodToMealItem(food, current.length),
+        ]);
+        if (!preview) {
+            setPreview([food.brand, food.name].filter(Boolean).join(' '));
+        }
+    };
 
     const handleChange = ((e) => {
         setPreview(e.target.value);
     }) satisfies ChangeEventHandler<HTMLTextAreaElement>;
+    const handleItemsChange = (nextItems: EditedMealItem[]) => {
+        setItems(nextItems);
+    };
 
     const mealSearch = (
         <MealSearch
@@ -120,7 +146,7 @@ export const MealModal = ({
                             {mealSearch}
                         </Tabs.Panel>
                         <Tabs.Panel pt="sm" value="food-database">
-                            <FoodDatabaseSearch onSelect={handleEdit} />
+                            <FoodDatabaseSearch onSelect={handleFoodSelect} />
                         </Tabs.Panel>
                     </Tabs>
                 ) : (
@@ -137,6 +163,10 @@ export const MealModal = ({
                     onFocus={resetError}
                     placeholder={t('meal_placeholder')}
                     value={preview}
+                />
+                <MealItemsEditor
+                    items={items}
+                    onItemsChange={handleItemsChange}
                 />
 
                 <Group justify="space-between">

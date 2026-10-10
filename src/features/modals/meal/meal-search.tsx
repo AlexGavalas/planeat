@@ -2,14 +2,16 @@ import { List, Text, TextInput } from '@mantine/core';
 import { type ChangeEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { type MealTemplate } from '~types/meal-pool';
+
 import { MealResult, type OnMealEdit } from './meal-result';
 
 type MealSearchProps = Readonly<{
     onEdit: OnMealEdit;
     onSearchChange: ChangeEventHandler<HTMLInputElement>;
     results: {
-        client: string[];
-        own: string[];
+        client: MealTemplate[];
+        own: MealTemplate[];
     };
     showClientMeals: boolean;
 }>;
@@ -36,8 +38,8 @@ export const MealSearch = ({
             <List withPadding mt="xs" spacing="md">
                 {results.own.map((result) => (
                     <MealResult
-                        key={result}
-                        mealText={result}
+                        key={result.id}
+                        template={result}
                         onEdit={onEdit}
                     />
                 ))}
@@ -50,8 +52,8 @@ export const MealSearch = ({
                     <List withPadding mt="xs" spacing="md">
                         {results.client.map((result) => (
                             <MealResult
-                                key={result}
-                                mealText={result}
+                                key={result.id}
+                                template={result}
                                 onEdit={onEdit}
                             />
                         ))}

@@ -1,9 +1,31 @@
-import { and, eq, gte, inArray, lte } from 'drizzle-orm';
+import { and, asc, eq, gte, inArray, lte } from 'drizzle-orm';
 import 'server-only';
 
 import { getDb } from '~db';
-import { meals } from '~db/schema';
-import { type EditedMeal, type Meal } from '~types/meal';
+import { mealItems, meals } from '~db/schema';
+import { type EditedMeal, type EditedMealItem, type Meal } from '~types/meal';
+
+const itemValues = (
+    mealId: string,
+    item: EditedMealItem,
+): typeof mealItems.$inferInsert => ({
+    alternative_name: item.alternative_name ?? null,
+    basis_grams: item.basis_grams,
+    brand: item.brand ?? null,
+    calories: item.calories ?? null,
+    carbohydrates: item.carbohydrates ?? null,
+    fat: item.fat ?? null,
+    fiber: item.fiber ?? null,
+    meal_id: mealId,
+    name: item.name,
+    position: item.position,
+    protein: item.protein ?? null,
+    provider_food_id: item.provider_food_id,
+    quantity_grams: item.quantity_grams,
+    salt: item.salt ?? null,
+    source: item.source,
+    sugar: item.sugar ?? null,
+});
 
 export const fetchMeals = async ({
     endDate,
@@ -13,8 +35,9 @@ export const fetchMeals = async ({
     endDate: string;
     startDate: string;
     userId: number;
-}): Promise<{ data: Meal[] }> => ({
-    data: await getDb()
+}): Promise<{ data: Meal[] }> => {
+    const db = getDb();
+    const rows = await db
         .select()
         .from(meals)
         .where(
@@ -23,8 +46,24 @@ export const fetchMeals = async ({
                 gte(meals.day, startDate),
                 lte(meals.day, endDate),
             ),
-        ),
-});
+        );
+    const ids = rows.map(({ id }) => id);
+    const items = ids.length
+        ? await db
+              .select()
+              .from(mealItems)
+              .where(inArray(mealItems.meal_id, ids))
+              .orderBy(asc(mealItems.position))
+        : [];
+    return {
+        data: rows.map((meal) => ({
+            ...meal,
+            items: items
+                .filter((item) => item.meal_id === meal.id)
+                .map(({ meal_id: _mealId, ...item }) => item),
+        })),
+    };
+};
 
 export const fetchMealsForDay = async ({
     day,
@@ -32,11 +71,10 @@ export const fetchMealsForDay = async ({
 }: {
     day: string;
     userId: number;
-}): Promise<Meal[]> =>
-    getDb()
-        .select()
-        .from(meals)
-        .where(and(eq(meals.user_id, userId), eq(meals.day, day)));
+}): Promise<Meal[]> => {
+    const { data } = await fetchMeals({ endDate: day, startDate: day, userId });
+    return data;
+};
 
 export const deleteMeals = async ({
     deletedIds,
@@ -74,8 +112,9 @@ export const updateMeals = async ({
             if (!meal.id) {
                 throw new Error('Edited meals must have an id');
             }
+            const mealId = meal.id;
 
-            await tx
+            const [updated] = await tx
                 .update(meals)
                 .set({
                     day: meal.day,
@@ -86,7 +125,19 @@ export const updateMeals = async ({
                     }),
                     section_key: meal.section_key,
                 })
-                .where(and(eq(meals.id, meal.id), eq(meals.user_id, userId)));
+                .where(and(eq(meals.id, mealId), eq(meals.user_id, userId)))
+                .returning({ id: meals.id });
+
+            if (updated && meal.items) {
+                await tx.delete(mealItems).where(eq(mealItems.meal_id, mealId));
+                if (meal.items.length) {
+                    await tx
+                        .insert(mealItems)
+                        .values(
+                            meal.items.map((item) => itemValues(mealId, item)),
+                        );
+                }
+            }
         }
     });
 
@@ -105,14 +156,27 @@ export const createMeals = async ({
     userId: number;
 }): Promise<{ error: null }> => {
     if (newMeals.length) {
-        await db.insert(meals).values(
-            newMeals.map((meal) => ({
-                ...meal,
-                id: undefined,
-                ...(!allowAnnotations && { note: null, rating: null }),
-                user_id: userId,
-            })),
-        );
+        for (const meal of newMeals) {
+            const [created] = await db
+                .insert(meals)
+                .values({
+                    day: meal.day,
+                    meal: meal.meal,
+                    ...(!allowAnnotations && { note: null, rating: null }),
+                    note: allowAnnotations ? meal.note : null,
+                    rating: allowAnnotations ? meal.rating : null,
+                    section_key: meal.section_key,
+                    user_id: userId,
+                })
+                .returning({ id: meals.id });
+            if (created && meal.items?.length) {
+                await db
+                    .insert(mealItems)
+                    .values(
+                        meal.items.map((item) => itemValues(created.id, item)),
+                    );
+            }
+        }
     }
 
     return { error: null };

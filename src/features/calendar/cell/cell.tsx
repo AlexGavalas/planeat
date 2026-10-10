@@ -1,4 +1,4 @@
-import { Badge, Box, Center, Text } from '@mantine/core';
+import { Badge, Box, Center, Stack, Text } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
 import { MultiplePages } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
@@ -8,8 +8,9 @@ import {
     useMealPlanOwnerId,
 } from '~features/meal-plan-owner';
 import { useMeals } from '~store/hooks';
-import { type EditedMeal, type Meal } from '~types/meal';
+import { type EditedMeal, type Meal, type MealChange } from '~types/meal';
 
+import { NutritionSummary } from '../nutrition-summary';
 import styles from './cell.module.css';
 import { CellOverlay } from './overlay';
 
@@ -30,13 +31,14 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
     const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =
         useMeals();
 
-    const handleSave = (newMeal: Partial<Meal>) => {
+    const handleSave = (newMeal: MealChange) => {
         if (!ownerUserId || !newMeal.meal) {
             return;
         }
 
         if (isRow) {
             saveEntryRow({
+                items: newMeal.items,
                 note: newMeal.note,
                 rating: newMeal.rating,
                 sectionKey: id,
@@ -45,6 +47,7 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
             });
         } else {
             saveEntryCell({
+                items: newMeal.items,
                 meal,
                 note: newMeal.note,
                 rating: newMeal.rating,
@@ -111,9 +114,16 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                         ...(isHovered && { opacity: 0.15 }),
                     }}
                 >
-                    <Text p="var(--app-space-calendar-cell)" ta="center">
-                        {meal?.meal || 'N/A'}
-                    </Text>
+                    <Stack
+                        align="center"
+                        gap="xs"
+                        p="var(--app-space-calendar-cell)"
+                    >
+                        <Text ta="center">{meal?.meal || 'N/A'}</Text>
+                        {meal?.items?.length ? (
+                            <NutritionSummary compact meals={[meal]} />
+                        ) : null}
+                    </Stack>
                 </Center>
             </Box>
         </Box>

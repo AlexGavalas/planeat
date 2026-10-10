@@ -1,4 +1,10 @@
-export { mealPool, meals, mealZoneTimes } from './schema/meals';
+export {
+    mealItems,
+    mealPool,
+    mealPoolItems,
+    meals,
+    mealZoneTimes,
+} from './schema/meals';
 export { professionalClients } from './schema/professional';
 export {
     mealReminderDeliveries,

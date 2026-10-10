@@ -2,23 +2,25 @@ import { Button, List } from '@mantine/core';
 import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export type OnMealEdit = (meal: string) => void;
+import { type MealTemplate } from '~types/meal-pool';
+
+export type OnMealEdit = (meal: MealTemplate) => void;
 
 type MealResultProps = Readonly<{
-    mealText: string;
+    template: MealTemplate;
     onEdit: OnMealEdit;
 }>;
 
-export const MealResult = ({ mealText, onEdit }: MealResultProps) => {
+export const MealResult = ({ template, onEdit }: MealResultProps) => {
     const { t } = useTranslation();
 
     const handleEdit = (() => {
-        onEdit(mealText);
+        onEdit(template);
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 
     return (
         <List.Item>
-            {mealText}{' '}
+            {template.content}{' '}
             <Button onClick={handleEdit} size="compact-xs">
                 {t('generic.actions.edit')}
             </Button>

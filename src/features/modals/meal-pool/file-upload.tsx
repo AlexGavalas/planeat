@@ -76,7 +76,9 @@ export const FileUploadTab = () => {
 
         const content = formSchema.parse(formData);
 
-        createMealPool({ content });
+        createMealPool({
+            templates: content.map((item) => ({ content: item, items: [] })),
+        });
     }) satisfies SubmitEventHandler<HTMLFormElement>;
 
     const handleRemoveItem = ((e) => {

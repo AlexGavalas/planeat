@@ -1,7 +1,12 @@
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { partition } from 'lodash/fp';
 
-import { type EditedMeal, type Meal, type MealsMap } from '~types/meal';
+import {
+    type EditedMeal,
+    type EditedMealItem,
+    type Meal,
+    type MealsMap,
+} from '~types/meal';
 
 export type DeleteEntryCell = (params: { meal: Meal | EditedMeal }) => void;
 export type DeleteEntryRow = (id: string) => void;
@@ -12,6 +17,7 @@ export type SaveEntryCell = (params: {
     timestamp: Date;
     userId: number;
     value: string;
+    items?: EditedMealItem[];
     note: EditedMeal['note'];
     rating: EditedMeal['rating'];
 }) => void;
@@ -20,6 +26,7 @@ export type SaveEntryRow = (params: {
     sectionKey: string;
     userId: number;
     value: string;
+    items?: EditedMealItem[];
     note: EditedMeal['note'];
     rating: EditedMeal['rating'];
 }) => void;

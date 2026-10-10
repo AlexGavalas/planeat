@@ -15,6 +15,9 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { type EditedMealItem } from '~types/meal';
+
+import { MealItemsEditor } from '../meal/meal-items-editor';
 import { useCreateMealPool } from './hooks/use-create-meal-pool';
 import { useGetMealPool } from './hooks/use-get-meal-pool';
 import { type OnEdit, SearchResult } from './search-result';
@@ -26,6 +29,8 @@ type ManualInputTabProps = Readonly<{
 export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
     const { t } = useTranslation();
     const [preview, setPreview] = useState('');
+    const [templateId, setTemplateId] = useState<number>();
+    const [items, setItems] = useState<EditedMealItem[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedSearchQuery] = useDebouncedValue(searchQuery, 350);
 
@@ -44,11 +49,13 @@ export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
     });
 
     const handleCreate = (() => {
-        mutate({ content: [preview] });
+        mutate({ templates: [{ content: preview, id: templateId, items }] });
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleEdit = ((previewText) => {
-        setPreview(previewText);
+    const handleEdit = ((template) => {
+        setPreview(template.content);
+        setTemplateId(template.id);
+        setItems(template.items.map(({ id: _id, ...item }) => ({ ...item })));
     }) satisfies OnEdit;
 
     const handlePreviewChange = ((e) => {
@@ -58,6 +65,9 @@ export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
     const handleSearchChange = ((e) => {
         setSearchQuery(e.target.value);
     }) satisfies ChangeEventHandler<HTMLInputElement>;
+    const handleItemsChange = (nextItems: EditedMealItem[]) => {
+        setItems(nextItems);
+    };
 
     return (
         <Stack gap="sm">
@@ -70,8 +80,8 @@ export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
             <List spacing="md">
                 {results.map((result) => (
                     <SearchResult
-                        key={result}
-                        mealText={result}
+                        key={result.id}
+                        template={result}
                         onEdit={handleEdit}
                     />
                 ))}
@@ -86,6 +96,10 @@ export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
                     onChange={handlePreviewChange}
                     onFocus={resetCreationState}
                     value={preview}
+                />
+                <MealItemsEditor
+                    items={items}
+                    onItemsChange={handleItemsChange}
                 />
             </Stack>
             <Group gap="md" justify="end">

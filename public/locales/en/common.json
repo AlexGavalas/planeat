@@ -99,6 +99,22 @@
         "more_actions": "More actions",
         "select_day": "Select a day"
     },
+    "nutrition": {
+        "protein": "Protein",
+        "carbohydrates": "Carbohydrates",
+        "fat": "Fat",
+        "fiber": "Fiber",
+        "sugar": "Sugar",
+        "salt": "Salt",
+        "partial": "partial data",
+        "incomplete": "Nutrition data is incomplete",
+        "macro_distribution": "Macro energy distribution",
+        "calories_by_meal": "Calories by meal",
+        "details": "Nutrition details",
+        "meal_total": "Meal total",
+        "show_details": "Show nutrition details",
+        "hide_details": "Hide nutrition details"
+    },
     "meal_zone_settings": {
         "title": "Meal schedule",
         "description": "Set the default times for new weeks. These changes will apply from {{date}}; earlier weeks will not change.",

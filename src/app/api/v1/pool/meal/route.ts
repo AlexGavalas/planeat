@@ -1,4 +1,4 @@
-import { createMealInPool, fetchMealPool } from '~api/meal-pool';
+import { fetchMealPool, saveMealTemplates } from '~api/meal-pool';
 import { requireMealPlanAccess } from '~api/professional';
 import { postRequestSchema } from '~schemas/meal-pool';
 import { withUser } from '~util/session';
@@ -30,8 +30,8 @@ export const GET = withUser(async ({ request, user }) => {
 
         return Response.json({
             data: {
-                client: client.map(({ content }) => content),
-                own: own.map(({ content }) => content),
+                client,
+                own,
             },
         });
     }
@@ -42,15 +42,15 @@ export const GET = withUser(async ({ request, user }) => {
     });
 
     return Response.json({
-        data: data.map(({ content }) => content),
+        data,
     });
 });
 
 export const POST = withUser(async ({ request, user }) => {
-    const { content } = postRequestSchema.parse(await request.json());
+    const { templates } = postRequestSchema.parse(await request.json());
 
-    await createMealInPool({
-        content,
+    await saveMealTemplates({
+        templates,
         userId: user.id,
     });
 

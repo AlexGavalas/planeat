@@ -137,6 +137,7 @@ export const useMeals: UseMeals = (explicitOwnerUserId) => {
         timestamp,
         userId,
         value,
+        items,
         note,
         rating,
     }) => {
@@ -145,6 +146,7 @@ export const useMeals: UseMeals = (explicitOwnerUserId) => {
         const editedMeal = {
             ...meal,
             day,
+            items: items ?? meal?.items ?? [],
             meal: value,
             note,
             rating,
@@ -159,6 +161,7 @@ export const useMeals: UseMeals = (explicitOwnerUserId) => {
         sectionKey,
         userId,
         value,
+        items,
         note,
         rating,
     }) => {
@@ -171,6 +174,7 @@ export const useMeals: UseMeals = (explicitOwnerUserId) => {
             const meal = mealsMap[key];
 
             saveEntryCell({
+                items,
                 meal,
                 note,
                 rating,
