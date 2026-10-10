@@ -10,6 +10,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: true });
 const config = {
     reactCompiler: true,
     experimental: {
+        agentUpgrade: 'latest',
         turbopackRustReactCompiler: !isAnalyze,
     },
     reactStrictMode: true,
