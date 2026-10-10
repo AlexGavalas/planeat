@@ -9,6 +9,7 @@ import { useMeals } from '~store/hooks';
 import styles from './calendar.module.css';
 import { Content } from './content';
 import { Controls } from './controls';
+import { DailyNutrition } from './daily-nutrition';
 import { Header } from './header';
 import { MobileContent } from './mobile-content';
 
@@ -30,6 +31,7 @@ export const Calendar = ({
             <Space h="md" />
             <div ref={ref} className={styles.desktopCalendar}>
                 <Header />
+                <DailyNutrition />
                 <Card>
                     <Content />
                 </Card>

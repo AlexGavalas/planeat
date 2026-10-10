@@ -5,13 +5,14 @@ import {
 } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
+import { type EditedMealItem } from '~types/meal';
 import {
     showErrorNotification,
     showSuccessNotification,
 } from '~util/notification';
 
 type CreateMealPoolProps = {
-    content: string[];
+    templates: { content: string; id?: number; items: EditedMealItem[] }[];
 };
 
 type UseCreateMealPool = (params?: {
@@ -23,13 +24,13 @@ export const useCreateMealPool: UseCreateMealPool = ({ onSuccess } = {}) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ content }) => {
-            if (!content.length) {
+        mutationFn: async ({ templates }) => {
+            if (!templates.length) {
                 throw new Error(t('errors.preview_empty'));
             }
 
             const response = await fetch('/api/v1/pool/meal', {
-                body: JSON.stringify({ content }),
+                body: JSON.stringify({ templates }),
                 headers: {
                     'Content-Type': 'application/json',
                 },

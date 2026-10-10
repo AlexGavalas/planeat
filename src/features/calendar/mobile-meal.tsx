@@ -8,7 +8,12 @@ import {
     useMealPlanOwnerId,
 } from '~features/meal-plan-owner';
 import { useMeals } from '~store/hooks';
-import { type EditedMeal, type Meal } from '~types/meal';
+import {
+    type EditedMeal,
+    type EditedMealItem,
+    type Meal,
+    type MealChange,
+} from '~types/meal';
 import { useOpenContextModal } from '~util/modal';
 
 import styles from './mobile-content.module.css';
@@ -49,13 +54,14 @@ export const MobileMeal = ({
     const [rowKey] = id.split('_');
     const Icon = MEAL_ICON[rowKey as RowKey];
 
-    const handleSave = (newMeal: Partial<Meal>): Promise<void> => {
+    const handleSave = (newMeal: MealChange): Promise<void> => {
         if (!ownerUserId || !newMeal.meal) {
             return Promise.resolve();
         }
 
         if (isRow) {
             saveEntryRow({
+                items: newMeal.items,
                 note: newMeal.note,
                 rating: newMeal.rating,
                 sectionKey: id,
@@ -64,6 +70,7 @@ export const MobileMeal = ({
             });
         } else {
             saveEntryCell({
+                items: newMeal.items,
                 meal,
                 note: newMeal.note,
                 rating: newMeal.rating,
@@ -92,9 +99,11 @@ export const MobileMeal = ({
         openEditMealModal({
             centered: true,
             innerProps: {
+                initialItems: meal?.items ?? [],
                 initialMeal: meal?.meal ?? '',
                 onDelete: handleDelete,
-                onSave: (value: string) => handleSave({ ...meal, meal: value }),
+                onSave: (value: string, items: EditedMealItem[]) =>
+                    handleSave({ ...meal, items, meal: value }),
                 ownerUserId,
             },
             size: 'lg',

@@ -12,6 +12,7 @@ import { getDaysOfWeek } from '~util/date';
 import styles from './mobile-content.module.css';
 import { MobileDayButton } from './mobile-day-button';
 import { MobileMeal } from './mobile-meal';
+import { NutritionSummary } from './nutrition-summary';
 import type { RowItem } from './types';
 
 export const MobileContent = ({
@@ -102,6 +103,21 @@ export const MobileContent = ({
                     {localizedDays[selectedDay]?.label}{' '}
                     {format(day.timestamp, 'dd/MM')}
                 </Title>
+                <NutritionSummary
+                    meals={ROWS.map(({ key }) => {
+                        const sectionDay = [
+                            'morning',
+                            'snack1',
+                            'snack2',
+                        ].includes(key)
+                            ? daysOfWeek[0]
+                            : day;
+                        const id = sectionDay
+                            ? `${key}_${sectionDay.label}`
+                            : '';
+                        return unsavedChanges[id] ?? mealsMap[id];
+                    })}
+                />
                 {dailyRows.map((row) => renderMeal(row, false))}
             </Stack>
         </Stack>

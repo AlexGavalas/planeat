@@ -1,15 +1,17 @@
 import { type UseQueryResult, useQuery } from '@tanstack/react-query';
 
+import { type MealTemplate } from '~types/meal-pool';
+
 export type MealPoolSearchResults = {
-    client: string[];
-    own: string[];
+    client: MealTemplate[];
+    own: MealTemplate[];
 };
 
 type UseGetMealPool = (params: {
     includeClient?: boolean;
     ownerUserId?: number;
     searchQuery: string;
-}) => UseQueryResult<string[] | MealPoolSearchResults>;
+}) => UseQueryResult<MealTemplate[] | MealPoolSearchResults>;
 
 export const useGetMealPool: UseGetMealPool = ({
     includeClient = false,
@@ -27,7 +29,7 @@ export const useGetMealPool: UseGetMealPool = ({
             const response = await fetch(`/api/v1/pool/meal?${query}`);
 
             const { data } = (await response.json()) as {
-                data?: string[] | MealPoolSearchResults;
+                data?: MealTemplate[] | MealPoolSearchResults;
             };
 
             return data ?? (includeClient ? { client: [], own: [] } : []);

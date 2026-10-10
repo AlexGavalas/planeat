@@ -1,12 +1,14 @@
 'use client';
 
-import { Button, Group, Text, Title } from '@mantine/core';
-import { Clock, NavArrowRight } from 'iconoir-react';
+import { ActionIcon, Button, Group, Text, Title } from '@mantine/core';
+import { Clock, NavArrowDown, NavArrowRight } from 'iconoir-react';
 import Link from 'next/link';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Card } from '~components/card';
 import { MEAL_ICON } from '~constants/calendar';
+import { NutritionSummary } from '~features/calendar/nutrition-summary';
 
 import { type MealItem } from './home-types';
 import styles from './home.module.css';
@@ -20,7 +22,12 @@ type MealRowProps = Readonly<{
 
 function MealRow({ day, index, item, nextMealIndex }: MealRowProps) {
     const { t } = useTranslation();
+    const [expanded, setExpanded] = useState(false);
     const Icon = MEAL_ICON[item.key];
+    const hasNutrition = Boolean(item.mealRecord?.items?.length);
+    const handleToggleNutrition = () => {
+        setExpanded((value) => !value);
+    };
     const isNext = index === nextMealIndex;
     const isEarlier = nextMealIndex < 0 || index < nextMealIndex;
     const status = !item.meal
@@ -32,39 +39,66 @@ function MealRow({ day, index, item, nextMealIndex }: MealRowProps) {
             : t('home_dashboard.planned');
 
     return (
-        <div className={styles.mealRow}>
-            <Text c="dimmed" size="sm">
-                {item.time}
-            </Text>
-            <span className={styles.mealIcon}>
-                <Icon aria-hidden />
-            </span>
-            <div className={styles.mealCopy}>
-                <Text fw="var(--mantine-font-weight-medium)">
-                    {item.meal ?? t('home_dashboard.not_planned')}
+        <div className={styles.mealEntry}>
+            <div className={styles.mealRow}>
+                <Text c="dimmed" size="sm">
+                    {item.time}
                 </Text>
-                <Text c={isNext ? 'brand' : 'dimmed'} size="sm">
-                    {status}
-                </Text>
+                <span className={styles.mealIcon}>
+                    <Icon aria-hidden />
+                </span>
+                <div className={styles.mealCopy}>
+                    <Text fw="var(--mantine-font-weight-medium)">
+                        {item.meal ?? t('home_dashboard.not_planned')}
+                    </Text>
+                    <Text c={isNext ? 'brand' : 'dimmed'} size="sm">
+                        {status}
+                    </Text>
+                </div>
+                <Group gap={4} wrap="nowrap">
+                    {item.meal && isEarlier && (
+                        <Clock
+                            aria-label={t('home_dashboard.earlier_today')}
+                            className={styles.mealStatusIcon}
+                        />
+                    )}
+                    {hasNutrition && (
+                        <ActionIcon
+                            aria-expanded={expanded}
+                            aria-label={t(
+                                expanded
+                                    ? 'nutrition.hide_details'
+                                    : 'nutrition.show_details',
+                            )}
+                            className={styles.nutritionToggle}
+                            onClick={handleToggleNutrition}
+                            variant="subtle"
+                        >
+                            <NavArrowDown aria-hidden />
+                        </ActionIcon>
+                    )}
+                    {!item.meal && (
+                        <Button
+                            aria-label={t('home_dashboard.plan_meal', {
+                                meal: t(`row.${item.key}`),
+                            })}
+                            component={Link}
+                            href={`/meal-plan?date=${day}&meal=${item.key}`}
+                            size="compact-sm"
+                            variant="subtle"
+                        >
+                            {t('home_dashboard.plan')}
+                        </Button>
+                    )}
+                </Group>
             </div>
-            {item.meal && isEarlier && (
-                <Clock
-                    aria-label={t('home_dashboard.earlier_today')}
-                    className={styles.mealStatusIcon}
-                />
-            )}
-            {!item.meal && (
-                <Button
-                    aria-label={t('home_dashboard.plan_meal', {
-                        meal: t(`row.${item.key}`),
-                    })}
-                    component={Link}
-                    href={`/meal-plan?date=${day}&meal=${item.key}`}
-                    size="compact-sm"
-                    variant="subtle"
-                >
-                    {t('home_dashboard.plan')}
-                </Button>
+            {expanded && (
+                <div className={styles.mealNutrition}>
+                    <NutritionSummary
+                        meals={[item.mealRecord]}
+                        showMealDistribution={false}
+                    />
+                </div>
             )}
         </div>
     );

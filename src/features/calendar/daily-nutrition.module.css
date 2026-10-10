@@ -1,0 +1,21 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: var(--grid-config);
+    gap: var(--grid-gap);
+    margin-bottom: var(--mantine-spacing-sm);
+}
+
+.day {
+    min-width: 0;
+    text-align: center;
+}
+
+.button {
+    border-radius: var(--mantine-radius-sm);
+    padding: var(--mantine-spacing-micro);
+    width: 100%;
+}
+
+.button:hover {
+    background: var(--mantine-color-gray-0);
+}

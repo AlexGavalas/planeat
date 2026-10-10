@@ -10,13 +10,18 @@ import { EditPencil, Notes, ThreeStars } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 
 import { CopyButton } from '~components/copy-button';
-import { type EditedMeal, type Meal } from '~types/meal';
+import {
+    type EditedMeal,
+    type EditedMealItem,
+    type Meal,
+    type MealChange,
+} from '~types/meal';
 import { useOpenContextModal } from '~util/modal';
 
 type CellOverlayProps = Readonly<{
     canEditAnnotations?: boolean;
     onDelete: () => Promise<void> | void;
-    onSave: (value: Partial<Meal>) => Promise<void> | void;
+    onSave: (value: MealChange) => Promise<void> | void;
     meal?: Meal | EditedMeal;
     ownerUserId?: number;
 }>;
@@ -49,8 +54,8 @@ export const CellOverlay = ({
     const isMealSaved = isSavedMeal(meal);
     const isMealFilled = isFilledMeal(meal);
 
-    const handleMealSave = async (value: string) => {
-        await onSave({ ...meal, meal: value });
+    const handleMealSave = async (value: string, items: EditedMealItem[]) => {
+        await onSave({ ...meal, items, meal: value });
     };
 
     const handleMealNoteSave = async (note: string) => {
@@ -73,6 +78,7 @@ export const CellOverlay = ({
         openEditMealModal({
             centered: true,
             innerProps: {
+                initialItems: meal?.items ?? [],
                 initialMeal: meal?.meal ?? '',
                 onDelete,
                 onSave: handleMealSave,

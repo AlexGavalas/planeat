@@ -17,12 +17,17 @@ exports[`<Cell /> renders 1`] = `
       <div
         class="m_4451eb3a mantine-Center-root"
       >
-        <p
-          class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
-          style="padding: var(--app-space-calendar-cell); text-align: center;"
+        <div
+          class="m_6d731127 mantine-Stack-root"
+          style="--stack-gap: var(--mantine-spacing-xs); --stack-align: center; --stack-justify: flex-start; padding: var(--app-space-calendar-cell);"
         >
-          N/A
-        </p>
+          <p
+            class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+            style="text-align: center;"
+          >
+            N/A
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -46,12 +51,17 @@ exports[`<Cell /> when the user has a meal renders 1`] = `
       <div
         class="m_4451eb3a mantine-Center-root"
       >
-        <p
-          class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
-          style="padding: var(--app-space-calendar-cell); text-align: center;"
+        <div
+          class="m_6d731127 mantine-Stack-root"
+          style="--stack-gap: var(--mantine-spacing-xs); --stack-align: center; --stack-justify: flex-start; padding: var(--app-space-calendar-cell);"
         >
-          test meal
-        </p>
+          <p
+            class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+            style="text-align: center;"
+          >
+            test meal
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -142,12 +152,17 @@ exports[`<Cell /> when the user has a meal when the meal has a note renders 1`] 
       <div
         class="m_4451eb3a mantine-Center-root"
       >
-        <p
-          class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
-          style="padding: var(--app-space-calendar-cell); text-align: center;"
+        <div
+          class="m_6d731127 mantine-Stack-root"
+          style="--stack-gap: var(--mantine-spacing-xs); --stack-align: center; --stack-justify: flex-start; padding: var(--app-space-calendar-cell);"
         >
-          test meal
-        </p>
+          <p
+            class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
+            style="text-align: center;"
+          >
+            test meal
+          </p>
+        </div>
       </div>
     </div>
   </div>

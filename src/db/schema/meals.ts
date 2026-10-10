@@ -3,6 +3,7 @@ import {
     date,
     doublePrecision,
     index,
+    integer,
     pgTable,
     primaryKey,
     text,
@@ -27,6 +28,32 @@ export const meals = pgTable(
             .references(() => users.id, { onDelete: 'cascade' }),
     },
     (table) => [index('meals_user_id_day_idx').on(table.user_id, table.day)],
+);
+
+export const mealItems = pgTable(
+    'meal_items',
+    {
+        alternative_name: text('alternative_name'),
+        basis_grams: doublePrecision('basis_grams').notNull().default(100),
+        brand: text('brand'),
+        calories: doublePrecision('calories'),
+        carbohydrates: doublePrecision('carbohydrates'),
+        fat: doublePrecision('fat'),
+        fiber: doublePrecision('fiber'),
+        id: uuid('id').defaultRandom().primaryKey(),
+        meal_id: uuid('meal_id')
+            .notNull()
+            .references(() => meals.id, { onDelete: 'cascade' }),
+        name: text('name').notNull(),
+        position: integer('position').notNull(),
+        protein: doublePrecision('protein'),
+        provider_food_id: text('provider_food_id').notNull(),
+        quantity_grams: doublePrecision('quantity_grams').notNull(),
+        salt: doublePrecision('salt'),
+        source: text('source').notNull(),
+        sugar: doublePrecision('sugar'),
+    },
+    (table) => [index('meal_items_meal_id_idx').on(table.meal_id)],
 );
 
 export const mealZoneTimes = pgTable(
@@ -67,5 +94,33 @@ export const mealPool = pgTable(
             table.user_id,
             table.content,
         ),
+    ],
+);
+
+export const mealPoolItems = pgTable(
+    'meal_pool_items',
+    {
+        alternative_name: text('alternative_name'),
+        basis_grams: doublePrecision('basis_grams').notNull().default(100),
+        brand: text('brand'),
+        calories: doublePrecision('calories'),
+        carbohydrates: doublePrecision('carbohydrates'),
+        fat: doublePrecision('fat'),
+        fiber: doublePrecision('fiber'),
+        id: uuid('id').defaultRandom().primaryKey(),
+        meal_pool_id: bigint('meal_pool_id', { mode: 'number' })
+            .notNull()
+            .references(() => mealPool.id, { onDelete: 'cascade' }),
+        name: text('name').notNull(),
+        position: integer('position').notNull(),
+        protein: doublePrecision('protein'),
+        provider_food_id: text('provider_food_id').notNull(),
+        quantity_grams: doublePrecision('quantity_grams').notNull(),
+        salt: doublePrecision('salt'),
+        source: text('source').notNull(),
+        sugar: doublePrecision('sugar'),
+    },
+    (table) => [
+        index('meal_pool_items_meal_pool_id_idx').on(table.meal_pool_id),
     ],
 );

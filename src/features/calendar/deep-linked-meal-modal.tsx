@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useMealPlanOwnerId } from '~features/meal-plan-owner';
 import { useCurrentWeek, useMeals, useUnsavedChanges } from '~store/hooks';
+import { type EditedMealItem } from '~types/meal';
 import { type MealZoneKey } from '~types/meal-zone';
 import { useOpenContextModal } from '~util/modal';
 
@@ -63,6 +64,7 @@ export function DeepLinkedMealModal({
         openMealModal({
             centered: true,
             innerProps: {
+                initialItems: meal?.items ?? [],
                 initialMeal: meal?.meal ?? '',
                 onDelete: () => {
                     if (!meal) {
@@ -74,9 +76,10 @@ export function DeepLinkedMealModal({
                         deleteEntryCell({ meal });
                     }
                 },
-                onSave: (value: string) => {
+                onSave: (value: string, items: EditedMealItem[]) => {
                     if (isRow) {
                         saveEntryRow({
+                            items,
                             note: meal?.note,
                             rating: meal?.rating,
                             sectionKey,
@@ -85,6 +88,7 @@ export function DeepLinkedMealModal({
                         });
                     } else {
                         saveEntryCell({
+                            items,
                             meal,
                             note: meal?.note,
                             rating: meal?.rating,

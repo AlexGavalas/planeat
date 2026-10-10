@@ -6,14 +6,14 @@ import { type FoodSearchResult } from '~types/food-search';
 
 type FoodResultProps = Readonly<{
     food: FoodSearchResult;
-    onSelect: (meal: string) => void;
+    onSelect: (food: FoodSearchResult) => void;
 }>;
 
 export const FoodResult = ({ food, onSelect }: FoodResultProps) => {
     const { i18n, t } = useTranslation();
 
     const handleClick = (() => {
-        onSelect([food.brand, food.name].filter(Boolean).join(' '));
+        onSelect(food);
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 
     const format = new Intl.NumberFormat(i18n.language, {

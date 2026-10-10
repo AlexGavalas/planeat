@@ -38,9 +38,11 @@ export function Home({
     const nextMealIndex = getNextMealIndex(date, mealZoneTimes);
     const mealItems: MealItem[] = ROWS.map(({ key }) => {
         const sectionKey = `${key}_${format(now, 'EEE dd/MM/yyyy')}`;
+        const mealRecord = dailyMeals[sectionKey];
         return {
             key,
-            meal: dailyMeals[sectionKey]?.meal.trim() || null,
+            meal: mealRecord?.meal.trim() || null,
+            mealRecord,
             time: mealZoneTimes[key],
         };
     });

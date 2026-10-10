@@ -14,14 +14,17 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { type FoodSearchCountry } from '~types/food-search';
+import {
+    type FoodSearchCountry,
+    type FoodSearchResult,
+} from '~types/food-search';
 
 import styles from './food-database-search.module.css';
 import { FoodResult } from './food-result';
 import { useFoodSearch } from './hooks/use-food-search';
 
 type FoodDatabaseSearchProps = Readonly<{
-    onSelect: (meal: string) => void;
+    onSelect: (food: FoodSearchResult) => void;
 }>;
 
 export const FoodDatabaseSearch = ({

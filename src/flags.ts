@@ -31,7 +31,7 @@ const localE2eAdapter: Adapter<boolean, Entities> = {
 export const foodDatabaseSearch = flag<boolean, Entities>({
     adapter:
         process.env.E2E_MODE === 'local' ? localE2eAdapter : vercelAdapter(),
-    defaultValue: false,
+    defaultValue: process.env.NODE_ENV === 'development',
     description: 'Show BLS and Open Food Facts search in meal modals',
     identify,
     key: 'food-database-search',
