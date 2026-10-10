@@ -35,11 +35,13 @@ export const viewport: Viewport = {
     viewportFit: 'cover',
 };
 async function AppContent({ children }: Readonly<{ children: ReactNode }>) {
-    const [session, profile, isFoodDatabaseSearchEnabled] = await Promise.all([
-        getServerSession(),
-        getCurrentUser(),
-        foodDatabaseSearch(),
-    ]);
+    const [session, profile, isFoodDatabaseSearchEnabled, requestDate] =
+        await Promise.all([
+            getServerSession(),
+            getCurrentUser(),
+            foodDatabaseSearch(),
+            getRequestDate(),
+        ]);
 
     const language = profile?.language === 'gr' ? 'gr' : 'en';
 
@@ -55,7 +57,7 @@ async function AppContent({ children }: Readonly<{ children: ReactNode }>) {
             dehydratedState={dehydrate(queryClient)}
             featureFlags={{ isFoodDatabaseSearchEnabled }}
             initialWeek={format(
-                startOfWeek(getRequestDate(), { weekStartsOn: 1 }),
+                startOfWeek(requestDate, { weekStartsOn: 1 }),
                 'yyyy-MM-dd',
             )}
             language={language}

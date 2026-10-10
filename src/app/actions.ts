@@ -108,7 +108,7 @@ export async function saveMealZoneTimes(
     }
 
     const effectiveFrom = format(
-        addWeeks(startOfWeek(getRequestDate(), { weekStartsOn: 1 }), 1),
+        addWeeks(startOfWeek(await getRequestDate(), { weekStartsOn: 1 }), 1),
         'yyyy-MM-dd',
     );
 

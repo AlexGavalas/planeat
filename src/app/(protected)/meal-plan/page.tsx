@@ -33,7 +33,7 @@ async function MealPlanContent({ searchParams }: MealPlanPageProps) {
         date && isMatch(date, 'yyyy-MM-dd') ? parseISO(date) : null;
 
     const requestedDate = parsedDate && isValid(parsedDate) ? parsedDate : null;
-    const now = requestedDate ?? getRequestDate();
+    const now = requestedDate ?? (await getRequestDate());
 
     const startDate = format(
         startOfWeek(now, { weekStartsOn: 1 }),

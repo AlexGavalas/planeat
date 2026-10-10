@@ -31,7 +31,7 @@ export const GET = withUser(async ({ request, user }) => {
 
     const effectiveDate = parsedWeek
         ? startOfWeek(parsedWeek, { weekStartsOn: 1 })
-        : addWeeks(startOfWeek(getRequestDate(), { weekStartsOn: 1 }), 1);
+        : addWeeks(startOfWeek(await getRequestDate(), { weekStartsOn: 1 }), 1);
     const effectiveFrom = format(effectiveDate, 'yyyy-MM-dd');
     await requireMealPlanAccess({ actorUserId: user.id, ownerUserId });
     const data = await fetchMealZoneTimes({

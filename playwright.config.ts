@@ -6,6 +6,7 @@ import {
     VISUAL_AUTH_STATE_PATH,
 } from './e2e/support/auth';
 import { loadE2eEnvironment } from './e2e/support/environment';
+import { E2E_REQUEST_DATE_HEADER } from './src/constants/e2e';
 
 const environment = loadE2eEnvironment();
 const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
@@ -86,12 +87,15 @@ export default defineConfig({
     testDir: './e2e',
     use: {
         baseURL: environment.baseUrl,
-        extraHTTPHeaders: bypassSecret
-            ? {
-                  'x-vercel-protection-bypass': bypassSecret,
-                  'x-vercel-set-bypass-cookie': 'true',
-              }
-            : {},
+        extraHTTPHeaders: {
+            [E2E_REQUEST_DATE_HEADER]: environment.requestDate,
+            ...(bypassSecret
+                ? {
+                      'x-vercel-protection-bypass': bypassSecret,
+                      'x-vercel-set-bypass-cookie': 'true',
+                  }
+                : {}),
+        },
         trace: 'on-first-retry',
     },
     workers: 1,

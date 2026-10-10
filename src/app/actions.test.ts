@@ -33,7 +33,7 @@ describe('server actions', () => {
             professional_is_discoverable: false,
             roles: [],
         } as unknown as UserProfile);
-        jest.mocked(getRequestDate).mockReturnValue(
+        jest.mocked(getRequestDate).mockResolvedValue(
             new Date('2026-10-07T12:00:00Z'),
         );
     });

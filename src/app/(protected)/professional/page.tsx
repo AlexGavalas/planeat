@@ -57,7 +57,7 @@ async function ProfessionalDashboardContent({
     let detail = null;
 
     if (selectedClient) {
-        const now = getRequestDate();
+        const now = await getRequestDate();
         const startDate = format(
             startOfWeek(now, { weekStartsOn: 1 }),
             'yyyy-MM-dd',

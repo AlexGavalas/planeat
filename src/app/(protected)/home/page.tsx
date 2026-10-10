@@ -12,7 +12,7 @@ import { createQueryClient } from '~util/query-client';
 
 async function HomeContent() {
     const profile = await requireUser();
-    const now = getRequestDate();
+    const now = await getRequestDate();
     const day = format(now, 'yyyy-MM-dd');
     const [meals, mealZoneTimes, measurementSummary] = await Promise.all([
         fetchMeals({

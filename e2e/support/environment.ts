@@ -1,10 +1,13 @@
 import { config as loadDotenv } from 'dotenv';
 import { resolve } from 'path';
 
+import { DEFAULT_E2E_REQUEST_DATE } from '../../src/constants/e2e';
+
 export type E2eEnvironment = {
     baseUrl: string;
     databaseUrl?: string;
     mode: 'local' | 'preview';
+    requestDate: string;
     serverEnvironment: Record<string, string>;
 };
 
@@ -45,9 +48,13 @@ export const loadE2eEnvironment = (): E2eEnvironment => {
     );
 
     const mode = process.env.E2E_MODE === 'preview' ? 'preview' : 'local';
+    const requestDate = getEnvironmentValue(
+        'E2E_REQUEST_DATE',
+        DEFAULT_E2E_REQUEST_DATE,
+    );
 
     if (mode === 'preview') {
-        return { baseUrl, mode, serverEnvironment: {} };
+        return { baseUrl, mode, requestDate, serverEnvironment: {} };
     }
 
     const databaseUrl = getEnvironmentValue('E2E_DATABASE_URL');
@@ -66,11 +73,6 @@ export const loadE2eEnvironment = (): E2eEnvironment => {
 
     const nextAuthUrl = getEnvironmentValue('NEXTAUTH_URL', baseUrl);
 
-    const requestDate = getEnvironmentValue(
-        'E2E_REQUEST_DATE',
-        '2026-01-12T12:00:00.000Z',
-    );
-
     assertE2eDatabaseUrl(databaseUrl);
 
     const serverEnvironment = {
@@ -88,5 +90,5 @@ export const loadE2eEnvironment = (): E2eEnvironment => {
         DATABASE_URL: databaseUrl,
     });
 
-    return { baseUrl, databaseUrl, mode, serverEnvironment };
+    return { baseUrl, databaseUrl, mode, requestDate, serverEnvironment };
 };

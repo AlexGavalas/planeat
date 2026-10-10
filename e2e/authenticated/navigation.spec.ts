@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test';
 
+import { DEFAULT_E2E_REQUEST_DATE } from '../../src/constants/e2e';
+
+const FIXED_E2E_DAY = DEFAULT_E2E_REQUEST_DATE.slice(0, 10);
+
 test('loads protected routes for a registered user', async ({ page }) => {
     await page.goto('/');
 
@@ -28,9 +32,7 @@ test('homepage actions open their advertised destinations', async ({
     await page.goto('/home');
 
     await page.getByRole('link', { name: 'Plan Lunch' }).click();
-    await expect(page).toHaveURL(
-        /\/meal-plan\?date=\d{4}-\d{2}-\d{2}&meal=lunch$/,
-    );
+    await expect(page).toHaveURL(`/meal-plan?date=${FIXED_E2E_DAY}&meal=lunch`);
     const mealDialog = page.getByRole('dialog', { name: 'Edit meal' });
     await expect(mealDialog).toBeVisible();
     await expect(mealDialog.getByLabel('The meal')).toBeVisible();
@@ -38,7 +40,7 @@ test('homepage actions open their advertised destinations', async ({
 
     await page.goto('/home');
     await page.getByRole('link', { name: 'View meal plan' }).click();
-    await expect(page).toHaveURL(/\/meal-plan\?date=\d{4}-\d{2}-\d{2}$/);
+    await expect(page).toHaveURL(`/meal-plan?date=${FIXED_E2E_DAY}`);
 
     await page.goto('/home');
     await page.getByRole('link', { name: 'Details' }).click();
