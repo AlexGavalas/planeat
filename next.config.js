@@ -1,9 +1,5 @@
 // @ts-check
 
-const isAnalyze = process.env.ANALYZE === 'true';
-
-const withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: true });
-
 /**
  * @type {import('next').NextConfig}
  **/
@@ -11,7 +7,7 @@ const config = {
     reactCompiler: true,
     experimental: {
         agentUpgrade: 'latest',
-        turbopackRustReactCompiler: !isAnalyze,
+        turbopackRustReactCompiler: true,
     },
     reactStrictMode: true,
     images: {
@@ -29,4 +25,4 @@ const config = {
     },
 };
 
-module.exports = isAnalyze ? withBundleAnalyzer(config) : config;
+module.exports = config;
