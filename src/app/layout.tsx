@@ -19,46 +19,49 @@ import '@mantine/notifications/styles.css';
 import '../styles/globals.css';
 
 const APPLE_STARTUP_SCREENS = [
-    [320, 568, 2],
-    [375, 667, 2],
-    [414, 736, 3],
-    [375, 812, 3],
-    [414, 896, 2],
-    [414, 896, 3],
-    [390, 844, 3],
-    [393, 852, 3],
-    [402, 874, 3],
-    [430, 932, 3],
-    [440, 956, 3],
-    [744, 1133, 2],
-    [768, 1024, 2],
-    [810, 1080, 2],
-    [820, 1180, 2],
-    [834, 1112, 2],
-    [834, 1194, 2],
-    [834, 1210, 2],
-    [1024, 1366, 2],
-    [1032, 1376, 2],
+    [320, 568, 2, 640, 1136],
+    [360, 780, 3, 1080, 2340],
+    [375, 667, 2, 750, 1334],
+    [414, 736, 3, 1080, 1920],
+    [375, 812, 3, 1125, 2436],
+    [414, 896, 2, 828, 1792],
+    [414, 896, 3, 1242, 2688],
+    [390, 844, 3, 1170, 2532],
+    [393, 852, 3, 1179, 2556],
+    [402, 874, 3, 1206, 2622],
+    [420, 912, 3, 1260, 2736],
+    [428, 926, 3, 1284, 2778],
+    [430, 932, 3, 1290, 2796],
+    [440, 956, 3, 1320, 2868],
+    [744, 1133, 2, 1488, 2266],
+    [768, 1024, 2, 1536, 2048],
+    [810, 1080, 2, 1620, 2160],
+    [820, 1180, 2, 1640, 2360],
+    [834, 1112, 2, 1668, 2224],
+    [834, 1194, 2, 1668, 2388],
+    [834, 1210, 2, 1668, 2420],
+    [1024, 1366, 2, 2048, 2732],
+    [1032, 1376, 2, 2064, 2752],
 ] as const;
 
 const appleStartupImages = [
     '/images/apple-startup/apple-startup-1320x2868.png',
-    ...APPLE_STARTUP_SCREENS.flatMap(([width, height, pixelRatio]) => {
-        const media = `(device-width: ${width}px) and (device-height: ${height}px) and (-webkit-device-pixel-ratio: ${pixelRatio})`;
-        const portraitWidth = width * pixelRatio;
-        const portraitHeight = height * pixelRatio;
+    ...APPLE_STARTUP_SCREENS.flatMap(
+        ([width, height, pixelRatio, portraitWidth, portraitHeight]) => {
+            const media = `(device-width: ${width}px) and (device-height: ${height}px) and (-webkit-device-pixel-ratio: ${pixelRatio})`;
 
-        return [
-            {
-                media: `${media} and (orientation: portrait)`,
-                url: `/images/apple-startup/apple-startup-${portraitWidth}x${portraitHeight}.png`,
-            },
-            {
-                media: `${media} and (orientation: landscape)`,
-                url: `/images/apple-startup/apple-startup-${portraitHeight}x${portraitWidth}.png`,
-            },
-        ];
-    }),
+            return [
+                {
+                    media: `${media} and (orientation: portrait)`,
+                    url: `/images/apple-startup/apple-startup-${portraitWidth}x${portraitHeight}.png`,
+                },
+                {
+                    media: `${media} and (orientation: landscape)`,
+                    url: `/images/apple-startup/apple-startup-${portraitHeight}x${portraitWidth}.png`,
+                },
+            ];
+        },
+    ),
 ];
 
 export const metadata: Metadata = {
