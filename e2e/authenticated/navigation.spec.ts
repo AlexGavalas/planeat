@@ -35,7 +35,7 @@ test('homepage actions open their advertised destinations', async ({
     await expect(page).toHaveURL(`/meal-plan?date=${FIXED_E2E_DAY}&meal=lunch`);
     const mealDialog = page.getByRole('dialog', { name: 'Edit meal' });
     await expect(mealDialog).toBeVisible();
-    await expect(mealDialog.getByLabel('The meal')).toBeVisible();
+    await expect(mealDialog.getByLabel('Meal name')).toBeVisible();
     await mealDialog.getByRole('button', { name: 'Cancel' }).click();
 
     await page.goto('/home');

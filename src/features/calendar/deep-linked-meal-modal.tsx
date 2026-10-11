@@ -10,6 +10,8 @@ import { type EditedMealItem } from '~types/meal';
 import { type MealZoneKey } from '~types/meal-zone';
 import { useOpenContextModal } from '~util/modal';
 
+import { MEAL_MODAL_OPTIONS } from '../modals/meal/meal-modal-options';
+
 const SHARED_MEAL_ZONES: MealZoneKey[] = ['morning', 'snack1', 'snack2'];
 
 type DeepLinkedMealModalProps = Readonly<{
@@ -62,7 +64,7 @@ export function DeepLinkedMealModal({
 
         openedTarget.current = targetKey;
         openMealModal({
-            centered: true,
+            ...MEAL_MODAL_OPTIONS,
             innerProps: {
                 initialItems: meal?.items ?? [],
                 initialMeal: meal?.meal ?? '',
@@ -101,7 +103,6 @@ export function DeepLinkedMealModal({
                 },
                 ownerUserId,
             },
-            size: 'lg',
             title: t('edit_meal'),
         });
     }, [

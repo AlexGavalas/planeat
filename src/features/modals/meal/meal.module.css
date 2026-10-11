@@ -1,0 +1,94 @@
+.modalInner {
+    padding: var(--mantine-spacing-md);
+}
+
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    height: min(48rem, calc(100dvh - 2rem));
+    overflow: hidden;
+}
+
+.modalHeader {
+    flex: 0 0 auto;
+    border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.modalBody {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 0;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    padding: var(--mantine-spacing-md);
+}
+
+.editorColumn,
+.sourcePanel {
+    height: 100%;
+}
+
+.sourcePanel {
+    background: var(--app-color-surface-mobile-card);
+}
+
+.actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mantine-spacing-sm);
+    border-top: 1px solid var(--mantine-color-default-border);
+    background: var(--app-color-surface-sticky);
+    padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+}
+
+.primaryActions {
+    display: flex;
+    gap: var(--mantine-spacing-sm);
+}
+
+@media (max-width: 48em) {
+    .modalInner {
+        padding: 0;
+    }
+
+    .modalContent {
+        width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        border-radius: 0;
+    }
+
+    .content {
+        padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+    }
+
+    .actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .deleteButton {
+        align-self: flex-start;
+    }
+
+    .primaryActions {
+        width: 100%;
+    }
+
+    .primaryActions > button {
+        flex: 1;
+    }
+}

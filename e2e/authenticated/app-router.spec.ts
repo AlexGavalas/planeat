@@ -43,7 +43,9 @@ test('saves calendar drafts through a server action and copies the week', async 
     await dialog
         .locator('textarea[name="meal"]')
         .fill('App Router migration meal');
-    await dialog.getByRole('button', { exact: true, name: 'Save' }).click();
+    await dialog
+        .getByRole('button', { exact: true, name: 'Save changes' })
+        .click();
     await expect(dialog).toBeHidden();
     await expect(mealText).toBeVisible();
 

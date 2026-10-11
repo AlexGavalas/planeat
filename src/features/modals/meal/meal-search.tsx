@@ -44,6 +44,11 @@ export const MealSearch = ({
                     />
                 ))}
             </List>
+            {results.own.length === 0 && (
+                <Text c="dimmed" mt="xs" size="sm">
+                    {t('modals.meal_edit.no_saved_meals')}
+                </Text>
+            )}
             {showClientMeals && (
                 <>
                     <Text fw="var(--mantine-font-weight-semibold)" mt="md">
@@ -58,6 +63,11 @@ export const MealSearch = ({
                             />
                         ))}
                     </List>
+                    {results.client.length === 0 && (
+                        <Text c="dimmed" mt="xs" size="sm">
+                            {t('modals.meal_edit.no_client_meals')}
+                        </Text>
+                    )}
                 </>
             )}
         </>

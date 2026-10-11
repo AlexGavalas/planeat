@@ -16,6 +16,7 @@ import {
 } from '~types/meal';
 import { useOpenContextModal } from '~util/modal';
 
+import { MEAL_MODAL_OPTIONS } from '../modals/meal/meal-modal-options';
 import styles from './mobile-content.module.css';
 import { MobileMealActions } from './mobile-meal-actions';
 import { MobileMealDetails } from './mobile-meal-details';
@@ -97,7 +98,7 @@ export const MobileMeal = ({
 
     const handleOpenEdit = (): void => {
         openEditMealModal({
-            centered: true,
+            ...MEAL_MODAL_OPTIONS,
             innerProps: {
                 initialItems: meal?.items ?? [],
                 initialMeal: meal?.meal ?? '',
@@ -106,7 +107,6 @@ export const MobileMeal = ({
                     handleSave({ ...meal, items, meal: value }),
                 ownerUserId,
             },
-            size: 'lg',
             title: t('edit_meal'),
         });
     };
