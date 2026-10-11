@@ -18,6 +18,7 @@ import {
 } from '~types/meal';
 import { useOpenContextModal } from '~util/modal';
 
+import { MEAL_MODAL_OPTIONS } from '../../modals/meal/meal-modal-options';
 type CellOverlayProps = Readonly<{
     canEditAnnotations?: boolean;
     onDelete: () => Promise<void> | void;
@@ -76,7 +77,7 @@ export const CellOverlay = ({
 
     const handleEditClick = () => {
         openEditMealModal({
-            centered: true,
+            ...MEAL_MODAL_OPTIONS,
             innerProps: {
                 initialItems: meal?.items ?? [],
                 initialMeal: meal?.meal ?? '',
@@ -84,7 +85,6 @@ export const CellOverlay = ({
                 onSave: handleMealSave,
                 ownerUserId,
             },
-            size: 'lg',
             title: t('edit_meal'),
         });
     };

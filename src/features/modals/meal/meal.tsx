@@ -1,5 +1,5 @@
-import { Button, Group, Stack, Tabs, Text, Textarea } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
+import { Grid } from '@mantine/core';
+import { useDebouncedValue, useMediaQuery } from '@mantine/hooks';
 import { type ContextModalProps } from '@mantine/modals';
 import {
     type ChangeEventHandler,
@@ -16,10 +16,12 @@ import { type EditedMealItem } from '~types/meal';
 import { foodToMealItem } from '~util/nutrition';
 
 import { useGetMealPool } from '../meal-pool/hooks/use-get-meal-pool';
-import { FoodDatabaseSearch } from './food-database-search';
-import { MealItemsEditor } from './meal-items-editor';
+import { MealActions } from './meal-actions';
+import { MealEditorPanel } from './meal-editor-panel';
 import { type OnMealEdit } from './meal-result';
 import { MealSearch } from './meal-search';
+import { MealSourcePanel } from './meal-source-panel';
+import styles from './meal.module.css';
 
 type MealModalProps = {
     onDelete: () => Promise<void> | void;
@@ -43,6 +45,7 @@ export const MealModal = ({
     const { t } = useTranslation();
     const { isFoodDatabaseSearchEnabled } = useFeatureFlags();
     const { profile } = useProfile();
+    const isMobile = useMediaQuery('(max-width: 48em)');
     const [error, setError] = useState('');
     const [preview, setPreview] = useState(initialMeal);
     const [items, setItems] = useState<EditedMealItem[]>(initialItems);
@@ -112,7 +115,6 @@ export const MealModal = ({
     const handleItemsChange = (nextItems: EditedMealItem[]) => {
         setItems(nextItems);
     };
-
     const mealSearch = (
         <MealSearch
             onEdit={handleEdit}
@@ -122,69 +124,52 @@ export const MealModal = ({
         />
     );
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <Stack gap="sm">
-                <Text>
-                    {t(
-                        isFoodDatabaseSearchEnabled
-                            ? 'modals.meal_edit.helper'
-                            : 'modals.meal_edit.helper_without_food_database',
-                    )}
-                </Text>
-                {isFoodDatabaseSearchEnabled ? (
-                    <Tabs defaultValue="my-meals">
-                        <Tabs.List>
-                            <Tabs.Tab value="my-meals">
-                                {t('modals.meal_edit.my_meals')}
-                            </Tabs.Tab>
-                            <Tabs.Tab value="food-database">
-                                {t('modals.meal_edit.food_search.tab')}
-                            </Tabs.Tab>
-                        </Tabs.List>
-                        <Tabs.Panel pt="sm" value="my-meals">
-                            {mealSearch}
-                        </Tabs.Panel>
-                        <Tabs.Panel pt="sm" value="food-database">
-                            <FoodDatabaseSearch onSelect={handleFoodSelect} />
-                        </Tabs.Panel>
-                    </Tabs>
-                ) : (
-                    mealSearch
-                )}
-                <Textarea
-                    autosize
-                    error={error}
-                    label={t('meal_label')}
-                    maxRows={20}
-                    minRows={5}
-                    name="meal"
-                    onChange={handleChange}
-                    onFocus={resetError}
-                    placeholder={t('meal_placeholder')}
-                    value={preview}
-                />
-                <MealItemsEditor
-                    items={items}
-                    onItemsChange={handleItemsChange}
-                />
+    const sources = (
+        <MealSourcePanel
+            foodDatabaseEnabled={isFoodDatabaseSearchEnabled}
+            mealSearch={mealSearch}
+            onFoodSelect={handleFoodSelect}
+        />
+    );
+    const editor = (
+        <MealEditorPanel
+            error={error}
+            items={items}
+            meal={preview}
+            onItemsChange={handleItemsChange}
+            onMealChange={handleChange}
+            onMealFocus={resetError}
+        />
+    );
+    const mobileEditor = (
+        <MealEditorPanel
+            error={error}
+            items={items}
+            meal={preview}
+            onItemsChange={handleItemsChange}
+            onMealChange={handleChange}
+            onMealFocus={resetError}
+            sourcePanel={sources}
+        />
+    );
 
-                <Group justify="space-between">
-                    <Button color="danger" onClick={closeModal} variant="light">
-                        {t('generic.actions.cancel')}
-                    </Button>
-                    <Group gap="md">
-                        {initialMeal && (
-                            <Button color="danger" onClick={handleDelete}>
-                                {t('generic.actions.delete')}
-                            </Button>
-                        )}
-                        <Button type="submit">
-                            {t('generic.actions.save')}
-                        </Button>
-                    </Group>
-                </Group>
-            </Stack>
+    return (
+        <form className={styles.form} onSubmit={handleSubmit}>
+            <div className={styles.content}>
+                {isMobile ? (
+                    mobileEditor
+                ) : (
+                    <Grid gap="md">
+                        <Grid.Col span={8}>{editor}</Grid.Col>
+                        <Grid.Col span={4}>{sources}</Grid.Col>
+                    </Grid>
+                )}
+            </div>
+            <MealActions
+                canDelete={Boolean(initialMeal)}
+                onCancel={closeModal}
+                onDelete={handleDelete}
+            />
         </form>
     );
 };

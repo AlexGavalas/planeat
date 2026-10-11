@@ -102,10 +102,21 @@ test('meal plan is touch-friendly on mobile Chrome', async ({ page }) => {
 
     await page.getByRole('button', { name: 'Edit Lunch' }).click();
     const dialog = page.getByRole('dialog', { name: 'Edit meal' });
+    await expect(
+        dialog.getByRole('tab', { exact: true, name: 'Meal' }),
+    ).toHaveCount(0);
+    await expect(
+        dialog.getByRole('heading', { name: 'Add to this meal' }),
+    ).toBeVisible();
+    await expect(
+        dialog.getByRole('heading', { name: 'Ingredients & nutrition' }),
+    ).toBeVisible();
     await dialog
-        .getByRole('textbox', { name: 'The meal' })
+        .getByRole('textbox', { name: 'Meal name' })
         .fill('Mobile lunch draft');
-    await dialog.getByRole('button', { exact: true, name: 'Save' }).click();
+    await dialog
+        .getByRole('button', { exact: true, name: 'Save changes' })
+        .click();
 
     await expect(dialog).toBeHidden();
     const draftMeal = page.locator('p:visible').filter({

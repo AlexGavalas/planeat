@@ -1,0 +1,44 @@
+.item {
+    align-items: center;
+    display: grid;
+    gap: var(--mantine-spacing-sm);
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    padding-block: var(--mantine-spacing-sm);
+}
+
+.item + .item {
+    border-top: 1px solid var(--mantine-color-default-border);
+}
+
+.nutrition {
+    overflow-wrap: anywhere;
+}
+
+.quantity {
+    width: 7.5rem;
+}
+
+.total {
+    background: var(--mantine-color-brand-light);
+}
+
+@media (max-width: 36em) {
+    .item {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .nutrition {
+        grid-column: 1 / -1;
+    }
+
+    .quantity {
+        grid-column: 1;
+        grid-row: 2;
+        width: 100%;
+    }
+
+    .delete {
+        grid-column: 2;
+        grid-row: 2;
+    }
+}

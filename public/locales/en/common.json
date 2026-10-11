@@ -268,6 +268,27 @@
             "helper": "Search your previous meals or a food database and use a result as a starting point. You can also write a new meal directly.",
             "helper_without_food_database": "Search your previous meals and use one as a starting point. You can also write a new meal directly.",
             "my_meals": "My meals",
+            "no_saved_meals": "No saved meals found.",
+            "no_client_meals": "No client meals found.",
+            "details": {
+                "title": "Meal details",
+                "helper": "Give the meal a clear, recognizable name.",
+                "label": "Meal name"
+            },
+            "items": {
+                "title": "Ingredients & nutrition",
+                "helper": "Adjust serving amounts or remove ingredients.",
+                "empty": "No ingredients with nutrition data have been added yet.",
+                "quantity": "Quantity for {{item}}",
+                "remove": "Remove {{item}}"
+            },
+            "source": {
+                "title": "Add to this meal"
+            },
+            "actions": {
+                "delete": "Delete meal",
+                "save": "Save changes"
+            },
             "food_search": {
                 "tab": "Food database",
                 "helper": "Search foods or brands. Choose a result to add its name to your meal.",

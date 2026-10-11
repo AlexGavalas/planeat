@@ -37,4 +37,40 @@ describe('<MealItemsEditor />', () => {
         expect(screen.getAllByText(/278\.4 kcal/)).toHaveLength(2);
         expect(screen.getAllByText(/Fiber 8\.8 g/)).toHaveLength(2);
     });
+
+    it('labels item quantity and removal controls', () => {
+        expect.hasAssertions();
+        const handleItemsChange = jest.fn();
+
+        renderWithUser(
+            <MealItemsEditor
+                items={[item]}
+                onItemsChange={handleItemsChange}
+            />,
+        );
+
+        expect(
+            screen.getByRole('textbox', {
+                name: 'Quantity for Hafer Flocken',
+            }),
+        ).toBeVisible();
+        expect(
+            screen.getByRole('button', { name: 'Remove Hafer Flocken' }),
+        ).toBeVisible();
+    });
+
+    it('explains the empty nutrition state', () => {
+        expect.hasAssertions();
+        const handleItemsChange = jest.fn();
+
+        renderWithUser(
+            <MealItemsEditor items={[]} onItemsChange={handleItemsChange} />,
+        );
+
+        expect(
+            screen.getByText(
+                'No ingredients with nutrition data have been added yet.',
+            ),
+        ).toBeVisible();
+    });
 });

@@ -1,16 +1,11 @@
-import {
-    ActionIcon,
-    Group,
-    NumberInput,
-    Paper,
-    Stack,
-    Text,
-} from '@mantine/core';
+import { ActionIcon, NumberInput, Paper, Stack, Text } from '@mantine/core';
 import { Trash } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 
 import { type EditedMealItem } from '~types/meal';
 import { scaleNutrition, totalNutrition } from '~util/nutrition';
+
+import styles from './meal-item.module.css';
 
 type Props = Readonly<{
     items: EditedMealItem[];
@@ -49,8 +44,8 @@ const MealItemRow = ({ index, item, items, onItemsChange }: RowProps) => {
     };
 
     return (
-        <Group wrap="nowrap">
-            <div style={{ flex: 1 }}>
+        <div className={styles.item}>
+            <div className={styles.nutrition}>
                 <Text fw={600} size="sm">
                     {[item.brand, item.name].filter(Boolean).join(' · ')}
                 </Text>
@@ -73,21 +68,27 @@ const MealItemRow = ({ index, item, items, onItemsChange }: RowProps) => {
             <NumberInput
                 allowDecimal
                 allowNegative={false}
+                aria-label={t('modals.meal_edit.items.quantity', {
+                    item: item.name,
+                })}
+                className={styles.quantity}
                 min={1}
                 onChange={handleQuantityChange}
                 suffix=" g"
                 value={item.quantity_grams}
-                w={120}
             />
             <ActionIcon
-                aria-label={t('generic.actions.delete')}
+                aria-label={t('modals.meal_edit.items.remove', {
+                    item: item.name,
+                })}
+                className={styles.delete}
                 color="danger"
                 onClick={handleDelete}
                 variant="subtle"
             >
                 <Trash />
             </ActionIcon>
-        </Group>
+        </div>
     );
 };
 
@@ -99,7 +100,12 @@ export const MealItemsEditor = ({ items, onItemsChange }: Props) => {
     const totals = totalNutrition(items);
 
     return (
-        <Stack gap="xs">
+        <Stack gap={0}>
+            {items.length === 0 && (
+                <Text c="dimmed" py="sm" size="sm">
+                    {t('modals.meal_edit.items.empty')}
+                </Text>
+            )}
             {items.map((item, index) => (
                 <MealItemRow
                     index={index}
@@ -110,7 +116,7 @@ export const MealItemsEditor = ({ items, onItemsChange }: Props) => {
                 />
             ))}
             {items.length > 0 && (
-                <Paper p="sm" withBorder>
+                <Paper className={styles.total} mt="sm" p="sm">
                     <Text fw={600} mb={4} size="sm">
                         {t('nutrition.meal_total')}
                     </Text>
