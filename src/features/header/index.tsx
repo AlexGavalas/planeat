@@ -25,7 +25,7 @@ export const Header = () => {
             wrap="nowrap"
         >
             <Link className={styles.brand} href={localize('/')}>
-                <Title className={styles.logo} order={1}>
+                <Title className={styles.logo} order={1} size="1.6rem">
                     <Image
                         alt=""
                         aria-hidden
