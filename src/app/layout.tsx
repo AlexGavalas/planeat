@@ -7,7 +7,12 @@ import { Suspense, type ReactNode } from 'react';
 
 import { getCurrentUser, getRequestDate, getServerSession } from '~api/session';
 import { AppStartup } from '~components/app-startup';
-import { APP_DESCRIPTION, APP_NAME } from '~constants/brand';
+import {
+    APP_DESCRIPTION,
+    APP_NAME,
+    APP_SHARE_IMAGE_ALT,
+    APP_URL,
+} from '~constants/brand';
 import { Providers } from '~features/providers';
 import { foodDatabaseSearch } from '~flags';
 import { getResources, getT } from '~util/i18n';
@@ -66,6 +71,9 @@ const appleStartupImages = [
 ];
 
 export const metadata: Metadata = {
+    alternates: {
+        canonical: '/',
+    },
     appleWebApp: {
         capable: true,
         startupImage: appleStartupImages,
@@ -73,8 +81,47 @@ export const metadata: Metadata = {
         title: APP_NAME,
     },
     applicationName: APP_NAME,
+    category: 'health and fitness',
+    creator: APP_NAME,
     description: APP_DESCRIPTION,
-    title: APP_NAME,
+    formatDetection: {
+        telephone: false,
+    },
+    keywords: [
+        'meal planning',
+        'nutrition tracking',
+        'activity tracking',
+        'health progress',
+    ],
+    metadataBase: new URL(APP_URL),
+    openGraph: {
+        description: APP_DESCRIPTION,
+        locale: 'en_US',
+        siteName: APP_NAME,
+        title: APP_NAME,
+        type: 'website',
+        url: '/',
+    },
+    publisher: APP_NAME,
+    robots: {
+        follow: true,
+        index: true,
+    },
+    title: {
+        default: APP_NAME,
+        template: `%s | ${APP_NAME}`,
+    },
+    twitter: {
+        card: 'summary_large_image',
+        description: APP_DESCRIPTION,
+        images: [
+            {
+                alt: APP_SHARE_IMAGE_ALT,
+                url: '/opengraph-image',
+            },
+        ],
+        title: APP_NAME,
+    },
 };
 
 export const viewport: Viewport = {
