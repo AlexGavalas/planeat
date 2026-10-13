@@ -1,5 +1,7 @@
+import Image from 'next/image';
 import { type CSSProperties } from 'react';
 
+import { APP_NAME } from '~constants/brand';
 import { APP_TOKENS, BRAND_COLORS } from '~theme/theme';
 
 import styles from './app-startup.module.css';
@@ -25,10 +27,18 @@ export function AppStartup() {
     return (
         <div className={styles.startup} role="status" style={startupStyle}>
             <div aria-hidden="true" className={styles.content}>
-                <span className={styles.brand}>PLANEAT</span>
+                <Image
+                    alt=""
+                    className={styles.mark}
+                    height={72}
+                    loading="eager"
+                    src="/brand/habitthread-symbol.png"
+                    width={72}
+                />
+                <span className={styles.brand}>{APP_NAME}</span>
                 <span className={styles.spinner} />
             </div>
-            <span className={styles.visuallyHidden}>Loading Planeat</span>
+            <span className={styles.visuallyHidden}>Loading {APP_NAME}</span>
         </div>
     );
 }

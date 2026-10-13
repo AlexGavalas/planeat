@@ -4,7 +4,7 @@ test.describe('public routes', () => {
     test('shows the landing page and credentials login', async ({ page }) => {
         await page.goto('/');
 
-        await expect(page).toHaveTitle('Planeat');
+        await expect(page).toHaveTitle('HabitThread');
 
         await expect(
             page.getByRole('heading', {
@@ -16,7 +16,7 @@ test.describe('public routes', () => {
 
         await expect(
             page.getByRole('heading', {
-                name: 'Create your Planeat account',
+                name: 'Create your HabitThread account',
             }),
         ).toBeVisible();
         await expect(page.getByLabel('Full name')).toBeVisible();

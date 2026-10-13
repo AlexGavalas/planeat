@@ -4,6 +4,7 @@ import { Button, Group, Stack, Text, Title } from '@mantine/core';
 import { Copy, PrintingPage, StatsReport } from 'iconoir-react';
 import Image from 'next/image';
 
+import { APP_TAGLINE } from '~constants/brand';
 import { openAuthDialog } from '~features/header/auth-dialog-event';
 import { InstallApp } from '~features/install-app';
 
@@ -21,9 +22,7 @@ export function LandingPage() {
         <main className={styles.content}>
             <section className={heroStyles.hero}>
                 <Stack className={heroStyles.heroCopy} gap="lg">
-                    <Text className={styles.eyebrow}>
-                        Meal planning, made clear
-                    </Text>
+                    <Text className={styles.eyebrow}>{APP_TAGLINE}</Text>
                     <Title className={heroStyles.heroTitle} order={1}>
                         Plan your meals.
                         <br />
@@ -71,12 +70,14 @@ export function LandingPage() {
 
             <section className={styles.features} id="features">
                 <div className={styles.sectionHeading}>
-                    <Text className={styles.eyebrow}>What Planeat does</Text>
+                    <Text className={styles.eyebrow}>
+                        What HabitThread does
+                    </Text>
                     <Title order={2}>A practical rhythm for every week</Title>
                     <Text>
-                        Plan ahead without losing sight of today. Planeat keeps
-                        the useful details together and leaves the rest out of
-                        your way.
+                        Plan ahead without losing sight of today. HabitThread
+                        keeps your food, activity, and progress connected while
+                        leaving the rest out of your way.
                     </Text>
                 </div>
 
@@ -149,8 +150,8 @@ export function LandingPage() {
                         Make room for the meals that matter.
                     </Title>
                     <Text>
-                        Create your free Planeat account and build your first
-                        weekly plan.
+                        Create your free HabitThread account and build your
+                        first weekly plan.
                     </Text>
                 </div>
                 <Button color="dark" onClick={handleCreateAccount} size="lg">

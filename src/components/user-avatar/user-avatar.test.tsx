@@ -52,7 +52,7 @@ describe('<UserAvatar />', () => {
         beforeAll(() => {
             jest.mocked(useProfile).mockReturnValue({
                 ...defaultProfile,
-                user: { image: 'http://planeat/image', name: undefined },
+                user: { image: 'http://habitthread/image', name: undefined },
             });
         });
 
@@ -86,7 +86,7 @@ describe('<UserAvatar />', () => {
         beforeAll(() => {
             jest.mocked(useProfile).mockReturnValue({
                 ...defaultProfile,
-                user: { image: 'http://planeat/image', name: 'Test User' },
+                user: { image: 'http://habitthread/image', name: 'Test User' },
             });
         });
 

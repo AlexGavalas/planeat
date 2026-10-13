@@ -20,6 +20,12 @@
     gap: 1.25rem;
 }
 
+.mark {
+    width: 4.5rem;
+    height: 4.5rem;
+    object-fit: contain;
+}
+
 .brand {
     font-size: clamp(2rem, 10vw, 3rem);
     font-weight: 700;

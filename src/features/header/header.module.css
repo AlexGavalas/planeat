@@ -8,7 +8,16 @@
 }
 
 .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
     cursor: pointer;
+}
+
+.mark {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
 }
 
 .actions {
@@ -27,7 +36,12 @@
     }
 
     .logo {
-        font-size: 1.75rem;
+        font-size: 1.45rem;
         line-height: 1;
+    }
+
+    .mark {
+        width: 1.75rem;
+        height: 1.75rem;
     }
 }

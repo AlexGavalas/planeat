@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate Planeat's compact BLS index without loading the workbook in memory."""
+"""Generate HabitThread's compact BLS index without loading the workbook in memory."""
 
 from __future__ import annotations
 

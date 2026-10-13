@@ -1,8 +1,8 @@
-# Planeat
+# HabitThread
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-**Planeat** is an app with which you can create and manage your weekly meal plan and track your weight loss progress.
+**HabitThread** connects meal planning, nutrition, activities, and health measurements so everyday choices form one clear picture of your progress.
 
 ## Getting Started
 

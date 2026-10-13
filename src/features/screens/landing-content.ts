@@ -14,7 +14,7 @@ export const features = [
     },
     {
         description:
-            "Open Planeat to see today's meals immediately, then opt in to a reminder with tomorrow's plan when it helps.",
+            "Open HabitThread to see today's meals immediately, then opt in to a reminder with tomorrow's plan when it helps.",
         icon: BellNotification,
         title: 'Keep today simple',
     },
@@ -26,7 +26,7 @@ export const features = [
     },
     {
         description:
-            'Set a target weight, note foods you like or avoid, choose your language, and connect with other Planeat users.',
+            'Set a target weight, note foods you like or avoid, choose your language, and connect with other HabitThread users.',
         icon: Community,
         title: 'Make it personal',
     },

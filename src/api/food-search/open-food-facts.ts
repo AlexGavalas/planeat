@@ -8,7 +8,8 @@ import {
 
 const RESULT_LIMIT = 8;
 const URL = 'https://search.openfoodfacts.org/search';
-const USER_AGENT = 'Planeat/0.0.1 (https://github.com/AlexGavalas/planeat)';
+const USER_AGENT =
+    'HabitThread/0.0.1 (https://github.com/AlexGavalas/habitthread)';
 const nullableNumber = z.number().finite().nullable().optional();
 const responseSchema = z.object({
     hits: z.array(

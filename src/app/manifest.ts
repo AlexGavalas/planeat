@@ -1,7 +1,6 @@
 import { type MetadataRoute } from 'next';
 
-const APP_NAME = 'Planeat';
-const APP_DESCRIPTION = 'Plan meals, track health, and eat better together.';
+import { APP_DESCRIPTION, APP_NAME } from '~constants/brand';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {

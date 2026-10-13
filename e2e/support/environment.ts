@@ -59,16 +59,19 @@ export const loadE2eEnvironment = (): E2eEnvironment => {
 
     const databaseUrl = getEnvironmentValue('E2E_DATABASE_URL');
 
-    const googleId = getEnvironmentValue('GOOGLE_ID', 'planeat-e2e-google-id');
+    const googleId = getEnvironmentValue(
+        'GOOGLE_ID',
+        'habitthread-e2e-google-id',
+    );
 
     const googleSecret = getEnvironmentValue(
         'GOOGLE_SECRET',
-        'planeat-e2e-google-secret',
+        'habitthread-e2e-google-secret',
     );
 
     const nextAuthSecret = getEnvironmentValue(
         'NEXTAUTH_SECRET',
-        'planeat-e2e-only-secret',
+        'habitthread-e2e-only-secret',
     );
 
     const nextAuthUrl = getEnvironmentValue('NEXTAUTH_URL', baseUrl);

@@ -7,6 +7,7 @@ import { Suspense, type ReactNode } from 'react';
 
 import { getCurrentUser, getRequestDate, getServerSession } from '~api/session';
 import { AppStartup } from '~components/app-startup';
+import { APP_DESCRIPTION, APP_NAME } from '~constants/brand';
 import { Providers } from '~features/providers';
 import { foodDatabaseSearch } from '~flags';
 import { getResources, getT } from '~util/i18n';
@@ -69,11 +70,11 @@ export const metadata: Metadata = {
         capable: true,
         startupImage: appleStartupImages,
         statusBarStyle: 'default',
-        title: 'Planeat',
+        title: APP_NAME,
     },
-    applicationName: 'Planeat',
-    description: 'Plan meals, track health, and eat better together.',
-    title: 'Planeat',
+    applicationName: APP_NAME,
+    description: APP_DESCRIPTION,
+    title: APP_NAME,
 };
 
 export const viewport: Viewport = {

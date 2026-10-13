@@ -69,7 +69,7 @@ test('accepts a connection request atomically and removes the connection', async
         storageState: { cookies: [], origins: [] },
     });
     const email = `connection-${Date.now()}@example.com`;
-    const password = 'PlaneatTestPassword123!';
+    const password = 'HabitThreadTestPassword123!';
     const register = await other.request.post('/api/auth/register', {
         data: { email, fullName: 'Connection migration test', password },
     });

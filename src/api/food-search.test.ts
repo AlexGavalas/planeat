@@ -64,7 +64,7 @@ describe('food search', () => {
             'https://search.openfoodfacts.org/search',
             expect.objectContaining({
                 headers: expect.objectContaining({
-                    'User-Agent': expect.stringContaining('Planeat/0.0.1'),
+                    'User-Agent': expect.stringContaining('HabitThread/0.0.1'),
                 }),
                 method: 'POST',
             }),

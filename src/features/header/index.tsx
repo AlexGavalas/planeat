@@ -1,6 +1,8 @@
 import { Box, Group, Title } from '@mantine/core';
+import Image from 'next/image';
 import Link from 'next/link';
 
+import { APP_NAME } from '~constants/brand';
 import { Nav } from '~features/nav';
 import { useLocalizedPath } from '~hooks/use-localized-path';
 import { useProfile } from '~hooks/use-profile';
@@ -24,7 +26,16 @@ export const Header = () => {
         >
             <Link className={styles.brand} href={localize('/')}>
                 <Title className={styles.logo} order={1}>
-                    PLANEAT
+                    <Image
+                        alt=""
+                        aria-hidden
+                        className={styles.mark}
+                        height={32}
+                        loading="eager"
+                        src="/brand/habitthread-symbol.png"
+                        width={32}
+                    />
+                    {APP_NAME}
                 </Title>
             </Link>
             {!isFetching && (

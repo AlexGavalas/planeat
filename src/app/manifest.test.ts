@@ -7,9 +7,9 @@ describe('web app manifest', () => {
         expect(value).toMatchObject({
             display: 'standalone',
             id: '/',
-            name: 'Planeat',
+            name: 'HabitThread',
             scope: '/',
-            short_name: 'Planeat',
+            short_name: 'HabitThread',
             start_url: '/',
         });
         expect(value.icons).toStrictEqual(

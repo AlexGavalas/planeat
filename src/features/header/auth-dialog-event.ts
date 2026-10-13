@@ -1,4 +1,4 @@
-export const AUTH_DIALOG_EVENT = 'planeat:open-auth-dialog';
+export const AUTH_DIALOG_EVENT = 'habitthread:open-auth-dialog';
 
 export type AuthDialogMode = 'login' | 'register';
 

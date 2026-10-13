@@ -7,8 +7,8 @@
     "install": {
         "action": "Install app",
         "available": "Installable on your device",
-        "title": "Install Planeat",
-        "description": "Add Planeat to your Home Screen for quick access and an app-like experience.",
+        "title": "Install HabitThread",
+        "description": "Add HabitThread to your Home Screen for quick access and an app-like experience.",
         "ios": {
             "open_safari": "Open this page in Safari.",
             "tap_share": "Tap the Share button.",
@@ -17,8 +17,8 @@
     },
     "login": {
         "button": "Log in",
-        "title": "Log in to Planeat",
-        "register_title": "Create your Planeat account",
+        "title": "Log in to HabitThread",
+        "register_title": "Create your HabitThread account",
         "google": "Continue with Google",
         "or": "or",
         "email": "Email",
@@ -234,7 +234,7 @@
         "time": "Reminder time",
         "timezone": "Timezone: {{timezone}}",
         "title": "Notifications",
-        "unsupported": "Push notifications are not supported on this device. On iPhone or iPad, install Planeat on the Home Screen first.",
+        "unsupported": "Push notifications are not supported on this device. On iPhone or iPad, install HabitThread on the Home Screen first.",
         "use_current_timezone": "Use current timezone ({{timezone}})"
     },
     "notification": {
@@ -417,8 +417,8 @@
         },
         "settings": {
             "title": "Professional account",
-            "description": "Enable professional tools while keeping your normal Planeat experience.",
-            "role_label": "Use Planeat as a professional",
+            "description": "Enable professional tools while keeping your normal HabitThread experience.",
+            "role_label": "Use HabitThread as a professional",
             "discoverable_label": "Allow clients to find me",
             "discoverable_description": "Your name and email will appear when clients search for a professional.",
             "active_clients_error": "Stop managing all active clients before disabling professional tools."

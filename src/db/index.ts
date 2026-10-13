@@ -4,7 +4,7 @@ import postgres, { type Sql } from 'postgres';
 import * as schema from './schema';
 
 declare global {
-    var planeatSql: Sql | undefined;
+    var habitThreadSql: Sql | undefined;
 }
 
 export const getDb = (): PostgresJsDatabase<typeof schema> => {
@@ -15,13 +15,13 @@ export const getDb = (): PostgresJsDatabase<typeof schema> => {
     }
 
     const sql =
-        globalThis.planeatSql ??
+        globalThis.habitThreadSql ??
         postgres(databaseUrl, {
             max: 5,
             prepare: false,
         });
 
-    globalThis.planeatSql = sql;
+    globalThis.habitThreadSql = sql;
 
     return drizzle(sql, { schema });
 };

@@ -1,10 +1,10 @@
-# Planeat Application Specification
+# HabitThread Application Specification
 
-This document describes the features, data model, and architecture of the Planeat application to allow another agent to recreate it from scratch.
+This document describes the features, data model, and architecture of the HabitThread application to allow another agent to recreate it from scratch.
 
 ## 1. Project Overview
 
-Planeat is a health and wellness tracking application focused on nutrition and body metrics. It allows users to track their weight, body fat, plan meals via a calendar, and connect with other users (specifically nutritionists).
+HabitThread is a health and wellness application that connects nutrition, activity, and body metrics. It allows users to track their weight and body fat, plan meals in a calendar, record activities, and collaborate with other users and professionals.
 
 ### Core Tech Stack
 
