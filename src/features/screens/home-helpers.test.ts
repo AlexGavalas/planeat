@@ -1,4 +1,4 @@
-import { DEFAULT_MEAL_ZONE_TIMES } from '~constants/calendar';
+import { DEFAULT_MEAL_ZONE_TIMES, ROWS } from '~constants/calendar';
 
 import {
     getFirstName,
@@ -20,12 +20,16 @@ describe('home dashboard helpers', () => {
     });
 
     it('finds the next meal from the configured schedule', () => {
-        expect(
-            getNextMealIndex('2026-01-12T12:00:00', DEFAULT_MEAL_ZONE_TIMES),
-        ).toBe(2);
-        expect(
-            getNextMealIndex('2026-01-12T21:00:00', DEFAULT_MEAL_ZONE_TIMES),
-        ).toBe(-1);
+        const zones = ROWS.map(({ key }, position) => ({
+            day: '2026-01-12',
+            label: key,
+            position,
+            time: DEFAULT_MEAL_ZONE_TIMES[key],
+            weekStart: '2026-01-12',
+            zoneKey: key,
+        }));
+        expect(getNextMealIndex('2026-01-12T12:00:00', zones)).toBe(2);
+        expect(getNextMealIndex('2026-01-12T21:00:00', zones)).toBe(-1);
     });
 
     it('summarizes valid timeline points', () => {

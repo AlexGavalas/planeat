@@ -1,11 +1,13 @@
 import { Alert, List, Stack, Text } from '@mantine/core';
 import { type ContextModalProps } from '@mantine/modals';
 import { format, parse, parseISO } from 'date-fns';
+import { AppleHalf } from 'iconoir-react';
 import groupBy from 'lodash/fp/groupBy';
 import { useTranslation } from 'react-i18next';
 
-import { MEAL_ICON, ROWS } from '~constants/calendar';
-import { useMeals } from '~store/hooks';
+import { MEAL_ICON } from '~constants/calendar';
+import { useWeeklyMealZones } from '~hooks/use-weekly-meal-zones';
+import { useCurrentWeek, useMeals } from '~store/hooks';
 import { type Meal } from '~types/meal';
 
 const MAX_RATING = 5;
@@ -23,7 +25,12 @@ export const WeekOverviewModal = ({
     innerProps: { ownerUserId },
 }: ContextModalProps<WeekOverviewModalProps>) => {
     const { t } = useTranslation();
+    const { currentWeek } = useCurrentWeek();
     const { meals } = useMeals(ownerUserId);
+    const { zones } = useWeeklyMealZones(currentWeek, undefined, ownerUserId);
+    const zonesByKey = Object.fromEntries(
+        zones.map((zone) => [zone.zoneKey, zone]),
+    );
 
     const mealsMap = groupByDay(meals);
 
@@ -60,41 +67,32 @@ export const WeekOverviewModal = ({
                         <List spacing="xs">
                             {dayMeals
                                 .sort((mealA, mealB) => {
-                                    const [rowKeyA] =
-                                        mealA.section_key.split('_');
-
-                                    const [rowKeyB] =
-                                        mealB.section_key.split('_');
-
-                                    const rowA = ROWS.findIndex(
-                                        ({ key }) => key === rowKeyA,
+                                    return (
+                                        (zonesByKey[mealA.section_key]
+                                            ?.position ?? 0) -
+                                        (zonesByKey[mealB.section_key]
+                                            ?.position ?? 0)
                                     );
-
-                                    const rowB = ROWS.findIndex(
-                                        ({ key }) => key === rowKeyB,
-                                    );
-
-                                    return rowA - rowB;
                                 })
                                 .map((meal) => {
-                                    const [rowKey] =
-                                        meal.section_key.split('_');
+                                    const zone = zonesByKey[meal.section_key];
 
-                                    const row = ROWS.find(
-                                        ({ key }) => key === rowKey,
-                                    );
-
-                                    if (!row) {
+                                    if (!zone) {
                                         return null;
                                     }
 
-                                    const Icon = MEAL_ICON[row.key];
+                                    const Icon = zone.legacyKey
+                                        ? MEAL_ICON[zone.legacyKey]
+                                        : AppleHalf;
 
                                     return (
                                         <List.Item
                                             key={meal.id}
                                             icon={<Icon />}
                                         >
+                                            <Text fw={600} size="sm">
+                                                {zone.label} · {zone.time}
+                                            </Text>
                                             {meal.meal}
                                             {meal.note && (
                                                 <Alert

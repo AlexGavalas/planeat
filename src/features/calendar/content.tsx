@@ -1,95 +1,116 @@
+/* oxlint-disable react/jsx-handler-names -- Mantine names this callback prop getEmblaApi. */
+import { Carousel } from '@mantine/carousel';
+import { useMediaQuery } from '@mantine/hooks';
+import { type EmblaCarouselType } from 'embla-carousel';
+import { type ButtonHTMLAttributes, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ROWS } from '~constants/calendar';
-import { useMealZoneTimes } from '~hooks/use-meal-zone-times';
 import { useCurrentWeek, useMeals, useUnsavedChanges } from '~store/hooks';
 import { type MealsMap } from '~types/meal';
+import { type WeeklyMealZone } from '~types/meal-zone';
 import { getDaysOfWeek } from '~util/date';
 
-import { Cell } from './cell';
 import styles from './content.module.css';
+import { DayLane } from './day-lane';
 
-export const Content = () => {
-    const { t } = useTranslation();
+type Props = Readonly<{
+    onEditSchedule: (day?: string) => void;
+    zones: WeeklyMealZone[];
+}>;
+
+export const Content = ({ onEditSchedule, zones }: Props) => {
+    const [carouselApi, setCarouselApi] = useState<EmblaCarouselType | null>(
+        null,
+    );
+    const [selectedSlide, setSelectedSlide] = useState(0);
+    const isMediumViewport = useMediaQuery('(min-width: 62em)');
+    const isLargeViewport = useMediaQuery('(min-width: 75em)');
+    const isExtraLargeViewport = useMediaQuery('(min-width: 88em)');
+    const { i18n, t } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const { unsavedChanges } = useUnsavedChanges();
     const { meals } = useMeals();
-    const { times } = useMealZoneTimes(currentWeek);
-
     const mealsMap = meals.reduce<MealsMap>((acc, meal) => {
         acc[meal.section_key] = meal;
         return acc;
     }, {});
-
-    const daysOfWeek = getDaysOfWeek(currentWeek);
-
-    const translatedRows = ROWS.map((row) => ({
-        ...row,
-        label: t(`row.${row.key}`),
-    }));
+    const days = getDaysOfWeek(
+        currentWeek,
+        'EEE dd/MM',
+        i18n.language === 'gr' ? 'gr' : 'en',
+    );
+    const visibleSlides = isExtraLargeViewport
+        ? 7
+        : isLargeViewport
+          ? 5
+          : isMediumViewport
+            ? 4
+            : 3;
+    const lastSlide = Math.max(0, days.length - visibleSlides);
+    const canScrollNext = selectedSlide < lastSlide;
+    const canScrollPrevious = lastSlide > 0 && selectedSlide > 0;
+    const onCarouselReady = useCallback((api: EmblaCarouselType) => {
+        setCarouselApi(api);
+    }, []);
+    const nextControlProps = {
+        'aria-disabled': !canScrollNext,
+        'aria-label': t('meal_plan.scroll_days_forward'),
+        'data-inactive': canScrollNext ? undefined : true,
+        onClick: () => {
+            carouselApi?.reInit();
+            carouselApi?.scrollTo(Math.min(selectedSlide + 1, lastSlide));
+        },
+        tabIndex: canScrollNext ? 0 : -1,
+    } as ButtonHTMLAttributes<HTMLButtonElement>;
+    const previousControlProps = {
+        'aria-disabled': !canScrollPrevious,
+        'aria-label': t('meal_plan.scroll_days_back'),
+        'data-inactive': canScrollPrevious ? undefined : true,
+        onClick: () => {
+            carouselApi?.reInit();
+            carouselApi?.scrollTo(Math.max(selectedSlide - 1, 0));
+        },
+        tabIndex: canScrollPrevious ? 0 : -1,
+    } as ButtonHTMLAttributes<HTMLButtonElement>;
 
     return (
-        <div className={styles.wrapper}>
-            {translatedRows.map((row) => {
-                const isRow =
-                    row.key === 'morning' ||
-                    row.key === 'snack1' ||
-                    row.key === 'snack2';
-
-                if (isRow) {
-                    if (!daysOfWeek[0]) {
-                        return null;
-                    }
-
-                    const { label, timestamp } = daysOfWeek[0];
-
-                    return (
-                        <div key={row.key} className={styles.row}>
-                            <h3>
-                                <span>{row.label}</span>
-                                <small>{times[row.key]}</small>
-                            </h3>
-                            <Cell
-                                key={label}
-                                isRow
-                                id={`${row.key}_${label}`}
-                                isEdited={
-                                    !!unsavedChanges[`${row.key}_${label}`]
-                                }
-                                meal={
-                                    unsavedChanges[`${row.key}_${label}`] ??
-                                    mealsMap[`${row.key}_${label}`]
-                                }
-                                timestamp={timestamp}
-                            />
-                        </div>
-                    );
-                }
-
-                return (
-                    <div key={row.key} className={styles.row}>
-                        <h3>
-                            <span>{row.label}</span>
-                            <small>{times[row.key]}</small>
-                        </h3>
-                        {daysOfWeek.map(({ label, timestamp }) => (
-                            <Cell
-                                key={label}
-                                id={`${row.key}_${label}`}
-                                isEdited={
-                                    !!unsavedChanges[`${row.key}_${label}`]
-                                }
-                                isRow={false}
-                                meal={
-                                    unsavedChanges[`${row.key}_${label}`] ??
-                                    mealsMap[`${row.key}_${label}`]
-                                }
-                                timestamp={timestamp}
-                            />
-                        ))}
-                    </div>
-                );
-            })}
-        </div>
+        <Carousel
+            aria-label={t('meal_plan.week_board')}
+            classNames={{
+                container: styles.carouselContainer,
+                control: styles.carouselControl,
+                controls: styles.carouselControls,
+                root: styles.carousel,
+                slide: styles.carouselSlide,
+                viewport: styles.carouselViewport,
+            }}
+            controlSize={28}
+            emblaOptions={{ align: 'start', slidesToScroll: 1 }}
+            getEmblaApi={onCarouselReady}
+            nextControlProps={nextControlProps}
+            onSlideChange={setSelectedSlide}
+            previousControlProps={previousControlProps}
+            slideGap="compact"
+            slideSize={{
+                base: '33.333333%',
+                lg: '20%',
+                md: '25%',
+                xl: '14.285714%',
+            }}
+            withIndicators={false}
+        >
+            {days.map(({ label, timestamp }) => (
+                <Carousel.Slide key={timestamp.toISOString()}>
+                    <DayLane
+                        label={label}
+                        meals={mealsMap}
+                        onEditSchedule={onEditSchedule}
+                        timestamp={timestamp}
+                        unsavedChanges={unsavedChanges}
+                        zones={zones}
+                    />
+                </Carousel.Slide>
+            ))}
+        </Carousel>
     );
 };

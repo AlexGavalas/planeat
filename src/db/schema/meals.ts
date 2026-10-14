@@ -78,6 +78,37 @@ export const mealZoneTimes = pgTable(
     ],
 );
 
+export const weeklyMealZones = pgTable(
+    'weekly_meal_zones',
+    {
+        day: date('day').notNull(),
+        label: text('label').notNull(),
+        legacy_key: text('legacy_key'),
+        position: integer('position').notNull(),
+        time: time('time').notNull(),
+        user_id: bigint('user_id', { mode: 'number' })
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+        week_start: date('week_start').notNull(),
+        zone_key: text('zone_key').notNull(),
+    },
+    (table) => [
+        primaryKey({
+            columns: [table.user_id, table.week_start, table.zone_key],
+            name: 'weekly_meal_zones_user_week_zone_pk',
+        }),
+        index('weekly_meal_zones_user_week_idx').on(
+            table.user_id,
+            table.week_start,
+        ),
+        unique('weekly_meal_zones_user_day_position_unique').on(
+            table.user_id,
+            table.day,
+            table.position,
+        ),
+    ],
+);
+
 export const mealPool = pgTable(
     'meals_pool',
     {

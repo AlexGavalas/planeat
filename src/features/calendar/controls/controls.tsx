@@ -8,22 +8,25 @@ import {
     useUnsavedChanges,
     useWeeklyScheduleOps,
 } from '~store/hooks';
+import { type WeeklyMealZone } from '~types/meal-zone';
 import { useOpenContextModal } from '~util/modal';
 
 import { DesktopControls } from './desktop-controls';
 import { MobileControls } from './mobile-controls';
 
 type ControlsProps = Readonly<{
+    onEditSchedule: () => void;
     onPrint: MouseEventHandler<HTMLButtonElement>;
+    zones: WeeklyMealZone[];
 }>;
 
-export const Controls = ({ onPrint }: ControlsProps) => {
+export const Controls = ({ onEditSchedule, onPrint, zones }: ControlsProps) => {
     const { t } = useTranslation();
     const ownerUserId = useMealPlanOwnerId();
     const { nextWeek: handleNextWeek, previousWeek: handlePreviousWeek } =
         useCurrentWeek();
     const { hasUnsavedChanges } = useUnsavedChanges();
-    const { copyToNextWeek } = useWeeklyScheduleOps();
+    const { copyToNextWeek } = useWeeklyScheduleOps(zones);
     const { meals, revert: handleRevert, savePlan } = useMeals();
     const openMealPoolModal = useOpenContextModal('meal-pool');
     const openWeekOverviewModal = useOpenContextModal('week-overview');
@@ -36,8 +39,8 @@ export const Controls = ({ onPrint }: ControlsProps) => {
         });
     };
 
-    const handleCopyToNextWeek = () => {
-        copyToNextWeek(meals);
+    const handleCopyToNextWeek = async () => {
+        await copyToNextWeek(meals);
     };
 
     const handleSave = (async () => {
@@ -58,6 +61,7 @@ export const Controls = ({ onPrint }: ControlsProps) => {
                 hasUnsavedChanges={hasUnsavedChanges}
                 onCopy={handleCopyToNextWeek}
                 onCreateMeal={handleMealCreation}
+                onEditSchedule={onEditSchedule}
                 onNextWeek={handleNextWeek}
                 onOverview={toggleWeekOverview}
                 onPreviousWeek={handlePreviousWeek}
@@ -69,6 +73,7 @@ export const Controls = ({ onPrint }: ControlsProps) => {
                 hasUnsavedChanges={hasUnsavedChanges}
                 onCopy={handleCopyToNextWeek}
                 onCreateMeal={handleMealCreation}
+                onEditSchedule={onEditSchedule}
                 onNextWeek={handleNextWeek}
                 onOverview={toggleWeekOverview}
                 onPreviousWeek={handlePreviousWeek}

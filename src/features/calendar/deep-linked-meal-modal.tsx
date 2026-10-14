@@ -1,38 +1,39 @@
 'use client';
 
-import { format, isSameWeek, parseISO, startOfWeek } from 'date-fns';
+import { isSameWeek, parseISO } from 'date-fns';
 import { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useMealPlanOwnerId } from '~features/meal-plan-owner';
+import { useWeeklyMealZones } from '~hooks/use-weekly-meal-zones';
 import { useCurrentWeek, useMeals, useUnsavedChanges } from '~store/hooks';
 import { type EditedMealItem } from '~types/meal';
-import { type MealZoneKey } from '~types/meal-zone';
+import { type MealZoneKey, type WeeklyMealZone } from '~types/meal-zone';
 import { useOpenContextModal } from '~util/modal';
 
 import { MEAL_MODAL_OPTIONS } from '../modals/meal/meal-modal-options';
 
-const SHARED_MEAL_ZONES: MealZoneKey[] = ['morning', 'snack1', 'snack2'];
-
 type DeepLinkedMealModalProps = Readonly<{
     date: string;
+    initialSchedule: {
+        weekStart: string;
+        zones: WeeklyMealZone[];
+    };
     mealZone?: MealZoneKey;
+    slotKey?: string;
 }>;
 
 export function DeepLinkedMealModal({
     date,
+    initialSchedule,
     mealZone,
+    slotKey,
 }: DeepLinkedMealModalProps) {
     const { t } = useTranslation();
     const ownerUserId = useMealPlanOwnerId();
     const { currentWeek } = useCurrentWeek();
-    const {
-        deleteEntryCell,
-        deleteEntryRow,
-        meals,
-        saveEntryCell,
-        saveEntryRow,
-    } = useMeals();
+    const { deleteEntryCell, meals, saveEntryCell } = useMeals();
+    const { zones } = useWeeklyMealZones(currentWeek, initialSchedule);
     const { unsavedChanges } = useUnsavedChanges();
     const openMealModal = useOpenContextModal('meal');
     const openedTarget = useRef<string | null>(null);
@@ -40,19 +41,25 @@ export function DeepLinkedMealModal({
 
     useEffect(() => {
         if (
-            !mealZone ||
+            (!mealZone && !slotKey) ||
             !ownerUserId ||
             !isSameWeek(currentWeek, targetDate, { weekStartsOn: 1 })
         ) {
             return;
         }
 
-        const isRow = SHARED_MEAL_ZONES.includes(mealZone);
-        const timestamp = isRow
-            ? startOfWeek(targetDate, { weekStartsOn: 1 })
-            : targetDate;
-        const sectionKey = `${mealZone}_${format(timestamp, 'EEE dd/MM/yyyy')}`;
-        const targetKey = `${date}:${mealZone}`;
+        const zone = zones.find(
+            (candidate) =>
+                candidate.day === date &&
+                (candidate.zoneKey === slotKey ||
+                    candidate.legacyKey === mealZone),
+        );
+        if (!zone) {
+            return;
+        }
+        const timestamp = targetDate;
+        const sectionKey = zone.zoneKey;
+        const targetKey = `${date}:${zone.zoneKey}`;
 
         if (openedTarget.current === targetKey) {
             return;
@@ -72,34 +79,19 @@ export function DeepLinkedMealModal({
                     if (!meal) {
                         return;
                     }
-                    if (isRow) {
-                        deleteEntryRow(sectionKey);
-                    } else {
-                        deleteEntryCell({ meal });
-                    }
+                    deleteEntryCell({ meal });
                 },
                 onSave: (value: string, items: EditedMealItem[]) => {
-                    if (isRow) {
-                        saveEntryRow({
-                            items,
-                            note: meal?.note,
-                            rating: meal?.rating,
-                            sectionKey,
-                            userId: ownerUserId,
-                            value,
-                        });
-                    } else {
-                        saveEntryCell({
-                            items,
-                            meal,
-                            note: meal?.note,
-                            rating: meal?.rating,
-                            sectionKey,
-                            timestamp,
-                            userId: ownerUserId,
-                            value,
-                        });
-                    }
+                    saveEntryCell({
+                        items,
+                        meal,
+                        note: meal?.note,
+                        rating: meal?.rating,
+                        sectionKey,
+                        timestamp,
+                        userId: ownerUserId,
+                        value,
+                    });
                 },
                 ownerUserId,
             },
@@ -109,16 +101,16 @@ export function DeepLinkedMealModal({
         currentWeek,
         date,
         deleteEntryCell,
-        deleteEntryRow,
         mealZone,
         meals,
         openMealModal,
         ownerUserId,
         saveEntryCell,
-        saveEntryRow,
+        slotKey,
         t,
         targetDate,
         unsavedChanges,
+        zones,
     ]);
 
     return null;

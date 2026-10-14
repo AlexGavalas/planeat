@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
 import { Card } from '~components/card';
-import { ROWS } from '~constants/calendar';
 
 import { type TimelineTrend } from './home-helpers';
 import { Trend } from './home-trend';
@@ -17,6 +16,7 @@ type SummaryCardsProps = Readonly<{
     nextMeal: MealItem | null;
     plannedMeals: number;
     targetWeight: number | null;
+    totalMeals: number;
     weightTrend: TimelineTrend;
 }>;
 
@@ -25,6 +25,7 @@ export function SummaryCards({
     nextMeal,
     plannedMeals,
     targetWeight,
+    totalMeals,
     weightTrend,
 }: SummaryCardsProps) {
     const { t, i18n } = useTranslation();
@@ -49,7 +50,7 @@ export function SummaryCards({
                 </Text>
                 <Text className={styles.summaryValue}>
                     {nextMeal
-                        ? `${t(`row.${nextMeal.key}`)} · ${nextMeal.time}`
+                        ? `${nextMeal.label} · ${nextMeal.time}`
                         : t('home_dashboard.day_finished')}
                 </Text>
                 <Text className={styles.summaryContext} size="sm">
@@ -66,16 +67,16 @@ export function SummaryCards({
                 <Text className={styles.summaryValue}>
                     {t('home_dashboard.planned_count', {
                         count: plannedMeals,
-                        total: ROWS.length,
+                        total: totalMeals,
                     })}
                 </Text>
                 <Progress
                     aria-label={t('home_dashboard.planned_count', {
                         count: plannedMeals,
-                        total: ROWS.length,
+                        total: totalMeals,
                     })}
                     className={styles.planProgress}
-                    value={(plannedMeals / ROWS.length) * 100}
+                    value={totalMeals ? (plannedMeals / totalMeals) * 100 : 0}
                 />
             </Card>
             <Card>

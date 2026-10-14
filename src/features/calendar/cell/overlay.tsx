@@ -122,6 +122,9 @@ export const CellOverlay = ({
     };
 
     const shouldShowColumnLayout = isMealSaved || isMealFilled;
+    const editLabel = isMealFilled
+        ? t('generic.actions.edit')
+        : t('meal_plan.plan_meal');
 
     return (
         <Overlay style={{ background: 'var(--app-color-surface-overlay)' }}>
@@ -133,12 +136,12 @@ export const CellOverlay = ({
                 >
                     <Tooltip
                         withArrow
-                        label={t('generic.actions.edit')}
+                        label={editLabel}
                         position={shouldShowColumnLayout ? 'left' : 'top'}
                     >
                         <ActionIcon
                             {...commonButtonProps}
-                            aria-label={t('generic.actions.edit')}
+                            aria-label={editLabel}
                             onClick={handleEditClick}
                         >
                             <EditPencil />

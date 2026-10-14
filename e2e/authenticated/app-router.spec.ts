@@ -37,8 +37,15 @@ test('saves calendar drafts through a server action and copies the week', async 
         .locator('p:visible')
         .filter({ hasText: /^App Router migration meal$/ });
     await page.goto('/meal-plan');
-    await page.getByText('N/A', { exact: true }).first().hover();
-    await page.getByRole('button', { exact: true, name: 'Edit' }).click();
+    const firstMealSlot = page
+        .getByRole('group', { name: 'Carousel slide' })
+        .first()
+        .getByRole('article')
+        .first();
+    await firstMealSlot.hover();
+    await firstMealSlot
+        .getByRole('button', { exact: true, name: 'Plan meal' })
+        .click();
     const dialog = page.getByRole('dialog');
     await dialog
         .locator('textarea[name="meal"]')
@@ -58,7 +65,8 @@ test('saves calendar drafts through a server action and copies the week', async 
     ).toBeHidden();
     await page.reload();
     await expect(mealText).toBeVisible();
-    await page.getByRole('button', { name: 'Copy to next week' }).click();
+    await page.getByRole('button', { name: 'More actions' }).click();
+    await page.getByRole('menuitem', { name: 'Copy to next week' }).click();
     await page.getByRole('button', { exact: true, name: 'Save' }).click();
     await expect(
         page.getByRole('button', { exact: true, name: 'Save' }),

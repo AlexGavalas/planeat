@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon, Button, Group, Text, Title } from '@mantine/core';
-import { Clock, NavArrowDown, NavArrowRight } from 'iconoir-react';
+import { AppleHalf, Clock, NavArrowDown, NavArrowRight } from 'iconoir-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,7 @@ type MealRowProps = Readonly<{
 function MealRow({ day, index, item, nextMealIndex }: MealRowProps) {
     const { t } = useTranslation();
     const [expanded, setExpanded] = useState(false);
-    const Icon = MEAL_ICON[item.key];
+    const Icon = item.legacyKey ? MEAL_ICON[item.legacyKey] : AppleHalf;
     const hasNutrition = Boolean(item.mealRecord?.items?.length);
     const handleToggleNutrition = () => {
         setExpanded((value) => !value);
@@ -80,10 +80,10 @@ function MealRow({ day, index, item, nextMealIndex }: MealRowProps) {
                     {!item.meal && (
                         <Button
                             aria-label={t('home_dashboard.plan_meal', {
-                                meal: t(`row.${item.key}`),
+                                meal: item.label,
                             })}
                             component={Link}
-                            href={`/meal-plan?date=${day}&meal=${item.key}`}
+                            href={`/meal-plan?date=${day}&slot=${encodeURIComponent(item.key)}`}
                             size="compact-sm"
                             variant="subtle"
                         >

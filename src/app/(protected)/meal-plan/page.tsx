@@ -13,6 +13,7 @@ import { fetchActivities } from '~api/activity';
 import { fetchMeals } from '~api/meal';
 import { fetchMealZoneTimes } from '~api/meal-zone';
 import { getRequestDate, requireUser } from '~api/session';
+import { fetchWeeklyMealZones } from '~api/weekly-meal-zone';
 import { MealPlanPageSkeleton } from '~components/loading-skeleton';
 import { MEAL_ZONE_KEYS } from '~constants/meal-zones';
 import { MealPlan } from '~features/screens/meal-plan';
@@ -20,7 +21,7 @@ import { type MealZoneKey } from '~types/meal-zone';
 import { createQueryClient } from '~util/query-client';
 
 type MealPlanPageProps = Readonly<{
-    searchParams: Promise<{ date?: string; meal?: string }>;
+    searchParams: Promise<{ date?: string; meal?: string; slot?: string }>;
 }>;
 
 const isMealZoneKey = (value?: string): value is MealZoneKey =>
@@ -28,7 +29,7 @@ const isMealZoneKey = (value?: string): value is MealZoneKey =>
 
 async function MealPlanContent({ searchParams }: MealPlanPageProps) {
     const profile = await requireUser();
-    const { date, meal } = await searchParams;
+    const { date, meal, slot } = await searchParams;
     const parsedDate =
         date && isMatch(date, 'yyyy-MM-dd') ? parseISO(date) : null;
 
@@ -42,11 +43,13 @@ async function MealPlanContent({ searchParams }: MealPlanPageProps) {
 
     const endDate = format(endOfWeek(now, { weekStartsOn: 1 }), 'yyyy-MM-dd');
 
-    const [meals, activities, mealZoneTimes] = await Promise.all([
-        fetchMeals({ endDate, startDate, userId: profile.id }),
-        fetchActivities({ endDate, startDate, userId: profile.id }),
-        fetchMealZoneTimes({ effectiveOn: startDate, userId: profile.id }),
-    ]);
+    const [meals, activities, mealZoneTimes, weeklyMealZones] =
+        await Promise.all([
+            fetchMeals({ endDate, startDate, userId: profile.id }),
+            fetchActivities({ endDate, startDate, userId: profile.id }),
+            fetchMealZoneTimes({ effectiveOn: startDate, userId: profile.id }),
+            fetchWeeklyMealZones({ userId: profile.id, weekStart: startDate }),
+        ]);
 
     const client = createQueryClient();
 
@@ -59,6 +62,10 @@ async function MealPlanContent({ searchParams }: MealPlanPageProps) {
         data: mealZoneTimes,
         effectiveFrom: startDate,
     });
+    client.setQueryData(
+        ['weekly-meal-zones', profile.id, startDate],
+        weeklyMealZones,
+    );
 
     return (
         <HydrationBoundary state={dehydrate(client)}>
@@ -66,6 +73,9 @@ async function MealPlanContent({ searchParams }: MealPlanPageProps) {
                 canEditAnnotations
                 initialDate={format(now, 'yyyy-MM-dd')}
                 initialMealZone={isMealZoneKey(meal) ? meal : undefined}
+                initialSlotKey={slot?.slice(0, 100)}
+                initialWeeklyMealZones={weeklyMealZones}
+                initialWeekStart={startDate}
                 ownerUserId={profile.id}
             />
         </HydrationBoundary>

@@ -1,0 +1,144 @@
+import {
+    ActionIcon,
+    Badge,
+    Button,
+    Group,
+    Popover,
+    Stack,
+    Text,
+    Title,
+    UnstyledButton,
+} from '@mantine/core';
+import { format, isToday, parseISO } from 'date-fns';
+import { EditPencil, Plus } from 'iconoir-react';
+import { useTranslation } from 'react-i18next';
+
+import { type MealsMap } from '~types/meal';
+import { type WeeklyMealZone } from '~types/meal-zone';
+
+import { Cell } from './cell';
+import styles from './content.module.css';
+import { NutritionSummary } from './nutrition-summary';
+
+type Props = Readonly<{
+    label: string;
+    meals: MealsMap;
+    onEditSchedule: (day?: string) => void;
+    timestamp: Date;
+    unsavedChanges: MealsMap;
+    zones: WeeklyMealZone[];
+}>;
+
+export const DayLane = ({
+    label,
+    meals,
+    onEditSchedule,
+    timestamp,
+    unsavedChanges,
+    zones,
+}: Props) => {
+    const { t } = useTranslation();
+    const day = format(timestamp, 'yyyy-MM-dd');
+    const dayZones = zones
+        .filter((zone) => zone.day === day)
+        .toSorted((a, b) => a.position - b.position);
+    const dayMeals = dayZones.map(
+        ({ zoneKey }) => unsavedChanges[zoneKey] ?? meals[zoneKey],
+    );
+    const hasNutrition = dayMeals.some((meal) => meal?.items?.length);
+    const handleEditSchedule = onEditSchedule.bind(undefined, day);
+
+    return (
+        <section className={styles.dayLane}>
+            <header className={styles.dayHeader}>
+                <Group align="flex-start" justify="space-between" wrap="nowrap">
+                    <div>
+                        <Group gap="xs">
+                            <Title
+                                c={isToday(timestamp) ? 'success.8' : undefined}
+                                order={3}
+                                size="h4"
+                            >
+                                {label}
+                            </Title>
+                            {isToday(timestamp) && (
+                                <Badge size="xs" variant="light">
+                                    {t('meal_plan.today')}
+                                </Badge>
+                            )}
+                        </Group>
+                        <Text c="dimmed" size="xs">
+                            {t('meal_plan.schedule.slot_count', {
+                                count: dayZones.length,
+                            })}
+                        </Text>
+                    </div>
+                    <ActionIcon
+                        aria-label={t('meal_plan.schedule.edit_day', {
+                            day: label,
+                        })}
+                        onClick={handleEditSchedule}
+                        variant="subtle"
+                    >
+                        <EditPencil />
+                    </ActionIcon>
+                </Group>
+                {hasNutrition && (
+                    <Popover position="bottom" width={300} withArrow>
+                        <Popover.Target>
+                            <UnstyledButton
+                                aria-label={t('nutrition.details')}
+                                className={styles.nutritionButton}
+                            >
+                                <NutritionSummary compact meals={dayMeals} />
+                            </UnstyledButton>
+                        </Popover.Target>
+                        <Popover.Dropdown>
+                            <NutritionSummary meals={dayMeals} />
+                        </Popover.Dropdown>
+                    </Popover>
+                )}
+            </header>
+            <Stack className={styles.slots} gap="compact">
+                {dayZones.map((zone) => {
+                    const meal =
+                        unsavedChanges[zone.zoneKey] ?? meals[zone.zoneKey];
+                    return (
+                        <article className={styles.slot} key={zone.zoneKey}>
+                            <Group
+                                gap="xs"
+                                justify="space-between"
+                                wrap="nowrap"
+                            >
+                                <Text fw={600} size="sm">
+                                    {zone.legacyKey
+                                        ? t(
+                                              `meal_zone_settings.labels.${zone.legacyKey}`,
+                                          )
+                                        : zone.label}
+                                </Text>
+                                <Text c="dimmed" size="xs">
+                                    {zone.time}
+                                </Text>
+                            </Group>
+                            <Cell
+                                id={zone.zoneKey}
+                                isEdited={Boolean(unsavedChanges[zone.zoneKey])}
+                                meal={meal}
+                                timestamp={parseISO(zone.day)}
+                            />
+                        </article>
+                    );
+                })}
+            </Stack>
+            <Button
+                fullWidth
+                leftSection={<Plus />}
+                onClick={handleEditSchedule}
+                variant="subtle"
+            >
+                {t('meal_plan.schedule.add_slot')}
+            </Button>
+        </section>
+    );
+};

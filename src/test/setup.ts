@@ -67,6 +67,10 @@ jest.mock('../app/actions', () => ({
     setProfessionalRole: jest.fn(),
 }));
 
+jest.mock('../app/weekly-meal-zone-actions', () => ({
+    saveWeeklyMealSchedule: jest.fn().mockResolvedValue({ ok: true }),
+}));
+
 jest.mock<typeof nextNavigation>('next/navigation', () =>
     jest.requireActual('next-router-mock/navigation'),
 );

@@ -10,6 +10,7 @@ import {
     fetchProfessionalClients,
 } from '~api/professional';
 import { getRequestDate, requireUser } from '~api/session';
+import { fetchWeeklyMealZones } from '~api/weekly-meal-zone';
 import { MealPlanPageSkeleton } from '~components/loading-skeleton';
 import { MealZoneSettings } from '~features/meal-zone-settings';
 import { ProfessionalDashboard } from '~features/professional-dashboard';
@@ -66,7 +67,7 @@ async function ProfessionalDashboardContent({
             endOfWeek(now, { weekStartsOn: 1 }),
             'yyyy-MM-dd',
         );
-        const [meals, mealZoneTimes] = await Promise.all([
+        const [meals, mealZoneTimes, weeklyMealZones] = await Promise.all([
             fetchMeals({
                 endDate,
                 startDate,
@@ -75,6 +76,10 @@ async function ProfessionalDashboardContent({
             fetchMealZoneTimes({
                 effectiveOn: startDate,
                 userId: selectedClient.id,
+            }),
+            fetchWeeklyMealZones({
+                userId: selectedClient.id,
+                weekStart: startDate,
             }),
         ]);
         const queryClient = createQueryClient();
@@ -86,12 +91,18 @@ async function ProfessionalDashboardContent({
             ['meal-zone-times', selectedClient.id, startDate],
             { data: mealZoneTimes, effectiveFrom: startDate },
         );
+        queryClient.setQueryData(
+            ['weekly-meal-zones', selectedClient.id, startDate],
+            weeklyMealZones,
+        );
 
         detail = (
             <HydrationBoundary state={dehydrate(queryClient)}>
                 <MealPlan
                     canEditAnnotations={false}
                     initialDate={format(now, 'yyyy-MM-dd')}
+                    initialWeeklyMealZones={weeklyMealZones}
+                    initialWeekStart={startDate}
                     ownerUserId={selectedClient.id}
                 />
                 <MealZoneSettings ownerUserId={selectedClient.id} />

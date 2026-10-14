@@ -7,9 +7,16 @@ exports[`<Cell /> renders 1`] = `
   >
     @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
   </style>
+  <div>
+    <div
+      class="m_9df02822 mantine-Modal-root"
+      style="--modal-y-offset: 5dvh; --mb-z-index: 201;"
+    />
+  </div>
   <div
     class=""
     style="position: relative;"
+    tabindex="0"
   >
     <div
       class="cell"
@@ -23,9 +30,42 @@ exports[`<Cell /> renders 1`] = `
         >
           <p
             class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
-            style="text-align: center;"
+            style="color: var(--mantine-color-dimmed); text-align: center;"
           >
-            N/A
+            <svg
+              color="currentColor"
+              fill="none"
+              height="1.5em"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="1.5em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6 20H9M12 20H9M9 20V15"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M17 20V12C17 12 19.5 11 19.5 9C19.5 7.24264 19.5 4.5 19.5 4.5"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M17 8.5V4.5"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M4.49999 11C5.49991 13.1281 8.99999 15 8.99999 15C8.99999 15 12.5001 13.1281 13.5 11C14.5795 8.70257 13.5 4.5 13.5 4.5L4.49999 4.5C4.49999 4.5 3.42047 8.70257 4.49999 11Z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </p>
         </div>
       </div>
@@ -41,9 +81,16 @@ exports[`<Cell /> when the user has a meal renders 1`] = `
   >
     @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
   </style>
+  <div>
+    <div
+      class="m_9df02822 mantine-Modal-root"
+      style="--modal-y-offset: 5dvh; --mb-z-index: 201;"
+    />
+  </div>
   <div
     class=""
     style="position: relative;"
+    tabindex="0"
   >
     <div
       class="cell"
@@ -75,9 +122,16 @@ exports[`<Cell /> when the user has a meal when the meal has a note renders 1`] 
   >
     @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
   </style>
+  <div>
+    <div
+      class="m_9df02822 mantine-Modal-root"
+      style="--modal-y-offset: 5dvh; --mb-z-index: 201;"
+    />
+  </div>
   <div
     class=""
     style="position: relative;"
+    tabindex="0"
   >
     <div
       class="cell"

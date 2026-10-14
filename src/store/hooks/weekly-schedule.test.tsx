@@ -4,11 +4,14 @@ import { type PropsWithChildren } from 'react';
 import { currentWeekAtom, unsavedChangesAtom } from '~store/atoms';
 import { act, renderHook } from '~test/utils';
 import { type Meal } from '~types/meal';
+import { type WeeklyMealZone } from '~types/meal-zone';
 
+import { saveWeeklyMealSchedule } from '../../app/weekly-meal-zone-actions';
 import { useWeeklyScheduleOps } from './weekly-schedule';
 
 describe('useWeeklyScheduleOps', () => {
-    it('copies the current meals into the following week as new meals', () => {
+    it('copies the current schedule and meals into the following week', async () => {
+        expect.hasAssertions();
         const store = createStore();
         store.set(currentWeekAtom, new Date('2024-01-01T12:00:00Z'));
 
@@ -16,7 +19,26 @@ describe('useWeeklyScheduleOps', () => {
             <Provider store={store}>{children}</Provider>
         );
 
-        const { result } = renderHook(useWeeklyScheduleOps, {
+        const zones: WeeklyMealZone[] = [
+            {
+                day: '2024-01-01',
+                label: 'Breakfast',
+                legacyKey: 'morning',
+                position: 0,
+                time: '08:00',
+                weekStart: '2024-01-01',
+                zoneKey: 'Breakfast_Mon 01/01/2024',
+            },
+            {
+                day: '2024-01-02',
+                label: 'Custom meal',
+                position: 0,
+                time: '10:00',
+                weekStart: '2024-01-01',
+                zoneKey: 'custom-zone-id',
+            },
+        ];
+        const { result } = renderHook(() => useWeeklyScheduleOps(zones), {
             wrapper: Wrapper,
         });
         const meal: Meal = {
@@ -29,9 +51,25 @@ describe('useWeeklyScheduleOps', () => {
             user_id: 7,
         };
 
-        act(() => {
-            result.current.copyToNextWeek([meal]);
+        await act(async () => {
+            await result.current.copyToNextWeek([meal]);
         });
+
+        expect(jest.mocked(saveWeeklyMealSchedule)).toHaveBeenCalledWith(
+            expect.objectContaining({
+                weekStart: '2024-01-08',
+                zones: [
+                    expect.objectContaining({
+                        day: '2024-01-08',
+                        zoneKey: 'Breakfast_Mon 08/01/2024',
+                    }),
+                    expect.objectContaining({
+                        day: '2024-01-09',
+                        zoneKey: 'custom-zone-id',
+                    }),
+                ],
+            }),
+        );
 
         expect(store.get(currentWeekAtom)).toStrictEqual(
             new Date('2024-01-08T12:00:00Z'),

@@ -4,6 +4,7 @@ export {
     mealPoolItems,
     meals,
     mealZoneTimes,
+    weeklyMealZones,
 } from './schema/meals';
 export { professionalClients } from './schema/professional';
 export {
