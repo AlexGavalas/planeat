@@ -1,0 +1,35 @@
+.zoneRow {
+    align-items: end;
+    display: grid;
+    gap: var(--mantine-spacing-sm);
+    grid-template-columns: minmax(0, 1fr) 7rem auto;
+}
+
+.zoneRow > button {
+    margin-bottom: 0.125rem;
+}
+
+.actions {
+    background: var(--mantine-color-body);
+    border-top: 1px solid var(--mantine-color-default-border);
+    bottom: 0;
+    padding-block: var(--mantine-spacing-xs);
+    position: sticky;
+    z-index: 1;
+}
+
+@media (max-width: 36em) {
+    .zoneRow {
+        grid-template-columns: minmax(0, 1fr) 6.5rem auto;
+    }
+}
+
+@media (max-width: 22em) {
+    .zoneRow {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .zoneRow > :first-child {
+        grid-column: 1 / -1;
+    }
+}

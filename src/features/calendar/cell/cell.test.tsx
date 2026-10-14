@@ -1,4 +1,7 @@
-import { renderWithUser } from '~test/utils';
+import { ModalsProvider } from '@mantine/modals';
+import { type ReactNode } from 'react';
+
+import { renderWithUser, screen } from '~test/utils';
 import { type Meal } from '~types/meal';
 
 import { Cell, type CellProps } from './cell';
@@ -22,17 +25,38 @@ jest.mock('~store/hooks', () => ({
 }));
 
 describe('<Cell />', () => {
+    const Wrapper = ({ children }: { children: ReactNode }) => (
+        <ModalsProvider>{children}</ModalsProvider>
+    );
     const props: CellProps = {
         id: 'id',
         isEdited: false,
-        isRow: false,
         timestamp: new Date(),
+    };
+    const removeGeneratedIds = (container: HTMLElement): void => {
+        container.querySelectorAll('[id^="mantine-"]').forEach((element) => {
+            element.removeAttribute('id');
+        });
     };
 
     it('renders', () => {
-        const { container } = renderWithUser(<Cell {...props} />);
+        const { container } = renderWithUser(<Cell {...props} />, { Wrapper });
+        removeGeneratedIds(container);
 
         expect(container).toMatchSnapshot();
+    });
+
+    it('reveals the plan action on keyboard focus', async () => {
+        expect.hasAssertions();
+        const { user } = renderWithUser(<Cell {...props} />, { Wrapper });
+
+        expect(
+            screen.queryByRole('button', { name: 'Plan meal' }),
+        ).not.toBeInTheDocument();
+
+        await user.tab();
+
+        expect(screen.getByRole('button', { name: 'Plan meal' })).toBeVisible();
     });
 
     describe('when the user has a meal', () => {
@@ -52,7 +76,10 @@ describe('<Cell />', () => {
         };
 
         it('renders', () => {
-            const { container } = renderWithUser(<Cell {...propsWithMeal} />);
+            const { container } = renderWithUser(<Cell {...propsWithMeal} />, {
+                Wrapper,
+            });
+            removeGeneratedIds(container);
 
             expect(container).toMatchSnapshot();
         });
@@ -69,7 +96,9 @@ describe('<Cell />', () => {
             it('renders', () => {
                 const { container } = renderWithUser(
                     <Cell {...propsWithMealNote} />,
+                    { Wrapper },
                 );
+                removeGeneratedIds(container);
 
                 expect(container).toMatchSnapshot();
             });

@@ -36,12 +36,16 @@ const structuredMeal: Meal = {
 
 const structuredMealItem: MealItem = {
     key: 'morning',
+    label: 'Morning',
+    legacyKey: 'morning',
     meal: structuredMeal.meal,
     mealRecord: structuredMeal,
     time: '08:00',
 };
 const freeTextMealItem: MealItem = {
     key: 'snack1',
+    label: 'First snack',
+    legacyKey: 'snack1',
     meal: 'Free-text snack',
     time: '10:00',
 };

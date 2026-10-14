@@ -3,13 +3,21 @@
     --grid-gap: var(--mantine-spacing-compact);
     display: grid;
     gap: var(--grid-gap);
+    min-width: 0;
+    width: 100%;
+}
+
+.desktopCalendar,
+.desktopCalendar > * {
+    min-width: 0;
+    max-width: 100%;
 }
 
 .mobileCalendar {
     display: none;
 }
 
-@media (max-width: 48em) {
+@media (max-width: 64em) {
     .container {
         display: block;
     }

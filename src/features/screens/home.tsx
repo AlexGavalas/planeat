@@ -7,7 +7,6 @@ import { enGB } from 'date-fns/locale/en-GB';
 import { EditPencil, Running } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 
-import { ROWS } from '~constants/calendar';
 import { useMeasurementSummary } from '~hooks/use-measurement-summary';
 
 import { HealthSummary } from './home-health-summary';
@@ -27,23 +26,29 @@ export function Home({
     dailyMeals,
     date,
     fullName,
-    mealZoneTimes,
     targetWeight,
+    weeklyMealZones,
 }: HomeProps) {
     const { t, i18n } = useTranslation();
     const { handleAddActivity, handleAddMeasurement } = useHomeActions();
     const { data: summary } = useMeasurementSummary();
     const now = parseISO(date);
     const day = format(now, 'yyyy-MM-dd');
-    const nextMealIndex = getNextMealIndex(date, mealZoneTimes);
-    const mealItems: MealItem[] = ROWS.map(({ key }) => {
-        const sectionKey = `${key}_${format(now, 'EEE dd/MM/yyyy')}`;
-        const mealRecord = dailyMeals[sectionKey];
+    const todayZones = weeklyMealZones
+        .filter((zone) => zone.day === day)
+        .toSorted((a, b) => a.position - b.position);
+    const nextMealIndex = getNextMealIndex(date, todayZones);
+    const mealItems: MealItem[] = todayZones.map((zone) => {
+        const mealRecord = dailyMeals[zone.zoneKey];
         return {
-            key,
+            key: zone.zoneKey,
+            label: zone.legacyKey
+                ? t(`meal_zone_settings.labels.${zone.legacyKey}`)
+                : zone.label,
+            legacyKey: zone.legacyKey,
             meal: mealRecord?.meal.trim() || null,
             mealRecord,
-            time: mealZoneTimes[key],
+            time: zone.time,
         };
     });
     const plannedMeals = mealItems.filter(({ meal }) => meal).length;
@@ -92,6 +97,7 @@ export function Home({
                 nextMeal={nextMeal}
                 plannedMeals={plannedMeals}
                 targetWeight={targetWeight}
+                totalMeals={mealItems.length}
                 weightTrend={weightTrend}
             />
 

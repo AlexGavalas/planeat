@@ -19,6 +19,7 @@ import { getResources, getT } from '~util/i18n';
 import { createQueryClient } from '~util/query-client';
 
 import '@mantine/core/styles.css';
+import '@mantine/carousel/styles.css';
 import '@mantine/charts/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';

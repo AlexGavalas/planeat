@@ -1,5 +1,5 @@
 import { Box, Group, Paper, Stack, Text, UnstyledButton } from '@mantine/core';
-import { EditPencil } from 'iconoir-react';
+import { AppleHalf, EditPencil } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 
 import { MEAL_ICON } from '~constants/calendar';
@@ -14,6 +14,7 @@ import {
     type Meal,
     type MealChange,
 } from '~types/meal';
+import { type MealZoneKey } from '~types/meal-zone';
 import { useOpenContextModal } from '~util/modal';
 
 import { MEAL_MODAL_OPTIONS } from '../modals/meal/meal-modal-options';
@@ -27,6 +28,7 @@ type MobileMealProps = Readonly<{
     isEdited: boolean;
     isRow: boolean;
     label: string;
+    legacyKey?: MealZoneKey;
     meal?: Meal | EditedMeal;
     time: string;
     timestamp: Date;
@@ -40,6 +42,7 @@ export const MobileMeal = ({
     isEdited,
     isRow,
     label,
+    legacyKey,
     meal,
     time,
     timestamp,
@@ -53,7 +56,9 @@ export const MobileMeal = ({
     const openMealNoteModal = useOpenContextModal('meal-note');
     const openMealRatingModal = useOpenContextModal('meal-rating');
     const [rowKey] = id.split('_');
-    const Icon = MEAL_ICON[rowKey as RowKey];
+    const Icon = legacyKey
+        ? MEAL_ICON[legacyKey]
+        : (MEAL_ICON[rowKey as RowKey] ?? AppleHalf);
 
     const handleSave = (newMeal: MealChange): Promise<void> => {
         if (!ownerUserId || !newMeal.meal) {
@@ -156,11 +161,9 @@ export const MobileMeal = ({
         >
             <Group justify="space-between" wrap="nowrap">
                 <Group className={styles.mealSummary} gap="md" wrap="nowrap">
-                    {Icon && (
-                        <Box aria-hidden className={styles.mealIcon}>
-                            <Icon />
-                        </Box>
-                    )}
+                    <Box aria-hidden className={styles.mealIcon}>
+                        <Icon />
+                    </Box>
                     <Stack gap="micro">
                         <Text fw="var(--mantine-font-weight-bold)">
                             {label} · {time}

@@ -7,17 +7,23 @@ import { Calendar } from '~features/calendar';
 import { DeepLinkedMealModal } from '~features/calendar/deep-linked-meal-modal';
 import { MealPlanOwnerProvider } from '~features/meal-plan-owner';
 import { useCurrentWeek } from '~store/hooks';
-import { type MealZoneKey } from '~types/meal-zone';
+import { type MealZoneKey, type WeeklyMealZone } from '~types/meal-zone';
 
 export function MealPlan({
     canEditAnnotations,
     initialDate,
     initialMealZone,
+    initialSlotKey,
+    initialWeeklyMealZones,
+    initialWeekStart,
     ownerUserId,
 }: Readonly<{
     canEditAnnotations: boolean;
     initialDate: string;
     initialMealZone?: MealZoneKey;
+    initialSlotKey?: string;
+    initialWeeklyMealZones: WeeklyMealZone[];
+    initialWeekStart: string;
     ownerUserId: number;
 }>) {
     const { goToDate } = useCurrentWeek();
@@ -33,9 +39,20 @@ export function MealPlan({
         >
             <DeepLinkedMealModal
                 date={initialDate}
+                initialSchedule={{
+                    weekStart: initialWeekStart,
+                    zones: initialWeeklyMealZones,
+                }}
                 mealZone={initialMealZone}
+                slotKey={initialSlotKey}
             />
-            <Calendar initialDate={initialDate} />
+            <Calendar
+                initialDate={initialDate}
+                initialSchedule={{
+                    weekStart: initialWeekStart,
+                    zones: initialWeeklyMealZones,
+                }}
+            />
         </MealPlanOwnerProvider>
     );
 }

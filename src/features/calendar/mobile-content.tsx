@@ -1,34 +1,39 @@
-import { Stack, Title } from '@mantine/core';
+import { Button, Stack, Title } from '@mantine/core';
 import { format, getDay, parseISO } from 'date-fns';
+import { EditPencil } from 'iconoir-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ROWS } from '~constants/calendar';
-import { useMealZoneTimes } from '~hooks/use-meal-zone-times';
-import { useCurrentWeek, useMeals, useUnsavedChanges } from '~store/hooks';
+import { useMeals, useUnsavedChanges } from '~store/hooks';
 import { type MealsMap } from '~types/meal';
+import { type WeeklyMealZone } from '~types/meal-zone';
 import { getDaysOfWeek } from '~util/date';
 
 import styles from './mobile-content.module.css';
 import { MobileDayButton } from './mobile-day-button';
 import { MobileMeal } from './mobile-meal';
 import { NutritionSummary } from './nutrition-summary';
-import type { RowItem } from './types';
 
 export const MobileContent = ({
     initialDate,
-}: Readonly<{ initialDate: string }>) => {
+    onEditSchedule,
+    zones,
+}: Readonly<{
+    initialDate: string;
+    onEditSchedule: (day?: string) => void;
+    zones: WeeklyMealZone[];
+}>) => {
     const { i18n, t } = useTranslation();
-    const { currentWeek } = useCurrentWeek();
-    const { times } = useMealZoneTimes(currentWeek);
     const { meals } = useMeals();
     const { unsavedChanges } = useUnsavedChanges();
     const [selectedDay, setSelectedDay] = useState(
         () => (getDay(parseISO(initialDate)) + 6) % 7,
     );
-    const daysOfWeek = getDaysOfWeek(currentWeek);
+    const daysOfWeek = getDaysOfWeek(
+        parseISO(zones[0]?.weekStart ?? initialDate),
+    );
     const localizedDays = getDaysOfWeek(
-        currentWeek,
+        parseISO(zones[0]?.weekStart ?? initialDate),
         'EEE',
         i18n.language === 'gr' ? 'gr' : 'en',
     );
@@ -36,45 +41,19 @@ export const MobileContent = ({
         acc[meal.section_key] = meal;
         return acc;
     }, {});
-
     const day = daysOfWeek[selectedDay] ?? daysOfWeek[0];
 
     if (!day) {
         return null;
     }
 
-    const sharedRows = ROWS.filter(({ key }) =>
-        ['morning', 'snack1', 'snack2'].includes(key),
+    const dayKey = format(day.timestamp, 'yyyy-MM-dd');
+    const dayZones = zones
+        .filter((zone) => zone.day === dayKey)
+        .toSorted((a, b) => a.position - b.position);
+    const dayMeals = dayZones.map(
+        ({ zoneKey }) => unsavedChanges[zoneKey] ?? mealsMap[zoneKey],
     );
-    const dailyRows = ROWS.filter(({ key }) =>
-        ['lunch', 'dinner'].includes(key),
-    );
-    const handleSelectDay = (index: number): void => {
-        setSelectedDay(index);
-    };
-
-    const renderMeal = (row: RowItem, isRow: boolean) => {
-        const sectionDay = isRow ? daysOfWeek[0] : day;
-
-        if (!sectionDay) {
-            return null;
-        }
-
-        const id = `${row.key}_${sectionDay.label}`;
-
-        return (
-            <MobileMeal
-                key={row.key}
-                id={id}
-                isEdited={Boolean(unsavedChanges[id])}
-                isRow={isRow}
-                label={t(`row.${row.key}`)}
-                meal={unsavedChanges[id] ?? mealsMap[id]}
-                time={times[row.key]}
-                timestamp={sectionDay.timestamp}
-            />
-        );
-    };
 
     return (
         <Stack gap="lg">
@@ -89,36 +68,49 @@ export const MobileContent = ({
                         date={timestamp}
                         index={index}
                         label={localizedDays[index]?.label}
-                        onSelect={handleSelectDay}
+                        onSelect={setSelectedDay}
                         selected={selectedDay === index}
                     />
                 ))}
             </div>
             <Stack gap="sm">
-                <Title order={3}>{t('meal_plan.every_day')}</Title>
-                {sharedRows.map((row) => renderMeal(row, true))}
-            </Stack>
-            <Stack gap="sm">
                 <Title order={3}>
                     {localizedDays[selectedDay]?.label}{' '}
                     {format(day.timestamp, 'dd/MM')}
                 </Title>
-                <NutritionSummary
-                    meals={ROWS.map(({ key }) => {
-                        const sectionDay = [
-                            'morning',
-                            'snack1',
-                            'snack2',
-                        ].includes(key)
-                            ? daysOfWeek[0]
-                            : day;
-                        const id = sectionDay
-                            ? `${key}_${sectionDay.label}`
-                            : '';
-                        return unsavedChanges[id] ?? mealsMap[id];
+                <NutritionSummary meals={dayMeals} />
+                {dayZones.map((zone) => (
+                    <MobileMeal
+                        id={zone.zoneKey}
+                        isEdited={Boolean(unsavedChanges[zone.zoneKey])}
+                        isRow={false}
+                        key={zone.zoneKey}
+                        label={
+                            zone.legacyKey
+                                ? t(
+                                      `meal_zone_settings.labels.${zone.legacyKey}`,
+                                  )
+                                : zone.label
+                        }
+                        legacyKey={zone.legacyKey}
+                        meal={
+                            unsavedChanges[zone.zoneKey] ??
+                            mealsMap[zone.zoneKey]
+                        }
+                        time={zone.time}
+                        timestamp={parseISO(zone.day)}
+                    />
+                ))}
+                <Button
+                    fullWidth
+                    leftSection={<EditPencil />}
+                    onClick={onEditSchedule.bind(undefined, dayKey)}
+                    variant="light"
+                >
+                    {t('meal_plan.schedule.edit_day', {
+                        day: localizedDays[selectedDay]?.label,
                     })}
-                />
-                {dailyRows.map((row) => renderMeal(row, false))}
+                </Button>
             </Stack>
         </Stack>
     );

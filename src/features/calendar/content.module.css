@@ -1,27 +1,81 @@
-.wrapper {
-    display: grid;
-    gap: var(--grid-gap);
+.carousel {
+    max-width: 100%;
+    min-width: 0;
+    padding-top: calc(1.75rem + var(--mantine-spacing-compact));
 }
 
-.row {
-    display: grid;
-    grid-template-columns: var(--grid-config);
-    gap: var(--grid-gap);
-    min-height: 8rem;
+.carouselViewport,
+.carouselSlide {
+    min-width: 0;
 }
 
-.row h3 {
-    flex-direction: column;
+.carouselControls {
+    gap: var(--mantine-spacing-xs);
+    justify-content: flex-end;
+    padding: 0;
+    top: 0;
+}
+
+.carouselControl[data-inactive] {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.dayLane {
+    background: var(--app-color-surface-mobile-card);
+    border: 1px solid var(--mantine-color-default-border);
+    border-radius: var(--mantine-radius-md);
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    word-break: break-all;
-    hyphens: auto;
+    flex-direction: column;
+    gap: var(--mantine-spacing-compact);
+    min-width: 0;
+    padding: var(--mantine-spacing-compact);
+    height: 100%;
 }
 
-.row h3 small {
-    color: var(--mantine-color-dimmed);
-    font-size: var(--mantine-font-size-sm);
-    font-weight: normal;
-    margin-top: var(--mantine-spacing-micro);
+.dayHeader {
+    min-height: 4.5rem;
+}
+
+.nutritionButton {
+    display: block;
+    text-align: left;
+    width: 100%;
+}
+
+.slots {
+    flex: 1;
+}
+
+.slot {
+    background: var(--app-color-surface-default);
+    border-radius: var(--mantine-radius-sm);
+    display: grid;
+    gap: var(--mantine-spacing-compact);
+    padding: var(--mantine-spacing-compact);
+}
+
+@media print {
+    .carousel {
+        padding-top: 0;
+    }
+
+    .carouselControls {
+        display: none;
+    }
+
+    .carouselViewport {
+        overflow: visible;
+    }
+
+    .carouselContainer {
+        display: grid;
+        gap: var(--mantine-spacing-compact);
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        transform: none !important;
+    }
+
+    .carouselSlide {
+        padding: 0;
+    }
 }

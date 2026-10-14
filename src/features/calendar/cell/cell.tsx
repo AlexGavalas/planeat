@@ -1,6 +1,6 @@
 import { Badge, Box, Center, Stack, Text } from '@mantine/core';
-import { useHover } from '@mantine/hooks';
-import { MultiplePages } from 'iconoir-react';
+import { useFocusWithin, useHover, useMergedRef } from '@mantine/hooks';
+import { Cutlery, MultiplePages } from 'iconoir-react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -19,44 +19,33 @@ export type CellProps = Readonly<{
     meal?: Meal | EditedMeal;
     timestamp: Date;
     isEdited: boolean;
-    isRow: boolean;
 }>;
 
-export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
+export const Cell = ({ id, meal, timestamp, isEdited }: CellProps) => {
     const { t } = useTranslation();
     const ownerUserId = useMealPlanOwnerId();
     const canEditAnnotations = useCanEditMealAnnotations();
     const { hovered: isHovered, ref } = useHover();
+    const { focused: isFocusedWithin, ref: focusRef } = useFocusWithin();
+    const mergedRef = useMergedRef(ref, focusRef);
 
-    const { deleteEntryCell, deleteEntryRow, saveEntryCell, saveEntryRow } =
-        useMeals();
+    const { deleteEntryCell, saveEntryCell } = useMeals();
 
     const handleSave = (newMeal: MealChange) => {
         if (!ownerUserId || !newMeal.meal) {
             return;
         }
 
-        if (isRow) {
-            saveEntryRow({
-                items: newMeal.items,
-                note: newMeal.note,
-                rating: newMeal.rating,
-                sectionKey: id,
-                userId: ownerUserId,
-                value: newMeal.meal,
-            });
-        } else {
-            saveEntryCell({
-                items: newMeal.items,
-                meal,
-                note: newMeal.note,
-                rating: newMeal.rating,
-                sectionKey: id,
-                timestamp,
-                userId: ownerUserId,
-                value: newMeal.meal,
-            });
-        }
+        saveEntryCell({
+            items: newMeal.items,
+            meal,
+            note: newMeal.note,
+            rating: newMeal.rating,
+            sectionKey: id,
+            timestamp,
+            userId: ownerUserId,
+            value: newMeal.meal,
+        });
     };
 
     const handleDelete = () => {
@@ -64,24 +53,14 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
             return;
         }
 
-        if (isRow) {
-            deleteEntryRow(id);
-        } else {
-            deleteEntryCell({ meal });
-        }
+        deleteEntryCell({ meal });
     };
 
     const hasNote = !!meal?.note;
 
     return (
-        <Box
-            ref={ref}
-            style={{
-                position: 'relative',
-                ...(isRow && { gridColumn: 'span 7' }),
-            }}
-        >
-            {isHovered && (
+        <Box ref={mergedRef} style={{ position: 'relative' }} tabIndex={0}>
+            {(isHovered || isFocusedWithin) && (
                 <CellOverlay
                     canEditAnnotations={canEditAnnotations}
                     meal={meal}
@@ -111,7 +90,9 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                 )}
                 <Center
                     style={{
-                        ...(isHovered && { opacity: 0.15 }),
+                        ...((isHovered || isFocusedWithin) && {
+                            opacity: 0.15,
+                        }),
                     }}
                 >
                     <Stack
@@ -119,7 +100,9 @@ export const Cell = ({ id, meal, timestamp, isEdited, isRow }: CellProps) => {
                         gap="xs"
                         p="var(--app-space-calendar-cell)"
                     >
-                        <Text ta="center">{meal?.meal || 'N/A'}</Text>
+                        <Text c={meal?.meal ? undefined : 'dimmed'} ta="center">
+                            {meal?.meal || <Cutlery />}
+                        </Text>
                         {meal?.items?.length ? (
                             <NutritionSummary compact meals={[meal]} />
                         ) : null}

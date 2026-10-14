@@ -22,7 +22,7 @@ test('loads protected routes for a registered user', async ({ page }) => {
     ).toBeVisible();
 
     await expect(
-        page.getByRole('button', { name: 'Create a meal' }),
+        page.getByRole('button', { name: 'Meal library' }),
     ).toBeVisible();
 });
 
@@ -32,7 +32,13 @@ test('homepage actions open their advertised destinations', async ({
     await page.goto('/home');
 
     await page.getByRole('link', { name: 'Plan Lunch' }).click();
-    await expect(page).toHaveURL(`/meal-plan?date=${FIXED_E2E_DAY}&meal=lunch`);
+    await expect(page).toHaveURL((url) => {
+        return (
+            url.pathname === '/meal-plan' &&
+            url.searchParams.get('date') === FIXED_E2E_DAY &&
+            url.searchParams.get('slot') === 'lunch_Mon 12/01/2026'
+        );
+    });
     const mealDialog = page.getByRole('dialog', { name: 'Edit meal' });
     await expect(mealDialog).toBeVisible();
     await expect(mealDialog.getByLabel('Meal name')).toBeVisible();

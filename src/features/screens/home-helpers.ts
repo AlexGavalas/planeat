@@ -1,7 +1,6 @@
 import { parse, parseISO, startOfDay } from 'date-fns';
 
-import { ROWS } from '~constants/calendar';
-import { type MealZoneTimes } from '~types/meal-zone';
+import { type WeeklyMealZone } from '~types/meal-zone';
 
 type TimelinePoint = { x: string; y: number | null };
 
@@ -30,13 +29,13 @@ export const getGreetingPeriod = (
 
 export const getNextMealIndex = (
     date: string,
-    mealZoneTimes: MealZoneTimes,
+    mealZones: WeeklyMealZone[],
 ): number => {
     const now = parseISO(date);
     const start = startOfDay(now);
 
-    return ROWS.findIndex(({ key }) => {
-        const mealTime = parse(mealZoneTimes[key], 'HH:mm', start);
+    return mealZones.findIndex(({ time }) => {
+        const mealTime = parse(time, 'HH:mm', start);
         return mealTime.getTime() > now.getTime();
     });
 };

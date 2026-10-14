@@ -15,3 +15,11 @@ export const DEFAULT_MEAL_ZONE_TIMES: MealZoneTimes = {
     snack1: '11:00',
     snack2: '17:00',
 };
+
+export const DEFAULT_MEAL_ZONE_LABELS: Record<MealZoneKey, string> = {
+    dinner: 'Dinner',
+    lunch: 'Lunch',
+    morning: 'Morning',
+    snack1: 'Snack',
+    snack2: 'Snack',
+};

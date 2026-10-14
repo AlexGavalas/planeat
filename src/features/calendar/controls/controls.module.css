@@ -2,7 +2,7 @@
     display: none;
 }
 
-@media (max-width: 48em) {
+@media (max-width: 64em) {
     .desktopControls {
         display: none;
     }
