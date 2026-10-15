@@ -1,4 +1,5 @@
 import { Button, List } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,10 +12,13 @@ type SearchResultProps = Readonly<{
     onEdit: OnEdit;
 }>;
 
-export const SearchResult = ({ template, onEdit }: SearchResultProps) => {
+export const SearchResult = ({
+    template,
+    onEdit,
+}: SearchResultProps): ReactElement => {
     const { t } = useTranslation();
 
-    const handleEdit = (() => {
+    const handleEdit = ((): void => {
         onEdit(template);
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 

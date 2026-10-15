@@ -1,6 +1,7 @@
 'use client';
 
 import { Text } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,7 +20,7 @@ import {
 import { saveReminderPreferences } from './reminder-api';
 import { ReminderControls } from './reminder-controls';
 
-export const MealReminders = () => {
+export const MealReminders = (): ReactElement | null => {
     const { t } = useTranslation();
     const [detectedTimezone, setDetectedTimezone] = useState('');
     const [isMealReminderEnabled, setIsMealReminderEnabled] = useState(false);

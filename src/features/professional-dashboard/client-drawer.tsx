@@ -1,4 +1,5 @@
 import { Button, Drawer, Group, Stack, Text } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -18,7 +19,7 @@ export const ClientDrawer = ({
     detail,
     onClose,
     onStopManaging,
-}: ClientDrawerProps) => {
+}: ClientDrawerProps): ReactElement => {
     const { t } = useTranslation();
 
     return (

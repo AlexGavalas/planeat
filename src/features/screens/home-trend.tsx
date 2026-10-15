@@ -4,6 +4,7 @@ import { Text } from '@mantine/core';
 import { format, parseISO } from 'date-fns';
 import { el } from 'date-fns/locale/el';
 import { enGB } from 'date-fns/locale/en-GB';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './home.module.css';
@@ -14,7 +15,11 @@ type TrendProps = Readonly<{
     unit: string;
 }>;
 
-export function Trend({ change, date, unit }: TrendProps) {
+export const Trend = ({
+    change,
+    date,
+    unit,
+}: TrendProps): ReactElement | null => {
     const { t, i18n } = useTranslation();
 
     if (change === null || !date) {
@@ -38,4 +43,4 @@ export function Trend({ change, date, unit }: TrendProps) {
             })}
         </Text>
     );
-}
+};

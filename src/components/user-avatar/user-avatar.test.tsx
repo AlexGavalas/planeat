@@ -91,10 +91,11 @@ describe('<UserAvatar />', () => {
         });
 
         it('render the avatar', () => {
-            const { container } = renderWithUser(<UserAvatar />);
+            renderWithUser(<UserAvatar />);
 
-            expect(screen.getByRole('img')).toBeInTheDocument();
-            expect(container).toMatchSnapshot();
+            expect(
+                screen.getByRole('img', { name: 'Test User' }),
+            ).toBeInTheDocument();
         });
     });
 });

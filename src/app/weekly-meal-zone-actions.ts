@@ -8,9 +8,9 @@ import { getCurrentUser } from '~api/session';
 import { saveWeeklyMealZones } from '~api/weekly-meal-zone';
 import { weeklyMealScheduleSchema } from '~schemas/weekly-meal-zone';
 
-export async function saveWeeklyMealSchedule(
+export const saveWeeklyMealSchedule = async (
     input: unknown,
-): Promise<{ ok: boolean }> {
+): Promise<{ ok: boolean }> => {
     const user = await getCurrentUser();
 
     if (!user) {
@@ -45,4 +45,4 @@ export async function saveWeeklyMealSchedule(
     revalidatePath('/meal-plan');
 
     return { ok: true };
-}
+};

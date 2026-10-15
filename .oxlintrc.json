@@ -1,6 +1,9 @@
 {
     "$schema": "./node_modules/oxlint/configuration_schema.json",
     "plugins": ["typescript", "unicorn", "import", "react"],
+    "jsPlugins": [
+        { "name": "project", "specifier": "./scripts/lint-rules.mts" }
+    ],
     "categories": {
         "correctness": "off"
     },
@@ -22,13 +25,24 @@
         "*.config.mjs"
     ],
     "rules": {
+        "complexity": ["warn", { "max": 20 }],
         "curly": "error",
+        "func-style": ["error", "expression"],
+        "max-depth": ["warn", { "max": 4 }],
         "max-lines": ["error", { "max": 200 }],
+        "max-params": ["warn", { "max": 4 }],
+        "max-statements": ["warn", { "max": 30 }],
         "no-array-constructor": "error",
+        "no-else-return": "error",
         "no-unused-expressions": "error",
         "no-unused-vars": "error",
         "no-useless-constructor": "error",
         "no-empty-function": "error",
+        "prefer-arrow-callback": [
+            "error",
+            { "allowNamedFunctions": false, "allowUnboundThis": false }
+        ],
+        "project/arrow-function-expressions": "error",
         "import/no-default-export": "error",
         "sort-keys": [
             "warn",
@@ -111,6 +125,15 @@
         "typescript/consistent-indexed-object-style": "error",
         "typescript/consistent-type-assertions": "error",
         "typescript/consistent-type-definitions": ["error", "type"],
+        "typescript/no-restricted-types": [
+            "error",
+            {
+                "types": {
+                    "JSX.Element": "Use ReactElement imported from react instead.",
+                    "React.JSX.Element": "Use ReactElement imported from react instead."
+                }
+            }
+        ],
         "typescript/dot-notation": "error",
         "typescript/no-confusing-non-null-assertion": "error",
         "typescript/no-inferrable-types": "error",
@@ -135,13 +158,32 @@
                 "prefer": "type-imports"
             }
         ],
-        "typescript/explicit-function-return-type": "warn"
+        "typescript/explicit-function-return-type": [
+            "error",
+            {
+                "allowConciseArrowFunctionExpressionsStartingWithVoid": false,
+                "allowDirectConstAssertionInArrowFunctions": false,
+                "allowExpressions": false,
+                "allowFunctionsWithoutTypeParameters": false,
+                "allowHigherOrderFunctions": false,
+                "allowIIFEs": false,
+                "allowTypedFunctionExpressions": true
+            }
+        ],
+        "typescript/switch-exhaustiveness-check": "error"
     },
     "overrides": [
         {
             "files": ["**/*.{js,jsx,mjs,ts,tsx,mts,cts}"],
             "rules": {
                 "react/display-name": "error",
+                "react/function-component-definition": [
+                    "error",
+                    {
+                        "namedComponents": "arrow-function",
+                        "unnamedComponents": "arrow-function"
+                    }
+                ],
                 "react/jsx-key": "error",
                 "react/jsx-no-comment-textnodes": "error",
                 "react/jsx-no-duplicate-props": "error",
@@ -265,8 +307,7 @@
                     }
                 ],
                 "react/jsx-no-useless-fragment": "error",
-                "react/void-dom-elements-no-children": "error",
-                "typescript/explicit-function-return-type": "off"
+                "react/void-dom-elements-no-children": "error"
             }
         },
         {
@@ -291,6 +332,15 @@
                 "jest/no-interpolation-in-snapshots": "error",
                 "jest/no-jasmine-globals": "error",
                 "jest/no-mocks-import": "error",
+                "jest/no-restricted-matchers": [
+                    "error",
+                    {
+                        "toMatchInlineSnapshot": "Use behavior assertions, or Playwright screenshots for visual output.",
+                        "toMatchSnapshot": "Use behavior assertions, or Playwright screenshots for visual output.",
+                        "toThrowErrorMatchingInlineSnapshot": "Assert the expected error explicitly.",
+                        "toThrowErrorMatchingSnapshot": "Assert the expected error explicitly."
+                    }
+                ],
                 "jest/no-standalone-expect": "error",
                 "jest/no-test-prefixes": "error",
                 "jest/valid-describe-callback": "error",
@@ -345,6 +395,12 @@
             "plugins": ["jest"],
             "env": {
                 "jest": true
+            }
+        },
+        {
+            "files": ["e2e/**/*.ts"],
+            "rules": {
+                "max-statements": ["warn", { "max": 50 }]
             }
         },
         {

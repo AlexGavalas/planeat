@@ -2,7 +2,7 @@ import { createCredentialsUser, fetchUser } from '~api/user';
 import { registrationSchema } from '~schemas/auth';
 import { hashPassword } from '~util/password';
 
-export async function POST(request: Request): Promise<Response> {
+export const POST = async (request: Request): Promise<Response> => {
     const parsed = registrationSchema.safeParse(
         await request.json().catch(() => null),
     );
@@ -54,4 +54,4 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     return Response.json({ message: 'Account created' }, { status: 201 });
-}
+};

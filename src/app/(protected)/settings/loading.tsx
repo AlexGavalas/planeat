@@ -1,5 +1,9 @@
+import type { ReactElement } from 'react';
+
 import { SettingsPageSkeleton } from '~components/loading-skeleton';
 
-export default function Loading() {
+const Loading = (): ReactElement => {
     return <SettingsPageSkeleton />;
-}
+};
+
+export default Loading;

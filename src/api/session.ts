@@ -29,7 +29,7 @@ export const requireUser = async (): Promise<UserProfile> => {
 // Share one calendar snapshot between the root provider and page loaders. Local
 // E2E owns the server environment; hosted E2E forwards the same date to Vercel
 // preview requests. Production never honors the test-only request header.
-export const getRequestDate = cache(async (): Promise<Date> => {
+export const getRequestDate = cache(async () => {
     const isPreview = process.env.VERCEL_ENV === 'preview';
     const headerDate = isPreview
         ? (await headers()).get(E2E_REQUEST_DATE_HEADER)

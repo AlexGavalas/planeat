@@ -11,6 +11,7 @@ import {
     StatsReport,
     Xmark,
 } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -29,7 +30,7 @@ type MobileControlsProps = Readonly<{
     onSave: MouseEventHandler<HTMLButtonElement>;
 }>;
 
-export const MobileControls = (props: MobileControlsProps) => {
+export const MobileControls = (props: MobileControlsProps): ReactElement => {
     const { t } = useTranslation();
 
     return (

@@ -1,7 +1,8 @@
-/* oxlint-disable react/jsx-handler-names -- Mantine names this callback prop getEmblaApi. */
 import { Carousel } from '@mantine/carousel';
 import { useMediaQuery } from '@mantine/hooks';
 import { type EmblaCarouselType } from 'embla-carousel';
+/* oxlint-disable react/jsx-handler-names -- Mantine names this callback prop getEmblaApi. */
+import type { ReactElement } from 'react';
 import { type ButtonHTMLAttributes, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -18,7 +19,7 @@ type Props = Readonly<{
     zones: WeeklyMealZone[];
 }>;
 
-export const Content = ({ onEditSchedule, zones }: Props) => {
+export const Content = ({ onEditSchedule, zones }: Props): ReactElement => {
     const [carouselApi, setCarouselApi] = useState<EmblaCarouselType | null>(
         null,
     );
@@ -56,7 +57,7 @@ export const Content = ({ onEditSchedule, zones }: Props) => {
         'aria-disabled': !canScrollNext,
         'aria-label': t('meal_plan.scroll_days_forward'),
         'data-inactive': canScrollNext ? undefined : true,
-        onClick: () => {
+        onClick: (): void => {
             carouselApi?.reInit();
             carouselApi?.scrollTo(Math.min(selectedSlide + 1, lastSlide));
         },
@@ -66,7 +67,7 @@ export const Content = ({ onEditSchedule, zones }: Props) => {
         'aria-disabled': !canScrollPrevious,
         'aria-label': t('meal_plan.scroll_days_back'),
         'data-inactive': canScrollPrevious ? undefined : true,
-        onClick: () => {
+        onClick: (): void => {
             carouselApi?.reInit();
             carouselApi?.scrollTo(Math.max(selectedSlide - 1, 0));
         },

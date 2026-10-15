@@ -1,7 +1,10 @@
 'use client';
-export default function ErrorPage({
+
+import type { ReactElement } from 'react';
+
+const ErrorPage = ({
     reset: handleReset,
-}: Readonly<{ reset: () => void }>) {
+}: Readonly<{ reset: () => void }>): ReactElement => {
     return (
         <div role="alert">
             <p>Something went wrong.</p>
@@ -10,4 +13,6 @@ export default function ErrorPage({
             </button>
         </div>
     );
-}
+};
+
+export default ErrorPage;

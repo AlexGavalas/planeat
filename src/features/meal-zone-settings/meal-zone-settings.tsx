@@ -4,6 +4,7 @@ import { Button, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { TimeInput } from '@mantine/dates';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
+import type { ReactElement } from 'react';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -21,7 +22,7 @@ import { saveMealZoneTimes } from '../../app/actions';
 
 export const MealZoneSettings = ({
     ownerUserId,
-}: Readonly<{ ownerUserId?: number }>) => {
+}: Readonly<{ ownerUserId?: number }>): ReactElement => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
     const { effectiveFrom, isFetching, times } = useMealZoneTimes(
@@ -43,7 +44,10 @@ export const MealZoneSettings = ({
     const validation = mealZoneTimesSchema.safeParse(values);
 
     const { isPending, mutate } = useMutation({
-        mutationFn: async () => {
+        mutationFn: async (): Promise<{
+            effectiveFrom?: string;
+            ok: boolean;
+        }> => {
             const response = await saveMealZoneTimes({
                 ownerUserId,
                 times: values,
@@ -55,13 +59,13 @@ export const MealZoneSettings = ({
 
             return response;
         },
-        onError: () => {
+        onError: (): void => {
             showErrorNotification({
                 message: t('meal_zone_settings.save_error'),
                 title: t('notification.error.title'),
             });
         },
-        onSuccess: async () => {
+        onSuccess: async (): Promise<void> => {
             await queryClient.invalidateQueries({
                 queryKey: ['meal-zone-times', ownerUserId],
             });
@@ -73,7 +77,8 @@ export const MealZoneSettings = ({
     });
 
     const handleChange =
-        (key: MealZoneKey) => (event: ChangeEvent<HTMLInputElement>) => {
+        (key: MealZoneKey): ((event: ChangeEvent<HTMLInputElement>) => void) =>
+        (event: ChangeEvent<HTMLInputElement>) => {
             const value = event.target.value;
 
             setValues((current) => ({
@@ -82,7 +87,7 @@ export const MealZoneSettings = ({
             }));
         };
 
-    const handleSave = () => {
+    const handleSave = (): void => {
         if (validation.success) {
             mutate();
         }

@@ -1,5 +1,6 @@
 import { Tour } from '@mantine/core';
 import { useRouter } from 'next/navigation';
+import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +10,7 @@ import { BRAND_COLORS } from '~theme';
 
 import { useSteps } from './helpers';
 
-export const Onboarding = () => {
+export const Onboarding = (): ReactElement | null => {
     const { t } = useTranslation();
     const router = useRouter();
     const localize = useLocalizedPath();
@@ -32,7 +33,7 @@ export const Onboarding = () => {
             return;
         }
 
-        const startWhenTargetIsReady = () => {
+        const startWhenTargetIsReady = (): boolean => {
             if (!document.querySelector(currentTarget)) {
                 return false;
             }
@@ -56,12 +57,12 @@ export const Onboarding = () => {
 
         observer.observe(document.body, { childList: true, subtree: true });
 
-        return () => {
+        return (): void => {
             observer.disconnect();
         };
     }, [currentTarget, hasTourEnded, isBrowser]);
 
-    const handleStepChange = (nextStepIndex: number) => {
+    const handleStepChange = (nextStepIndex: number): void => {
         const currentStep = steps[stepIndex];
         const nextStep = steps[nextStepIndex];
 
@@ -73,7 +74,7 @@ export const Onboarding = () => {
         }
     };
 
-    const handleTourClose = () => {
+    const handleTourClose = (): void => {
         setShouldRun(false);
         setHasTourEnded(true);
 

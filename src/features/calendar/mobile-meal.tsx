@@ -1,5 +1,6 @@
 import { Box, Group, Paper, Stack, Text, UnstyledButton } from '@mantine/core';
 import { AppleHalf, EditPencil } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MEAL_ICON } from '~constants/calendar';
@@ -46,7 +47,7 @@ export const MobileMeal = ({
     meal,
     time,
     timestamp,
-}: MobileMealProps) => {
+}: MobileMealProps): ReactElement => {
     const { t } = useTranslation();
     const ownerUserId = useMealPlanOwnerId();
     const canEditAnnotations = useCanEditMealAnnotations();
@@ -65,27 +66,17 @@ export const MobileMeal = ({
             return Promise.resolve();
         }
 
-        if (isRow) {
-            saveEntryRow({
-                items: newMeal.items,
-                note: newMeal.note,
-                rating: newMeal.rating,
-                sectionKey: id,
-                userId: ownerUserId,
-                value: newMeal.meal,
-            });
-        } else {
-            saveEntryCell({
-                items: newMeal.items,
-                meal,
-                note: newMeal.note,
-                rating: newMeal.rating,
-                sectionKey: id,
-                timestamp,
-                userId: ownerUserId,
-                value: newMeal.meal,
-            });
-        }
+        const saveEntry = isRow ? saveEntryRow : saveEntryCell;
+        saveEntry({
+            items: newMeal.items,
+            meal,
+            note: newMeal.note,
+            rating: newMeal.rating,
+            sectionKey: id,
+            timestamp,
+            userId: ownerUserId,
+            value: newMeal.meal,
+        });
 
         return Promise.resolve();
     };
@@ -108,8 +99,10 @@ export const MobileMeal = ({
                 initialItems: meal?.items ?? [],
                 initialMeal: meal?.meal ?? '',
                 onDelete: handleDelete,
-                onSave: (value: string, items: EditedMealItem[]) =>
-                    handleSave({ ...meal, items, meal: value }),
+                onSave: (
+                    value: string,
+                    items: EditedMealItem[],
+                ): Promise<void> => handleSave({ ...meal, items, meal: value }),
                 ownerUserId,
             },
             title: t('edit_meal'),
@@ -124,8 +117,10 @@ export const MobileMeal = ({
             centered: true,
             innerProps: {
                 meal,
-                onDelete: () => handleSave({ ...meal, note: null }),
-                onSave: (note: string) => handleSave({ ...meal, note }),
+                onDelete: (): Promise<void> =>
+                    handleSave({ ...meal, note: null }),
+                onSave: (note: string): Promise<void> =>
+                    handleSave({ ...meal, note }),
             },
             title: t('notes'),
         });
@@ -139,8 +134,10 @@ export const MobileMeal = ({
             centered: true,
             innerProps: {
                 meal,
-                onDelete: () => handleSave({ ...meal, rating: null }),
-                onSave: (rating: number) => handleSave({ ...meal, rating }),
+                onDelete: (): Promise<void> =>
+                    handleSave({ ...meal, rating: null }),
+                onSave: (rating: number): Promise<void> =>
+                    handleSave({ ...meal, rating }),
             },
             title: t('modals.meal_rate.title'),
         });

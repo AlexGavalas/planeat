@@ -5,6 +5,7 @@ import { format, parseISO } from 'date-fns';
 import { el } from 'date-fns/locale/el';
 import { enGB } from 'date-fns/locale/en-GB';
 import { EditPencil, Running } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useMeasurementSummary } from '~hooks/use-measurement-summary';
@@ -22,13 +23,13 @@ import { type HomeProps, type MealItem } from './home-types';
 import styles from './home.module.css';
 import { useHomeActions } from './use-home-actions';
 
-export function Home({
+export const Home = ({
     dailyMeals,
     date,
     fullName,
     targetWeight,
     weeklyMealZones,
-}: HomeProps) {
+}: HomeProps): ReactElement => {
     const { t, i18n } = useTranslation();
     const { handleAddActivity, handleAddMeasurement } = useHomeActions();
     const { data: summary } = useMeasurementSummary();
@@ -114,4 +115,4 @@ export function Home({
             </section>
         </main>
     );
-}
+};

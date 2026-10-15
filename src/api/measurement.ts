@@ -4,6 +4,7 @@ import 'server-only';
 import { getDb } from '~db';
 import { measurements } from '~db/schema';
 import { type Measurement, type MeasurementSummary } from '~types/measurement';
+import { getMeasurementSummary } from '~util/measurement';
 
 const MAX_MEASUREMENTS = 12;
 
@@ -70,7 +71,10 @@ export const fetchMeasurements = async ({
 }): Promise<{ data: Pick<Measurement, 'date' | 'weight'>[] }> => ({
     data: (await fetchLatest(userId, 'weight'))
         .reverse()
-        .map(({ date, weight }) => ({ date, weight })),
+        .map(({ date, weight }) => ({
+            date,
+            weight,
+        })),
 });
 
 export const fetchFatMeasurements = async ({
@@ -183,14 +187,5 @@ export const fetchMeasurementSummary = async ({
         fetchFatMeasurements({ userId }),
     ]);
 
-    return {
-        currentFat: fat.data.at(-1)?.fat_percentage ?? 0,
-        currentWeight: weight.data.at(-1)?.weight ?? 0,
-        fatTimeline: fat.data.length
-            ? fat.data.map(({ date: x, fat_percentage: y }) => ({ x, y }))
-            : null,
-        weightTimeline: weight.data.length
-            ? weight.data.map(({ date: x, weight: y }) => ({ x, y }))
-            : null,
-    };
+    return getMeasurementSummary(weight.data, fat.data);
 };

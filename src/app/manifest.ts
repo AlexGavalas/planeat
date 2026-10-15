@@ -2,7 +2,7 @@ import { type MetadataRoute } from 'next';
 
 import { APP_DESCRIPTION, APP_NAME } from '~constants/brand';
 
-export default function manifest(): MetadataRoute.Manifest {
+const manifest = (): MetadataRoute.Manifest => {
     return {
         background_color: '#ecf5ec',
         categories: ['food', 'health', 'lifestyle'],
@@ -36,4 +36,6 @@ export default function manifest(): MetadataRoute.Manifest {
         start_url: '/',
         theme_color: '#047d55',
     };
-}
+};
+
+export default manifest;

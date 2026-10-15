@@ -1,6 +1,7 @@
 import { Grid } from '@mantine/core';
 import { useDebouncedValue, useMediaQuery } from '@mantine/hooks';
 import { type ContextModalProps } from '@mantine/modals';
+import type { ReactElement } from 'react';
 import {
     type ChangeEventHandler,
     type MouseEventHandler,
@@ -41,7 +42,7 @@ export const MealModal = ({
         onSave,
         ownerUserId,
     },
-}: ContextModalProps<MealModalProps>) => {
+}: ContextModalProps<MealModalProps>): ReactElement => {
     const { t } = useTranslation();
     const { isFoodDatabaseSearchEnabled } = useFeatureFlags();
     const { profile } = useProfile();
@@ -62,15 +63,15 @@ export const MealModal = ({
     });
     const results = Array.isArray(data) ? { client: [], own: data } : data;
 
-    const closeModal = () => {
+    const closeModal = (): void => {
         context.closeContextModal(id);
     };
 
-    const resetError = () => {
+    const resetError = (): void => {
         setError('');
     };
 
-    const handleSubmit = (async (e) => {
+    const handleSubmit = (async (e): Promise<void> => {
         e.preventDefault();
 
         const meal = preview;
@@ -85,21 +86,25 @@ export const MealModal = ({
         closeModal();
     }) satisfies SubmitEventHandler<HTMLFormElement>;
 
-    const handleDelete = (async () => {
+    const handleDelete = (async (): Promise<void> => {
         await onDelete();
         closeModal();
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleSearchChange = ((e) => {
+    const handleSearchChange = ((e): void => {
         setSearchQuery(e.target.value);
     }) satisfies ChangeEventHandler<HTMLInputElement>;
 
-    const handleEdit = ((template) => {
+    const handleEdit = ((template): void => {
         setPreview(template.content);
-        setItems(template.items.map(({ id: _id, ...item }) => ({ ...item })));
+        setItems(
+            template.items.map(({ id: _id, ...item }) => ({
+                ...item,
+            })),
+        );
     }) satisfies OnMealEdit;
 
-    const handleFoodSelect = (food: FoodSearchResult) => {
+    const handleFoodSelect = (food: FoodSearchResult): void => {
         setItems((current) => [
             ...current,
             foodToMealItem(food, current.length),
@@ -109,10 +114,10 @@ export const MealModal = ({
         }
     };
 
-    const handleChange = ((e) => {
+    const handleChange = ((e): void => {
         setPreview(e.target.value);
     }) satisfies ChangeEventHandler<HTMLTextAreaElement>;
-    const handleItemsChange = (nextItems: EditedMealItem[]) => {
+    const handleItemsChange = (nextItems: EditedMealItem[]): void => {
         setItems(nextItems);
     };
     const mealSearch = (

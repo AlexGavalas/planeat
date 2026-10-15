@@ -9,6 +9,7 @@ import {
     TextInput,
 } from '@mantine/core';
 import { Google } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler, type SubmitEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -28,7 +29,7 @@ export const AuthForm = ({
     onGoogleLogin,
     onSubmit,
     onToggleMode,
-}: AuthFormProps) => {
+}: AuthFormProps): ReactElement => {
     const { t } = useTranslation();
 
     return (

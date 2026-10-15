@@ -34,7 +34,9 @@ export const pushSubscriptions = pgTable(
             .notNull(),
         user_id: bigint('user_id', { mode: 'number' })
             .notNull()
-            .references(() => users.id, { onDelete: 'cascade' }),
+            .references(() => users.id, {
+                onDelete: 'cascade',
+            }),
     },
     (table) => [index('push_subscriptions_user_id_idx').on(table.user_id)],
 );
@@ -66,7 +68,9 @@ export const mealReminderDeliveries = pgTable(
             .notNull(),
         user_id: bigint('user_id', { mode: 'number' })
             .notNull()
-            .references(() => users.id, { onDelete: 'cascade' }),
+            .references(() => users.id, {
+                onDelete: 'cascade',
+            }),
     },
     (table) => [
         unique('meal_reminder_deliveries_user_id_local_date_unique').on(

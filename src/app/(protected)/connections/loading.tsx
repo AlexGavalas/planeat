@@ -1,5 +1,9 @@
+import type { ReactElement } from 'react';
+
 import { ConnectionsPageSkeleton } from '~components/loading-skeleton';
 
-export default function Loading() {
+const Loading = (): ReactElement => {
     return <ConnectionsPageSkeleton />;
-}
+};
+
+export default Loading;

@@ -8,6 +8,7 @@ import {
     Textarea,
 } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
+import type { ReactElement } from 'react';
 import {
     type ChangeEventHandler,
     type MouseEventHandler,
@@ -26,7 +27,9 @@ type ManualInputTabProps = Readonly<{
     onDone: () => void;
 }>;
 
-export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
+export const ManualInputTab = ({
+    onDone,
+}: ManualInputTabProps): ReactElement => {
     const { t } = useTranslation();
     const [preview, setPreview] = useState('');
     const [templateId, setTemplateId] = useState<number>();
@@ -48,24 +51,28 @@ export const ManualInputTab = ({ onDone }: ManualInputTabProps) => {
         onSuccess: onDone,
     });
 
-    const handleCreate = (() => {
+    const handleCreate = ((): void => {
         mutate({ templates: [{ content: preview, id: templateId, items }] });
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleEdit = ((template) => {
+    const handleEdit = ((template): void => {
         setPreview(template.content);
         setTemplateId(template.id);
-        setItems(template.items.map(({ id: _id, ...item }) => ({ ...item })));
+        setItems(
+            template.items.map(({ id: _id, ...item }) => ({
+                ...item,
+            })),
+        );
     }) satisfies OnEdit;
 
-    const handlePreviewChange = ((e) => {
+    const handlePreviewChange = ((e): void => {
         setPreview(e.target.value);
     }) satisfies ChangeEventHandler<HTMLTextAreaElement>;
 
-    const handleSearchChange = ((e) => {
+    const handleSearchChange = ((e): void => {
         setSearchQuery(e.target.value);
     }) satisfies ChangeEventHandler<HTMLInputElement>;
-    const handleItemsChange = (nextItems: EditedMealItem[]) => {
+    const handleItemsChange = (nextItems: EditedMealItem[]): void => {
         setItems(nextItems);
     };
 

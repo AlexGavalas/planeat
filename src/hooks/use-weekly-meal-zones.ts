@@ -38,7 +38,7 @@ export const useWeeklyMealZones = (
             initialSchedule?.weekStart === weekStart
                 ? initialSchedule.zones
                 : undefined,
-        queryFn: async () => {
+        queryFn: async (): Promise<WeeklyMealZone[]> => {
             const ownerQuery = ownerUserId ? `&ownerUserId=${ownerUserId}` : '';
             const response = await fetch(
                 `/api/v1/weekly-meal-zones?weekStart=${weekStart}${ownerQuery}`,
@@ -54,7 +54,7 @@ export const useWeeklyMealZones = (
         queryKey,
     });
     const mutation = useMutation({
-        mutationFn: async (zones: WeeklyMealZone[]) => {
+        mutationFn: async (zones: WeeklyMealZone[]): Promise<void> => {
             const response = await saveWeeklyMealSchedule({
                 ...(ownerUserId ? { ownerUserId } : {}),
                 weekStart,
@@ -64,13 +64,13 @@ export const useWeeklyMealZones = (
                 throw new Error('Could not save weekly meal zones');
             }
         },
-        onError: () => {
+        onError: (): void => {
             showErrorNotification({
                 message: t('meal_plan.schedule.save_error'),
                 title: t('notification.error.title'),
             });
         },
-        onSuccess: async () => {
+        onSuccess: async (): Promise<void> => {
             await Promise.all([
                 queryClient.invalidateQueries({ queryKey }),
                 queryClient.invalidateQueries({

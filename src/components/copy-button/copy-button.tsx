@@ -7,6 +7,7 @@ import {
     type TooltipProps,
 } from '@mantine/core';
 import { Check, Copy } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type CopyButtonProps2 = Readonly<{
@@ -21,7 +22,7 @@ export const CopyButton = ({
     variant = 'outline',
     size = 'lg',
     tooltipPosition,
-}: CopyButtonProps2) => {
+}: CopyButtonProps2): ReactElement => {
     const { t } = useTranslation();
 
     return (

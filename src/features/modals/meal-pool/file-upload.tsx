@@ -9,6 +9,7 @@ import {
     Textarea,
 } from '@mantine/core';
 import { InfoCircle, Redo, Trash, Undo } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import {
     type MouseEventHandler,
     type SubmitEventHandler,
@@ -26,7 +27,7 @@ import { useUpload } from './hooks/use-upload';
 
 const formSchema = z.array(z.string());
 
-export const FileUploadTab = () => {
+export const FileUploadTab = (): ReactElement => {
     const { t } = useTranslation();
     const [file, setFile] = useState<File | null>(null);
     const resetRef = useRef<() => void>(null);
@@ -54,22 +55,22 @@ export const FileUploadTab = () => {
     const { mutate: createMealPool, isPending: isCreating } =
         useCreateMealPool();
 
-    const handleClear = () => {
+    const handleClear = (): void => {
         setFile(null);
         clearHistory();
         resetRef.current?.();
     };
 
-    const handleUpload = (() => {
+    const handleUpload = ((): void => {
         mutate({ file });
     }) satisfies MouseEventHandler;
 
-    const handleReset = () => {
+    const handleReset = (): void => {
         resetUpload();
         setFile(null);
     };
 
-    const handleSubmit = ((e) => {
+    const handleSubmit = ((e): void => {
         e.preventDefault();
 
         const formData = Array.from(new FormData(e.currentTarget));
@@ -77,11 +78,14 @@ export const FileUploadTab = () => {
         const content = formSchema.parse(formData);
 
         createMealPool({
-            templates: content.map((item) => ({ content: item, items: [] })),
+            templates: content.map((item) => ({
+                content: item,
+                items: [],
+            })),
         });
     }) satisfies SubmitEventHandler<HTMLFormElement>;
 
-    const handleRemoveItem = ((e) => {
+    const handleRemoveItem = ((e): void => {
         const itemIndex = e.currentTarget.dataset.itemIndex;
 
         if (itemIndex && currentState) {

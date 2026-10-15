@@ -2,7 +2,7 @@ import { dispatchDueMealReminders } from '~api/meal-reminder';
 
 export const runtime = 'nodejs';
 
-export async function GET(request: Request): Promise<Response> {
+export const GET = async (request: Request): Promise<Response> => {
     const secret = process.env.CRON_SECRET;
 
     if (
@@ -14,4 +14,4 @@ export async function GET(request: Request): Promise<Response> {
 
     const result = await dispatchDueMealReminders();
     return Response.json(result);
-}
+};

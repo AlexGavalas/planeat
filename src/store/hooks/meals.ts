@@ -48,7 +48,7 @@ export const useMeals: UseMeals = (explicitOwnerUserId) => {
     const { data: meals = [], isFetching: isFetchingMeals } = useQuery({
         enabled: ownerUserId !== -1,
         placeholderData: keepPreviousData,
-        queryFn: async () => {
+        queryFn: async (): Promise<Meal[]> => {
             const { endDate, startDate } = getWeekRange(currentWeek);
 
             const ownerQuery = ownerUserId ? `&ownerUserId=${ownerUserId}` : '';
@@ -85,24 +85,19 @@ export const useMeals: UseMeals = (explicitOwnerUserId) => {
                 title: t('notification.error.title'),
             });
             return false;
-        } else {
-            await queryClient.invalidateQueries({
-                queryKey: ownerUserId ? ['meals', ownerUserId] : ['meals'],
-            });
-            setIsSubmitting(false);
-
-            removeChanges();
-
-            showSuccessNotification({
-                message: t('notification.success.message'),
-                title: t('notification.success.title'),
-            });
-            return true;
         }
-    };
+        await queryClient.invalidateQueries({
+            queryKey: ownerUserId ? ['meals', ownerUserId] : ['meals'],
+        });
+        setIsSubmitting(false);
 
-    const revert = (): void => {
         removeChanges();
+
+        showSuccessNotification({
+            message: t('notification.success.message'),
+            title: t('notification.success.title'),
+        });
+        return true;
     };
 
     const deleteEntryCell: DeleteEntryCell = ({ meal }) => {
@@ -191,7 +186,7 @@ export const useMeals: UseMeals = (explicitOwnerUserId) => {
         deleteEntryRow,
         isLoading: isFetchingMeals || isSubmitting,
         meals,
-        revert,
+        revert: removeChanges,
         saveEntryCell,
         saveEntryRow,
         savePlan,

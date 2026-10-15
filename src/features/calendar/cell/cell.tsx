@@ -1,6 +1,7 @@
 import { Badge, Box, Center, Stack, Text } from '@mantine/core';
 import { useFocusWithin, useHover, useMergedRef } from '@mantine/hooks';
 import { Cutlery, MultiplePages } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -21,7 +22,12 @@ export type CellProps = Readonly<{
     isEdited: boolean;
 }>;
 
-export const Cell = ({ id, meal, timestamp, isEdited }: CellProps) => {
+export const Cell = ({
+    id,
+    meal,
+    timestamp,
+    isEdited,
+}: CellProps): ReactElement => {
     const { t } = useTranslation();
     const ownerUserId = useMealPlanOwnerId();
     const canEditAnnotations = useCanEditMealAnnotations();
@@ -31,7 +37,7 @@ export const Cell = ({ id, meal, timestamp, isEdited }: CellProps) => {
 
     const { deleteEntryCell, saveEntryCell } = useMeals();
 
-    const handleSave = (newMeal: MealChange) => {
+    const handleSave = (newMeal: MealChange): void => {
         if (!ownerUserId || !newMeal.meal) {
             return;
         }
@@ -48,7 +54,7 @@ export const Cell = ({ id, meal, timestamp, isEdited }: CellProps) => {
         });
     };
 
-    const handleDelete = () => {
+    const handleDelete = (): void => {
         if (!meal) {
             return;
         }

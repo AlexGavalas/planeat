@@ -1,15 +1,16 @@
 import { Button, Stack, Text, Title } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SettingsActions } from '~features/settings-actions';
 import { useOpenContextModal } from '~util/modal';
 
-export const DeleteAccount = () => {
+export const DeleteAccount = (): ReactElement => {
     const { t } = useTranslation();
     const openDeleteAccountModal = useOpenContextModal('delete-account');
 
-    const handleOpenDeleteAccountModal = (() => {
+    const handleOpenDeleteAccountModal = ((): void => {
         openDeleteAccountModal({
             centered: true,
             innerProps: {},

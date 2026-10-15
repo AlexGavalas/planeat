@@ -1,4 +1,5 @@
 import { Table, Text } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type KeyboardEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,7 +17,7 @@ export const ClientList = ({
     clients,
     onSelectClient,
     selectedClientId,
-}: ClientListProps) => {
+}: ClientListProps): ReactElement => {
     const { t } = useTranslation();
     if (!clients.length) {
         return <Text>{t('professional.dashboard.no_clients')}</Text>;
@@ -32,7 +33,7 @@ export const ClientList = ({
             </Table.Thead>
             <Table.Tbody>
                 {clients.map((client) => {
-                    const handleSelectClient = () => {
+                    const handleSelectClient = (): void => {
                         onSelectClient(client.id);
                     };
                     const handleKeyDown: KeyboardEventHandler<HTMLElement> = (

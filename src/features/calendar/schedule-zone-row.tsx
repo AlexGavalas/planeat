@@ -1,6 +1,7 @@
 import { ActionIcon, Paper, TextInput } from '@mantine/core';
 import { TimeInput } from '@mantine/dates';
 import { Trash } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { type ChangeEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -26,7 +27,7 @@ export const ScheduleZoneRow = ({
     onRemove,
     onTimeChange,
     zone,
-}: Props) => {
+}: Props): ReactElement => {
     const { t } = useTranslation();
 
     return (

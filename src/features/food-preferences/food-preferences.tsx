@@ -1,5 +1,6 @@
 import { Button, SimpleGrid, Stack, Textarea, Title } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
+import type { ReactElement } from 'react';
 import { type SubmitEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -18,12 +19,12 @@ const formSchema = z.object({
     positive: z.string(),
 });
 
-export const FoodPreferences = () => {
+export const FoodPreferences = (): ReactElement => {
     const { t } = useTranslation();
     const { isFetching, profile } = useProfile();
     const queryClient = useQueryClient();
 
-    const handleSavePreferences = (async (e) => {
+    const handleSavePreferences = (async (e): Promise<null | undefined> => {
         e.preventDefault();
 
         if (!profile?.email) {

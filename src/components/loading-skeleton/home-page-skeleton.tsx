@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import {
     DailyMealsSkeleton,
     SkeletonCard,
@@ -6,7 +8,7 @@ import {
 import styles from './loading-skeleton.module.css';
 import pageStyles from './page-skeletons.module.css';
 
-const Lines = () => (
+const Lines = (): ReactElement => (
     <div className={styles.lines}>
         {[0, 1].map((item) => (
             <div className={`${styles.skeleton} ${styles.line}`} key={item} />
@@ -14,7 +16,7 @@ const Lines = () => (
     </div>
 );
 
-export function HomePageSkeleton() {
+export const HomePageSkeleton = (): ReactElement => {
     return (
         <SkeletonLoader>
             <div className={pageStyles.homeDashboard}>
@@ -53,4 +55,4 @@ export function HomePageSkeleton() {
             </div>
         </SkeletonLoader>
     );
-}
+};

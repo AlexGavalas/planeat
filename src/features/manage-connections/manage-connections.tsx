@@ -3,6 +3,7 @@
 import { Badge, Group, Stack, Text, Title } from '@mantine/core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Community } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
@@ -12,7 +13,7 @@ import { showErrorNotification } from '~util/notification';
 
 import { ConnectionItem } from './connection';
 
-export const ManageConnections = () => {
+export const ManageConnections = (): ReactElement => {
     const { t } = useTranslation();
     const { profile } = useProfile();
     const queryClient = useQueryClient();
@@ -20,7 +21,7 @@ export const ManageConnections = () => {
     const { data: connections = [], isFetching: isFetchingConnections } =
         useQuery({
             enabled: Boolean(profile),
-            queryFn: async () => {
+            queryFn: async (): Promise<ConnectionWithUser[]> => {
                 const response = await fetch('/api/v1/connection');
 
                 const { data } = (await response.json()) as {
@@ -32,7 +33,7 @@ export const ManageConnections = () => {
             queryKey: ['connections'],
         });
 
-    const removeConnection = async (connection: Connection) => {
+    const removeConnection = async (connection: Connection): Promise<void> => {
         const response = await fetch('/api/v1/connection', {
             body: JSON.stringify({
                 connectionId: connection.id,

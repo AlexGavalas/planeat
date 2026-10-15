@@ -8,6 +8,7 @@ import {
     TableThead,
     TableTr,
 } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { useState } from 'react';
 
 import { type Header, type Item, MobileRow, Row } from './row';
@@ -33,12 +34,12 @@ export const Table = <ItemType extends Item>({
     onDelete,
     onEdit,
     page: initialPage,
-}: TableProps<ItemType>) => {
+}: TableProps<ItemType>): ReactElement => {
     const [page, setPage] = useState(initialPage);
 
     const shouldShowPagination = totalPages > 1;
 
-    const handlePageChange = (page: number) => {
+    const handlePageChange = (page: number): void => {
         setPage(page);
         onPageChange?.(page);
     };

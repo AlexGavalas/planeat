@@ -1,6 +1,7 @@
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { notFound, redirect } from 'next/navigation';
+import type { ReactElement } from 'react';
 import { Suspense } from 'react';
 
 import { fetchMeals } from '~api/meal';
@@ -25,9 +26,9 @@ type ProfessionalPageProps = Readonly<{
     }>;
 }>;
 
-async function ProfessionalDashboardContent({
+const ProfessionalDashboardContent = async ({
     searchParams,
-}: ProfessionalPageProps) {
+}: ProfessionalPageProps): Promise<ReactElement> => {
     const user = await requireUser();
     if (!user.roles.includes('professional')) {
         redirect('/home');
@@ -118,12 +119,14 @@ async function ProfessionalDashboardContent({
             selectedClient={selectedClient}
         />
     );
-}
+};
 
-export default function Page({ searchParams }: ProfessionalPageProps) {
+const Page = ({ searchParams }: ProfessionalPageProps): ReactElement => {
     return (
         <Suspense fallback={<MealPlanPageSkeleton />}>
             <ProfessionalDashboardContent searchParams={searchParams} />
         </Suspense>
     );
-}
+};
+
+export default Page;

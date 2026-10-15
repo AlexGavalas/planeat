@@ -8,6 +8,7 @@ import {
     Stack,
     Title,
 } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,26 +16,28 @@ import { LoadingOverlay } from '~components/loading-overlay';
 import { SettingsActions } from '~features/settings-actions';
 import { useProfile } from '~hooks/use-profile';
 
-export const PersonalSettings = () => {
+export const PersonalSettings = (): ReactElement => {
     const { t } = useTranslation();
     const [height, setHeight] = useState<number>();
     const [targetWeight, setTargetWeight] = useState<number>();
     const [language, setLanguage] = useState<string>();
     const { isFetching, profile, updateProfile } = useProfile();
 
-    const handleHeightChange: NumberInputProps['onChange'] = (value) => {
+    const handleHeightChange: NumberInputProps['onChange'] = (value): void => {
         setHeight(Number(value));
     };
 
-    const handleTargetWeightChange: NumberInputProps['onChange'] = (value) => {
+    const handleTargetWeightChange: NumberInputProps['onChange'] = (
+        value,
+    ): void => {
         setTargetWeight(Number(value));
     };
 
-    const handleLanguageChange: SelectProps['onChange'] = (value) => {
+    const handleLanguageChange: SelectProps['onChange'] = (value): void => {
         setLanguage(value ?? undefined);
     };
 
-    const handleSave = () => {
+    const handleSave = (): void => {
         updateProfile({
             height,
             language,

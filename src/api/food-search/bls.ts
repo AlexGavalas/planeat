@@ -59,7 +59,10 @@ const scoreBlsFood = (food: BlsFood, query: string): number => {
 export const searchBlsFoods = (query: string): FoodSearchResult[] => {
     const normalizedQuery = normalize(query.trim());
     return blsFoods
-        .map((food) => ({ food, score: scoreBlsFood(food, normalizedQuery) }))
+        .map((food) => ({
+            food,
+            score: scoreBlsFood(food, normalizedQuery),
+        }))
         .filter(({ score }) => Number.isFinite(score))
         .sort(
             (a, b) =>

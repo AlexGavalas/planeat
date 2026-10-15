@@ -1,4 +1,5 @@
 import { Button, Stack, Text } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,10 +10,13 @@ type FoodResultProps = Readonly<{
     onSelect: (food: FoodSearchResult) => void;
 }>;
 
-export const FoodResult = ({ food, onSelect }: FoodResultProps) => {
+export const FoodResult = ({
+    food,
+    onSelect,
+}: FoodResultProps): ReactElement => {
     const { i18n, t } = useTranslation();
 
-    const handleClick = (() => {
+    const handleClick = ((): void => {
         onSelect(food);
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 

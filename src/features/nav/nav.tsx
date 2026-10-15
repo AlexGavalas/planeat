@@ -2,6 +2,7 @@ import { Anchor, Group, Text } from '@mantine/core';
 import { type KeyPrefix } from 'i18next';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useLocalizedPath } from '~hooks/use-localized-path';
@@ -24,7 +25,7 @@ export const PROFESSIONAL_LINK = {
 
 export const Nav = ({
     isProfessional = false,
-}: Readonly<{ isProfessional?: boolean }>) => {
+}: Readonly<{ isProfessional?: boolean }>): ReactElement => {
     const localize = useLocalizedPath();
     const { t } = useTranslation();
     const pathname = usePathname();

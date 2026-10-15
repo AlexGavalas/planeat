@@ -9,7 +9,9 @@ export type MealZone = {
     key: MealZoneKey;
 };
 
-export const ROWS: MealZone[] = MEAL_ZONE_KEYS.map((key) => ({ key }));
+export const ROWS: MealZone[] = MEAL_ZONE_KEYS.map((key) => ({
+    key,
+}));
 
 export const MEAL_ICON = {
     dinner: Bbq,

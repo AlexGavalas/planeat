@@ -1,4 +1,5 @@
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import type { ReactElement } from 'react';
 import { Suspense } from 'react';
 
 import { fetchUserConnections } from '~api/connection';
@@ -12,7 +13,7 @@ import { ProfessionalConnections } from '~features/professional-connections';
 import { Connections } from '~features/screens/connections';
 import { createQueryClient } from '~util/query-client';
 
-async function ConnectionList() {
+const ConnectionList = async (): Promise<ReactElement> => {
     const profile = await requireUser();
     const connections = await fetchUserConnections({ userId: profile.id });
 
@@ -24,9 +25,9 @@ async function ConnectionList() {
             <ManageConnections />
         </HydrationBoundary>
     );
-}
+};
 
-async function RequestList() {
+const RequestList = async (): Promise<ReactElement> => {
     const profile = await requireUser();
     const requests = await fetchConnectionRequestNotifications({
         userId: profile.id,
@@ -40,9 +41,9 @@ async function RequestList() {
             <ManageConnectionRequests />
         </HydrationBoundary>
     );
-}
+};
 
-async function ProfessionalSection() {
+const ProfessionalSection = async (): Promise<ReactElement> => {
     const profile = await requireUser();
     const state = await fetchProfessionalConnectionState(profile.id);
 
@@ -54,9 +55,9 @@ async function ProfessionalSection() {
             <ProfessionalConnections />
         </HydrationBoundary>
     );
-}
+};
 
-export default function Page() {
+const Page = (): ReactElement => {
     return (
         <Connections
             connections={
@@ -76,4 +77,6 @@ export default function Page() {
             }
         />
     );
-}
+};
+
+export default Page;

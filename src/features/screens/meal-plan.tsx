@@ -1,6 +1,7 @@
 'use client';
 
 import { parseISO } from 'date-fns';
+import type { ReactElement } from 'react';
 import { useEffect } from 'react';
 
 import { Calendar } from '~features/calendar';
@@ -9,7 +10,7 @@ import { MealPlanOwnerProvider } from '~features/meal-plan-owner';
 import { useCurrentWeek } from '~store/hooks';
 import { type MealZoneKey, type WeeklyMealZone } from '~types/meal-zone';
 
-export function MealPlan({
+export const MealPlan = ({
     canEditAnnotations,
     initialDate,
     initialMealZone,
@@ -25,7 +26,7 @@ export function MealPlan({
     initialWeeklyMealZones: WeeklyMealZone[];
     initialWeekStart: string;
     ownerUserId: number;
-}>) {
+}>): ReactElement => {
     const { goToDate } = useCurrentWeek();
 
     useEffect(() => {
@@ -55,4 +56,4 @@ export function MealPlan({
             />
         </MealPlanOwnerProvider>
     );
-}
+};

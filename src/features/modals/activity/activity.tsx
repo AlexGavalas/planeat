@@ -3,6 +3,7 @@ import { DatePicker } from '@mantine/dates';
 import { type ContextModalProps } from '@mantine/modals';
 import { format } from 'date-fns';
 import 'dayjs/locale/el';
+import type { ReactElement } from 'react';
 import {
     type ChangeEventHandler,
     type SubmitEventHandler,
@@ -29,7 +30,7 @@ export const ActivityModal = ({
     context,
     id,
     innerProps: { onSave, initialData },
-}: ContextModalProps<ActivityModalProps>) => {
+}: ContextModalProps<ActivityModalProps>): ReactElement => {
     const { t, i18n } = useTranslation();
     const [date, setDate] = useState<string | null>(() =>
         format(initialData?.date ?? new Date(), 'yyyy-MM-dd'),
@@ -38,19 +39,19 @@ export const ActivityModal = ({
     const [activity, setActivity] = useState(initialData?.activity);
     const [error, setError] = useState('');
 
-    const closeModal = () => {
+    const closeModal = (): void => {
         context.closeContextModal(id);
     };
 
-    const resetError = () => {
+    const resetError = (): void => {
         setError('');
     };
 
-    const handleActivityChange = ((e) => {
+    const handleActivityChange = ((e): void => {
         setActivity(e.target.value);
     }) satisfies ChangeEventHandler<HTMLTextAreaElement>;
 
-    const handleSave = (async (e) => {
+    const handleSave = (async (e): Promise<void> => {
         e.preventDefault();
 
         if (!activity) {

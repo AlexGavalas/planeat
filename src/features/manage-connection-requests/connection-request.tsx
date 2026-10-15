@@ -1,4 +1,5 @@
 import { Button, Group, Paper, Text } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,14 +21,14 @@ export const ConnectionRequest = ({
     connectionRequest,
     onAcceptConnectionRequest,
     onDeclineConnectionRequest,
-}: ConnectionRequestProps) => {
+}: ConnectionRequestProps): ReactElement => {
     const { t } = useTranslation();
 
-    const handleAccept = (async () => {
+    const handleAccept = (async (): Promise<void> => {
         await onAcceptConnectionRequest(connectionRequest);
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleDecline = (async () => {
+    const handleDecline = (async (): Promise<void> => {
         await onDeclineConnectionRequest(connectionRequest.id);
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 

@@ -1,6 +1,12 @@
 import { MantineProvider } from '@mantine/core';
-import { type RenderOptions, render } from '@testing-library/react';
+import {
+    type RenderOptions,
+    type RenderResult,
+    queries,
+    render,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import type { ReactNode, ReactElement } from 'react';
 import { I18nextProvider } from 'react-i18next';
 
 import { i18n } from '~test/i18n';
@@ -11,13 +17,14 @@ type RenderParameters = Parameters<typeof render>;
 export const renderWithUser = (
     renderParams: RenderParameters[0],
     {
-        Wrapper = ({ children }) => children,
+        Wrapper = ({ children }): ReactNode => children,
     }: { Wrapper?: RenderOptions['wrapper'] } = {},
-) => {
+): RenderResult & { user: ReturnType<typeof userEvent.setup> } => {
     return {
         user: userEvent.setup(),
         ...render(renderParams, {
-            wrapper: ({ children }) => (
+            queries,
+            wrapper: ({ children }): ReactElement => (
                 <I18nextProvider i18n={i18n}>
                     <MantineProvider
                         env="test"

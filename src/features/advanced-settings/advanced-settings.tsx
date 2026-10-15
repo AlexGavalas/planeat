@@ -1,17 +1,18 @@
 import { Divider, Stack, Switch, type SwitchProps, Title } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MealReminders } from '~features/meal-reminders';
 import { ProfessionalSettings } from '~features/professional-settings';
 import { useProfile } from '~hooks/use-profile';
 
-export const AdvancedSettings = () => {
+export const AdvancedSettings = (): ReactElement => {
     const { t } = useTranslation();
     const { isFetching, profile, updateProfile } = useProfile();
 
     const handleIsDiscoverableChange: SwitchProps['onChange'] = ({
         target: { checked },
-    }) => {
+    }): void => {
         updateProfile({ isDiscoverable: checked });
     };
 

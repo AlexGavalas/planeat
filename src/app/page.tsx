@@ -1,9 +1,10 @@
 import { redirect } from 'next/navigation';
+import type { ReactElement } from 'react';
 
 import { getCurrentUser } from '~api/session';
 import { LandingPage } from '~features/screens/index';
 
-export default async function Page() {
+const Page = async (): Promise<ReactElement> => {
     const user = await getCurrentUser();
     if (user) {
         redirect(
@@ -12,4 +13,6 @@ export default async function Page() {
     }
 
     return <LandingPage />;
-}
+};
+
+export default Page;

@@ -1,5 +1,6 @@
 import { Text, UnstyledButton } from '@mantine/core';
 import { format } from 'date-fns';
+import type { ReactElement } from 'react';
 
 import styles from './mobile-content.module.css';
 
@@ -17,7 +18,7 @@ export const MobileDayButton = ({
     label,
     onSelect,
     selected,
-}: MobileDayButtonProps) => {
+}: MobileDayButtonProps): ReactElement => {
     const handleClick = (): void => {
         onSelect(index);
     };

@@ -1,4 +1,5 @@
 import { LineChart as MantineLineChart } from '@mantine/charts';
+import type { ReactElement } from 'react';
 
 import { BRAND_COLORS } from '~theme';
 
@@ -24,7 +25,11 @@ type LineChartProps = Readonly<{
     }[];
 }>;
 
-export const LineChart = ({ data, target, unit }: LineChartProps) => {
+export const LineChart = ({
+    data,
+    target,
+    unit,
+}: LineChartProps): ReactElement => {
     const sourceData = data[0]?.data ?? [];
     const targetValue = getTargetValue(target);
     const values = sourceData.flatMap(({ y }) =>
@@ -73,7 +78,7 @@ export const LineChart = ({ data, target, unit }: LineChartProps) => {
             strokeWidth={2}
             tickLine="y"
             tooltipProps={{
-                content: (props) => (
+                content: (props): ReactElement => (
                     <ChartTooltip
                         {...props}
                         dataLength={chartData.length}
@@ -83,7 +88,7 @@ export const LineChart = ({ data, target, unit }: LineChartProps) => {
                 ),
                 position: {},
             }}
-            vars={() => ({
+            vars={(): { root: { '--chart-text-color': string } } => ({
                 root: {
                     '--chart-text-color': 'var(--app-color-chart-text)',
                 },

@@ -6,6 +6,7 @@ import {
     Text,
     TextInput,
 } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type ChangeEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -37,7 +38,7 @@ export const ReminderControls = ({
     onUseCurrentTimezone,
     time,
     timezone,
-}: ReminderControlsProps) => {
+}: ReminderControlsProps): ReactElement => {
     const { t } = useTranslation();
 
     return (

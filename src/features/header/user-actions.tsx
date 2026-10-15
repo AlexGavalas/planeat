@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 import { UserMenu } from '~features/user-menu';
 
 import { AuthDialog } from './auth-dialog';
@@ -10,7 +12,7 @@ type UserActionsProps = Readonly<{
 export const UserActions = ({
     hasUser,
     isProfessional = false,
-}: UserActionsProps) => {
+}: UserActionsProps): ReactElement => {
     if (!hasUser) {
         return <AuthDialog />;
     }

@@ -4,6 +4,7 @@ import { Box, Button, Center, Group, Stack, Title } from '@mantine/core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +15,7 @@ import { type Activity } from '~types/activity';
 import { useOpenContextModal } from '~util/modal';
 import { showErrorNotification } from '~util/notification';
 
-export const Activities = () => {
+export const Activities = (): ReactElement => {
     const { t } = useTranslation();
     const openNewActivityModal = useOpenContextModal('activity');
     const { profile } = useProfile();
@@ -23,7 +24,7 @@ export const Activities = () => {
 
     const { data: count = 0, isFetched: isCountFetched } = useQuery({
         enabled: Boolean(profile),
-        queryFn: async () => {
+        queryFn: async (): Promise<number | undefined> => {
             const response = await fetch('/api/v1/activity?count=true');
 
             const { count } = (await response.json()) as { count?: number };
@@ -35,7 +36,9 @@ export const Activities = () => {
 
     const { data: activities = [], isFetching } = useQuery({
         enabled: Boolean(profile),
-        queryFn: async () => {
+        queryFn: async (): Promise<
+            { date: string; id: string; user_id: number; activity: string }[]
+        > => {
             const start = (page - 1) * PAGE_SIZE;
             const end = page * PAGE_SIZE - 1;
 
@@ -53,7 +56,7 @@ export const Activities = () => {
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
     const isLoading = (!activities.length && !isCountFetched) || isFetching;
 
-    const onNewActivitySave = async () => {
+    const onNewActivitySave = async (): Promise<void> => {
         setPage(INITIAL_PAGE);
 
         await queryClient.invalidateQueries({
@@ -67,7 +70,7 @@ export const Activities = () => {
 
     const headers = [
         {
-            formatValue: (item: Activity) =>
+            formatValue: (item: Activity): string =>
                 format(parseISO(item.date), 'dd/MM/yy'),
             key: 'date',
             label: t('date'),
@@ -85,7 +88,7 @@ export const Activities = () => {
         },
     ];
 
-    const onDelete = async (item: Activity) => {
+    const onDelete = async (item: Activity): Promise<void> => {
         const response = await fetch(`/api/v1/activity?id=${item.id}`, {
             method: 'DELETE',
         });
@@ -106,8 +109,8 @@ export const Activities = () => {
         }
     };
 
-    const onEdit = (item: Activity) => {
-        const onSave = async () => {
+    const onEdit = (item: Activity): void => {
+        const onSave = async (): Promise<void> => {
             await queryClient.invalidateQueries({
                 queryKey: ['activities', 'page', page],
             });
@@ -127,11 +130,11 @@ export const Activities = () => {
         });
     };
 
-    const onPageChange = (page: number) => {
+    const onPageChange = (page: number): void => {
         setPage(page);
     };
 
-    const handleAddActivity = () => {
+    const handleAddActivity = (): void => {
         openNewActivityModal({
             innerProps: {
                 onSave: onNewActivitySave,

@@ -1,6 +1,7 @@
 import { Button, Stack, Title } from '@mantine/core';
 import { format, getDay, parseISO } from 'date-fns';
 import { EditPencil } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -22,7 +23,7 @@ export const MobileContent = ({
     initialDate: string;
     onEditSchedule: (day?: string) => void;
     zones: WeeklyMealZone[];
-}>) => {
+}>): ReactElement | null => {
     const { i18n, t } = useTranslation();
     const { meals } = useMeals();
     const { unsavedChanges } = useUnsavedChanges();

@@ -20,7 +20,7 @@ export const useFoodSearch = ({
     useQuery({
         enabled: query.length >= 2,
         placeholderData: emptyResponse,
-        queryFn: async () => {
+        queryFn: async (): Promise<FoodSearchResponse> => {
             const parameters = new URLSearchParams({ country, q: query });
             const response = await fetch(`/api/v1/food/search?${parameters}`);
 

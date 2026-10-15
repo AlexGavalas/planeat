@@ -141,12 +141,11 @@ export const dispatchDueMealReminders = async (
                 day: targetDate,
                 userId: reminder.user_id,
             });
-            const copy = getNotificationCopy({
-                language: reminder.language,
-                mealNames: meals.map(({ meal }) => meal),
-            });
             const payload = JSON.stringify({
-                ...copy,
+                ...getNotificationCopy({
+                    language: reminder.language,
+                    mealNames: meals.map(({ meal }) => meal),
+                }),
                 icon: '/icons/icon-192x192.png',
                 tag: `meal-plan-${targetDate}`,
                 url: `/meal-plan?date=${targetDate}`,

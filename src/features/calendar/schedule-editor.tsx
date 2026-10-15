@@ -12,6 +12,7 @@ import {
     Text,
 } from '@mantine/core';
 import { format } from 'date-fns';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { type Meal } from '~types/meal';
@@ -32,7 +33,7 @@ type Props = Readonly<{
     zones: WeeklyMealZone[];
 }>;
 
-export const ScheduleEditor = (props: Props) => {
+export const ScheduleEditor = (props: Props): ReactElement => {
     const { t } = useTranslation();
     const editor = useScheduleEditor(props);
     const dayOptions = editor.days.map(({ label, timestamp }) => ({
@@ -42,12 +43,12 @@ export const ScheduleEditor = (props: Props) => {
     const copyOptions = dayOptions.filter(
         ({ value }) => value !== editor.selectedDay,
     );
-    const handleDayChange = (value: string | null) => {
+    const handleDayChange = (value: string | null): void => {
         if (value) {
             editor.setSelectedDay(value);
         }
     };
-    const handleCopySourceChange = (value: string | null) => {
+    const handleCopySourceChange = (value: string | null): void => {
         editor.setCopySource(value);
     };
 

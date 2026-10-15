@@ -7,6 +7,7 @@ import {
     TextInput,
     Title,
 } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type ChangeEventHandler, type FormEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -34,7 +35,7 @@ export const ClientDirectory = ({
     onSelectClient,
     search,
     selectedClientId,
-}: ClientDirectoryProps) => {
+}: ClientDirectoryProps): ReactElement => {
     const { t } = useTranslation();
     return (
         <Stack gap="lg">

@@ -20,7 +20,7 @@ export const useGetMealPool: UseGetMealPool = ({
 }) => {
     return useQuery({
         enabled: Boolean(searchQuery),
-        queryFn: async () => {
+        queryFn: async (): Promise<MealTemplate[] | MealPoolSearchResults> => {
             const query = new URLSearchParams({ q: searchQuery });
             if (includeClient && ownerUserId) {
                 query.set('includeClient', 'true');

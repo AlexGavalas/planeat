@@ -2,6 +2,7 @@
 
 import { Progress, Text } from '@mantine/core';
 import Link from 'next/link';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Card } from '~components/card';
@@ -20,14 +21,14 @@ type SummaryCardsProps = Readonly<{
     weightTrend: TimelineTrend;
 }>;
 
-export function SummaryCards({
+export const SummaryCards = ({
     currentWeight,
     nextMeal,
     plannedMeals,
     targetWeight,
     totalMeals,
     weightTrend,
-}: SummaryCardsProps) {
+}: SummaryCardsProps): ReactElement => {
     const { t, i18n } = useTranslation();
     const formatter = new Intl.NumberFormat(i18n.language, {
         maximumFractionDigits: 1,
@@ -104,7 +105,7 @@ export function SummaryCards({
             </Card>
         </section>
     );
-}
+};
 
 type TargetSummaryOptions = {
     currentWeight: number | null;
@@ -113,12 +114,12 @@ type TargetSummaryOptions = {
     translate: ReturnType<typeof useTranslation>['t'];
 };
 
-function getTargetSummary({
+const getTargetSummary = ({
     currentWeight,
     formatter,
     targetWeight,
     translate,
-}: TargetSummaryOptions) {
+}: TargetSummaryOptions): string => {
     if (!targetWeight) {
         return translate('home_dashboard.set_target');
     }
@@ -136,4 +137,4 @@ function getTargetSummary({
               amount: formatter.format(gap),
               unit: translate('kg'),
           });
-}
+};

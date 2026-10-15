@@ -9,7 +9,7 @@ export const resolveRequestDate = ({
     allowHeaderDate,
     environmentDate,
     headerDate,
-    now = () => new Date(),
+    now = (): Date => new Date(),
 }: RequestDateOptions): Date => {
     const value = environmentDate ?? (allowHeaderDate ? headerDate : null);
     const parsedDate = value ? new Date(value) : null;

@@ -11,7 +11,7 @@ type Entities = {
     };
 };
 
-const identify = dedupe(async (): Promise<Entities> => {
+const identify = dedupe(async () => {
     const user = await getCurrentUser();
 
     return {

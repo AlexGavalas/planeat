@@ -1,4 +1,5 @@
 import { Button, Group, Stack, Text, TextInput } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,7 +14,9 @@ type FoodDatabaseTabProps = Readonly<{
     onDone: () => void;
 }>;
 
-export const FoodDatabaseTab = ({ onDone }: FoodDatabaseTabProps) => {
+export const FoodDatabaseTab = ({
+    onDone,
+}: FoodDatabaseTabProps): ReactElement => {
     const { t } = useTranslation();
     const [preview, setPreview] = useState('');
     const [items, setItems] = useState<EditedMealItem[]>([]);
@@ -24,10 +27,12 @@ export const FoodDatabaseTab = ({ onDone }: FoodDatabaseTabProps) => {
         reset: resetCreationState,
     } = useCreateMealPool({ onSuccess: onDone });
 
-    const handleCreate = (() => {
+    const handleCreate = ((): void => {
         mutate({ templates: [{ content: preview, items }] });
     }) satisfies MouseEventHandler<HTMLButtonElement>;
-    const handleFoodSelect = (food: Parameters<typeof foodToMealItem>[0]) => {
+    const handleFoodSelect = (
+        food: Parameters<typeof foodToMealItem>[0],
+    ): void => {
         setItems((current) => [
             ...current,
             foodToMealItem(food, current.length),
@@ -38,10 +43,10 @@ export const FoodDatabaseTab = ({ onDone }: FoodDatabaseTabProps) => {
     };
     const handlePreviewChange = (
         event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
+    ): void => {
         setPreview(event.target.value);
     };
-    const handleItemsChange = (nextItems: EditedMealItem[]) => {
+    const handleItemsChange = (nextItems: EditedMealItem[]): void => {
         setItems(nextItems);
     };
 

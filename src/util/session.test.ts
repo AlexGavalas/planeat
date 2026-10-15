@@ -7,7 +7,9 @@ import { type UserProfile } from '~types/user';
 import { withUser } from './session';
 
 jest.mock('next/cache');
-jest.mock('~api/session', () => ({ getCurrentUser: jest.fn() }));
+jest.mock('~api/session', () => ({
+    getCurrentUser: jest.fn(),
+}));
 
 const user: UserProfile = {
     created_at: '2024-01-01T00:00:00Z',

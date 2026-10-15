@@ -22,3 +22,31 @@ export const getNextMealTime = (zones: WeeklyMealZone[]): string => {
     const value = format(addMinutes(parsed, 60), 'HH:mm');
     return value === '00:00' ? '23:59' : value;
 };
+
+export const normalizeSchedule = (
+    zones: readonly WeeklyMealZone[],
+    days: readonly { timestamp: Date }[],
+): WeeklyMealZone[] =>
+    days.flatMap(({ timestamp }) => {
+        const day = format(timestamp, 'yyyy-MM-dd');
+        return zones
+            .filter((zone) => zone.day === day)
+            .toSorted((a, b) => a.time.localeCompare(b.time))
+            .map((zone, position) => ({
+                ...zone,
+                label: zone.label.trim(),
+                position,
+            }));
+    });
+
+export const getDuplicateTimes = (
+    zones: readonly WeeklyMealZone[],
+): Set<string> =>
+    new Set(
+        zones
+            .filter(
+                (zone, index) =>
+                    zones.findIndex(({ time }) => time === zone.time) !== index,
+            )
+            .map(({ time }) => time),
+    );

@@ -1,5 +1,6 @@
 import { Menu, UnstyledButton } from '@mantine/core';
 import { Copy, MoreHoriz, Notes, ThreeStars } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './mobile-content.module.css';
@@ -16,7 +17,7 @@ export const MobileMealActions = ({
     onCopy,
     onEditNote,
     onEditRating,
-}: MobileMealActionsProps) => {
+}: MobileMealActionsProps): ReactElement => {
     const { t } = useTranslation();
 
     return (

@@ -7,6 +7,7 @@ import {
     Text,
     TextInput,
 } from '@mantine/core';
+import type { ReactElement } from 'react';
 import {
     type ChangeEventHandler,
     type KeyboardEventHandler,
@@ -29,32 +30,32 @@ type FoodDatabaseSearchProps = Readonly<{
 
 export const FoodDatabaseSearch = ({
     onSelect: handleSelect,
-}: FoodDatabaseSearchProps) => {
+}: FoodDatabaseSearchProps): ReactElement => {
     const { t } = useTranslation();
     const [input, setInput] = useState('');
     const [query, setQuery] = useState('');
     const [country, setCountry] = useState<FoodSearchCountry>('de');
     const { data, error, isFetching } = useFoodSearch({ country, query });
 
-    const handleSearch = () => {
+    const handleSearch = (): void => {
         const nextQuery = input.trim();
         if (nextQuery.length >= 2) {
             setQuery(nextQuery);
         }
     };
 
-    const handleInputChange = ((event) => {
+    const handleInputChange = ((event): void => {
         setInput(event.target.value);
     }) satisfies ChangeEventHandler<HTMLInputElement>;
 
-    const handleInputKeyDown = ((event) => {
+    const handleInputKeyDown = ((event): void => {
         if (event.key === 'Enter') {
             event.preventDefault();
             handleSearch();
         }
     }) satisfies KeyboardEventHandler<HTMLInputElement>;
 
-    const handleCountryChange = (value: string | null) => {
+    const handleCountryChange = (value: string | null): void => {
         setCountry((value ?? 'de') as FoodSearchCountry);
     };
 

@@ -2,6 +2,7 @@ import { Button, Modal } from '@mantine/core';
 import { LogIn } from 'iconoir-react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import type { ReactElement } from 'react';
 import {
     type MouseEventHandler,
     type SubmitEventHandler,
@@ -26,7 +27,7 @@ const registerSchema = loginSchema.extend({
     professional: z.string().optional().transform(Boolean),
 });
 
-export const AuthDialog = () => {
+export const AuthDialog = (): ReactElement => {
     const { t } = useTranslation();
     const router = useRouter();
     const localize = useLocalizedPath();
@@ -35,14 +36,14 @@ export const AuthDialog = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const closeModal = () => {
+    const closeModal = (): void => {
         setIsOpen(false);
         setIsRegistering(false);
         setError(null);
     };
 
     useEffect(() => {
-        const handleOpen = (event: Event) => {
+        const handleOpen = (event: Event): void => {
             const mode = (event as CustomEvent<AuthDialogMode>).detail;
             setIsRegistering(mode === 'register');
             setError(null);
@@ -50,16 +51,16 @@ export const AuthDialog = () => {
         };
 
         window.addEventListener(AUTH_DIALOG_EVENT, handleOpen);
-        return () => {
+        return (): void => {
             window.removeEventListener(AUTH_DIALOG_EVENT, handleOpen);
         };
     }, []);
 
-    const handleLoginWithGoogle = (async () => {
+    const handleLoginWithGoogle = (async (): Promise<void> => {
         await signIn('google', { callbackUrl: localize('/') });
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleEmailSubmit = (async (event) => {
+    const handleEmailSubmit = (async (event): Promise<void> => {
         event.preventDefault();
         setError(null);
         setIsSubmitting(true);
@@ -116,12 +117,12 @@ export const AuthDialog = () => {
         }
     }) satisfies SubmitEventHandler<HTMLFormElement>;
 
-    const toggleMode = () => {
+    const toggleMode = (): void => {
         setIsRegistering((value) => !value);
         setError(null);
     };
 
-    const handleOpenModal = () => {
+    const handleOpenModal = (): void => {
         setIsOpen(true);
     };
 

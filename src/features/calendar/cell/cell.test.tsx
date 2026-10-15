@@ -1,4 +1,5 @@
 import { ModalsProvider } from '@mantine/modals';
+import type { ReactElement } from 'react';
 import { type ReactNode } from 'react';
 
 import { renderWithUser, screen } from '~test/utils';
@@ -25,7 +26,7 @@ jest.mock('~store/hooks', () => ({
 }));
 
 describe('<Cell />', () => {
-    const Wrapper = ({ children }: { children: ReactNode }) => (
+    const Wrapper = ({ children }: { children: ReactNode }): ReactElement => (
         <ModalsProvider>{children}</ModalsProvider>
     );
     const props: CellProps = {
@@ -33,17 +34,11 @@ describe('<Cell />', () => {
         isEdited: false,
         timestamp: new Date(),
     };
-    const removeGeneratedIds = (container: HTMLElement): void => {
-        container.querySelectorAll('[id^="mantine-"]').forEach((element) => {
-            element.removeAttribute('id');
-        });
-    };
-
     it('renders', () => {
         const { container } = renderWithUser(<Cell {...props} />, { Wrapper });
-        removeGeneratedIds(container);
 
-        expect(container).toMatchSnapshot();
+        expect(container.querySelector('[tabindex="0"]')).toBeInTheDocument();
+        expect(screen.queryByText('test meal')).not.toBeInTheDocument();
     });
 
     it('reveals the plan action on keyboard focus', async () => {
@@ -76,12 +71,11 @@ describe('<Cell />', () => {
         };
 
         it('renders', () => {
-            const { container } = renderWithUser(<Cell {...propsWithMeal} />, {
+            renderWithUser(<Cell {...propsWithMeal} />, {
                 Wrapper,
             });
-            removeGeneratedIds(container);
 
-            expect(container).toMatchSnapshot();
+            expect(screen.getByText('test meal')).toBeVisible();
         });
 
         describe('when the meal has a note', () => {
@@ -94,13 +88,9 @@ describe('<Cell />', () => {
             };
 
             it('renders', () => {
-                const { container } = renderWithUser(
-                    <Cell {...propsWithMealNote} />,
-                    { Wrapper },
-                );
-                removeGeneratedIds(container);
-
-                expect(container).toMatchSnapshot();
+                renderWithUser(<Cell {...propsWithMealNote} />, { Wrapper });
+                expect(screen.getByText('Note')).toBeVisible();
+                expect(screen.getByText('test meal')).toBeVisible();
             });
         });
     });

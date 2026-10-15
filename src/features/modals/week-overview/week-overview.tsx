@@ -3,12 +3,14 @@ import { type ContextModalProps } from '@mantine/modals';
 import { format, parse, parseISO } from 'date-fns';
 import { AppleHalf } from 'iconoir-react';
 import groupBy from 'lodash/fp/groupBy';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MEAL_ICON } from '~constants/calendar';
 import { useWeeklyMealZones } from '~hooks/use-weekly-meal-zones';
 import { useCurrentWeek, useMeals } from '~store/hooks';
 import { type Meal } from '~types/meal';
+import type { WeeklyMealZone } from '~types/meal-zone';
 
 const MAX_RATING = 5;
 const DATE_PARSE_REFERENCE = new Date(0);
@@ -23,13 +25,13 @@ type WeekOverviewModalProps = {
 
 export const WeekOverviewModal = ({
     innerProps: { ownerUserId },
-}: ContextModalProps<WeekOverviewModalProps>) => {
+}: ContextModalProps<WeekOverviewModalProps>): ReactElement => {
     const { t } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const { meals } = useMeals(ownerUserId);
     const { zones } = useWeeklyMealZones(currentWeek, undefined, ownerUserId);
     const zonesByKey = Object.fromEntries(
-        zones.map((zone) => [zone.zoneKey, zone]),
+        zones.map((zone): [string, WeeklyMealZone] => [zone.zoneKey, zone]),
     );
 
     const mealsMap = groupByDay(meals);

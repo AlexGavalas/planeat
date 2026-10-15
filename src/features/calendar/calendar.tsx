@@ -1,5 +1,6 @@
 import { Space } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import type { ReactElement } from 'react';
 import { useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
@@ -24,7 +25,7 @@ export const Calendar = ({
         weekStart: string;
         zones: WeeklyMealZone[];
     };
-}>) => {
+}>): ReactElement => {
     const ref = useRef<HTMLDivElement>(null);
     const [scheduleOpened, scheduleHandlers] = useDisclosure(false);
     const [scheduleDay, setScheduleDay] = useState(initialDate);

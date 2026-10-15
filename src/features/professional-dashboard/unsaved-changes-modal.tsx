@@ -1,4 +1,5 @@
 import { Button, Group, Modal, Stack, Text } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './professional-dashboard.module.css';
@@ -15,7 +16,7 @@ export const UnsavedChangesModal = ({
     onCancel,
     onDiscard,
     onSave,
-}: UnsavedChangesModalProps) => {
+}: UnsavedChangesModalProps): ReactElement => {
     const { t } = useTranslation();
 
     return (

@@ -11,6 +11,7 @@ import {
 } from '@mantine/core';
 import { format, isToday, parseISO } from 'date-fns';
 import { EditPencil, Plus } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { type MealsMap } from '~types/meal';
@@ -36,7 +37,7 @@ export const DayLane = ({
     timestamp,
     unsavedChanges,
     zones,
-}: Props) => {
+}: Props): ReactElement => {
     const { t } = useTranslation();
     const day = format(timestamp, 'yyyy-MM-dd');
     const dayZones = zones
