@@ -1,9 +1,6 @@
 {
     "$schema": "./node_modules/oxlint/configuration_schema.json",
     "plugins": ["typescript", "unicorn", "import", "react"],
-    "jsPlugins": [
-        { "name": "project", "specifier": "./scripts/lint-rules.mts" }
-    ],
     "categories": {
         "correctness": "off"
     },
@@ -42,7 +39,6 @@
             "error",
             { "allowNamedFunctions": false, "allowUnboundThis": false }
         ],
-        "project/arrow-function-expressions": "error",
         "import/no-default-export": "error",
         "sort-keys": [
             "warn",

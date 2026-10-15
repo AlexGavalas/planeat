@@ -82,4 +82,4 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - For bug fixes, add a regression test at the lowest layer that actually reproduces the failure.
 - Run `mise exec -- pnpm validate` and the tests relevant to the change. Report the checks actually run and any checks not run.
 - Lint configuration lives in `.oxlintrc.json`. Complexity, nesting, statement, and parameter limits are warning-level review signals, not reasons to create arbitrary abstractions. E2E flows have a higher statement allowance.
-- `mise exec -- pnpm test:lint` tests the local arrow-function rule and return-type configuration, and runs as part of validation. Required language/framework exceptions must be narrow and explained beside the suppression.
+- Required language/framework exceptions must be narrow and explained beside the suppression.

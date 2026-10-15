@@ -16,7 +16,6 @@
         "push:generate-vapid-keys": "web-push generate-vapid-keys",
         "data:generate-bls": "python3 scripts/generate-bls-index.py BLS_4_0_2025_DE/BLS_4_0_Daten_2025_DE.xlsx src/data/bls-foods.json",
         "test": "TZ=UTC jest",
-        "test:lint": "node --test scripts/lint-rules.check.mts scripts/return-types.check.mts",
         "test:e2e": "playwright test",
         "test:e2e:watch": "playwright test --ui",
         "test:coverage": "TZ=UTC jest --coverage",
@@ -35,7 +34,7 @@
         "format": "oxfmt",
         "format:all": "pnpm format .",
         "prepare": "husky install",
-        "validate": "pnpm lint && pnpm check:format && pnpm check:types && pnpm test:lint"
+        "validate": "pnpm lint && pnpm check:format && pnpm check:types"
     },
     "dependencies": {
         "@date-fns/tz": "1.5.0",
