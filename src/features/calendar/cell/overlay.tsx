@@ -7,6 +7,7 @@ import {
     Tooltip,
 } from '@mantine/core';
 import { EditPencil, Notes, ThreeStars } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CopyButton } from '~components/copy-button';
@@ -46,7 +47,7 @@ export const CellOverlay = ({
     onSave,
     meal,
     ownerUserId,
-}: CellOverlayProps) => {
+}: CellOverlayProps): ReactElement => {
     const { t } = useTranslation();
     const openEditMealModal = useOpenContextModal('meal');
     const openMealNoteModal = useOpenContextModal('meal-note');
@@ -55,27 +56,30 @@ export const CellOverlay = ({
     const isMealSaved = isSavedMeal(meal);
     const isMealFilled = isFilledMeal(meal);
 
-    const handleMealSave = async (value: string, items: EditedMealItem[]) => {
+    const handleMealSave = async (
+        value: string,
+        items: EditedMealItem[],
+    ): Promise<void> => {
         await onSave({ ...meal, items, meal: value });
     };
 
-    const handleMealNoteSave = async (note: string) => {
+    const handleMealNoteSave = async (note: string): Promise<void> => {
         await onSave({ ...meal, note });
     };
 
-    const handleMealNoteDelete = async () => {
+    const handleMealNoteDelete = async (): Promise<void> => {
         await onSave({ ...meal, note: null });
     };
 
-    const handleMealRatingSave = async (rating: number) => {
+    const handleMealRatingSave = async (rating: number): Promise<void> => {
         await onSave({ ...meal, rating });
     };
 
-    const handleMealRatingDelete = async () => {
+    const handleMealRatingDelete = async (): Promise<void> => {
         await onSave({ ...meal, rating: null });
     };
 
-    const handleEditClick = () => {
+    const handleEditClick = (): void => {
         openEditMealModal({
             ...MEAL_MODAL_OPTIONS,
             innerProps: {
@@ -89,7 +93,7 @@ export const CellOverlay = ({
         });
     };
 
-    const handleNoteClick = () => {
+    const handleNoteClick = (): void => {
         if (!isMealSaved) {
             return;
         }
@@ -105,7 +109,7 @@ export const CellOverlay = ({
         });
     };
 
-    const handleRateClick = () => {
+    const handleRateClick = (): void => {
         if (!isMealSaved) {
             return;
         }

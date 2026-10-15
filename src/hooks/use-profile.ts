@@ -39,7 +39,7 @@ export const useProfile: UseProfile = () => {
 
     const { data: profile, isFetching } = useQuery({
         enabled: Boolean(user),
-        queryFn: async () => {
+        queryFn: async (): Promise<UserProfile> => {
             const response = await fetch('/api/v1/user');
 
             const { data } = (await response.json()) as { data?: UserProfile };
@@ -60,7 +60,7 @@ export const useProfile: UseProfile = () => {
             targetWeight,
             language,
             hasCompletedOnboarding,
-        }: MutationProps) => {
+        }: MutationProps): Promise<void> => {
             const response = await saveProfile({
                 hasCompletedOnboarding,
                 height,
@@ -72,13 +72,13 @@ export const useProfile: UseProfile = () => {
                 throw new Error('Could not save profile');
             }
         },
-        onError: () => {
+        onError: (): void => {
             showErrorNotification({
                 message: t('notification.error.message'),
                 title: t('notification.error.title'),
             });
         },
-        onSuccess: async (_, { language, silent }) => {
+        onSuccess: async (_, { language, silent }): Promise<void> => {
             if (!silent) {
                 showSuccessNotification({
                     message: t('notification.success.message', {
@@ -97,7 +97,7 @@ export const useProfile: UseProfile = () => {
     });
 
     const { mutate: deleteProfile, isPending: isDeleting } = useMutation({
-        mutationFn: async () => {
+        mutationFn: async (): Promise<void> => {
             const response = await fetch('/api/v1/user', {
                 method: 'DELETE',
             });
@@ -106,13 +106,13 @@ export const useProfile: UseProfile = () => {
                 throw new Error('Could not delete profile');
             }
         },
-        onError: () => {
+        onError: (): void => {
             showErrorNotification({
                 message: t('notification.error.message'),
                 title: t('notification.error.title'),
             });
         },
-        onSuccess: async () => {
+        onSuccess: async (): Promise<void> => {
             showSuccessNotification({
                 message: t('notification.success.message'),
                 title: t('notification.success.title'),

@@ -44,7 +44,9 @@ export const userRoles = pgTable(
         role: text('role').notNull(),
         user_id: bigint('user_id', { mode: 'number' })
             .notNull()
-            .references(() => users.id, { onDelete: 'cascade' }),
+            .references(() => users.id, {
+                onDelete: 'cascade',
+            }),
     },
     (table) => [
         primaryKey({

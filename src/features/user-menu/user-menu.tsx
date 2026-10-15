@@ -4,6 +4,7 @@ import { NavArrowDown } from 'iconoir-react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import type { ReactElement } from 'react';
 import {
     type ComponentPropsWithoutRef,
     type MouseEventHandler,
@@ -36,7 +37,7 @@ MenuTrigger.displayName = 'MenuTrigger';
 
 export const UserMenu = ({
     isProfessional = false,
-}: Readonly<{ isProfessional?: boolean }>) => {
+}: Readonly<{ isProfessional?: boolean }>): ReactElement => {
     const localize = useLocalizedPath();
     const pathname = usePathname();
     const router = useRouter();
@@ -46,7 +47,7 @@ export const UserMenu = ({
         ? [PROFESSIONAL_LINK, ...NAV_LINKS]
         : NAV_LINKS;
 
-    const handleLogout = (async () => {
+    const handleLogout = (async (): Promise<void> => {
         queryClient.clear();
 
         await signOut({ callbackUrl: '/' });

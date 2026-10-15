@@ -16,7 +16,7 @@ const symbol = await readFile(
 );
 const symbolSource = `data:image/png;base64,${symbol.toString('base64')}`;
 
-export default function OpenGraphImage() {
+const OpenGraphImage = (): ImageResponse => {
     return new ImageResponse(
         <div
             style={{
@@ -86,4 +86,6 @@ export default function OpenGraphImage() {
         </div>,
         size,
     );
-}
+};
+
+export default OpenGraphImage;

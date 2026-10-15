@@ -44,6 +44,20 @@ const sanitizeQuery = (query: string): string =>
         .replace(/\s+/g, ' ')
         .trim();
 
+type OpenFoodFactsProduct = z.infer<typeof responseSchema>['hits'][number];
+
+const getProductNutrition = (
+    nutrients: OpenFoodFactsProduct['nutriments'],
+): FoodSearchResult['nutrition'] => ({
+    calories: nutrients?.['energy-kcal_100g'] ?? null,
+    carbohydrates: nutrients?.carbohydrates_100g ?? null,
+    fat: nutrients?.fat_100g ?? null,
+    fiber: nutrients?.fiber_100g ?? null,
+    protein: nutrients?.proteins_100g ?? null,
+    salt: nutrients?.salt_100g ?? null,
+    sugar: nutrients?.sugars_100g ?? null,
+});
+
 export const searchOpenFoodFacts = async ({
     country,
     query,
@@ -85,7 +99,7 @@ export const searchOpenFoodFacts = async ({
     }
 
     const parsed = responseSchema.parse(await response.json());
-    return parsed.hits.flatMap((product): FoodSearchResult[] => {
+    return parsed.hits.flatMap((product) => {
         const name =
             (country === 'gr'
                 ? product.product_name_el
@@ -93,22 +107,13 @@ export const searchOpenFoodFacts = async ({
         if (!name) {
             return [];
         }
-        const nutrients = product.nutriments;
         return [
             {
                 alternativeName: null,
                 brand: product.brands?.join(', ') ?? null,
                 id: product.code,
                 name,
-                nutrition: {
-                    calories: nutrients?.['energy-kcal_100g'] ?? null,
-                    carbohydrates: nutrients?.carbohydrates_100g ?? null,
-                    fat: nutrients?.fat_100g ?? null,
-                    fiber: nutrients?.fiber_100g ?? null,
-                    protein: nutrients?.proteins_100g ?? null,
-                    salt: nutrients?.salt_100g ?? null,
-                    sugar: nutrients?.sugars_100g ?? null,
-                },
+                nutrition: getProductNutrition(product.nutriments),
                 quantity: product.quantity ?? null,
                 source: 'open-food-facts',
             },

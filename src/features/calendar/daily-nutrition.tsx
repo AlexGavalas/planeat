@@ -1,5 +1,6 @@
 import { Popover, UnstyledButton } from '@mantine/core';
 import { format } from 'date-fns';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { MEAL_ZONE_KEYS } from '~constants/meal-zones';
@@ -10,7 +11,7 @@ import { getDaysOfWeek } from '~util/date';
 import styles from './daily-nutrition.module.css';
 import { NutritionSummary } from './nutrition-summary';
 
-export const DailyNutrition = () => {
+export const DailyNutrition = (): ReactElement => {
     const { t } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const { meals } = useMeals();
@@ -31,7 +32,7 @@ export const DailyNutrition = () => {
                 })
                     .filter((meal) => meal.day === day)
                     .sort((a, b) => {
-                        const zone = (meal: typeof a) =>
+                        const zone = (meal: typeof a): number =>
                             MEAL_ZONE_KEYS.indexOf(
                                 meal.section_key.split(
                                     '_',

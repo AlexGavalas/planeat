@@ -20,6 +20,7 @@ import {
     MoreHoriz,
     Xmark,
 } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -42,7 +43,7 @@ type DesktopControlsProps = Readonly<{
 
 const buttonProps = { size: 'xs' } satisfies ButtonProps;
 
-export const DesktopControls = (props: DesktopControlsProps) => {
+export const DesktopControls = (props: DesktopControlsProps): ReactElement => {
     const { t } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const weekLabel = `${format(startOfWeek(currentWeek, { weekStartsOn: 1 }), 'd MMM')}–${format(endOfWeek(currentWeek, { weekStartsOn: 1 }), 'd MMM yyyy')}`;

@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { ReactElement } from 'react';
 import { type PropsWithChildren } from 'react';
 
 import { DEFAULT_MEAL_ZONE_TIMES } from '~constants/calendar';
@@ -28,7 +29,7 @@ describe('meal zone settings', () => {
         const client = new QueryClient({
             defaultOptions: { mutations: { retry: false } },
         });
-        const Wrapper = ({ children }: PropsWithChildren) => (
+        const Wrapper = ({ children }: PropsWithChildren): ReactElement => (
             <QueryClientProvider client={client}>
                 {children}
             </QueryClientProvider>

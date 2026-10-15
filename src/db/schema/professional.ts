@@ -22,7 +22,9 @@ export const professionalClients = pgTable(
         }),
         client_user_id: bigint('client_user_id', { mode: 'number' })
             .notNull()
-            .references(() => users.id, { onDelete: 'cascade' }),
+            .references(() => users.id, {
+                onDelete: 'cascade',
+            }),
         created_at: timestamp('created_at', {
             mode: 'string',
             withTimezone: true,
@@ -32,7 +34,9 @@ export const professionalClients = pgTable(
         id: uuid('id').defaultRandom().primaryKey(),
         professional_user_id: bigint('professional_user_id', { mode: 'number' })
             .notNull()
-            .references(() => users.id, { onDelete: 'cascade' }),
+            .references(() => users.id, {
+                onDelete: 'cascade',
+            }),
         status: text('status').notNull().default('pending'),
     },
     (table) => [

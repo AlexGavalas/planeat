@@ -24,7 +24,7 @@ export const useCreateMealPool: UseCreateMealPool = ({ onSuccess } = {}) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async ({ templates }) => {
+        mutationFn: async ({ templates }): Promise<void> => {
             if (!templates.length) {
                 throw new Error(t('errors.preview_empty'));
             }

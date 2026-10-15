@@ -2,6 +2,7 @@
 
 import { List, Menu, Modal, Stack, Text, UnstyledButton } from '@mantine/core';
 import { CheckCircle, DownloadCircle } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,15 +21,17 @@ type InstallAppProps = Readonly<{
     placement?: 'landing' | 'menu';
 }>;
 
-const isIosDevice = () =>
+const isIosDevice = (): boolean =>
     /iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-const isRunningStandalone = () =>
+const isRunningStandalone = (): boolean =>
     window.matchMedia('(display-mode: standalone)').matches ||
     (navigator as NavigatorWithStandalone).standalone === true;
 
-export const InstallApp = ({ placement = 'landing' }: InstallAppProps) => {
+export const InstallApp = ({
+    placement = 'landing',
+}: InstallAppProps): ReactElement | null => {
     const { t } = useTranslation();
     const [installPrompt, setInstallPrompt] =
         useState<BeforeInstallPromptEvent | null>(null);
@@ -40,11 +43,11 @@ export const InstallApp = ({ placement = 'landing' }: InstallAppProps) => {
             setCanShowIosInstall(isIosDevice());
         }
 
-        const handleBeforeInstallPrompt = (event: Event) => {
+        const handleBeforeInstallPrompt = (event: Event): void => {
             event.preventDefault();
             setInstallPrompt(event as BeforeInstallPromptEvent);
         };
-        const handleInstalled = () => {
+        const handleInstalled = (): void => {
             setInstallPrompt(null);
             setCanShowIosInstall(false);
             setIsIosInstallOpen(false);
@@ -56,7 +59,7 @@ export const InstallApp = ({ placement = 'landing' }: InstallAppProps) => {
         );
         window.addEventListener('appinstalled', handleInstalled);
 
-        return () => {
+        return (): void => {
             window.removeEventListener(
                 'beforeinstallprompt',
                 handleBeforeInstallPrompt,
@@ -65,7 +68,7 @@ export const InstallApp = ({ placement = 'landing' }: InstallAppProps) => {
         };
     }, []);
 
-    const handleInstall = async () => {
+    const handleInstall = async (): Promise<void> => {
         if (!installPrompt) {
             setIsIosInstallOpen(true);
             return;
@@ -75,7 +78,7 @@ export const InstallApp = ({ placement = 'landing' }: InstallAppProps) => {
         await installPrompt.userChoice;
         setInstallPrompt(null);
     };
-    const handleCloseIosInstall = () => {
+    const handleCloseIosInstall = (): void => {
         setIsIosInstallOpen(false);
     };
 

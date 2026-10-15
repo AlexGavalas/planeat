@@ -3,6 +3,7 @@
 import { ActionIcon, Button, Group, Text, Title } from '@mantine/core';
 import { AppleHalf, Clock, NavArrowDown, NavArrowRight } from 'iconoir-react';
 import Link from 'next/link';
+import type { ReactElement } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,12 +21,17 @@ type MealRowProps = Readonly<{
     nextMealIndex: number;
 }>;
 
-function MealRow({ day, index, item, nextMealIndex }: MealRowProps) {
+const MealRow = ({
+    day,
+    index,
+    item,
+    nextMealIndex,
+}: MealRowProps): ReactElement => {
     const { t } = useTranslation();
     const [expanded, setExpanded] = useState(false);
     const Icon = item.legacyKey ? MEAL_ICON[item.legacyKey] : AppleHalf;
     const hasNutrition = Boolean(item.mealRecord?.items?.length);
-    const handleToggleNutrition = () => {
+    const handleToggleNutrition = (): void => {
         setExpanded((value) => !value);
     };
     const isNext = index === nextMealIndex;
@@ -102,7 +108,7 @@ function MealRow({ day, index, item, nextMealIndex }: MealRowProps) {
             )}
         </div>
     );
-}
+};
 
 type TodayMealsProps = Readonly<{
     day: string;
@@ -110,7 +116,11 @@ type TodayMealsProps = Readonly<{
     nextMealIndex: number;
 }>;
 
-export function TodayMeals({ day, mealItems, nextMealIndex }: TodayMealsProps) {
+export const TodayMeals = ({
+    day,
+    mealItems,
+    nextMealIndex,
+}: TodayMealsProps): ReactElement => {
     const { t } = useTranslation();
 
     return (
@@ -152,4 +162,4 @@ export function TodayMeals({ day, mealItems, nextMealIndex }: TodayMealsProps) {
             </section>
         </Card>
     );
-}
+};

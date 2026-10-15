@@ -1,10 +1,12 @@
 import { Menu } from '@mantine/core';
+import type { ReactElement } from 'react';
 
 import { fireEvent, renderWithUser, screen } from '~test/utils';
 
 import { InstallApp } from './install-app';
 
-const renderInstallApp = () => renderWithUser(<InstallApp />);
+const renderInstallApp = (): ReturnType<typeof renderWithUser> =>
+    renderWithUser(<InstallApp />);
 
 describe('install app', () => {
     const originalUserAgent = navigator.userAgent;
@@ -74,7 +76,7 @@ describe('install app', () => {
 
     it('renders the installation action as a menu item', async () => {
         expect.assertions(1);
-        const renderMenu = (opened: boolean) => (
+        const renderMenu = (opened: boolean): ReactElement => (
             <Menu keepMounted keepMountedMode="display-none" opened={opened}>
                 <Menu.Target>
                     <button type="button">Open menu</button>

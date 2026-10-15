@@ -11,6 +11,7 @@ import { DatePicker } from '@mantine/dates';
 import { type ContextModalProps } from '@mantine/modals';
 import { format } from 'date-fns';
 import 'dayjs/locale/el';
+import type { ReactElement } from 'react';
 import { type SubmitEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -34,7 +35,7 @@ export const MeasurementModal = ({
     context,
     id,
     innerProps: { onSave, initialData },
-}: ContextModalProps<ModalContentProps>) => {
+}: ContextModalProps<ModalContentProps>): ReactElement => {
     const { t, i18n } = useTranslation();
     const [date, setDate] = useState<string | null>(() =>
         format(initialData?.date ?? new Date(), 'yyyy-MM-dd'),
@@ -43,23 +44,23 @@ export const MeasurementModal = ({
     const [fatPercent, setFatPercent] = useState(initialData?.fat_percentage);
     const [error, setError] = useState('');
 
-    const closeModal = () => {
+    const closeModal = (): void => {
         context.closeContextModal(id);
     };
 
-    const resetError = () => {
+    const resetError = (): void => {
         setError('');
     };
 
-    const handleWeightChange = ((value) => {
+    const handleWeightChange = ((value): void => {
         setWeight(Number(value));
     }) satisfies NonNullable<NumberInputProps['onChange']>;
 
-    const handleFatPercentChange = ((value) => {
+    const handleFatPercentChange = ((value): void => {
         setFatPercent(Number(value));
     }) satisfies NonNullable<NumberInputProps['onChange']>;
 
-    const handleSave = (async (e) => {
+    const handleSave = (async (e): Promise<void> => {
         e.preventDefault();
 
         if (!weight) {

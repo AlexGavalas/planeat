@@ -1,4 +1,5 @@
 import { List, Text, TextInput } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type ChangeEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -21,7 +22,7 @@ export const MealSearch = ({
     onSearchChange,
     results,
     showClientMeals,
-}: MealSearchProps) => {
+}: MealSearchProps): ReactElement => {
     const { t } = useTranslation();
 
     return (

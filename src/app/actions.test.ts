@@ -42,7 +42,7 @@ describe('server actions', () => {
         (): Promise<{ ok: boolean }> =>
             saveMealPlan({ deletedIds: [], editedMeals: [], newMeals: [] }),
         (): Promise<{ ok: boolean }> => saveProfile({ height: 180 }),
-        (): Promise<{ ok: boolean }> =>
+        (): Promise<{ effectiveFrom?: string; ok: boolean }> =>
             saveMealZoneTimes({
                 times: {
                     dinner: '20:00',

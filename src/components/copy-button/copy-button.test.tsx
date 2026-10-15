@@ -4,24 +4,24 @@ import { CopyButton } from './copy-button';
 
 describe('<CopyButton />', () => {
     it('renders the button', () => {
-        const { container } = renderWithUser(<CopyButton value="test" />);
+        renderWithUser(<CopyButton value="test" />);
 
-        expect(container).toMatchSnapshot();
+        expect(screen.getByRole('button')).toBeEnabled();
     });
 
     describe('when the user hovers the button', () => {
         it('shows the tooltip', async () => {
             expect.hasAssertions();
 
-            const { user, baseElement } = renderWithUser(
-                <CopyButton value="test" />,
-            );
+            const { user } = renderWithUser(<CopyButton value="test" />);
 
             const button = screen.getByRole('button');
 
             await user.hover(button);
 
-            expect(baseElement).toMatchSnapshot();
+            await expect(
+                screen.findByRole('tooltip'),
+            ).resolves.toHaveTextContent('Copy');
         });
     });
 

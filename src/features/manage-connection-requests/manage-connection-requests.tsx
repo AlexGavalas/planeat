@@ -3,6 +3,7 @@
 import { Badge, Group, Stack, Text, Title } from '@mantine/core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { CheckCircle, Mail } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { LoadingOverlay } from '~components/loading-overlay';
@@ -19,7 +20,7 @@ import {
 import { acceptConnectionRequest } from '../../app/actions';
 import { ConnectionRequest } from './connection-request';
 
-export const ManageConnectionRequests = () => {
+export const ManageConnectionRequests = (): ReactElement => {
     const { t } = useTranslation();
     const { profile } = useProfile();
     const queryClient = useQueryClient();
@@ -29,7 +30,7 @@ export const ManageConnectionRequests = () => {
         isFetching: isFetchingConnectionRequests,
     } = useQuery({
         enabled: Boolean(profile),
-        queryFn: async () => {
+        queryFn: async (): Promise<NotificationWithUser[]> => {
             const response = await fetch(
                 '/api/v1/notification?type=connection_request',
             );
@@ -46,7 +47,9 @@ export const ManageConnectionRequests = () => {
     const hasConnectionsRequests =
         !isFetchingConnectionRequests && connectionRequests.length > 0;
 
-    const removeConnectionRequest = async (connectionRequestId: string) => {
+    const removeConnectionRequest = async (
+        connectionRequestId: string,
+    ): Promise<Response> => {
         const response = await fetch(
             `/api/v1/notification?id=${connectionRequestId}`,
             {
@@ -59,7 +62,7 @@ export const ManageConnectionRequests = () => {
 
     const handleAcceptConnectionRequest = async (
         connectionRequest: Notification,
-    ) => {
+    ): Promise<void> => {
         const response = await acceptConnectionRequest(
             connectionRequest.id,
         ).catch(() => ({ ok: false }));
@@ -90,7 +93,7 @@ export const ManageConnectionRequests = () => {
 
     const handleDeclineConnectionRequest = async (
         connectionRequestId: string,
-    ) => {
+    ): Promise<void> => {
         const response = await removeConnectionRequest(connectionRequestId);
 
         if (!response.ok) {

@@ -1,8 +1,10 @@
+import type { ReactElement } from 'react';
+
 import calendarStyles from './calendar-skeleton.module.css';
 import styles from './loading-skeleton.module.css';
 import pageStyles from './page-skeletons.module.css';
 
-const Lines = ({ count = 3 }: Readonly<{ count?: number }>) => (
+const Lines = ({ count = 3 }: Readonly<{ count?: number }>): ReactElement => (
     <div className={styles.lines}>
         {Array.from({ length: count }, (_, index) => (
             <div key={index} className={`${styles.skeleton} ${styles.line}`} />
@@ -12,20 +14,20 @@ const Lines = ({ count = 3 }: Readonly<{ count?: number }>) => (
 
 export const SkeletonCard = ({
     children,
-}: Readonly<{ children: React.ReactNode }>) => (
+}: Readonly<{ children: React.ReactNode }>): ReactElement => (
     <div className={styles.card}>{children}</div>
 );
 
 export const SkeletonLoader = ({
     children,
-}: Readonly<{ children: React.ReactNode }>) => (
+}: Readonly<{ children: React.ReactNode }>): ReactElement => (
     <div aria-label="Loading" className={styles.loader} role="status">
         <span className={styles.visuallyHidden}>Loading</span>
         <div aria-hidden="true">{children}</div>
     </div>
 );
 
-export function DailyMealsSkeleton() {
+export const DailyMealsSkeleton = (): ReactElement => {
     return (
         <SkeletonLoader>
             <div className={`${styles.skeleton} ${styles.heading}`} />
@@ -41,9 +43,9 @@ export function DailyMealsSkeleton() {
             </div>
         </SkeletonLoader>
     );
-}
+};
 
-export function TableSectionSkeleton() {
+export const TableSectionSkeleton = (): ReactElement => {
     return (
         <SkeletonLoader>
             <div className={styles.sectionHeading}>
@@ -53,17 +55,17 @@ export function TableSectionSkeleton() {
             <Lines count={4} />
         </SkeletonLoader>
     );
-}
+};
 
-export function ConnectionsSectionSkeleton() {
+export const ConnectionsSectionSkeleton = (): ReactElement => {
     return (
         <SkeletonLoader>
             <Lines count={3} />
         </SkeletonLoader>
     );
-}
+};
 
-export function ConnectionsPageSkeleton() {
+export const ConnectionsPageSkeleton = (): ReactElement => {
     return (
         <SkeletonLoader>
             <div className={pageStyles.connectionsPage}>
@@ -100,9 +102,9 @@ export function ConnectionsPageSkeleton() {
             </div>
         </SkeletonLoader>
     );
-}
+};
 
-export function SettingsPageSkeleton() {
+export const SettingsPageSkeleton = (): ReactElement => {
     return (
         <SkeletonLoader>
             <div className={styles.settingsPage}>
@@ -122,9 +124,9 @@ export function SettingsPageSkeleton() {
             </div>
         </SkeletonLoader>
     );
-}
+};
 
-export function MealPlanPageSkeleton() {
+export const MealPlanPageSkeleton = (): ReactElement => {
     return (
         <SkeletonLoader>
             <div className={calendarStyles.calendarControls}>
@@ -161,4 +163,4 @@ export function MealPlanPageSkeleton() {
             </SkeletonCard>
         </SkeletonLoader>
     );
-}
+};

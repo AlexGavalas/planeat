@@ -11,6 +11,7 @@ import {
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { UserPlus } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,18 +26,18 @@ type ConnectionsProps = Readonly<{
     requests: ReactNode;
 }>;
 
-export function Connections({
+export const Connections = ({
     connections,
     professional,
     requests,
-}: ConnectionsProps) {
+}: ConnectionsProps): ReactElement => {
     const { t } = useTranslation();
     const [isAddPersonOpen, setIsAddPersonOpen] = useState(false);
     const isMobile = useMediaQuery('(max-width: 48em)');
-    const openAddPerson = () => {
+    const openAddPerson = (): void => {
         setIsAddPersonOpen(true);
     };
-    const closeAddPerson = () => {
+    const closeAddPerson = (): void => {
         setIsAddPersonOpen(false);
     };
 
@@ -84,4 +85,4 @@ export function Connections({
             </Modal>
         </Container>
     );
-}
+};

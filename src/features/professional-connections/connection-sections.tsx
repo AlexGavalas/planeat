@@ -1,4 +1,5 @@
 import { Button, Divider, Stack, Text, TextInput, Title } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type ChangeEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -45,13 +46,13 @@ export const ConnectionSections = ({
     run,
     search,
     state,
-}: ConnectionSectionsProps) => {
+}: ConnectionSectionsProps): ReactElement => {
     const { t } = useTranslation();
     const pendingIds = new Set(
         state?.outgoingInvitations.map(({ id }) => id) ?? [],
     );
     const current = state?.currentProfessional;
-    const handleStopClient = () => {
+    const handleStopClient = (): void => {
         if (current) {
             void run(() =>
                 removeProfessionalRelationship({
@@ -97,7 +98,7 @@ export const ConnectionSections = ({
                     />
                     {professionals.map((professional) => {
                         const isPending = pendingIds.has(professional.id);
-                        const handleInviteProfessional = () => {
+                        const handleInviteProfessional = (): void => {
                             void run(() =>
                                 inviteProfessional({
                                     professionalUserId: professional.id,

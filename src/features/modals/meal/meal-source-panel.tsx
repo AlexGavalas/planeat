@@ -1,4 +1,5 @@
 import { Paper, Stack, Tabs, Text, Title } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,7 +18,7 @@ export const MealSourcePanel = ({
     foodDatabaseEnabled,
     mealSearch,
     onFoodSelect,
-}: Props) => {
+}: Props): ReactElement => {
     const { t } = useTranslation();
 
     return (

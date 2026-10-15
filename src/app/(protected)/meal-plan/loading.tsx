@@ -1,5 +1,9 @@
+import type { ReactElement } from 'react';
+
 import { MealPlanPageSkeleton } from '~components/loading-skeleton';
 
-export default function Loading() {
+const Loading = (): ReactElement => {
     return <MealPlanPageSkeleton />;
-}
+};
+
+export default Loading;

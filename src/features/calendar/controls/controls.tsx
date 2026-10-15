@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,7 +21,11 @@ type ControlsProps = Readonly<{
     zones: WeeklyMealZone[];
 }>;
 
-export const Controls = ({ onEditSchedule, onPrint, zones }: ControlsProps) => {
+export const Controls = ({
+    onEditSchedule,
+    onPrint,
+    zones,
+}: ControlsProps): ReactElement => {
     const { t } = useTranslation();
     const ownerUserId = useMealPlanOwnerId();
     const { nextWeek: handleNextWeek, previousWeek: handlePreviousWeek } =
@@ -31,7 +36,7 @@ export const Controls = ({ onEditSchedule, onPrint, zones }: ControlsProps) => {
     const openMealPoolModal = useOpenContextModal('meal-pool');
     const openWeekOverviewModal = useOpenContextModal('week-overview');
 
-    const toggleWeekOverview = () => {
+    const toggleWeekOverview = (): void => {
         openWeekOverviewModal({
             innerProps: { ownerUserId },
             size: 'lg',
@@ -39,15 +44,15 @@ export const Controls = ({ onEditSchedule, onPrint, zones }: ControlsProps) => {
         });
     };
 
-    const handleCopyToNextWeek = async () => {
+    const handleCopyToNextWeek = async (): Promise<void> => {
         await copyToNextWeek(meals);
     };
 
-    const handleSave = (async () => {
+    const handleSave = (async (): Promise<void> => {
         await savePlan();
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleMealCreation = () => {
+    const handleMealCreation = (): void => {
         openMealPoolModal({
             innerProps: {},
             size: 'lg',

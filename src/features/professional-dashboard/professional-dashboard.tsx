@@ -2,6 +2,7 @@
 
 import { Container } from '@mantine/core';
 import { useRouter } from 'next/navigation';
+import type { ReactElement } from 'react';
 import {
     type ChangeEventHandler,
     type FormEventHandler,
@@ -34,7 +35,7 @@ export const ProfessionalDashboard = ({
     detail,
     query,
     selectedClient,
-}: ProfessionalDashboardProps) => {
+}: ProfessionalDashboardProps): ReactElement => {
     const router = useRouter();
     const localize = useLocalizedPath();
     const [search, setSearch] = useState(query);
@@ -53,7 +54,7 @@ export const ProfessionalDashboard = ({
         client?: number;
         page?: number;
         q?: string;
-    }) => {
+    }): string => {
         const params = new URLSearchParams();
         if (q) {
             params.set('q', q);
@@ -68,7 +69,7 @@ export const ProfessionalDashboard = ({
         return `${localize('/professional')}${value ? `?${value}` : ''}`;
     };
 
-    const navigate = (url: string) => {
+    const navigate = (url: string): void => {
         if (requestNavigation(url)) {
             return;
         }
@@ -80,7 +81,7 @@ export const ProfessionalDashboard = ({
         navigate(destination({ page: 1, q: search.trim() }));
     };
 
-    const continueNavigation = async () => {
+    const continueNavigation = async (): Promise<void> => {
         const url = pendingUrl;
         if (shouldStopAfterPrompt && selectedClient) {
             const result = await removeProfessionalRelationship({
@@ -98,23 +99,23 @@ export const ProfessionalDashboard = ({
         }
     };
 
-    const handleDiscardAndContinue = () => {
+    const handleDiscardAndContinue = (): void => {
         removeChanges();
         void continueNavigation();
     };
 
-    const handleCancelNavigation = () => {
+    const handleCancelNavigation = (): void => {
         clearNavigation();
         setShouldStopAfterPrompt(false);
     };
 
-    const handleSaveAndContinue = async () => {
+    const handleSaveAndContinue = async (): Promise<void> => {
         if (await savePlan()) {
             await continueNavigation();
         }
     };
 
-    const handleStopManaging = async () => {
+    const handleStopManaging = async (): Promise<void> => {
         if (!selectedClient) {
             return;
         }
@@ -138,15 +139,15 @@ export const ProfessionalDashboard = ({
         setSearch(event.target.value);
     };
 
-    const handleSelectClient = (clientId: number) => {
+    const handleSelectClient = (clientId: number): void => {
         navigate(destination({ client: clientId }));
     };
 
-    const handlePageChange = (page: number) => {
+    const handlePageChange = (page: number): void => {
         navigate(destination({ page }));
     };
 
-    const handleCloseDrawer = () => {
+    const handleCloseDrawer = (): void => {
         navigate(destination({}));
     };
 

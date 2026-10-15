@@ -13,8 +13,10 @@ export type RouteHandlerWithUser = (params: {
 }) => Promise<Response>;
 
 export const withUser =
-    (handler: RouteHandlerWithUser) =>
-    async (request: NextRequest): Promise<Response> => {
+    (
+        handler: RouteHandlerWithUser,
+    ): ((request: NextRequest) => Promise<Response>) =>
+    async (request: NextRequest) => {
         try {
             const user = await getCurrentUser();
 

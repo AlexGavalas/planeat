@@ -1,5 +1,4 @@
-import { type FoodNutrition } from '~types/food-search';
-import { type FoodSearchResult } from '~types/food-search';
+import { type FoodNutrition, type FoodSearchResult } from '~types/food-search';
 import { type EditedMealItem, type MealItem } from '~types/meal';
 
 export const NUTRIENT_KEYS = [
@@ -22,7 +21,7 @@ export const scaleNutrition = (
 ): FoodNutrition => {
     const factor = item.quantity_grams / (item.basis_grams ?? 100);
     return Object.fromEntries(
-        NUTRIENT_KEYS.map((key) => [
+        NUTRIENT_KEYS.map((key): [NutrientKey, number | null] => [
             key,
             item[key] === null || item[key] === undefined
                 ? null
@@ -36,7 +35,7 @@ export const totalNutrition = (
 ): NutritionTotals => {
     const scaled = items.map(scaleNutrition);
     const totals = Object.fromEntries(
-        NUTRIENT_KEYS.map((key) => {
+        NUTRIENT_KEYS.map((key): [NutrientKey, number | null] => {
             const known = scaled.flatMap((value) =>
                 value[key] === null ? [] : [value[key]],
             );
@@ -51,7 +50,7 @@ export const totalNutrition = (
     return {
         ...totals,
         complete: Object.fromEntries(
-            NUTRIENT_KEYS.map((key) => [
+            NUTRIENT_KEYS.map((key): [NutrientKey, boolean] => [
                 key,
                 scaled.length > 0 &&
                     scaled.every((value) => value[key] !== null),

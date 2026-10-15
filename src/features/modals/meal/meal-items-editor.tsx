@@ -1,5 +1,6 @@
 import { ActionIcon, NumberInput, Paper, Stack, Text } from '@mantine/core';
 import { Trash } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { type EditedMealItem } from '~types/meal';
@@ -14,15 +15,20 @@ type Props = Readonly<{
 
 type RowProps = Readonly<Props & { index: number; item: EditedMealItem }>;
 
-const MealItemRow = ({ index, item, items, onItemsChange }: RowProps) => {
+const MealItemRow = ({
+    index,
+    item,
+    items,
+    onItemsChange,
+}: RowProps): ReactElement => {
     const { i18n, t } = useTranslation();
     const format = new Intl.NumberFormat(i18n.language, {
         maximumFractionDigits: 1,
     });
     const nutrition = scaleNutrition(item);
-    const value = (amount: number | null) =>
+    const value = (amount: number | null): string =>
         amount === null ? '—' : `${format.format(amount)} g`;
-    const handleQuantityChange = (value: number | string) => {
+    const handleQuantityChange = (value: number | string): void => {
         const quantity = Number(value);
         if (!Number.isFinite(quantity) || quantity <= 0) {
             return;
@@ -35,11 +41,14 @@ const MealItemRow = ({ index, item, items, onItemsChange }: RowProps) => {
             ),
         );
     };
-    const handleDelete = () => {
+    const handleDelete = (): void => {
         onItemsChange(
             items
                 .filter((_, candidateIndex) => candidateIndex !== index)
-                .map((candidate, position) => ({ ...candidate, position })),
+                .map((candidate, position) => ({
+                    ...candidate,
+                    position,
+                })),
         );
     };
 
@@ -92,7 +101,10 @@ const MealItemRow = ({ index, item, items, onItemsChange }: RowProps) => {
     );
 };
 
-export const MealItemsEditor = ({ items, onItemsChange }: Props) => {
+export const MealItemsEditor = ({
+    items,
+    onItemsChange,
+}: Props): ReactElement => {
     const { i18n, t } = useTranslation();
     const format = new Intl.NumberFormat(i18n.language, {
         maximumFractionDigits: 1,

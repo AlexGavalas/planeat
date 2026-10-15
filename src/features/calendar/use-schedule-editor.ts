@@ -6,11 +6,32 @@ import { type WeeklyMealZone } from '~types/meal-zone';
 import { getDaysOfWeek } from '~util/date';
 
 import {
+    getDuplicateTimes,
     getNextMealTime,
+    normalizeSchedule,
     type ScheduleEditorOptions,
 } from './schedule-editor-utils';
 
-// oxlint-disable typescript/explicit-function-return-type -- The inferred controller keeps UI consumers synchronized.
+type ScheduleEditor = {
+    copySource: string | null;
+    dayZones: WeeklyMealZone[];
+    days: ReturnType<typeof getDaysOfWeek>;
+    duplicateTimes: Set<string>;
+    handleAdd: () => void;
+    handleCopy: () => void;
+    handleRemove: (zoneKey: string) => void;
+    handleSave: () => Promise<void>;
+    handleZoneChange: (
+        zoneKey: string,
+        field: 'label' | 'time',
+    ) => (event: ChangeEvent<HTMLInputElement>) => void;
+    hasErrors: boolean;
+    removedMealCount: number;
+    selectedDay: string;
+    setCopySource: (source: string | null) => void;
+    setSelectedDay: (day: string) => void;
+};
+
 export const useScheduleEditor = ({
     initialDay,
     meals,
@@ -19,7 +40,7 @@ export const useScheduleEditor = ({
     opened,
     weekStart,
     zones,
-}: ScheduleEditorOptions) => {
+}: ScheduleEditorOptions): ScheduleEditor => {
     const { i18n, t } = useTranslation();
     const days = useMemo(
         () =>
@@ -57,15 +78,7 @@ export const useScheduleEditor = ({
     const dayZones = draft
         .filter(({ day }) => day === selectedDay)
         .toSorted((a, b) => a.position - b.position);
-    const duplicateTimes = new Set(
-        dayZones
-            .filter(
-                (zone, index) =>
-                    dayZones.findIndex(({ time }) => time === zone.time) !==
-                    index,
-            )
-            .map(({ time }) => time),
-    );
+    const duplicateTimes = getDuplicateTimes(dayZones);
     const hasErrors =
         draft.some(({ label }) => !label.trim()) ||
         days.some(({ timestamp }) => {
@@ -86,7 +99,7 @@ export const useScheduleEditor = ({
             zoneKey: string,
             field: 'label' | 'time',
         ): ((event: ChangeEvent<HTMLInputElement>) => void) =>
-        (event: ChangeEvent<HTMLInputElement>): void => {
+        (event: ChangeEvent<HTMLInputElement>) => {
             const value = event.currentTarget.value;
             setDraft((current) =>
                 current.map((zone) =>
@@ -159,17 +172,7 @@ export const useScheduleEditor = ({
         ]);
     };
     const handleSave = async (): Promise<void> => {
-        const normalized = days.flatMap(({ timestamp }) => {
-            const day = format(timestamp, 'yyyy-MM-dd');
-            return draft
-                .filter((zone) => zone.day === day)
-                .toSorted((a, b) => a.time.localeCompare(b.time))
-                .map((zone, position) => ({
-                    ...zone,
-                    label: zone.label.trim(),
-                    position,
-                }));
-        });
+        const normalized = normalizeSchedule(draft, days);
         await onSave(normalized);
         onClose();
     };

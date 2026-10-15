@@ -7,6 +7,7 @@ import {
     parseISO,
     startOfWeek,
 } from 'date-fns';
+import type { ReactElement } from 'react';
 import { Suspense } from 'react';
 
 import { fetchActivities } from '~api/activity';
@@ -27,7 +28,9 @@ type MealPlanPageProps = Readonly<{
 const isMealZoneKey = (value?: string): value is MealZoneKey =>
     MEAL_ZONE_KEYS.some((key) => key === value);
 
-async function MealPlanContent({ searchParams }: MealPlanPageProps) {
+const MealPlanContent = async ({
+    searchParams,
+}: MealPlanPageProps): Promise<ReactElement> => {
     const profile = await requireUser();
     const { date, meal, slot } = await searchParams;
     const parsedDate =
@@ -80,12 +83,14 @@ async function MealPlanContent({ searchParams }: MealPlanPageProps) {
             />
         </HydrationBoundary>
     );
-}
+};
 
-export default function Page({ searchParams }: MealPlanPageProps) {
+const Page = ({ searchParams }: MealPlanPageProps): ReactElement => {
     return (
         <Suspense fallback={<MealPlanPageSkeleton />}>
             <MealPlanContent searchParams={searchParams} />
         </Suspense>
     );
-}
+};
+
+export default Page;

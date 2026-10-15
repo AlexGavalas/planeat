@@ -11,6 +11,7 @@ import {
 } from '@mantine/core';
 import { EditPencil, Trash } from 'iconoir-react';
 import get from 'lodash/fp/get';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler, type ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -46,26 +47,26 @@ const RowActions = <ItemType extends Item>({
     isMobile = false,
     onDelete,
     onEdit,
-}: RowActionsProps<ItemType>) => {
+}: RowActionsProps<ItemType>): ReactElement => {
     const { t } = useTranslation();
     const [hasOpenConfirmation, setHasOpenConfirmation] = useState(false);
     const [isDeleteInProgress, setIsDeleteInProgress] = useState(false);
 
-    const handleDelete = (async () => {
+    const handleDelete = (async (): Promise<void> => {
         setIsDeleteInProgress(true);
         await onDelete(item);
         setIsDeleteInProgress(false);
         setHasOpenConfirmation(false);
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleEdit = (async () => {
+    const handleEdit = (async (): Promise<void> => {
         await onEdit(item);
     }) satisfies MouseEventHandler<HTMLButtonElement>;
 
-    const handleOpenConfirmation = () => {
+    const handleOpenConfirmation = (): void => {
         setHasOpenConfirmation(true);
     };
-    const handleCloseConfirmation = () => {
+    const handleCloseConfirmation = (): void => {
         setHasOpenConfirmation(false);
     };
 
@@ -141,7 +142,7 @@ export const Row = <ItemType extends Item>({
     headers,
     onDelete,
     onEdit,
-}: RowProps<ItemType>) => {
+}: RowProps<ItemType>): ReactElement => {
     return (
         <TableTr style={{ height: '3rem', width: '100%' }}>
             {headers
@@ -168,7 +169,7 @@ export const MobileRow = <ItemType extends Item>({
     headers,
     onDelete,
     onEdit,
-}: RowProps<ItemType>) => (
+}: RowProps<ItemType>): ReactElement => (
     <Paper withBorder className={styles.mobileCard} p="md" role="listitem">
         <Stack gap="md">
             {headers

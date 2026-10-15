@@ -1,4 +1,5 @@
 import { Badge, Group } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { type EditedMeal, type Meal } from '~types/meal';
@@ -9,7 +10,9 @@ type MobileMealDetailsProps = Readonly<{
     meal?: Meal | EditedMeal;
 }>;
 
-export const MobileMealDetails = ({ meal }: MobileMealDetailsProps) => {
+export const MobileMealDetails = ({
+    meal,
+}: MobileMealDetailsProps): ReactElement => {
     const { t } = useTranslation();
 
     return (

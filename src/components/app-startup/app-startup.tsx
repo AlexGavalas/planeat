@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import type { ReactElement } from 'react';
 import { type CSSProperties } from 'react';
 
 import { APP_NAME } from '~constants/brand';
@@ -23,7 +24,7 @@ const startupStyle = {
     zIndex: 1000,
 } as CSSProperties;
 
-export function AppStartup() {
+export const AppStartup = (): ReactElement => {
     return (
         <div className={styles.startup} role="status" style={startupStyle}>
             <div aria-hidden="true" className={styles.content}>
@@ -41,4 +42,4 @@ export function AppStartup() {
             <span className={styles.visuallyHidden}>Loading {APP_NAME}</span>
         </div>
     );
-}
+};

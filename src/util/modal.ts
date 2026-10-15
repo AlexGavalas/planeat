@@ -1,34 +1,19 @@
-import { type MantineModalsOverride, useModals } from '@mantine/modals';
-import curry from 'lodash/fp/curry';
+import {
+    type MantineModal,
+    type MantineModals,
+    type OpenContextModal,
+    useModals,
+} from '@mantine/modals';
 
-type Modals = keyof MantineModalsOverride['modals'];
+type ModalOptions<Modal extends MantineModal> = OpenContextModal<
+    Parameters<MantineModals[Modal]>[0]['innerProps']
+>;
 
-// oxlint-disable-next-line typescript/explicit-function-return-type
-export const useOpenContextModal = (modalName: Modals) => {
+export const useOpenContextModal = <Modal extends MantineModal>(
+    modalName: Modal,
+): ((options: ModalOptions<Modal>) => string) => {
     const modals = useModals();
 
-    switch (modalName) {
-        case 'activity':
-            return curry(modals.openContextModal<'activity'>)('activity');
-        case 'meal':
-            return curry(modals.openContextModal<'meal'>)('meal');
-        case 'delete-account':
-            return curry(modals.openContextModal<'delete-account'>)(
-                'delete-account',
-            );
-        case 'meal-note':
-            return curry(modals.openContextModal<'meal-note'>)('meal-note');
-        case 'meal-pool':
-            return curry(modals.openContextModal<'meal-pool'>)('meal-pool');
-        case 'meal-rating':
-            return curry(modals.openContextModal<'meal-rating'>)('meal-rating');
-        case 'measurement':
-            return curry(modals.openContextModal<'measurement'>)('measurement');
-        case 'week-overview':
-            return curry(modals.openContextModal<'week-overview'>)(
-                'week-overview',
-            );
-        default:
-            throw new Error(`No modal with that name exists`);
-    }
+    return (options: ModalOptions<Modal>) =>
+        modals.openContextModal(modalName, options);
 };

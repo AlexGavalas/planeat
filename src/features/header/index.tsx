@@ -1,6 +1,7 @@
 import { Box, Group, Title } from '@mantine/core';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { ReactElement } from 'react';
 
 import { APP_NAME } from '~constants/brand';
 import { Nav } from '~features/nav';
@@ -10,7 +11,7 @@ import { useProfile } from '~hooks/use-profile';
 import styles from './header.module.css';
 import { UserActions } from './user-actions';
 
-export const Header = () => {
+export const Header = (): ReactElement => {
     const localize = useLocalizedPath();
     const { profile, isFetching } = useProfile();
 

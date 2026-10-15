@@ -10,7 +10,7 @@ type HomeActions = {
     handleAddMeasurement: () => void;
 };
 
-export function useHomeActions(): HomeActions {
+export const useHomeActions = (): HomeActions => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
     const openActivityModal = useOpenContextModal('activity');
@@ -19,7 +19,7 @@ export function useHomeActions(): HomeActions {
     const handleAddMeasurement = (): void => {
         openMeasurementModal({
             innerProps: {
-                onSave: async () => {
+                onSave: async (): Promise<void> => {
                     await Promise.all([
                         queryClient.invalidateQueries({
                             queryKey: ['measurement-summary'],
@@ -41,7 +41,7 @@ export function useHomeActions(): HomeActions {
     const handleAddActivity = (): void => {
         openActivityModal({
             innerProps: {
-                onSave: async () => {
+                onSave: async (): Promise<void> => {
                     await Promise.all([
                         queryClient.invalidateQueries({
                             queryKey: ['activities'],
@@ -58,4 +58,4 @@ export function useHomeActions(): HomeActions {
     };
 
     return { handleAddActivity, handleAddMeasurement };
-}
+};

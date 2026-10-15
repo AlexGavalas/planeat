@@ -1,3 +1,4 @@
+import type { Session } from 'next-auth';
 import { type AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
@@ -32,10 +33,10 @@ const isGoogleProfile = (profile: unknown): profile is GoogleProfile => {
 
 export const authOptions: AuthOptions = {
     callbacks: {
-        session: ({ session }) => makeSessionSerializable(session),
+        session: ({ session }): Session => makeSessionSerializable(session),
     },
     events: {
-        signIn: async ({ user }) => {
+        signIn: async ({ user }): Promise<void> => {
             if (!user.email || !user.name) {
                 return;
             }
@@ -49,7 +50,7 @@ export const authOptions: AuthOptions = {
     },
     providers: [
         CredentialsProvider({
-            async authorize(credentials) {
+            authorize: async (credentials) => {
                 const parsed = loginSchema.safeParse(credentials);
 
                 if (!parsed.success) {
@@ -86,7 +87,15 @@ export const authOptions: AuthOptions = {
         GoogleProvider({
             clientId: process.env.GOOGLE_ID,
             clientSecret: process.env.GOOGLE_SECRET,
-            profile(profile) {
+            profile: (
+                profile,
+            ): {
+                email: string;
+                id: string;
+                image: string;
+                locale: string;
+                name: string;
+            } => {
                 if (isGoogleProfile(profile)) {
                     return {
                         email: profile.email,

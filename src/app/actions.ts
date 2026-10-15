@@ -23,37 +23,39 @@ import {
     setProfessionalRole as setProfessionalRoleAction,
 } from './professional-actions';
 
-export async function acceptProfessionalInvitation(
+export const acceptProfessionalInvitation = async (
     input: unknown,
-): Promise<ProfessionalActionResult> {
+): Promise<ProfessionalActionResult> => {
     return acceptProfessionalInvitationAction(input);
-}
+};
 
-export async function inviteProfessional(
+export const inviteProfessional = async (
     input: unknown,
-): Promise<ProfessionalActionResult> {
+): Promise<ProfessionalActionResult> => {
     return inviteProfessionalAction(input);
-}
+};
 
-export async function removeProfessionalRelationship(
+export const removeProfessionalRelationship = async (
     input: unknown,
-): Promise<ProfessionalActionResult> {
+): Promise<ProfessionalActionResult> => {
     return removeProfessionalRelationshipAction(input);
-}
+};
 
-export async function setProfessionalDiscoverable(
+export const setProfessionalDiscoverable = async (
     input: unknown,
-): Promise<ProfessionalActionResult> {
+): Promise<ProfessionalActionResult> => {
     return setProfessionalDiscoverableAction(input);
-}
+};
 
-export async function setProfessionalRole(
+export const setProfessionalRole = async (
     input: unknown,
-): Promise<ProfessionalActionResult> {
+): Promise<ProfessionalActionResult> => {
     return setProfessionalRoleAction(input);
-}
+};
 
-export async function saveMealPlan(input: unknown): Promise<{ ok: boolean }> {
+export const saveMealPlan = async (
+    input: unknown,
+): Promise<{ ok: boolean }> => {
     const user = await getCurrentUser();
 
     if (!user) {
@@ -88,11 +90,11 @@ export async function saveMealPlan(input: unknown): Promise<{ ok: boolean }> {
     revalidatePath('/meal-plan');
 
     return { ok: true };
-}
+};
 
-export async function saveMealZoneTimes(
+export const saveMealZoneTimes = async (
     input: unknown,
-): Promise<{ effectiveFrom?: string; ok: boolean }> {
+): Promise<{ effectiveFrom?: string; ok: boolean }> => {
     const user = await getCurrentUser();
 
     if (!user) {
@@ -133,9 +135,9 @@ export async function saveMealZoneTimes(
     revalidatePath('/settings');
 
     return { effectiveFrom, ok: true };
-}
+};
 
-export async function saveProfile(input: unknown): Promise<{ ok: boolean }> {
+export const saveProfile = async (input: unknown): Promise<{ ok: boolean }> => {
     const user = await getCurrentUser();
 
     if (!user) {
@@ -158,11 +160,11 @@ export async function saveProfile(input: unknown): Promise<{ ok: boolean }> {
     revalidatePath('/', 'layout');
 
     return { ok: true };
-}
+};
 
-export async function acceptConnectionRequest(
+export const acceptConnectionRequest = async (
     input: unknown,
-): Promise<{ ok: boolean }> {
+): Promise<{ ok: boolean }> => {
     const user = await getCurrentUser();
 
     const requestId = z.string().uuid().safeParse(input);
@@ -181,4 +183,4 @@ export async function acceptConnectionRequest(
     revalidatePath('/connections');
 
     return { ok: true };
-}
+};

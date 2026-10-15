@@ -18,7 +18,9 @@ export const measurements = pgTable(
         id: uuid('id').defaultRandom().primaryKey(),
         user_id: bigint('user_id', { mode: 'number' })
             .notNull()
-            .references(() => users.id, { onDelete: 'cascade' }),
+            .references(() => users.id, {
+                onDelete: 'cascade',
+            }),
         weight: doublePrecision('weight').notNull(),
     },
     (table) => [
@@ -34,7 +36,9 @@ export const activities = pgTable(
         id: uuid('id').defaultRandom().primaryKey(),
         user_id: bigint('user_id', { mode: 'number' })
             .notNull()
-            .references(() => users.id, { onDelete: 'cascade' }),
+            .references(() => users.id, {
+                onDelete: 'cascade',
+            }),
     },
     (table) => [
         index('activities_user_id_date_idx').on(table.user_id, table.date),

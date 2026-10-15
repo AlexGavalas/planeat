@@ -1,5 +1,6 @@
 import { Tabs } from '@mantine/core';
 import { type ContextModalProps } from '@mantine/modals';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useFeatureFlags } from '~features/feature-flags';
@@ -8,10 +9,13 @@ import { FileUploadTab } from './file-upload';
 import { FoodDatabaseTab } from './food-database';
 import { ManualInputTab } from './manual-input';
 
-export const MealPoolModal = ({ context, id }: ContextModalProps) => {
+export const MealPoolModal = ({
+    context,
+    id,
+}: ContextModalProps): ReactElement => {
     const { t } = useTranslation();
     const { isFoodDatabaseSearchEnabled } = useFeatureFlags();
-    const closeModal = () => {
+    const closeModal = (): void => {
         context.closeContextModal(id);
     };
 

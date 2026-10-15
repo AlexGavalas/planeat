@@ -1,5 +1,6 @@
 import { Card } from '@mantine/core';
 import { format, isValid, parse } from 'date-fns';
+import type { ReactElement } from 'react';
 import { type TooltipContentProps, type XAxisTickContentProps } from 'recharts';
 
 export type ChartPoint = {
@@ -52,7 +53,7 @@ export const DateTick = ({
     visibleTicksCount,
     x,
     y,
-}: XAxisTickContentProps) => {
+}: XAxisTickContentProps): ReactElement => {
     const isFirst = index === 0;
     const isLast = index === visibleTicksCount - 1;
     const textAnchor =
@@ -92,7 +93,7 @@ export const ChartTooltip = ({
     max,
     payload,
     unit,
-}: ChartTooltipProps) => {
+}: ChartTooltipProps): ReactElement | null => {
     const item = payload[0];
 
     if (!active || !item || typeof item.value !== 'number') {

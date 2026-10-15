@@ -6,6 +6,7 @@ import { el } from 'date-fns/locale/el';
 import { enGB } from 'date-fns/locale/en-GB';
 import { EditPencil, NavArrowRight } from 'iconoir-react';
 import Link from 'next/link';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Card } from '~components/card';
@@ -20,10 +21,10 @@ type HealthSummaryProps = Readonly<{
     targetWeight: number | null;
 }>;
 
-export function HealthSummary({
+export const HealthSummary = ({
     onAddMeasurement,
     targetWeight,
-}: HealthSummaryProps) {
+}: HealthSummaryProps): ReactElement => {
     const { t, i18n } = useTranslation();
     const { data: summary } = useMeasurementSummary();
     const weight = getTimelineTrend(summary?.weightTimeline);
@@ -149,11 +150,11 @@ export function HealthSummary({
             </section>
         </Card>
     );
-}
+};
 
-function EmptyHealthSummary({
+const EmptyHealthSummary = ({
     onAddMeasurement,
-}: Readonly<{ onAddMeasurement: () => void }>) {
+}: Readonly<{ onAddMeasurement: () => void }>): ReactElement => {
     const { t } = useTranslation();
 
     return (
@@ -168,4 +169,4 @@ function EmptyHealthSummary({
             </Button>
         </Stack>
     );
-}
+};

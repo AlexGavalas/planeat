@@ -1,4 +1,4 @@
-import { renderWithUser } from '~test/utils';
+import { renderWithUser, screen, within } from '~test/utils';
 
 import { Table, type TableProps } from './table';
 
@@ -17,19 +17,28 @@ describe('<Table />', () => {
 
     describe('when passed no data', () => {
         it('renders a table', () => {
-            const { container } = renderWithUser(
+            renderWithUser(
                 <Table {...props} data={[]} headers={[]} totalPages={0} />,
             );
 
-            expect(container).toMatchSnapshot();
+            expect(screen.getByRole('table')).toBeInTheDocument();
+            expect(
+                within(screen.getByRole('table')).queryAllByRole('cell'),
+            ).toHaveLength(0);
         });
     });
 
     describe('when passed data', () => {
         it('renders a table', () => {
-            const { container } = renderWithUser(<Table {...props} />);
+            renderWithUser(<Table {...props} />);
 
-            expect(container).toMatchSnapshot();
+            const table = screen.getByRole('table');
+            expect(
+                within(table).getByRole('columnheader', { name: 'test label' }),
+            ).toBeInTheDocument();
+            expect(
+                within(table).getByRole('cell', { name: 'test value 1' }),
+            ).toBeInTheDocument();
         });
     });
 });

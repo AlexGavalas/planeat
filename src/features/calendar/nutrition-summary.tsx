@@ -8,6 +8,7 @@ import {
     Stack,
     Text,
 } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { type EditedMeal, type Meal } from '~types/meal';
@@ -23,7 +24,7 @@ export const NutritionSummary = ({
     compact?: boolean;
     meals: readonly (Meal | EditedMeal | undefined)[];
     showMealDistribution?: boolean;
-}>) => {
+}>): ReactElement | null => {
     const { i18n, t } = useTranslation();
     const planned = meals.filter((meal) => meal?.meal);
     const items = planned.flatMap((meal) => meal?.items ?? []);
@@ -47,7 +48,7 @@ export const NutritionSummary = ({
     const format = new Intl.NumberFormat(i18n.language, {
         maximumFractionDigits: 1,
     });
-    const value = (amount: number | null, unit = 'g') =>
+    const value = (amount: number | null, unit = 'g'): string =>
         amount === null ? '—' : `${format.format(amount)} ${unit}`;
 
     return (

@@ -8,7 +8,9 @@ import { setProfessionalRole } from './professional-actions';
 
 jest.mock('next/cache');
 jest.mock('~api/professional');
-jest.mock('~api/session', () => ({ getCurrentUser: jest.fn() }));
+jest.mock('~api/session', () => ({
+    getCurrentUser: jest.fn(),
+}));
 
 describe('professional server actions', () => {
     beforeEach(() => {

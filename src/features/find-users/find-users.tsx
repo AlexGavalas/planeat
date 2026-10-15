@@ -11,6 +11,7 @@ import {
 import { useDebouncedValue } from '@mantine/hooks';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ProfileCircle, UserPlus, Xmark } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -23,7 +24,7 @@ import {
 
 import styles from './find-users.module.css';
 
-export const FindUsers = () => {
+export const FindUsers = (): ReactElement => {
     const { t } = useTranslation();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedUserId, setSelectedUserId] = useState('');
@@ -33,7 +34,7 @@ export const FindUsers = () => {
 
     const { data: users = [] } = useQuery({
         enabled: Boolean(debouncedSearchQuery),
-        queryFn: async () => {
+        queryFn: async (): Promise<{ label: string; value: string }[]> => {
             const response = await fetch(
                 `/api/v1/user?type=search&fullName=${debouncedSearchQuery}`,
             );
@@ -50,7 +51,7 @@ export const FindUsers = () => {
     const { data: selectedUser, isFetching: isFetchingSelectedUser } = useQuery(
         {
             enabled: Boolean(selectedUserId),
-            queryFn: async () => {
+            queryFn: async (): Promise<User[] | undefined> => {
                 const response = await fetch(
                     `/api/v1/user?type=profile&id=${selectedUserId}`,
                 );
@@ -70,7 +71,7 @@ export const FindUsers = () => {
         isFetching: isFetchingHasAlreadySentRequest,
     } = useQuery({
         enabled: Boolean(selectedUserProfileId),
-        queryFn: async () => {
+        queryFn: async (): Promise<boolean | null | undefined> => {
             if (!selectedUserProfileId || !profile) {
                 return null;
             }
@@ -88,16 +89,16 @@ export const FindUsers = () => {
         queryKey: ['connection_request', selectedUserProfileId],
     });
 
-    const handleUserSelect = ((value) => {
+    const handleUserSelect = ((value): void => {
         setSelectedUserId(value);
     }) satisfies NonNullable<AutocompleteProps['onOptionSubmit']>;
 
-    const handleClearInput = () => {
+    const handleClearInput = (): void => {
         setSearchQuery('');
         setSelectedUserId('');
     };
 
-    const handleConnectionRequest = (async () => {
+    const handleConnectionRequest = (async (): Promise<void> => {
         if (!profile || !selectedUser) {
             return;
         }

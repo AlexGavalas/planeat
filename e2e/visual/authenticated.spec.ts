@@ -1,12 +1,6 @@
-import { type Page, expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
-const expectNoHorizontalOverflow = async (page: Page): Promise<void> => {
-    expect(
-        await page.evaluate(
-            () => document.documentElement.scrollWidth <= window.innerWidth,
-        ),
-    ).toBe(true);
-};
+import { expectNoHorizontalOverflow } from '../support/layout';
 
 test.beforeEach(async ({ page }) => {
     await page.goto('/home');

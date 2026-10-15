@@ -1,4 +1,5 @@
 import { ModalsProvider } from '@mantine/modals';
+import type { ReactElement } from 'react';
 import { type PropsWithChildren } from 'react';
 
 import { renderWithUser, screen } from '~test/utils';
@@ -16,7 +17,7 @@ const meal: Meal = {
     user_id: 1,
 };
 
-const Wrapper = ({ children }: PropsWithChildren) => (
+const Wrapper = ({ children }: PropsWithChildren): ReactElement => (
     <ModalsProvider>{children}</ModalsProvider>
 );
 const handleDelete = jest.fn();

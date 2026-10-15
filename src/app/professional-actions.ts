@@ -26,9 +26,9 @@ const actionError = (error: unknown): ProfessionalActionResult => {
     return { error: 'unknown', ok: false };
 };
 
-export async function setProfessionalRole(
+export const setProfessionalRole = async (
     input: unknown,
-): Promise<ProfessionalActionResult> {
+): Promise<ProfessionalActionResult> => {
     const user = await getCurrentUser();
     const parsed = z.object({ enabled: z.boolean() }).safeParse(input);
     if (!user || !parsed.success) {
@@ -47,11 +47,11 @@ export async function setProfessionalRole(
     } catch (error) {
         return actionError(error);
     }
-}
+};
 
-export async function setProfessionalDiscoverable(
+export const setProfessionalDiscoverable = async (
     input: unknown,
-): Promise<ProfessionalActionResult> {
+): Promise<ProfessionalActionResult> => {
     const user = await getCurrentUser();
     const parsed = z.object({ discoverable: z.boolean() }).safeParse(input);
     if (!user || !parsed.success) {
@@ -69,11 +69,11 @@ export async function setProfessionalDiscoverable(
     } catch (error) {
         return actionError(error);
     }
-}
+};
 
-export async function inviteProfessional(
+export const inviteProfessional = async (
     input: unknown,
-): Promise<ProfessionalActionResult> {
+): Promise<ProfessionalActionResult> => {
     const user = await getCurrentUser();
     const parsed = z
         .object({ professionalUserId: z.number().int().positive() })
@@ -92,11 +92,11 @@ export async function inviteProfessional(
     } catch (error) {
         return actionError(error);
     }
-}
+};
 
-export async function acceptProfessionalInvitation(
+export const acceptProfessionalInvitation = async (
     input: unknown,
-): Promise<ProfessionalActionResult> {
+): Promise<ProfessionalActionResult> => {
     const user = await getCurrentUser();
     const parsed = z
         .object({ relationshipId: z.string().uuid() })
@@ -116,11 +116,11 @@ export async function acceptProfessionalInvitation(
     } catch (error) {
         return actionError(error);
     }
-}
+};
 
-export async function removeProfessionalRelationship(
+export const removeProfessionalRelationship = async (
     input: unknown,
-): Promise<ProfessionalActionResult> {
+): Promise<ProfessionalActionResult> => {
     const user = await getCurrentUser();
     const parsed = z
         .object({ relationshipId: z.string().uuid() })
@@ -140,4 +140,4 @@ export async function removeProfessionalRelationship(
     } catch (error) {
         return actionError(error);
     }
-}
+};

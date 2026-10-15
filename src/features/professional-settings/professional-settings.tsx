@@ -2,6 +2,7 @@
 
 import { Alert, Stack, Switch, Text, Title } from '@mantine/core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { ReactElement } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,21 +16,23 @@ import {
     setProfessionalDiscoverable,
     setProfessionalRole,
 } from '../../app/actions';
+import type { ProfessionalActionResult } from '../../app/professional-actions';
 
-export const ProfessionalSettings = () => {
+export const ProfessionalSettings = (): ReactElement => {
     const { t } = useTranslation();
     const { profile } = useProfile();
     const queryClient = useQueryClient();
     const [error, setError] = useState<string | null>(null);
     const isProfessional = profile?.roles.includes('professional') ?? false;
 
-    const refreshProfile = async () => {
+    const refreshProfile = async (): Promise<void> => {
         await queryClient.invalidateQueries({ queryKey: ['user'] });
     };
 
     const roleMutation = useMutation({
-        mutationFn: (enabled: boolean) => setProfessionalRole({ enabled }),
-        onSuccess: async (result) => {
+        mutationFn: (enabled: boolean): Promise<ProfessionalActionResult> =>
+            setProfessionalRole({ enabled }),
+        onSuccess: async (result): Promise<void> => {
             if (!result.ok) {
                 setError(
                     result.error === 'active_clients'
@@ -49,9 +52,11 @@ export const ProfessionalSettings = () => {
     });
 
     const discoverabilityMutation = useMutation({
-        mutationFn: (discoverable: boolean) =>
+        mutationFn: (
+            discoverable: boolean,
+        ): Promise<ProfessionalActionResult> =>
             setProfessionalDiscoverable({ discoverable }),
-        onSuccess: async (result) => {
+        onSuccess: async (result): Promise<void> => {
             if (!result.ok) {
                 showErrorNotification({
                     message: t('notification.error.message'),
@@ -65,12 +70,14 @@ export const ProfessionalSettings = () => {
     });
 
     const isBusy = roleMutation.isPending || discoverabilityMutation.isPending;
-    const handleRoleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleRoleChange = (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ): void => {
         roleMutation.mutate(event.target.checked);
     };
     const handleDiscoverabilityChange = (
         event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
+    ): void => {
         discoverabilityMutation.mutate(event.target.checked);
     };
 

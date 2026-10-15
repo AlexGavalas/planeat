@@ -25,7 +25,9 @@ export const meals = pgTable(
         section_key: text('section_key').notNull(),
         user_id: bigint('user_id', { mode: 'number' })
             .notNull()
-            .references(() => users.id, { onDelete: 'cascade' }),
+            .references(() => users.id, {
+                onDelete: 'cascade',
+            }),
     },
     (table) => [index('meals_user_id_day_idx').on(table.user_id, table.day)],
 );
@@ -43,7 +45,9 @@ export const mealItems = pgTable(
         id: uuid('id').defaultRandom().primaryKey(),
         meal_id: uuid('meal_id')
             .notNull()
-            .references(() => meals.id, { onDelete: 'cascade' }),
+            .references(() => meals.id, {
+                onDelete: 'cascade',
+            }),
         name: text('name').notNull(),
         position: integer('position').notNull(),
         protein: doublePrecision('protein'),
@@ -63,7 +67,9 @@ export const mealZoneTimes = pgTable(
         time: time('time').notNull(),
         user_id: bigint('user_id', { mode: 'number' })
             .notNull()
-            .references(() => users.id, { onDelete: 'cascade' }),
+            .references(() => users.id, {
+                onDelete: 'cascade',
+            }),
         zone_key: text('zone_key').notNull(),
     },
     (table) => [
@@ -88,7 +94,9 @@ export const weeklyMealZones = pgTable(
         time: time('time').notNull(),
         user_id: bigint('user_id', { mode: 'number' })
             .notNull()
-            .references(() => users.id, { onDelete: 'cascade' }),
+            .references(() => users.id, {
+                onDelete: 'cascade',
+            }),
         week_start: date('week_start').notNull(),
         zone_key: text('zone_key').notNull(),
     },
@@ -118,7 +126,9 @@ export const mealPool = pgTable(
             .generatedByDefaultAsIdentity(),
         user_id: bigint('user_id', { mode: 'number' })
             .notNull()
-            .references(() => users.id, { onDelete: 'cascade' }),
+            .references(() => users.id, {
+                onDelete: 'cascade',
+            }),
     },
     (table) => [
         unique('meals_pool_user_id_content_unique').on(
@@ -141,7 +151,9 @@ export const mealPoolItems = pgTable(
         id: uuid('id').defaultRandom().primaryKey(),
         meal_pool_id: bigint('meal_pool_id', { mode: 'number' })
             .notNull()
-            .references(() => mealPool.id, { onDelete: 'cascade' }),
+            .references(() => mealPool.id, {
+                onDelete: 'cascade',
+            }),
         name: text('name').notNull(),
         position: integer('position').notNull(),
         protein: doublePrecision('protein'),

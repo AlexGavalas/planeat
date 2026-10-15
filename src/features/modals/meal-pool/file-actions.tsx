@@ -1,4 +1,5 @@
 import { Box, Button, Group, Text } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +12,8 @@ type FileActionsProps = Readonly<{
     onUpload: MouseEventHandler<HTMLButtonElement>;
 }>;
 
-const formatSizeInMB = (size: number) => +(size / 1024 / 1024).toFixed(2);
+const formatSizeInMB = (size: number): number =>
+    +(size / 1024 / 1024).toFixed(2);
 
 export const FileActions = ({
     file,
@@ -20,7 +22,7 @@ export const FileActions = ({
     onClear,
     onReset,
     onUpload,
-}: FileActionsProps) => {
+}: FileActionsProps): ReactElement => {
     const { t } = useTranslation();
 
     if (isSuccess) {

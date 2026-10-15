@@ -1,5 +1,6 @@
 import { Button, Center, Group, Rating, Stack } from '@mantine/core';
 import { type ContextModalProps } from '@mantine/modals';
+import type { ReactElement } from 'react';
 import {
     type MouseEventHandler,
     type SubmitEventHandler,
@@ -19,15 +20,15 @@ export const MealRatingModal = ({
     context,
     id,
     innerProps: { meal, onDelete, onSave },
-}: ContextModalProps<MealRatingModalProps>) => {
+}: ContextModalProps<MealRatingModalProps>): ReactElement => {
     const { t } = useTranslation();
     const [rating, setRating] = useState<number>();
 
-    const closeModal = () => {
+    const closeModal = (): void => {
         context.closeContextModal(id);
     };
 
-    const handleSubmit = (async (e) => {
+    const handleSubmit = (async (e): Promise<void> => {
         e.preventDefault();
 
         if (!rating) {
@@ -38,7 +39,7 @@ export const MealRatingModal = ({
         closeModal();
     }) satisfies SubmitEventHandler<HTMLFormElement>;
 
-    const handleDelete = (async () => {
+    const handleDelete = (async (): Promise<void> => {
         await onDelete();
         closeModal();
     }) satisfies MouseEventHandler<HTMLButtonElement>;

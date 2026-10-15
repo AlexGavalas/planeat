@@ -1,11 +1,11 @@
-import { renderWithUser } from '~test/utils';
+import { renderWithUser, screen } from '~test/utils';
 
 import { Card } from './card';
 
 describe('<Card />', () => {
     it('renders with content', () => {
-        const { container } = renderWithUser(<Card>Card content</Card>);
+        renderWithUser(<Card>Card content</Card>);
 
-        expect(container).toMatchSnapshot();
+        expect(screen.getByText('Card content')).toBeVisible();
     });
 });

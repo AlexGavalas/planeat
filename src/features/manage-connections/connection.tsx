@@ -9,6 +9,7 @@ import {
     Text,
 } from '@mantine/core';
 import { MoreHoriz, Trash } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,21 +26,21 @@ type ConnectionItemProps = Readonly<{
 export const ConnectionItem = ({
     connection,
     removeConnection,
-}: ConnectionItemProps) => {
+}: ConnectionItemProps): ReactElement => {
     const { t } = useTranslation();
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [isRemoving, setIsRemoving] = useState(false);
 
-    const handleRemoveConnection = (async () => {
+    const handleRemoveConnection = (async (): Promise<void> => {
         setIsRemoving(true);
         await removeConnection(connection);
         setIsRemoving(false);
         setIsConfirmOpen(false);
     }) satisfies MouseEventHandler<HTMLButtonElement>;
-    const openConfirmation = () => {
+    const openConfirmation = (): void => {
         setIsConfirmOpen(true);
     };
-    const closeConfirmation = () => {
+    const closeConfirmation = (): void => {
         setIsConfirmOpen(false);
     };
 

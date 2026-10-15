@@ -2,6 +2,7 @@
 
 import { Container, Space, Tabs } from '@mantine/core';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import type { ReactElement } from 'react';
 import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,7 +26,10 @@ type SettingsTab = (typeof SETTINGS_TABS)[number];
 const isSettingsTab = (value: string | null): value is SettingsTab =>
     SETTINGS_TABS.some((tab) => tab === value);
 
-export function Settings({ activities, measurements }: SettingsProps) {
+export const Settings = ({
+    activities,
+    measurements,
+}: SettingsProps): ReactElement => {
     const { t } = useTranslation();
     const pathname = usePathname();
     const router = useRouter();
@@ -108,4 +112,4 @@ export function Settings({ activities, measurements }: SettingsProps) {
             </Tabs>
         </Container>
     );
-}
+};

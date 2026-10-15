@@ -19,7 +19,9 @@ export const useUpload: UseUpload = ({ onSuccess }) => {
     const { t } = useTranslation();
 
     return useMutation({
-        mutationFn: async ({ file }) => {
+        mutationFn: async ({
+            file,
+        }): Promise<{ data: string[] } | undefined> => {
             if (!file) {
                 throw new Error(t('errors.no_file'));
             }
@@ -38,12 +40,11 @@ export const useUpload: UseUpload = ({ onSuccess }) => {
                 onSuccess(data);
 
                 return data;
-            } else {
-                showErrorNotification({
-                    message: t('notification.error.message'),
-                    title: t('notification.error.title'),
-                });
             }
+            showErrorNotification({
+                message: t('notification.error.message'),
+                title: t('notification.error.title'),
+            });
         },
     });
 };

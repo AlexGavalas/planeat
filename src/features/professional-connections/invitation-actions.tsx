@@ -1,4 +1,5 @@
 import { Button } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -20,12 +21,12 @@ export const InvitationActions = ({
     incoming = false,
     relationshipId,
     run,
-}: InvitationActionsProps) => {
+}: InvitationActionsProps): ReactElement => {
     const { t } = useTranslation();
-    const handleRemove = () => {
+    const handleRemove = (): void => {
         void run(() => removeProfessionalRelationship({ relationshipId }));
     };
-    const handleAccept = () => {
+    const handleAccept = (): void => {
         void run(() => acceptProfessionalInvitation({ relationshipId }));
     };
 

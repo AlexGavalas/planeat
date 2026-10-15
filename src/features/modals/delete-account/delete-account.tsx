@@ -1,26 +1,30 @@
 import { Button, Group, Stack, Text, TextInput } from '@mantine/core';
 import { type ContextModalProps } from '@mantine/modals';
+import type { ReactElement } from 'react';
 import { type ChangeEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useProfile } from '~hooks/use-profile';
 
-export const DeleteAccountModal = ({ context, id }: ContextModalProps) => {
+export const DeleteAccountModal = ({
+    context,
+    id,
+}: ContextModalProps): ReactElement => {
     const { t } = useTranslation();
     const { user, deleteProfile, isDeleting } = useProfile();
     const [userEmail, setUserEmail] = useState('');
 
     const canDelete = userEmail === user?.email;
 
-    const handleEmailChange = ((value) => {
+    const handleEmailChange = ((value): void => {
         setUserEmail(value.target.value);
     }) satisfies ChangeEventHandler<HTMLInputElement>;
 
-    const closeModal = () => {
+    const closeModal = (): void => {
         context.closeModal(id);
     };
 
-    const handleProfileDelete = () => {
+    const handleProfileDelete = (): void => {
         deleteProfile();
     };
 

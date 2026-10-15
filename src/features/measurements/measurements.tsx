@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query';
 import { parseISO } from 'date-fns';
 import { Plus } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,7 +21,7 @@ import { showErrorNotification } from '~util/notification';
 
 import { getMeasurementHeaders } from './measurement-table';
 
-export const Measurements = () => {
+export const Measurements = (): ReactElement => {
     const { t } = useTranslation();
     const { profile } = useProfile();
     const queryClient = useQueryClient();
@@ -29,7 +30,7 @@ export const Measurements = () => {
 
     const { data: count = 0, isFetched } = useQuery({
         enabled: Boolean(profile),
-        queryFn: async () => {
+        queryFn: async (): Promise<number | undefined> => {
             const response = await fetch('/api/v1/measurement?count=true');
 
             const { count } = (await response.json()) as { count?: number };
@@ -42,7 +43,15 @@ export const Measurements = () => {
     const { data: measurements = [], isFetching } = useQuery({
         enabled: Boolean(profile),
         placeholderData: keepPreviousData,
-        queryFn: async () => {
+        queryFn: async (): Promise<
+            {
+                date: string;
+                id: string;
+                user_id: number;
+                fat_percentage: number | null;
+                weight: number;
+            }[]
+        > => {
             const start = (page - 1) * PAGE_SIZE;
             const end = page * PAGE_SIZE - 1;
 
@@ -62,7 +71,7 @@ export const Measurements = () => {
     const totalPages = Math.ceil((count || 0) / PAGE_SIZE);
     const isLoading = (!measurements.length && !isFetched) || isFetching;
 
-    const handleNewWeightSave = async () => {
+    const handleNewWeightSave = async (): Promise<void> => {
         setPage(INITIAL_PAGE);
 
         await queryClient.invalidateQueries({
@@ -77,7 +86,7 @@ export const Measurements = () => {
         });
     };
 
-    const handleDelete = async (item: Measurement) => {
+    const handleDelete = async (item: Measurement): Promise<void> => {
         const response = await fetch(`/api/v1/measurement?id=${item.id}`, {
             method: 'DELETE',
         });
@@ -101,8 +110,8 @@ export const Measurements = () => {
         }
     };
 
-    const handleEdit = (item: Measurement) => {
-        const handleSave = async () => {
+    const handleEdit = (item: Measurement): void => {
+        const handleSave = async (): Promise<void> => {
             await queryClient.invalidateQueries({
                 queryKey: ['measurement-summary'],
             });
@@ -130,11 +139,11 @@ export const Measurements = () => {
         });
     };
 
-    const handlePageChange = (page: number) => {
+    const handlePageChange = (page: number): void => {
         setPage(page);
     };
 
-    const handleAddMeasurement = () => {
+    const handleAddMeasurement = (): void => {
         openMeasurementModal({
             innerProps: {
                 onSave: handleNewWeightSave,

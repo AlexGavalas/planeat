@@ -23,12 +23,12 @@ type DeepLinkedMealModalProps = Readonly<{
     slotKey?: string;
 }>;
 
-export function DeepLinkedMealModal({
+export const DeepLinkedMealModal = ({
     date,
     initialSchedule,
     mealZone,
     slotKey,
-}: DeepLinkedMealModalProps) {
+}: DeepLinkedMealModalProps): null => {
     const { t } = useTranslation();
     const ownerUserId = useMealPlanOwnerId();
     const { currentWeek } = useCurrentWeek();
@@ -75,13 +75,13 @@ export function DeepLinkedMealModal({
             innerProps: {
                 initialItems: meal?.items ?? [],
                 initialMeal: meal?.meal ?? '',
-                onDelete: () => {
+                onDelete: (): void => {
                     if (!meal) {
                         return;
                     }
                     deleteEntryCell({ meal });
                 },
-                onSave: (value: string, items: EditedMealItem[]) => {
+                onSave: (value: string, items: EditedMealItem[]): void => {
                     saveEntryCell({
                         items,
                         meal,
@@ -114,4 +114,4 @@ export function DeepLinkedMealModal({
     ]);
 
     return null;
-}
+};

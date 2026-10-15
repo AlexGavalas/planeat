@@ -1,7 +1,7 @@
 /* oxlint-disable react/jsx-max-depth -- Providers are fine to have more nesting */
 'use client';
 
-import { Center, Loader, MantineProvider } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import {
@@ -14,7 +14,7 @@ import { type Resource } from 'i18next';
 import { Provider as JotaiProvider, createStore } from 'jotai';
 import { SessionProvider, type SessionProviderProps } from 'next-auth/react';
 import { I18nProvider } from 'next-i18next/client';
-import dynamic from 'next/dynamic';
+import type { ReactElement } from 'react';
 import { type PropsWithChildren, useEffect, useState } from 'react';
 
 import {
@@ -28,67 +28,7 @@ import { UserContext } from '~store/user-context';
 import { APP_THEME, appCssVariablesResolver } from '~theme';
 import { createQueryClient } from '~util/query-client';
 
-const CenterLoader = () => (
-    <Center py="md">
-        <Loader />
-    </Center>
-);
-
-const modals = {
-    activity: dynamic(
-        () => import('./modals/activity').then((m) => m.ActivityModal),
-        {
-            loading: CenterLoader,
-        },
-    ),
-    'delete-account': dynamic(
-        () =>
-            import('./modals/delete-account').then((m) => m.DeleteAccountModal),
-        {
-            loading: CenterLoader,
-        },
-    ),
-    meal: dynamic(() => import('./modals/meal').then((m) => m.MealModal), {
-        loading: CenterLoader,
-    }),
-    'meal-note': dynamic(
-        () => import('./modals/meal-note').then((m) => m.MealNoteModal),
-        {
-            loading: CenterLoader,
-        },
-    ),
-    'meal-pool': dynamic(
-        () => import('./modals/meal-pool').then((m) => m.MealPoolModal),
-        {
-            loading: CenterLoader,
-        },
-    ),
-    'meal-rating': dynamic(
-        () => import('./modals/meal-rating').then((m) => m.MealRatingModal),
-        {
-            loading: CenterLoader,
-        },
-    ),
-    measurement: dynamic(
-        () => import('./modals/measurement').then((m) => m.MeasurementModal),
-        {
-            loading: CenterLoader,
-        },
-    ),
-    'week-overview': dynamic(
-        () => import('./modals/week-overview').then((m) => m.WeekOverviewModal),
-        {
-            loading: CenterLoader,
-        },
-    ),
-} as const;
-
-declare module '@mantine/modals' {
-    // oxlint-disable-next-line typescript/consistent-type-definitions
-    interface MantineModalsOverride {
-        modals: typeof modals;
-    }
-}
+import { modals } from './context-modals';
 
 type ProvidersProps = PropsWithChildren<
     Readonly<{
@@ -109,7 +49,7 @@ export const Providers = ({
     language,
     resources,
     initialWeek,
-}: ProvidersProps) => {
+}: ProvidersProps): ReactElement => {
     useEffect(() => {
         document.documentElement.lang = language === 'gr' ? 'el' : 'en';
     }, [language]);

@@ -1,5 +1,6 @@
 import { Button } from '@mantine/core';
 import { Trash } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +12,11 @@ type Props = Readonly<{
     onDelete: MouseEventHandler<HTMLButtonElement>;
 }>;
 
-export const MealActions = ({ canDelete, onCancel, onDelete }: Props) => {
+export const MealActions = ({
+    canDelete,
+    onCancel,
+    onDelete,
+}: Props): ReactElement => {
     const { t } = useTranslation();
 
     return (

@@ -1,4 +1,5 @@
 import { Button, Group, Stack, Text } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type MouseEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,7 +13,7 @@ export const ConfirmationPopover = ({
     onDelete,
     isDeleteInProgress,
     onToggleConfirmation,
-}: ConfirmationPopoverProps) => {
+}: ConfirmationPopoverProps): ReactElement => {
     const { t } = useTranslation();
 
     return (

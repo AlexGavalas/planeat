@@ -1,4 +1,5 @@
 import { Paper, Stack, Text, Textarea, Title } from '@mantine/core';
+import type { ReactElement } from 'react';
 import {
     type ChangeEventHandler,
     type FocusEventHandler,
@@ -28,7 +29,7 @@ export const MealEditorPanel = ({
     onMealChange,
     onMealFocus,
     sourcePanel,
-}: Props) => {
+}: Props): ReactElement => {
     const { t } = useTranslation();
 
     return (

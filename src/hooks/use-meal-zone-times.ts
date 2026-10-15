@@ -19,7 +19,10 @@ export const useMealZoneTimes = (
         : undefined;
 
     const { data, isFetching } = useQuery({
-        queryFn: async () => {
+        queryFn: async (): Promise<{
+            data?: MealZoneTimes;
+            effectiveFrom?: string;
+        }> => {
             const query = new URLSearchParams();
             if (weekStart) {
                 query.set('weekStart', weekStart);

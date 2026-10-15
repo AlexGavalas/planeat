@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactElement } from 'react';
 import { type PropsWithChildren, createContext, useContext } from 'react';
 
 export type FeatureFlags = {
@@ -13,7 +14,7 @@ const FeatureFlagsContext = createContext<FeatureFlags>({
 export const FeatureFlagsProvider = ({
     children,
     value,
-}: PropsWithChildren<Readonly<{ value: FeatureFlags }>>) => (
+}: PropsWithChildren<Readonly<{ value: FeatureFlags }>>): ReactElement => (
     <FeatureFlagsContext.Provider value={value}>
         {children}
     </FeatureFlagsContext.Provider>

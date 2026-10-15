@@ -1,4 +1,5 @@
-export const Line = () => (
+import type { ReactElement } from 'react';
+export const Line = (): ReactElement => (
     <svg
         fill="none"
         style={{
@@ -90,7 +91,7 @@ export const Line = () => (
     </svg>
 );
 
-export const Blobs = () => (
+export const Blobs = (): ReactElement => (
     <svg
         fill="none"
         style={{

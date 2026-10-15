@@ -1,4 +1,5 @@
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
+import type { ReactElement } from 'react';
 import { Suspense } from 'react';
 
 import { fetchActivitiesCount, fetchActivitiesPaginated } from '~api/activity';
@@ -14,13 +15,15 @@ import { Measurements } from '~features/measurements';
 import { Settings } from '~features/screens/settings';
 import { createQueryClient } from '~util/query-client';
 
-const getArgs = (userId: number) => ({
+const getArgs = (
+    userId: number,
+): { end: number; start: number; userId: number } => ({
     end: PAGE_SIZE - 1,
     start: 0,
     userId,
 });
 
-async function MeasurementList() {
+const MeasurementList = async (): Promise<ReactElement> => {
     const profile = await requireUser();
     const args = getArgs(profile.id);
     const [measurements, measurementsCount] = await Promise.all([
@@ -37,9 +40,9 @@ async function MeasurementList() {
             <Measurements />
         </HydrationBoundary>
     );
-}
+};
 
-async function ActivityList() {
+const ActivityList = async (): Promise<ReactElement> => {
     const profile = await requireUser();
     const args = getArgs(profile.id);
     const [activities, activitiesCount] = await Promise.all([
@@ -56,9 +59,9 @@ async function ActivityList() {
             <Activities />
         </HydrationBoundary>
     );
-}
+};
 
-export default function Page() {
+const Page = (): ReactElement => {
     return (
         <Settings
             activities={
@@ -73,4 +76,6 @@ export default function Page() {
             }
         />
     );
-}
+};
+
+export default Page;

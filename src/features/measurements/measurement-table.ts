@@ -6,7 +6,7 @@ import { type Measurement } from '~types/measurement';
 
 export const getMeasurementHeaders = (t: TFunction): Header<Measurement>[] => [
     {
-        formatValue: (item) => format(parseISO(item.date), 'dd/MM/yy'),
+        formatValue: (item): string => format(parseISO(item.date), 'dd/MM/yy'),
         key: 'date',
         label: t('date'),
         width: '25%',
@@ -17,7 +17,7 @@ export const getMeasurementHeaders = (t: TFunction): Header<Measurement>[] => [
         width: '20%',
     },
     {
-        formatValue: (item) =>
+        formatValue: (item): string =>
             item.fat_percentage ? `${item.fat_percentage}%` : '-',
         key: 'fat',
         label: t('fat_label'),

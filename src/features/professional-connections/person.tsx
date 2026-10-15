@@ -1,4 +1,5 @@
 import { Group, Paper, Text } from '@mantine/core';
+import type { ReactElement } from 'react';
 import { type ReactNode } from 'react';
 
 import { NameAvatar } from '~components/name-avatar';
@@ -6,7 +7,11 @@ import { type ProfessionalSummary } from '~types/professional';
 
 type PersonProps = ProfessionalSummary & Readonly<{ actions: ReactNode }>;
 
-export const Person = ({ actions, email, fullName }: PersonProps) => (
+export const Person = ({
+    actions,
+    email,
+    fullName,
+}: PersonProps): ReactElement => (
     <Paper withBorder p="md">
         <Group justify="space-between" wrap="wrap">
             <Group gap="sm" wrap="nowrap">

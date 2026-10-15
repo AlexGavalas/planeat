@@ -3,6 +3,7 @@
 import { Button, Group, Stack, Text, Title } from '@mantine/core';
 import { Copy, PrintingPage, StatsReport } from 'iconoir-react';
 import Image from 'next/image';
+import type { ReactElement } from 'react';
 
 import { APP_TAGLINE } from '~constants/brand';
 import { openAuthDialog } from '~features/header/auth-dialog-event';
@@ -13,8 +14,8 @@ import heroStyles from './landing-hero.module.css';
 import utilityStyles from './landing-utility.module.css';
 import styles from './landing.module.css';
 
-export function LandingPage() {
-    const handleCreateAccount = () => {
+export const LandingPage = (): ReactElement => {
+    const handleCreateAccount = (): void => {
         openAuthDialog('register');
     };
 
@@ -160,4 +161,4 @@ export function LandingPage() {
             </section>
         </main>
     );
-}
+};

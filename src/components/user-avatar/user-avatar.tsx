@@ -1,10 +1,11 @@
 import { Avatar } from '@mantine/core';
 import Image from 'next/image';
+import type { ReactElement } from 'react';
 
 import { useProfile } from '~hooks/use-profile';
 import { getInitials } from '~util/name';
 
-export const UserAvatar = () => {
+export const UserAvatar = (): ReactElement | null => {
     const { user } = useProfile();
 
     if (!user) {

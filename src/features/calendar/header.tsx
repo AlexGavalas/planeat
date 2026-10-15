@@ -2,6 +2,7 @@ import { Flex, Title } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { endOfWeek, format, isToday, startOfWeek } from 'date-fns';
 import { Running } from 'iconoir-react';
+import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useMealPlanOwnerId } from '~features/meal-plan-owner';
@@ -12,7 +13,7 @@ import { getDaysOfWeek } from '~util/date';
 
 import styles from './header.module.css';
 
-export const Header = () => {
+export const Header = (): ReactElement => {
     const { i18n } = useTranslation();
     const { currentWeek } = useCurrentWeek();
     const { profile } = useProfile();
@@ -32,7 +33,23 @@ export const Header = () => {
 
     const { data: activities = [] } = useQuery({
         enabled: shouldShowActivities,
-        queryFn: async () => {
+        queryFn: async (): Promise<
+            | (
+                  | {
+                        date: string;
+                        id: string;
+                        user_id: number;
+                        activity: string;
+                    }
+                  | {
+                        date: string;
+                        user_id: number;
+                        activity: string;
+                        id?: string | undefined;
+                    }
+              )[]
+            | undefined
+        > => {
             if (!profile?.id || !shouldShowActivities) {
                 return;
             }

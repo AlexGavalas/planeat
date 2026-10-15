@@ -1,5 +1,6 @@
 import { Button, Group, Stack, Textarea } from '@mantine/core';
 import { type ContextModalProps } from '@mantine/modals';
+import type { ReactElement } from 'react';
 import {
     type MouseEventHandler,
     type SubmitEventHandler,
@@ -26,19 +27,19 @@ export const MealNoteModal = ({
     context,
     id,
     innerProps: { meal, onSave, onDelete },
-}: ContextModalProps<MealNoteModalProps>) => {
+}: ContextModalProps<MealNoteModalProps>): ReactElement => {
     const { t } = useTranslation();
     const [error, setError] = useState('');
 
-    const closeModal = () => {
+    const closeModal = (): void => {
         context.closeContextModal(id);
     };
 
-    const resetError = () => {
+    const resetError = (): void => {
         setError('');
     };
 
-    const handleSubmit = (async (e) => {
+    const handleSubmit = (async (e): Promise<void> => {
         e.preventDefault();
 
         const formData = Object.fromEntries(new FormData(e.currentTarget));
@@ -54,7 +55,7 @@ export const MealNoteModal = ({
         closeModal();
     }) satisfies SubmitEventHandler<HTMLFormElement>;
 
-    const handleDelete = (async () => {
+    const handleDelete = (async (): Promise<void> => {
         await onDelete();
         closeModal();
     }) satisfies MouseEventHandler<HTMLButtonElement>;

@@ -3,6 +3,7 @@ import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core';
 import { dehydrate } from '@tanstack/react-query';
 import { format, startOfWeek } from 'date-fns';
 import { type Metadata, type Viewport } from 'next';
+import type { ReactElement } from 'react';
 import { Suspense, type ReactNode } from 'react';
 
 import { getCurrentUser, getRequestDate, getServerSession } from '~api/session';
@@ -18,9 +19,9 @@ import { foodDatabaseSearch } from '~flags';
 import { getResources, getT } from '~util/i18n';
 import { createQueryClient } from '~util/query-client';
 
-import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
 import '@mantine/charts/styles.css';
+import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/notifications/styles.css';
 import '../styles/globals.css';
@@ -130,7 +131,9 @@ export const viewport: Viewport = {
     themeColor: '#047d55',
     viewportFit: 'cover',
 };
-async function AppContent({ children }: Readonly<{ children: ReactNode }>) {
+const AppContent = async ({
+    children,
+}: Readonly<{ children: ReactNode }>): Promise<ReactElement> => {
     const [session, profile, isFoodDatabaseSearchEnabled, requestDate] =
         await Promise.all([
             getServerSession(),
@@ -163,11 +166,11 @@ async function AppContent({ children }: Readonly<{ children: ReactNode }>) {
             {children}
         </Providers>
     );
-}
+};
 
-export default function RootLayout({
+const RootLayout = ({
     children,
-}: Readonly<{ children: ReactNode }>) {
+}: Readonly<{ children: ReactNode }>): ReactElement => {
     return (
         <html data-scroll-behavior="smooth" lang="en" {...mantineHtmlProps}>
             <head>
@@ -180,4 +183,6 @@ export default function RootLayout({
             </body>
         </html>
     );
-}
+};
+
+export default RootLayout;
